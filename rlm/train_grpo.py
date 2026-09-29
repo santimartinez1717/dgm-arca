@@ -25,25 +25,27 @@ from __future__ import annotations
 import argparse
 from collections.abc import Sequence
 
-from rlm.data import load_domain_dataset, load_gsm8k
-from rlm.rewards import _completion_text, accuracy_reward, format_reward
+from rlm.data import load_gsm8k, load_mixed_dataset
+from rlm.realestate_rewards import breakdown_reward, euro_accuracy_reward
+from rlm.rewards import accuracy_reward, format_reward
+
+GATE_ON_CORRECT = True
 
 
 def domain_reward(prompts: Sequence, completions: Sequence, **kwargs) -> list[float]:
-    """Tu turno: a reward that captures what "good" means in your domain.
+    """Our third reward, "desglose trazable" (``rlm/realestate_rewards.py``).
 
-    Same signature as the other rewards: one float per completion, dataset columns arrive
-    in ``kwargs``. Keep it deterministic and cheap. Examples from class and beyond:
-
-    * language consistency: fraction of words in the answer's language (DeepSeek-R1);
-    * length shaping: penalise thinking that exceeds a budget, or reward concise answers;
-    * a units check for physical quantities; a schema check for structured answers;
-    * a code-execution reward: run the unit tests of the problem (only in a sandbox!).
-
-    Until you implement it, it returns 0.0 everywhere so the script still runs.
+    0.5 for answering with the unit the question asks for (€ or %), plus 0.5 times the share
+    of intermediate values of the reference solution (tax base, depreciation, rent cap…)
+    that appear in the reasoning, only when the final answer is correct. Justification and
+    ablation plan in ``docs/propuesta.md``.
     """
-    texts = [_completion_text(c) for c in completions]
-    return [0.0 for _ in texts]
+    return breakdown_reward(prompts, completions, gate_on_correct=GATE_ON_CORRECT, **kwargs)
+
+
+def ungated_domain_reward(prompts: Sequence, completions: Sequence, **kwargs) -> list[float]:
+    """Ablation: the checkpoint half also rewards wrong answers (a process reward)."""
+    return breakdown_reward(prompts, completions, gate_on_correct=False, **kwargs)
 
 
 def train(args: argparse.Namespace) -> None:
@@ -53,8 +55,11 @@ def train(args: argparse.Namespace) -> None:
 
     if args.data == "gsm8k":
         dataset = load_gsm8k("train", n_examples=args.n_examples, seed=args.seed)
+        reward_funcs = [format_reward, accuracy_reward]
     else:
-        dataset = load_domain_dataset(args.data)
+        dataset = load_mixed_dataset(args.data, args.control_fraction, args.seed)
+        third = ungated_domain_reward if args.ungated_breakdown else domain_reward
+        reward_funcs = [format_reward, euro_accuracy_reward, third]
     print(f"{len(dataset)} training problems")
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -71,6 +76,9 @@ def train(args: argparse.Namespace) -> None:
         epsilon=0.2,
         bf16=device == "cuda",
         gradient_checkpointing=device == "cuda",
+        # Without CUDA, stay on CPU explicitly: on a Mac, accelerate would pick MPS and TRL's
+        # generation mixes MPS and CPU tensors.
+        use_cpu=device == "cpu",
         logging_steps=1,
         save_steps=args.save_steps,
         save_strategy="steps",
@@ -79,7 +87,9 @@ def train(args: argparse.Namespace) -> None:
         log_completions=True,
         num_completions_to_print=2,
         model_init_kwargs={"dtype": torch.bfloat16 if device == "cuda" else torch.float32},
-        # Tu turno: reward_weights=[1.0, 2.0, 0.5] lets you weight format / accuracy / domain.
+        # Accuracy dominates: format is learnt in a few dozen steps and the breakdown reward
+        # must never outweigh getting the number right. Justified in EXPERIMENTS.md.
+        reward_weights=args.reward_weights[: len(reward_funcs)],
     )
 
     if args.init_adapter:
@@ -103,7 +113,7 @@ def train(args: argparse.Namespace) -> None:
 
     trainer = GRPOTrainer(
         model=model,
-        reward_funcs=[format_reward, accuracy_reward, domain_reward],
+        reward_funcs=reward_funcs,
         args=config,
         train_dataset=dataset,
         peft_config=peft_config,
@@ -135,6 +145,21 @@ def main() -> None:
         "--resume-from-checkpoint",
         default=None,
         help="path to a checkpoint-XXX folder to continue an interrupted run (24h sessions!)",
+    )
+    parser.add_argument(
+        "--control-fraction", type=float, default=0.1, help="share of GSM8K control problems"
+    )
+    parser.add_argument(
+        "--reward-weights",
+        type=float,
+        nargs="+",
+        default=[0.5, 2.0, 0.5],
+        help="format / accuracy / breakdown",
+    )
+    parser.add_argument(
+        "--ungated-breakdown",
+        action="store_true",
+        help="ablation: breakdown reward also on wrong answers",
     )
     parser.add_argument("--seed", type=int, default=0)
     train(parser.parse_args())

@@ -66,6 +66,7 @@ def train(args: argparse.Namespace) -> None:
         gradient_accumulation_steps=args.grad_accum,
         max_length=args.max_length,
         bf16=torch.cuda.is_available(),
+        use_cpu=not torch.cuda.is_available(),
         gradient_checkpointing=True,
         logging_steps=10,
         save_strategy="epoch",

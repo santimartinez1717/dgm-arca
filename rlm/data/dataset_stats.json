@@ -1,0 +1,240 @@
+{
+  "train": {
+    "n_problems": 2400,
+    "families": {
+      "cash_on_cash": 400,
+      "max_price": 400,
+      "irpf_rental": 400,
+      "net_yield": 400,
+      "acquisition_cost": 400,
+      "legal_rent": 400
+    },
+    "templates_per_family": {
+      "cash_on_cash": 3,
+      "max_price": 2,
+      "irpf_rental": 2,
+      "net_yield": 3,
+      "acquisition_cost": 3,
+      "legal_rent": 3
+    },
+    "branches": {
+      "cash_on_cash": {
+        "negative_cash_flow": {
+          "False": 285,
+          "True": 115
+        },
+        "years": {
+          "20": 100,
+          "25": 100,
+          "15": 98,
+          "30": 102
+        }
+      },
+      "max_price": {
+        "target": {
+          "0.04": 55,
+          "0.07": 61,
+          "0.06": 52,
+          "0.065": 72,
+          "0.05": 63,
+          "0.055": 48,
+          "0.045": 49
+        }
+      },
+      "irpf_rental": {
+        "reduction": {
+          "50": 143,
+          "70": 51,
+          "90": 41,
+          "0": 126,
+          "60": 39
+        },
+        "limit_binds": {
+          "False": 367,
+          "True": 33
+        },
+        "negative": {
+          "False": 274,
+          "True": 126
+        }
+      },
+      "net_yield": {
+        "vacancy": {
+          "True": 268,
+          "False": 132
+        },
+        "management": {
+          "True": 241,
+          "False": 159
+        }
+      },
+      "acquisition_cost": {
+        "new_build": {
+          "False": 319,
+          "True": 81
+        },
+        "base": {
+          "price": 203,
+          "reference": 197
+        }
+      },
+      "legal_rent": {
+        "rule": {
+          "index": 79,
+          "zone_uncapped": 61,
+          "previous_rent": 126,
+          "no_zone": 74,
+          "market_below_cap": 60
+        },
+        "large_holder": {
+          "False": 301,
+          "True": 99
+        },
+        "stressed": {
+          "True": 326,
+          "False": 74
+        }
+      }
+    },
+    "answer_leaked_in_statement": 1
+  },
+  "test": {
+    "n_problems": 300,
+    "families": {
+      "cash_on_cash": 50,
+      "legal_rent": 50,
+      "max_price": 50,
+      "net_yield": 50,
+      "acquisition_cost": 50,
+      "irpf_rental": 50
+    },
+    "templates_per_family": {
+      "cash_on_cash": 3,
+      "legal_rent": 3,
+      "max_price": 2,
+      "net_yield": 3,
+      "acquisition_cost": 3,
+      "irpf_rental": 2
+    },
+    "branches": {
+      "cash_on_cash": {
+        "negative_cash_flow": {
+          "False": 33,
+          "True": 17
+        },
+        "years": {
+          "15": 16,
+          "20": 10,
+          "25": 15,
+          "30": 9
+        }
+      },
+      "legal_rent": {
+        "rule": {
+          "index": 9,
+          "zone_uncapped": 8,
+          "market_below_cap": 5,
+          "no_zone": 12,
+          "previous_rent": 16
+        },
+        "large_holder": {
+          "True": 7,
+          "False": 43
+        },
+        "stressed": {
+          "True": 38,
+          "False": 12
+        }
+      },
+      "max_price": {
+        "target": {
+          "0.07": 8,
+          "0.045": 10,
+          "0.06": 8,
+          "0.055": 5,
+          "0.05": 6,
+          "0.04": 8,
+          "0.065": 5
+        }
+      },
+      "net_yield": {
+        "vacancy": {
+          "False": 21,
+          "True": 29
+        },
+        "management": {
+          "True": 21,
+          "False": 29
+        }
+      },
+      "acquisition_cost": {
+        "new_build": {
+          "True": 11,
+          "False": 39
+        },
+        "base": {
+          "price": 22,
+          "reference": 28
+        }
+      },
+      "irpf_rental": {
+        "reduction": {
+          "60": 7,
+          "50": 20,
+          "70": 8,
+          "0": 10,
+          "90": 5
+        },
+        "limit_binds": {
+          "False": 45,
+          "True": 5
+        },
+        "negative": {
+          "False": 40,
+          "True": 10
+        }
+      }
+    },
+    "answer_leaked_in_statement": 1
+  },
+  "test_ood": {
+    "n_problems": 150,
+    "families": {
+      "max_price_capped": 75,
+      "becomes_large_holder": 75
+    },
+    "templates_per_family": {
+      "max_price_capped": 2,
+      "becomes_large_holder": 2
+    },
+    "branches": {
+      "max_price_capped": {
+        "rule": {
+          "market_below_cap": 15,
+          "previous_rent": 25,
+          "no_zone": 12,
+          "index": 13,
+          "zone_uncapped": 10
+        },
+        "large_holder": {
+          "False": 56,
+          "True": 19
+        }
+      },
+      "becomes_large_holder": {
+        "rule": {
+          "index": 40,
+          "previous_rent": 21,
+          "market_below_cap": 14
+        },
+        "large_holder": {
+          "True": 75
+        },
+        "stressed": {
+          "True": 75
+        }
+      }
+    },
+    "answer_leaked_in_statement": 0
+  }
+}

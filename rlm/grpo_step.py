@@ -37,8 +37,13 @@ def group_advantages(rewards: torch.Tensor, eps: float = 1e-4, scale: bool = Tru
     Returns:
         Advantages with shape ``(G,)``. A positive advantage means "better than the group".
     """
-    # Tu turno.
-    raise NotImplementedError
+    centered = rewards - rewards.mean()
+    if not scale:
+        return centered
+    # Population std (unbiased=False): with G=8 the Bessel correction would inflate every
+    # advantage by sqrt(8/7) for no reason. If all rewards are equal, centered is 0 and eps
+    # keeps us from dividing 0 by 0: the group carries no learning signal.
+    return centered / (rewards.std(unbiased=False) + eps)
 
 
 def policy_ratio(logp_new: torch.Tensor, logp_old: torch.Tensor) -> torch.Tensor:
@@ -46,8 +51,8 @@ def policy_ratio(logp_new: torch.Tensor, logp_old: torch.Tensor) -> torch.Tensor
 
     Both inputs have shape ``(G, T)``. Return a tensor of the same shape.
     """
-    # Tu turno.
-    raise NotImplementedError
+    # exp(log a - log b) = a / b, without ever forming tiny probabilities in float.
+    return torch.exp(logp_new - logp_old)
 
 
 def clipped_objective(
@@ -63,8 +68,13 @@ def clipped_objective(
     Returns:
         Per-token objective, shape ``(G, T)``, *before* masking and averaging.
     """
-    # Tu turno.
-    raise NotImplementedError
+    adv = advantages.unsqueeze(-1)  # (G, 1): the same advantage for every token of output i
+    unclipped = ratio * adv
+    clipped = torch.clamp(ratio, 1 - epsilon, 1 + epsilon) * adv
+    # The minimum makes the objective pessimistic: the policy gets no extra credit for moving
+    # further than epsilon in the direction the advantage asks for, but a move in the wrong
+    # direction is always penalised in full.
+    return torch.minimum(unclipped, clipped)
 
 
 def kl_penalty(logp_new: torch.Tensor, logp_ref: torch.Tensor) -> torch.Tensor:
@@ -72,8 +82,9 @@ def kl_penalty(logp_new: torch.Tensor, logp_ref: torch.Tensor) -> torch.Tensor:
 
     exp(logp_ref - logp_new) - (logp_ref - logp_new) - 1. Always >= 0. Shape ``(G, T)``.
     """
-    # Tu turno.
-    raise NotImplementedError
+    # The k3 estimator (Schulman): unbiased, and x - log(x) - 1 >= 0 for any ratio x.
+    delta = logp_ref - logp_new
+    return torch.exp(delta) - delta - 1
 
 
 def grpo_loss(
@@ -93,5 +104,33 @@ def grpo_loss(
     ``mean_advantage``, ``clip_fraction`` (share of tokens where clipping was active) and
     ``kl`` for logging.
     """
-    # Tu turno.
-    raise NotImplementedError
+    mask = mask.to(logp_new.dtype)
+    tokens_per_output = mask.sum(dim=1).clamp(min=1)
+
+    advantages = group_advantages(rewards)
+    ratio = policy_ratio(logp_new, logp_old)
+    per_token = clipped_objective(ratio, advantages, epsilon)
+
+    kl_value = torch.zeros((), dtype=logp_new.dtype)
+    if beta > 0:
+        if logp_ref is None:
+            raise ValueError("beta > 0 needs the reference log-probs")
+        per_token_kl = kl_penalty(logp_new, logp_ref)
+        per_token = per_token - beta * per_token_kl
+        kl_value = ((per_token_kl * mask).sum(dim=1) / tokens_per_output).mean()
+
+    # 1/|o_i| inside each output, then 1/G over the group, exactly as in the GRPO formula.
+    objective = ((per_token * mask).sum(dim=1) / tokens_per_output).mean()
+
+    with torch.no_grad():
+        adv = advantages.unsqueeze(-1)
+        # Clipping is active where the clipped branch won the minimum and cut the gradient.
+        clipped_mask = ((ratio > 1 + epsilon) & (adv > 0)) | ((ratio < 1 - epsilon) & (adv < 0))
+        clip_fraction = (clipped_mask.to(mask.dtype) * mask).sum() / mask.sum().clamp(min=1)
+    stats = {
+        "mean_advantage": float(advantages.mean()),
+        "clip_fraction": float(clip_fraction),
+        "kl": float(kl_value),
+        "objective": float(objective.detach()),
+    }
+    return -objective, stats
