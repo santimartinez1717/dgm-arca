@@ -9,7 +9,7 @@ laptop, on the DGX and inside Docker:
 
 * ``ARCA_RLM_BASE_MODEL``  base model id (default ``Qwen/Qwen3-0.6B``)
 * ``ARCA_RLM_ADAPTER``     path to your trained LoRA adapter (e.g. ``rlm/weights/final_rlm_lora``)
-* ``ARCA_RLM_VERIFIER``    ``numeric`` (default) or ``exact_match``; register yours in ``VERIFIERS``
+* ``ARCA_RLM_VERIFIER``    ``numeric`` (default), ``exact_match`` or ``euro`` (our domain)
 
 Try it from the command line::
 
@@ -29,12 +29,12 @@ from pathlib import Path
 from api.schemas import ReasoningResponse, VerifierVerdict
 from rlm.data import build_prompt
 from rlm.rewards import extract_answer, has_valid_format
-from rlm.verifier import ExactMatchVerifier, NumericVerifier, Verifier
+from rlm.verifier import EuroVerifier, ExactMatchVerifier, NumericVerifier, Verifier
 
 VERIFIERS: dict[str, type[Verifier]] = {
     "numeric": NumericVerifier,
     "exact_match": ExactMatchVerifier,
-    # Tu turno: register your domain verifier here, e.g. "sql": SQLResultVerifier
+    "euro": EuroVerifier,
 }
 
 THINK_PATTERN = re.compile(r"<think>(?P<think>.*?)</think>", re.DOTALL)

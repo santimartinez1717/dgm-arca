@@ -85,3 +85,86 @@ class ExactMatchVerifier(Verifier):
         if predicted is None:
             return False
         return self._normalize(predicted) == self._normalize(expected)
+
+
+# --------------------------------------------------------------------------- domain verifier
+
+# A number as people write it in Spanish or English: 1.234,56 · 1,234.56 · 1234,5 · -654.
+_AMOUNT = re.compile(r"-?\d[\d.,]*")
+_THOUSANDS_DOT = re.compile(r"^[1-9]\d{0,2}(\.\d{3})+$")
+_THOUSANDS_COMMA = re.compile(r"^[1-9]\d{0,2}(,\d{3}){2,}$")
+
+
+def parse_amount(token: str) -> float | None:
+    """Parse one number written in Spanish or English convention.
+
+    * Both separators present: the last one is the decimal mark
+      (``208.850,00`` and ``208,850.00`` are both 208850).
+    * Only dots: thousands if the groups are exactly three digits after a non-zero lead
+      (``1.050`` is one thousand fifty, as in Spanish), decimal otherwise (``4.37``, ``0.375``).
+    * Only commas: decimal (``4,37``), unless there are two or more groups of three
+      (``1,050,000``).
+    """
+    token = token.strip().rstrip(".,")
+    negative = token.startswith("-")
+    token = token.lstrip("-")
+    if not token or not token[0].isdigit():
+        return None
+    if "." in token and "," in token:
+        decimal = "," if token.rfind(",") > token.rfind(".") else "."
+        thousands = "." if decimal == "," else ","
+        token = token.replace(thousands, "").replace(decimal, ".")
+    elif "." in token:
+        if _THOUSANDS_DOT.match(token):
+            token = token.replace(".", "")
+        elif token.count(".") > 1:
+            return None
+    elif "," in token:
+        if _THOUSANDS_COMMA.match(token):
+            token = token.replace(",", "")
+        elif token.count(",") > 1:
+            return None
+        else:
+            token = token.replace(",", ".")
+    try:
+        value = float(token)
+    except ValueError:
+        return None
+    return -value if negative else value
+
+
+def amounts_in(text: str) -> list[float]:
+    """Every number in a piece of text, parsed with ``parse_amount``."""
+    values = []
+    for token in _AMOUNT.findall(text):
+        value = parse_amount(token)
+        if value is not None:
+            values.append(value)
+    return values
+
+
+class EuroVerifier(Verifier):
+    """Money and percentage answers of the real-estate domain.
+
+    Accepts Spanish and English number formats, units and words around the figure
+    (``"208.850,00 €"``, ``"Necesitas 208850 euros"``, ``"4,37 %"``). The answer must contain
+    exactly one *distinct* number: two different candidates ("entre 4,2 y 4,4 %") are
+    rejected, so hedging never pays. Tolerance is absolute plus relative, to forgive the
+    cent-level drift of rounding intermediate steps.
+    """
+
+    name = "euro"
+
+    def __init__(self, tolerance_abs: float = 0.01, tolerance_rel: float = 0.0005):
+        self.tolerance_abs = tolerance_abs
+        self.tolerance_rel = tolerance_rel
+
+    def is_correct(self, predicted: str | None, expected: str) -> bool:
+        if predicted is None:
+            return False
+        candidates = {round(v, 6) for v in amounts_in(predicted)}
+        target = parse_amount(expected)
+        if len(candidates) != 1 or target is None:
+            return False
+        value = candidates.pop()
+        return abs(value - target) <= self.tolerance_abs + self.tolerance_rel * abs(target)

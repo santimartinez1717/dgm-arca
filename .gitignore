@@ -12,6 +12,8 @@ dist/
 # Pesos, datos, índices y cachés de modelos
 rlm/weights/*
 !rlm/weights/.gitkeep
+rlm/data/train*.jsonl
+rlm/data/sft_traces*
 rag/corpus/*
 !rag/corpus/.gitkeep
 rag/index/
