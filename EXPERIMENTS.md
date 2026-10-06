@@ -194,3 +194,67 @@ y por eso hay aciertos con formato inválido.
   smoke test (7,3 GB con 0,6B y 384 tokens) no sirve para extrapolar.
 - Siguiente paso: destilación con Qwen3-4B, empezando por `--limit 20` para medir la
   velocidad.
+
+---
+
+### 2026-10-06 · Fase 1 · Pruebas de destilación con Qwen3-4B: sin y con hoja de reglas
+
+**Qué queríamos saber.** Cuánto tarda y cuánta memoria usa destilar en la MIG 1g.18gb, y qué
+parte de las trazas del profesor pasa el verificador, antes de lanzar la destilación grande.
+
+**Qué hicimos.** Dos pruebas sobre los mismos 20 problemas de `rlm/data/train.jsonl`
+(`--limit 20`, semilla 0), con 4 muestras por problema y temperatura 0,6:
+
+1. **Sin hoja de reglas**: 3072 tokens nuevos, lotes de 2. Un primer intento a las 11:21
+   murió con el fin de la sesión de Slurm (12:02) sin guardar nada, porque `distill.py`
+   escribía solo al final. Lo repetimos a las 12:17.
+2. **Con hoja de reglas** (`TEACHER_RULES` en el prompt de sistema del profesor, commit
+   `b770a6a`): 1536 tokens nuevos. Con lotes de 4 se quedó sin memoria en el primer lote
+   (15,8 GB en uso); repetido con lotes de 2 y `expandable_segments`:
+   `PYTHONUNBUFFERED=1 uv run python -m rlm.distill --data rlm/data/train.jsonl
+   --teacher Qwen/Qwen3-4B --limit 20 --batch-size 2 --output
+   rlm/data/sft_traces_probe20_rules.jsonl`.
+
+**Qué pasó.**
+
+| | Sin hoja (3072 tokens) | Con hoja (1536 tokens) |
+|---|---|---|
+| **Aceptación** | **18,8 %** (15/80) | **37,5 %** (30/80) |
+| Cortadas | 32,5 % (26) | 42,5 % (34) |
+| Citan la hoja (descartadas) | — | 25 % (20) |
+| Duración | 71,7 min (7,2 min/lote) | 45,4 min (3,4–3,8 min/lote*) |
+| Memoria pico | 15,6 GB | 11,6 GB |
+
+\* El primer lote marcó 13,7 min porque el cronómetro incluye la carga del modelo.
+
+Aceptación por familia:
+
+| Familia | Sin hoja | Con hoja | Cortadas con hoja |
+|---|---|---|---|
+| `acquisition_cost` | 31 % | **81 %** | 0 % |
+| `net_yield` | 75 % | **100 %** | 0 % |
+| `max_price` | 0 % (todas cortadas) | **62 %** | 0 % |
+| `legal_rent` | 35 % | 35 % | 55 % |
+| `irpf_rental` | 0 % | 8 % | 50 % |
+| `cash_on_cash` | 0 % | 0 % | **85 %** |
+
+Sin hoja, el profesor fallaba igual en las cuatro muestras de un problema: no conoce las
+reglas implícitas. En obra nueva olvidaba el IVA del 10 % (176.306 € frente a 189.106 €) y
+en cash-on-cash no restaba la cuota de la hipoteca (22,55 % frente a −1,35 %).
+
+Con hoja, las 80 trazas se reparten así: 30 aceptadas, 34 cortadas, 11 terminadas pero
+citando la hoja ("following the rules provided"), de las que 5 eran correctas, y solo **5
+respuestas equivocadas**. Las trazas aceptadas tienen una mediana de 799 tokens.
+
+**Qué concluimos.**
+- La hoja de reglas resuelve los errores de conocimiento: el profesor ya casi no se equivoca.
+  Lo que queda se pierde por longitud y por citar la hoja.
+- `cash_on_cash` se corta casi siempre: calcular a mano la cuota (con (1+i)^−240) no cabe en
+  1536 tokens. Subiremos el tope a 2048.
+- La instrucción de no citar la hoja está en español y el profesor razona en inglés. La
+  reescribiremos en inglés y más tajante.
+- Al 37,5 %, 400 problemas darían unas 600 trazas, por debajo de las 1.000–2.000
+  recomendadas. Con los dos arreglos esperamos más; si no basta, destilaremos 800 problemas.
+- La destilación grande se hará en una sesión de 24 h con 71 GiB, que admite lotes más
+  grandes y permite probar Qwen3-8B como profesor. Antes, prueba de 20 problemas con los
+  arreglos.
