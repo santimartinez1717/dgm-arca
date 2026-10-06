@@ -226,9 +226,9 @@ def main() -> None:
     parser.add_argument(
         "--batch-size",
         type=int,
-        default=4,
-        help="problems per batch; x samples sequences share the KV cache (MIG 1g.18gb: 4 "
-        "with 1536 new tokens, 2 with 3072)",
+        default=2,
+        help="problems per batch; x samples sequences share the KV cache. On a MIG 1g.18gb, "
+        "4 runs out of memory with the rule sheet (~1,000 prompt tokens) and 1536 new tokens",
     )
     parser.add_argument("--temperature", type=float, default=0.6)
     parser.add_argument(
@@ -269,6 +269,8 @@ def main() -> None:
     n_batches = math.ceil(len(pending) / args.batch_size)
     print(f"{len(done)} problems already in {out}, {len(pending)} to go in {n_batches} batches")
 
+    # The KV cache grows token by token; without this, ~2 GB end up reserved but unusable.
+    os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
     system_prompt = R1_ZERO_SYSTEM_PROMPT
     if args.rules:
         system_prompt += "\n\n" + TEACHER_RULES
