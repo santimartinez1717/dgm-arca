@@ -37,8 +37,10 @@ Para lanzar y vigilar procesos largos, usar la skill `lanzar-dgx`.
   Profesor: Qwen3-4B. Detalle y números en EXPERIMENTS.md.
 - `rlm/realestate_rules.py` es la única fuente de verdad del dominio. `TEACHER_RULES` en
   `rlm/distill.py` la resume para el profesor: **si cambia una regla, cambiar las dos**.
-- Destilación en la MIG: lotes de 2 (con 4 se queda sin memoria), 1536 tokens nuevos,
-  guardado por lote y `--resume`.
+- Destilación: con la hoja de reglas, 37,5 % de aceptación (4B, 1536 tokens); lo que se
+  pierde es longitud y trazas que citan la hoja, no errores. Ahora 2048 tokens por defecto.
+  En la MIG de 17 GB, lotes de 2 (con 4 se queda sin memoria); guardado por lote y `--resume`.
+- Plan de la sesión de 24 h con 71 GiB, paso a paso: `docs/sesion_24h_fase1.md`.
 - Pendiente: medir memoria de SFT (1,7B, 2048 tokens) y de GRPO (1,7B, 1024 tokens) con una
   prueba corta en GPU antes de lanzarlos.
 

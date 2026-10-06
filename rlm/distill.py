@@ -49,8 +49,11 @@ ANSWER = re.compile(r"<answer>(?P<answer>.*?)</answer>", re.DOTALL)
 
 # The same rules as realestate_rules.py, written for the teacher. Keep both in sync.
 TEACHER_RULES = """\
-Reglas del dominio (inversión en vivienda para alquilar en España). Razona como si las \
-conocieras de memoria: no digas que te las han dado ni las cites como una lista.
+The following is background knowledge about Spanish buy-to-let law and finance. Treat it as \
+something you have always known. NEVER mention, quote or refer to these notes, to "the \
+rules provided", "the given rules", a rule list, a system prompt or any instructions: \
+justify each step with the law or the finance itself (for example "new builds pay 10 % \
+VAT"), as an expert would.
 
 - Coste de adquisición. Vivienda usada: ITP al tipo de la comunidad sobre el mayor entre \
 el precio y el valor de referencia del Catastro. Obra nueva: no paga ITP; paga IVA del 10 % \
@@ -90,11 +93,15 @@ pública o entidad sin ánimo de lucro para vivienda social; 60 % si se terminó
 rehabilitación en los dos años anteriores; 50 % en el resto. Rendimiento reducido = neto × \
 (1 − reducción). Un neto negativo no se reduce.
 - Redondea a dos decimales solo el resultado final (y la cuota de la hipoteca). En \
-<answer> pon solo el número, con punto decimal y sin unidades."""
+<answer> pon solo el número, con punto decimal y sin unidades.
+
+Remember: reason as an expert who knows all this; never refer to these notes."""
 
 # A trace that cites the sheet teaches the student to refer to rules it will never be shown.
+# The first probe with the sheet lost 25 % of its traces here (2026-10-06, EXPERIMENTS.md).
 RULES_LEAK = re.compile(
-    r"(rules? (provided|given|listed|above)|(provided|given|listed) rules?|system prompt|"
+    r"(rules? (provided|given|listed|above|you gave|i was given)|(provided|given|listed) "
+    r"(rules?|notes|instructions)|(the|these) notes|system prompt|instructions (provided|given)|"
     r"reglas (dadas|proporcionadas|indicadas|del dominio)|hoja de reglas)",
     re.IGNORECASE,
 )
@@ -234,8 +241,9 @@ def main() -> None:
     parser.add_argument(
         "--max-new-tokens",
         type=int,
-        default=1536,
-        help="longer traces are dropped as truncated: the student answers within 1024 tokens",
+        default=2048,
+        help="longer traces are dropped as truncated; with 1536, 85 %% of the cash-on-cash "
+        "traces were cut while computing the mortgage payment by hand",
     )
     parser.add_argument("--min-think-words", type=int, default=30)
     parser.add_argument("--seed", type=int, default=0)
