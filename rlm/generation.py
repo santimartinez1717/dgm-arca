@@ -10,7 +10,7 @@ from __future__ import annotations
 from collections.abc import Iterator, Sequence
 from dataclasses import dataclass
 
-from rlm.data import build_prompt
+from rlm.data import R1_ZERO_SYSTEM_PROMPT, build_prompt
 
 
 @dataclass
@@ -20,6 +20,7 @@ class Generator:
     model_name: str
     adapter_path: str | None = None
     enable_thinking: bool | None = None
+    system_prompt: str = R1_ZERO_SYSTEM_PROMPT
 
     def load(self) -> Generator:
         import torch
@@ -46,7 +47,10 @@ class Generator:
             # Qwen3 templates accept this switch; other templates ignore unknown kwargs.
             kwargs["enable_thinking"] = self.enable_thinking
         return self.tokenizer.apply_chat_template(
-            build_prompt(question), tokenize=False, add_generation_prompt=True, **kwargs
+            build_prompt(question, self.system_prompt),
+            tokenize=False,
+            add_generation_prompt=True,
+            **kwargs,
         )
 
     def generate(
