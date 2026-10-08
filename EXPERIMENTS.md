@@ -258,3 +258,87 @@ respuestas equivocadas**. Las trazas aceptadas tienen una mediana de 799 tokens.
 - La destilación grande se hará en una sesión de 24 h con 71 GiB, que admite lotes más
   grandes y permite probar Qwen3-8B como profesor. Antes, prueba de 20 problemas con los
   arreglos.
+
+---
+
+### 2026-10-06 · Fase 1 · Destilación principal con Qwen3-4B (206 de 400 problemas)
+
+**Qué queríamos saber.** Cuántas trazas verificadas da el profesor con la hoja de reglas y
+2048 tokens sobre una muestra al azar de train, y cómo se reparten por familia.
+
+**Qué hicimos.** `PYTHONUNBUFFERED=1 uv run python -m rlm.distill --data rlm/data/train.jsonl
+--teacher Qwen/Qwen3-4B --limit 400 --batch-size 2 --resume --output
+rlm/data/sft_traces.jsonl` (commit `18492e0`: instrucción anti-cita en inglés, 2048 tokens).
+De 15:45 a 23:41, en la MIG de 17 GB; el fin de la sesión la cortó en el lote 103 de 200.
+Unos 5 min por lote; el primero tarda unos 15 más porque incluye la carga del modelo.
+
+**Qué pasó.** 469 de 824 trazas aceptadas (**56,9 %**), 206 problemas; mediana de 790
+tokens en las aceptadas.
+
+| Familia | Aceptación | Cortadas | Citan la hoja | Problemas con traza |
+|---|---|---|---|---|
+| `acquisition_cost` | 99 % | 0 % | 1 | 35/35 |
+| `max_price` | 89 % | 2 % | 5 | 32/32 |
+| `net_yield` | 81 % | 2 % | 1 | 33/33 |
+| `legal_rent` | 38 % | 30 % | 3 | 26/40 |
+| `irpf_rental` | 25 % | 29 % | 42 | 18/31 |
+| `cash_on_cash` | 14 % | 65 % | 1 | 12/35 |
+
+Cada familia difícil falla por una razón distinta:
+- `cash_on_cash`: se corta calculando la cuota a mano ((1+i)^−240, unas 20 potencias por
+  traza), y las que terminan fallan por centésimas de aproximación (−1,41 frente a −1,35).
+- `irpf_rental`: una cuarta parte cita la hoja ("the rules provided"); esas trazas además
+  suelen estar mal. El resto se corta dudando o falla por unos euros en la amortización.
+- `legal_rent`: error sistemático. Aplica el tope del índice cuando el enunciado dice que la
+  resolución **no** lo extiende (27.820,80 € frente a 27.960 €, en las cuatro muestras).
+
+**Qué concluimos.** No seguir con los 194 problemas restantes: dos tercios serían de las
+familias fáciles, que ya tienen de sobra. En su lugar, una pasada solo con las difíciles
+(entrada siguiente).
+
+---
+
+### 2026-10-08 · Fase 1 · Pasada extra de destilación para las familias difíciles
+
+**Qué queríamos saber.** Si arreglos dirigidos a la causa de cada fallo suben la aceptación
+de `legal_rent`, `irpf_rental` y `cash_on_cash`.
+
+**Qué hicimos.** `distill_hard.sh` (commit `438f0aa`), con problemas nuevos de train
+(`--families`, `--exclude rlm/data/sft_traces.jsonl`):
+1. `legal_rent` + `irpf_rental`, 100 problemas, 2048 tokens. La hoja explica el caso de
+   `legal_rent` que fallaba siempre, presenta las reducciones del IRPF como art. 23.2 y pide
+   cuentas con céntimos; las citas a la hoja se reescriben como "the rules" antes de
+   verificar. 4,5 h, pico de 12,8 GB.
+2. `cash_on_cash`, 30 problemas, **3072 tokens**. 2,8 h (~9,3 min por lote), pico de 14,1 GB.
+
+**Qué pasó.**
+
+| Familia | Principal | Pasada extra | Cortadas (antes → ahora) |
+|---|---|---|---|
+| `legal_rent` | 38 % | **67 %** | 30 % → 16 % |
+| `irpf_rental` | 25 % | 32 % | 29 % → 42 % |
+| `cash_on_cash` | 14 % | **32 %** | 65 % → 27 % |
+
+En `irpf_rental` las citas en trazas terminadas desaparecen, pero la aceptación apenas se
+mueve: las que citaban estaban casi siempre mal, y ahora se cortan o fallan igual.
+
+Total de trazas verificadas, sumando las tres tandas: **698**.
+
+| Familia | Trazas | Problemas distintos |
+|---|---|---|
+| `legal_rent` | 180 | 65 |
+| `acquisition_cost` | 138 | 35 |
+| `max_price` | 114 | 32 |
+| `net_yield` | 107 | 33 |
+| `irpf_rental` | 101 | 52 |
+| `cash_on_cash` | 58 | 33 |
+
+**Qué concluimos.**
+- El error de reglas de `legal_rent` se arregla explicando el caso en la hoja. Lo de
+  `cash_on_cash` es longitud: con 3072 tokens se cortan la mitad que antes.
+- `irpf_rental` es larga y numéricamente delicada para el 4B; las citas no eran la causa.
+  Queda una tanda con 3072 tokens y un orden fijo de cálculo (`distill_irpf.sh`, commit
+  `d515476`), que no cupo en la sesión.
+- Las familias que más le cuestan al profesor son las de más pasos encadenados: es de esperar
+  lo mismo en el alumno, y es donde una herramienta de cálculo (fase 2) aportaría más.
+- Siguiente paso: SFT con las tres tandas y `--max-per-problem 3 --max-per-family 150`.
