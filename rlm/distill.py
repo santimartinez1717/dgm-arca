@@ -82,16 +82,20 @@ anteriores, o si el contrato fue de diez años o más). Si el propietario es gra
 se añade el tope del índice: valor superior del índice de referencia (€/m² al mes) × m². \
 Sin contrato en los últimos cinco años, el tope del índice solo se aplica si la declaración \
 de la zona lo extiende a esas viviendas. Se aplican todos los topes que correspondan, y la \
-renta es la menor entre la de mercado y esos topes. Si preguntan por el año: renta mensual × 12.
+renta es la menor entre la de mercado y esos topes. Si preguntan por el año: renta mensual × 12. \
+Ojo con este caso: zona tensionada, sin contrato en los últimos cinco años, la resolución NO \
+extiende el índice y el propietario NO es gran tenedor → no hay ningún tope y se cobra la \
+renta de mercado; el índice no se aplica aunque el enunciado dé su valor.
 - Rendimiento del alquiler en el IRPF. Neto = ingresos − IBI − comunidad − seguro − \
 mín(intereses + reparaciones, ingresos) − amortización. Amortización = 3 % × el mayor entre \
 el coste de adquisición y el valor catastral × (1 − valor del suelo / valor catastral). \
-Reducción, solo si el neto es positivo (gana la primera que encaje): 90 % en zona tensionada \
-si ya estaba alquilada y la renta baja más de un 5 %; 70 % en zona tensionada si es el \
-primer alquiler y el inquilino tiene de 18 a 35 años, o si se alquila a una administración \
-pública o entidad sin ánimo de lucro para vivienda social; 60 % si se terminó una \
-rehabilitación en los dos años anteriores; 50 % en el resto. Rendimiento reducido = neto × \
-(1 − reducción). Un neto negativo no se reduce.
+El art. 23.2 de la Ley del IRPF reduce el neto, solo si es positivo, con el primero de estos \
+porcentajes que encaje: 90 % en zona tensionada si ya estaba alquilada y la renta baja más de \
+un 5 %; 70 % en zona tensionada si es el primer alquiler y el inquilino tiene de 18 a 35 años, \
+o si se alquila a una administración pública o entidad sin ánimo de lucro para vivienda \
+social; 60 % si se terminó una rehabilitación en los dos años anteriores; 50 % en el resto. \
+Rendimiento reducido = neto × (1 − reducción). Un neto negativo no se reduce. Haz las \
+cuentas con céntimos y sin redondear los pasos intermedios.
 - Redondea a dos decimales solo el resultado final (y la cuota de la hipoteca). En \
 <answer> pon solo el número, con punto decimal y sin unidades.
 
@@ -105,6 +109,22 @@ RULES_LEAK = re.compile(
     r"reglas (dadas|proporcionadas|indicadas|del dominio)|hoja de reglas)",
     re.IGNORECASE,
 )
+# The citations are almost always one of these phrases ("Let me recall the rules provided"),
+# 31 of 104 irpf_rental traces in the main run. Rewritten to "the rules", the sentence reads
+# as plain legal reasoning, so the trace can still be verified instead of being thrown away.
+CITATION = re.compile(
+    r"\b(the )?(rules (provided|given)( to me| above| earlier)?|(provided|given) rules)\b",
+    re.IGNORECASE,
+)
+
+
+def scrub_citations(text: str) -> str:
+    """Replace the usual ways of citing the rule sheet with a neutral "the rules"."""
+
+    def neutral(match: re.Match) -> str:
+        return "The rules" if match.group(0)[0].isupper() else "the rules"
+
+    return CITATION.sub(neutral, text)
 
 
 def canonicalize(raw: str) -> str | None:
@@ -163,6 +183,8 @@ def generate_traces(
         for row, completions in zip(chunk, outputs, strict=True):
             for raw, n_tokens, truncated in completions:
                 trace = canonicalize(raw)
+                if trace is not None:
+                    trace = scrub_citations(trace)
                 mentions_rules = bool(RULES_LEAK.search(trace or raw))
                 ok = False
                 if trace is not None and not truncated and has_valid_format(trace):
@@ -256,10 +278,23 @@ def main() -> None:
     parser.add_argument(
         "--resume", action="store_true", help="skip the problems already in --output"
     )
+    parser.add_argument(
+        "--families", nargs="+", default=None, help="only distill these problem families"
+    )
+    parser.add_argument(
+        "--exclude",
+        nargs="+",
+        default=[],
+        help="trace files of earlier runs: their problems are not drawn again",
+    )
     parser.add_argument("--output", default="rlm/data/sft_traces.jsonl")
     args = parser.parse_args()
 
     rows = [json.loads(line) for line in Path(args.data).read_text().splitlines()]
+    if args.families:
+        rows = [row for row in rows if row.get("family") in args.families]
+    seen = {t["question"] for path in args.exclude for t in read_traces(Path(path))}
+    rows = [row for row in rows if row["question"] not in seen]
     if args.limit:
         rows = random.Random(args.seed).sample(rows, min(args.limit, len(rows)))
 

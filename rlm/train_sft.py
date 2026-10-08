@@ -25,13 +25,16 @@ from datasets import load_dataset
 from rlm.data import build_prompt
 
 
-def load_sft_dataset(path: str | Path):
+def load_sft_dataset(paths: str | Path | list[str | Path]):
     """Turn distilled traces into TRL's prompt/completion conversational format.
 
     Expected JSONL fields: ``question``, ``trace`` (the full ``<think>…</think><answer>…</answer>``
-    text) and ``answer``. Only traces marked ``verified: true`` are used.
+    text) and ``answer``. Only traces marked ``verified: true`` are used. Several files (the
+    main distillation plus targeted passes for hard families) are concatenated.
     """
-    dataset = load_dataset("json", data_files=str(path), split="train")
+    if not isinstance(paths, list):
+        paths = [paths]
+    dataset = load_dataset("json", data_files=[str(p) for p in paths], split="train")
     if "verified" in dataset.column_names:
         dataset = dataset.filter(lambda ex: bool(ex["verified"]))
     return dataset.map(
@@ -91,7 +94,10 @@ def main() -> None:
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument(
-        "--data", required=True, help="JSONL with question / trace / answer / verified"
+        "--data",
+        nargs="+",
+        required=True,
+        help="one or more JSONL files with question / trace / answer / verified",
     )
     parser.add_argument("--model", default="Qwen/Qwen3-0.6B")
     parser.add_argument("--output", default="rlm/weights/sft_lora")
