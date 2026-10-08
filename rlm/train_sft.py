@@ -18,14 +18,49 @@ sequence length. Write down in EXPERIMENTS.md why you chose them.
 from __future__ import annotations
 
 import argparse
+import random
+from collections import Counter, defaultdict
 from pathlib import Path
 
-from datasets import load_dataset
+from datasets import Dataset, load_dataset
 
 from rlm.data import build_prompt
 
 
-def load_sft_dataset(paths: str | Path | list[str | Path]):
+def cap_traces(
+    rows: list[dict], max_per_problem: int | None, max_per_family: int | None, seed: int = 0
+) -> list[dict]:
+    """Keep at most ``max_per_problem`` traces per question and ``max_per_family`` per family.
+
+    The teacher solves the easy families almost every time, so without a cap they dominate
+    the SFT set (~260 traces each against ~90 for irpf_rental). Problems are filled one trace
+    at a time, so a family cap keeps as many distinct problems as possible.
+    """
+    rng = random.Random(seed)
+    rows = rows[:]
+    rng.shuffle(rows)
+    by_problem: dict[str, list[dict]] = defaultdict(list)
+    for row in rows:
+        if max_per_problem is None or len(by_problem[row["question"]]) < max_per_problem:
+            by_problem[row["question"]].append(row)
+    by_family: dict[str, list[list[dict]]] = defaultdict(list)
+    for traces in by_problem.values():
+        by_family[traces[0].get("family", "control")].append(traces)
+    kept = []
+    for problems in by_family.values():
+        family_kept = []
+        for round_ in range(max(len(t) for t in problems)):
+            family_kept += [t[round_] for t in problems if round_ < len(t)]
+        kept += family_kept[:max_per_family] if max_per_family else family_kept
+    rng.shuffle(kept)
+    return kept
+
+
+def load_sft_dataset(
+    paths: str | Path | list[str | Path],
+    max_per_problem: int | None = None,
+    max_per_family: int | None = None,
+):
     """Turn distilled traces into TRL's prompt/completion conversational format.
 
     Expected JSONL fields: ``question``, ``trace`` (the full ``<think>…</think><answer>…</answer>``
@@ -37,6 +72,10 @@ def load_sft_dataset(paths: str | Path | list[str | Path]):
     dataset = load_dataset("json", data_files=[str(p) for p in paths], split="train")
     if "verified" in dataset.column_names:
         dataset = dataset.filter(lambda ex: bool(ex["verified"]))
+    if max_per_problem or max_per_family:
+        rows = cap_traces(dataset.to_list(), max_per_problem, max_per_family)
+        print(f"per family after capping: {dict(Counter(r.get('family') for r in rows))}")
+        dataset = Dataset.from_list(rows)
     return dataset.map(
         lambda ex: {
             "prompt": build_prompt(ex["question"]),
@@ -51,7 +90,7 @@ def train(args: argparse.Namespace) -> None:
     from peft import LoraConfig
     from trl import SFTConfig, SFTTrainer
 
-    dataset = load_sft_dataset(args.data)
+    dataset = load_sft_dataset(args.data, args.max_per_problem, args.max_per_family)
     print(f"{len(dataset)} verified traces loaded from {args.data}")
 
     peft_config = LoraConfig(
@@ -98,6 +137,12 @@ def main() -> None:
         nargs="+",
         required=True,
         help="one or more JSONL files with question / trace / answer / verified",
+    )
+    parser.add_argument(
+        "--max-per-problem", type=int, default=None, help="cap traces of the same question"
+    )
+    parser.add_argument(
+        "--max-per-family", type=int, default=None, help="cap traces of each problem family"
     )
     parser.add_argument("--model", default="Qwen/Qwen3-0.6B")
     parser.add_argument("--output", default="rlm/weights/sft_lora")

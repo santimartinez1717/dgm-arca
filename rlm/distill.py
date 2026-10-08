@@ -95,7 +95,10 @@ un 5 %; 70 % en zona tensionada si es el primer alquiler y el inquilino tiene de
 o si se alquila a una administración pública o entidad sin ánimo de lucro para vivienda \
 social; 60 % si se terminó una rehabilitación en los dos años anteriores; 50 % en el resto. \
 Rendimiento reducido = neto × (1 − reducción). Un neto negativo no se reduce. Haz las \
-cuentas con céntimos y sin redondear los pasos intermedios.
+cuentas con céntimos y sin redondear los pasos intermedios. Sigue este orden y escribe cada \
+cifra una sola vez, sin volver atrás a repasarla: (1) ingresos; (2) IBI + comunidad + seguro; \
+(3) mín(intereses + reparaciones, ingresos); (4) amortización; (5) neto; (6) porcentaje de \
+reducción; (7) resultado.
 - Redondea a dos decimales solo el resultado final (y la cuota de la hipoteca). En \
 <answer> pon solo el número, con punto decimal y sin unidades.
 
