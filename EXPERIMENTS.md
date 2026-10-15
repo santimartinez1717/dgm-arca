@@ -342,3 +342,51 @@ Total de trazas verificadas, sumando las tres tandas: **698**.
 - Las familias que más le cuestan al profesor son las de más pasos encadenados: es de esperar
   lo mismo en el alumno, y es donde una herramienta de cálculo (fase 2) aportaría más.
 - Siguiente paso: SFT con las tres tandas y `--max-per-problem 3 --max-per-family 150`.
+
+---
+
+### 2026-10-15 · Fase 1 · SFT de Qwen3-1.7B sobre las trazas destiladas, y su evaluación
+
+**Qué queríamos saber.** Si el arranque en frío con las trazas del profesor enseña al alumno
+el formato y a resolver los problemas, y cuánto de lo que falla es falta de espacio.
+
+**Qué hicimos.** SFT con LoRA (rango 16, 2 épocas, lr 2e-4, lote efectivo 16) sobre las
+cuatro tandas de destilación, con `--max-per-problem 3 --max-per-family 150`: 596 trazas de
+252 problemas (`legal_rent` 150, `acquisition_cost` 105, `irpf_rental` 102, `max_price` 92,
+`net_yield` 91, `cash_on_cash` 56). `--max-length 3328`: con el valor por defecto (2048)
+se habrían recortado antes de `</answer>` cerca de la mitad de las trazas de
+`cash_on_cash` (mediana de 1.862 tokens). 76 pasos en 23,6 min, pico de 5,3 GB en la prueba.
+Evaluación con `eval_sft.sh` sobre los 300 problemas de test, en modo greedy.
+
+**Qué pasó.** La loss baja de 0,52 a 0,28 (acierto por token del 85 al 90 %) sin caer a
+cero.
+
+| | Base, 1.024 | Base, 2.048 | SFT, 1.024 | **SFT, 2.048** |
+|---|---|---|---|---|
+| **pass@1** | 3,3 % | 10,3 % | 32,0 % | **37,7 %** |
+| Formato válido | 0,7 % | 3,3 % | 47,3 % | 69,0 % |
+| Cortadas | 81,3 % | 35,0 % | 52,7 % | 31,0 % |
+| `acquisition_cost` | 10 % | 16 % | 74 % | 72 % |
+| `net_yield` | 2 % | 26 % | 64 % | 68 % |
+| `max_price` | 0 % | 0 % | 36 % | 56 % |
+| `legal_rent` | 8 % | 20 % | 18 % | 30 % |
+| `irpf_rental` | 0 % | 0 % | 0 % | 0 % |
+| `cash_on_cash` | 0 % | 0 % | 0 % | 0 % |
+
+Detalle en `reports/eval_sft_17b.json`, `reports/eval_sft_17b_2048.json` y
+`reports/eval_base_17b_2048.json`. Con 2.048 tokens, el 55 % de las respuestas que terminan
+son correctas.
+
+En `cash_on_cash` e `irpf_rental` más espacio no basta: terminan más respuestas (cortadas
+del 98 al 62 % y del 80 al 52 %) pero siguen al 0 %, y fallan por mucho, no por céntimos.
+En `cash_on_cash` da por ejemplo 13,17 % frente a 5,36 %, o 7,17 % frente a −3,03 %, como
+si no restara la cuota de la hipoteca: el mismo error del profesor sin la hoja de reglas.
+
+**Qué concluimos.**
+- El SFT multiplica el pass@1 por 10 con el mismo presupuesto que la línea base (1.024
+  tokens) y por 3,7 con 2.048. La mejora no viene solo de tener más espacio.
+- En las familias de trazas cortas el alumno aprende la tarea; en `max_price` y `legal_rent`
+  le falta espacio; en `cash_on_cash` e `irpf_rental`, 56 y 102 trazas no le bastan para
+  aprender la regla.
+- GRPO con 1.536 tokens por respuesta, desde este adaptador. `cash_on_cash` e `irpf_rental`
+  van al análisis de fallos y son el caso para la herramienta de cálculo de la fase 2.
