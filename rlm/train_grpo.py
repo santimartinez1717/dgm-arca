@@ -53,6 +53,11 @@ def train(args: argparse.Namespace) -> None:
     from peft import LoraConfig
     from trl import GRPOConfig, GRPOTrainer
 
+    # torch 2.11 + cuDNN 9.19 on the DGX: the cuDNN attention backend fails in the first
+    # training forward after generation ("mha_graph.execute ... is_good()"). The other SDPA
+    # backends compute the same attention.
+    torch.backends.cuda.enable_cudnn_sdp(False)
+
     if args.data == "gsm8k":
         dataset = load_gsm8k("train", n_examples=args.n_examples, seed=args.seed)
         reward_funcs = [format_reward, accuracy_reward]
@@ -67,8 +72,10 @@ def train(args: argparse.Namespace) -> None:
         output_dir=args.output,
         max_steps=args.steps,
         learning_rate=args.learning_rate,
-        per_device_train_batch_size=args.num_generations,
-        gradient_accumulation_steps=args.grad_accum,
+        # One problem's group of completions per optimizer step, split into micro-batches:
+        # 8 completions of 1536 tokens at once need ~9 GB just for the logits.
+        per_device_train_batch_size=args.micro_batch,
+        gradient_accumulation_steps=args.grad_accum * args.num_generations // args.micro_batch,
         num_generations=args.num_generations,
         max_completion_length=args.max_completion_length,
         temperature=args.temperature,
@@ -134,6 +141,12 @@ def main() -> None:
     parser.add_argument("--steps", type=int, default=300)
     parser.add_argument("--num-generations", type=int, default=8)
     parser.add_argument("--grad-accum", type=int, default=1)
+    parser.add_argument(
+        "--micro-batch",
+        type=int,
+        default=2,
+        help="completions per forward pass; must divide --num-generations (MIG 1g.18gb: 2)",
+    )
     parser.add_argument("--max-completion-length", type=int, default=768)
     parser.add_argument("--learning-rate", type=float, default=5e-6)
     parser.add_argument("--temperature", type=float, default=1.0)
