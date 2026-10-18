@@ -452,5 +452,19 @@ aciertos; McNemar exacto, p = 0,085).
 - La mejora global es probable pero no concluyente con 300 problemas.
 - `cash_on_cash` e `irpf_rental` siguen en 0: terminan más respuestas, pero mal. Sin
   aciertos en el grupo, GRPO no tiene señal en esas familias.
-- Pendiente: evaluación a 2.048 tokens y la ablación de la recompensa del dominio al mismo
-  número de pasos (`checkpoint-200` de cada ejecución), con `eval_grpo.sh`.
+- Con 2.048 tokens (`reports/eval_grpo_17b_2048.json`), donde el espacio no limita:
+
+  | | Base | SFT | **GRPO** |
+  |---|---|---|---|
+  | **pass@1** | 10,3 % | 37,7 % | **38,3 %** |
+  | Formato válido | 3,3 % | 69,0 % | 92,0 % |
+  | Cortadas | 35,0 % | 31,0 % | 8,0 % |
+  | Tokens medios | 1.578 | 1.255 | 857 |
+
+  GRPO acierta lo mismo que el SFT (22 problemas solo el SFT, 24 solo GRPO; McNemar p =
+  0,88), con un tercio menos de tokens. Gana en `legal_rent` (30 → 46 %) y pierde en
+  `max_price` (56 → 42 %).
+- **En resumen: con 400 pasos, GRPO no enseña a resolver más problemas, sino a resolver los
+  que ya sabía en menos tokens.** Por eso mejora con 1.024 y no con 2.048.
+- Pendiente: la ablación de la recompensa del dominio al mismo número de pasos
+  (`checkpoint-200` de cada ejecución), con las dos últimas pasadas de `eval_grpo.sh`.
