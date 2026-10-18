@@ -23,6 +23,12 @@ from rlm.verifier import EuroVerifier, amounts_in
 THINK_BLOCK = re.compile(r"<think>(?P<think>.*?)</think>", re.DOTALL)
 EURO_UNIT = re.compile(r"€|\beur(?:o|os)?\b", re.IGNORECASE)
 PCT_UNIT = re.compile(r"%|\bpor ?ciento\b", re.IGNORECASE)
+# The student reasons in English and writes "240,700 €" or "17,164.80": ``amounts_in`` follows
+# the Spanish convention and reads those as 240.7 and 17.1648. Both readings are kept.
+ENGLISH_GROUPED = re.compile(r"-?\d{1,3}(?:,\d{3})+(?:\.\d+)?")
+AMOUNT_WITH_UNIT = re.compile(
+    r"(?P<num>-?\d[\d.,]*\d|\d)\s*(?P<unit>€|%|eur(?:o|os)?\b|por ?ciento)", re.IGNORECASE
+)
 
 
 def _column(kwargs: dict, name: str, n: int, default):
@@ -68,11 +74,41 @@ def unit_ok(answer_text: str | None, unit: str) -> bool:
     return (has_eur and not has_pct) if unit == "eur" else (has_pct and not has_eur)
 
 
+def readings(text: str) -> list[float]:
+    """Every number in the text, in Spanish convention plus the English one for "1,234.5"."""
+    english = [float(token.replace(",", "")) for token in ENGLISH_GROUPED.findall(text)]
+    return amounts_in(text) + english
+
+
+def _close(a: float, b: float) -> bool:
+    return abs(a - b) <= max(0.011, 0.0005 * abs(b))
+
+
+def unit_stated(text: str, answer_text: str | None, unit: str) -> bool:
+    """The final figure is given with the unit the question asked for, and not the other one.
+
+    Either inside ``<answer>`` or next to that same figure anywhere in the completion. The
+    distilled traces put a bare number in ``<answer>`` and close the reasoning with "The
+    answer is 17,164.80 €", so the answer block alone never carried a unit after SFT.
+    """
+    if unit_ok(answer_text, unit):
+        return True
+    targets = readings(answer_text or "")
+    if not targets:
+        return False
+    for match in AMOUNT_WITH_UNIT.finditer(text):
+        if any(_close(v, t) for v in readings(match.group("num")) for t in targets):
+            stated = "eur" if EURO_UNIT.fullmatch(match.group("unit")) else "pct"
+            if stated == unit:
+                return True
+    return False
+
+
 def checkpoint_coverage(thinking: str, checkpoints: Sequence[float], tol: float = 0.01) -> float:
     """Share of intermediate values that appear (to the cent) somewhere in the reasoning."""
     if not checkpoints:
         return 0.0
-    seen = amounts_in(thinking)
+    seen = readings(thinking)
     hits = sum(1 for target in checkpoints if any(abs(v - target) <= tol for v in seen))
     return hits / len(checkpoints)
 
@@ -84,7 +120,7 @@ def breakdown_reward(
     gate_on_correct: bool = True,
     **kwargs,
 ) -> list[float]:
-    """0.5 · unit in the answer + 0.5 · checkpoint coverage (gated on a correct answer).
+    """0.5 · unit of the final figure + 0.5 · checkpoint coverage (gated on a correct answer).
 
     With ``gate_on_correct=False`` the checkpoint part gives partial credit to wrong answers
     that got the intermediate steps right: a process reward. Comparing both is one of our
@@ -105,7 +141,7 @@ def breakdown_reward(
         text = _completion_text(c)
         match = THINK_BLOCK.search(text)
         thinking = match.group("think") if match else ""
-        score = 0.5 if unit_ok(extract_answer(text), unit) else 0.0
+        score = 0.5 if unit_stated(text, extract_answer(text), unit) else 0.0
         if not gate_on_correct or is_correct(text, expected, ta, tr):
             score += 0.5 * checkpoint_coverage(thinking, cps or [])
         rewards.append(score)

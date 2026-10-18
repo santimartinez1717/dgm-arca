@@ -5,6 +5,7 @@ from rlm.realestate_rewards import (
     checkpoint_coverage,
     euro_accuracy_reward,
     unit_ok,
+    unit_stated,
 )
 
 ROW = dict(
@@ -42,3 +43,23 @@ def test_unit_and_coverage_helpers():
     assert unit_ok("4,37 %", "pct") and not unit_ok("4,37 €", "pct")
     assert unit_ok("648 euros", "eur") and not unit_ok("648", "eur")
     assert checkpoint_coverage("3.420 y luego 2.160", [3420.0, 2160.0, 648.0]) == 2 / 3
+
+
+# What the student writes after SFT: English reasoning, bare number in the answer block.
+STUDENT = (
+    "<think>Base 195,000 €, ITP 13,650.00 €. The answer should be 208,850.00 €.\n</think>"
+    "\n\n<answer>208850.00</answer>"
+)
+
+
+def test_unit_next_to_the_final_figure_in_the_reasoning_counts():
+    assert unit_stated(STUDENT, "208850.00", "eur")
+    assert not unit_stated(STUDENT, "208850.00", "pct")
+    assert not unit_stated(
+        "<think>Total 1.000 €.</think><answer>208850.00</answer>", "208850.00", "eur"
+    )
+    assert breakdown_reward([None], [STUDENT], ["208850.00"], **ROW) == [1.0]
+
+
+def test_coverage_reads_english_thousands_separators():
+    assert checkpoint_coverage("base 195,000 € and tax 13,650.00", [195000.0, 13650.0]) == 1.0
