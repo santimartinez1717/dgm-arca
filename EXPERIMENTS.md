@@ -466,5 +466,8 @@ aciertos; McNemar exacto, p = 0,085).
   `max_price` (56 → 42 %).
 - **En resumen: con 400 pasos, GRPO no enseña a resolver más problemas, sino a resolver los
   que ya sabía en menos tokens.** Por eso mejora con 1.024 y no con 2.048.
-- Pendiente: la ablación de la recompensa del dominio al mismo número de pasos
-  (`checkpoint-200` de cada ejecución), con las dos últimas pasadas de `eval_grpo.sh`.
+- Ablación de la recompensa del dominio, a medias: el `checkpoint-200` de la ejecución con
+  la recompensa arreglada saca un 33,0 % de pass@1 con 1.024 tokens
+  (`reports/eval_grpo200_dominio.json`), entre el SFT (32,0 %) y el final (36,3 %). Falta el
+  `checkpoint-200` de la ejecución sin ella (`rlm/weights/grpo_sin_dominio_lora`), que no
+  cupo en la sesión.
