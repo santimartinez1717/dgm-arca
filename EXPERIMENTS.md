@@ -390,3 +390,67 @@ si no restara la cuota de la hipoteca: el mismo error del profesor sin la hoja d
   aprender la regla.
 - GRPO con 1.536 tokens por respuesta, desde este adaptador. `cash_on_cash` e `irpf_rental`
   van al análisis de fallos y son el caso para la herramienta de cálculo de la fase 2.
+
+---
+
+### 2026-10-18 · Fase 1 · GRPO desde el adaptador del SFT
+
+**Qué queríamos saber.** Si GRPO con las tres recompensas mejora al alumno tras el SFT, y
+qué aporta la recompensa del dominio.
+
+**Qué hicimos.** `rlm.train_grpo` con Qwen3-1.7B, `--init-adapter rlm/weights/sft_lora`,
+400 pasos (un problema por paso, 8 respuestas), `--max-completion-length 1536`, lr 5e-6,
+sin KL, pesos 0,5 / 2,0 / 0,5 (formato / exactitud / dominio), 10 % de control GSM8K. En la
+MIG de 17 GB hizo falta desactivar la atención de cuDNN (falla en el primer forward de
+entrenamiento) y procesar las respuestas en micro-lotes de 2 (commit `59e9685`): 10,6 GB de
+pico, ~50 s por paso, 5 h 21 min en total.
+
+Hubo dos ejecuciones:
+1. **15/10, 215 pasos, recompensa del dominio rota** (`rlm/weights/grpo_sin_dominio_lora`,
+   `grpo_sin_dominio.log`). Se quedó en 0,01-0,05: exigía la unidad dentro de `<answer>`,
+   y la hoja del profesor pedía el número sin unidades; y leía "240,700" como 240,7. La
+   cortó el fin de la sesión.
+2. **18/10, 400 pasos, recompensa arreglada** (commit `82a2e71`; `rlm/weights/final_rlm_lora`,
+   `grpo.log`). Con las respuestas del SFT, 0,99 de media en aciertos y 0,25 en fallos.
+
+**Qué pasó.** Curvas de la ejecución 2, medias de 100 pasos:
+
+| Pasos | Formato | Exactitud | Dominio | Cortadas | Longitud |
+|---|---|---|---|---|---|
+| 1-100 | 0,61 | 0,31 | 0,38 | 39 % | 1.112 |
+| 101-200 | 0,73 | 0,32 | 0,41 | 27 % | 1.022 |
+| 201-300 | 0,82 | 0,36 | 0,48 | 18 % | 938 |
+| 301-400 | 0,83 | 0,34 | 0,49 | 17 % | 899 |
+
+Hasta el paso 215, las dos ejecuciones van igual en formato, exactitud, cortadas y longitud
+(los problemas salen en el mismo orden): lo único que cambia es la recompensa del dominio.
+
+Evaluación en test, 300 problemas, 1.024 tokens (`reports/eval_grpo_17b.json`):
+
+| | Base | SFT | **GRPO** |
+|---|---|---|---|
+| **pass@1** | 3,3 % | 32,0 % | **36,3 %** |
+| Formato válido | 0,7 % | 47,3 % | 76,7 % |
+| Cortadas | 81,3 % | 52,7 % | 23,3 % |
+| Tokens medios | 983 | 866 | 718 |
+| `acquisition_cost` | 10 % | 74 % | 78 % |
+| `net_yield` | 2 % | 64 % | 56 % |
+| `max_price` | 0 % | 36 % | 36 % |
+| `legal_rent` | 8 % | 18 % | **46 %** |
+| `irpf_rental` | 0 % | 0 % | 2 % |
+| `cash_on_cash` | 0 % | 0 % | 0 % |
+
+GRPO acierta 31 problemas que el SFT fallaba y falla 18 que el SFT acertaba (96 frente a 109
+aciertos; McNemar exacto, p = 0,085).
+
+**Qué concluimos.**
+- Lo que más aprende GRPO es a ser compacto: un 20 % menos de longitud y la mitad de
+  cortadas sin premiarlo directamente, solo porque una respuesta cortada no puntúa. Con el
+  mismo presupuesto, más respuestas llegan a la cifra final.
+- `legal_rent` lo muestra mejor: tras el SFT sabía resolverla pero no le daba tiempo (30 %
+  con 2.048 tokens, 18 % con 1.024); tras GRPO saca un 46 % con 1.024.
+- La mejora global es probable pero no concluyente con 300 problemas.
+- `cash_on_cash` e `irpf_rental` siguen en 0: terminan más respuestas, pero mal. Sin
+  aciertos en el grupo, GRPO no tiene señal en esas familias.
+- Pendiente: evaluación a 2.048 tokens y la ablación de la recompensa del dominio al mismo
+  número de pasos (`checkpoint-200` de cada ejecución), con `eval_grpo.sh`.
