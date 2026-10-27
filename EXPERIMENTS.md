@@ -466,8 +466,51 @@ aciertos; McNemar exacto, p = 0,085).
   `max_price` (56 → 42 %).
 - **En resumen: con 400 pasos, GRPO no enseña a resolver más problemas, sino a resolver los
   que ya sabía en menos tokens.** Por eso mejora con 1.024 y no con 2.048.
-- Ablación de la recompensa del dominio, a medias: el `checkpoint-200` de la ejecución con
-  la recompensa arreglada saca un 33,0 % de pass@1 con 1.024 tokens
-  (`reports/eval_grpo200_dominio.json`), entre el SFT (32,0 %) y el final (36,3 %). Falta el
-  `checkpoint-200` de la ejecución sin ella (`rlm/weights/grpo_sin_dominio_lora`), que no
-  cupo en la sesión.
+- Ablación de la recompensa del dominio: entrada siguiente.
+
+---
+
+### 2026-10-27 · Fase 1 · Ablación de la recompensa del dominio, curvas y análisis de fallos
+
+**Qué queríamos saber.** Si la tercera recompensa ("desglose trazable": unidad junto a la
+cifra final y cifras intermedias en el razonamiento) aporta algo frente a entrenar solo con
+formato y exactitud.
+
+**Qué hicimos.** Comparamos el `checkpoint-200` de las dos ejecuciones de GRPO, que salen del
+mismo adaptador del SFT con la misma semilla y los problemas en el mismo orden. La única
+diferencia es la recompensa del dominio: arreglada en una (`final_rlm_lora`) y prácticamente
+nula en la otra (`grpo_sin_dominio_lora`, 0,01-0,05 durante todo el entrenamiento). Test de
+300 problemas, 1.024 tokens, greedy.
+
+**Qué pasó.**
+
+| Paso 200, 1.024 tokens | Con recompensa del dominio | Sin ella |
+|---|---|---|
+| **pass@1** | 33,0 % | **35,7 %** |
+| Formato válido | 65,3 % | 72,7 % |
+| Cortadas | 34,7 % | 27,3 % |
+| Tokens medios | 781 | 743 |
+| Unidad junto a la cifra final | 194 / 300 | 218 / 300 |
+| `legal_rent` | 32 % | 42 % |
+| `max_price` | 26 % | 38 % |
+| `net_yield` | 66 % | 60 % |
+
+Cada versión acierta problemas que la otra falla (21 y 29); McNemar exacto, p = 0,32.
+Detalle en `reports/eval_grpo200_dominio.json` y `reports/eval_grpo200_sin_dominio.json`.
+Curvas de las dos ejecuciones en `reports/grpo_curvas.png`.
+
+**Qué concluimos.**
+- **No hay evidencia de que la recompensa del dominio ayude.** La versión sin ella sale
+  ligeramente mejor, pero la diferencia no es significativa con 300 problemas. Tampoco aumenta
+  lo que premia: la unidad junto a la cifra final aparece más sin ella (218 frente a 194).
+- Una hipótesis, sin medir: la mitad de la recompensa premia escribir cifras intermedias, lo
+  que alarga el razonamiento (781 frente a 743 tokens) y hace que se corten más respuestas con
+  1.024 tokens (35 % frente a 27 %).
+- En los aciertos, la recompensa vale casi siempre 1 (0,99 de media con las respuestas del
+  SFT): el alumno ya escribe las cifras intermedias, así que apenas distingue entre respuestas
+  correctas. Para que aporte haría falta que discriminara más, por ejemplo puntuando solo las
+  cifras que el enunciado no da.
+- Análisis de cinco fallos del modelo final en `docs/analisis_fallos_fase1.md`: obra nueva sin
+  IVA (0 de 11), cash-on-cash sin cuota, IRPF sin amortización, divisiones mal hechas en
+  `max_price` y bucles de repetición. Además, el alumno escribe "From the background knowledge"
+  en 80 de 300 respuestas: la frase de la hoja del profesor se coló en 143 de las 703 trazas.
