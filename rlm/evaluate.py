@@ -123,38 +123,71 @@ def plot_pass1(results: dict, path: Path) -> None:
     fig.savefig(path, dpi=150)
 
 
-def plot_history(trainer_state: Path, path: Path) -> None:
-    """Reward components and completion length along GRPO training, from ``trainer_state.json``."""
+# Panels of the GRPO curves: (title, log key, scale applied to the value).
+HISTORY_PANELS = [
+    ("Formato", "rewards/format_reward/mean", 1.0),
+    ("Exactitud", "rewards/euro_accuracy_reward/mean", 1.0),
+    ("Recompensa del dominio", "rewards/domain_reward/mean", 1.0),
+    ("Respuestas cortadas (%)", "completions/clipped_ratio", 100.0),
+    ("Longitud media (tokens)", "completions/mean_length", 1.0),
+]
+# First two slots of the reference categorical palette (fixed order, not cycled).
+RUN_COLORS = ["#2a78d6", "#eb6834"]
+
+
+def _rolling(values: list[float], window: int) -> list[float]:
+    out = []
+    for i in range(len(values)):
+        if i < window - 1:  # a partial window is a few problems, i.e. noise
+            out.append(float("nan"))
+            continue
+        chunk = [v for v in values[i - window + 1 : i + 1] if v is not None]
+        out.append(sum(chunk) / len(chunk) if chunk else float("nan"))
+    return out
+
+
+def plot_history(
+    trainer_state: Path,
+    path: Path,
+    compare: dict[str, Path] | None = None,
+    window: int = 25,
+) -> None:
+    """GRPO curves from ``trainer_state.json``: one panel per metric, moving averages.
+
+    Each step is a single problem, so per-step values are mostly noise; the curves show a
+    ``window``-step moving average. ``compare`` adds other runs (name -> trainer_state.json)
+    on the same panels, e.g. an ablation.
+    """
     import matplotlib
 
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    history = json.loads(trainer_state.read_text())["log_history"]
-    steps = [h["step"] for h in history if "reward" in h]
-    reward_keys = sorted(
-        {k for h in history for k in h if k.startswith("rewards/") and k.endswith("/mean")}
+    runs = {"GRPO con recompensa del dominio": trainer_state, **(compare or {})}
+    fig, axes = plt.subplots(1, len(HISTORY_PANELS), figsize=(17, 3.6), sharex=True)
+    for color, (name, state_path) in zip(RUN_COLORS, runs.items(), strict=False):
+        log = json.loads(Path(state_path).read_text())["log_history"]
+        history = [h for h in log if "reward" in h]
+        steps = [h["step"] for h in history]
+        for ax, (_, key, scale) in zip(axes, HISTORY_PANELS, strict=True):
+            raw = [h[key] * scale if key in h else None for h in history]
+            ax.plot(steps, _rolling(raw, window), color=color, linewidth=2, label=name)
+    for ax, (title, _, _) in zip(axes, HISTORY_PANELS, strict=True):
+        ax.set_title(title, fontsize=10, loc="left", color="#0b0b0b")
+        ax.set_xlabel("paso", color="#52514e")
+        ax.grid(axis="y", color="#e6e5e0", linewidth=0.8)
+        ax.tick_params(colors="#52514e", labelsize=8)
+        for side in ("top", "right"):
+            ax.spines[side].set_visible(False)
+        for side in ("left", "bottom"):
+            ax.spines[side].set_color("#c3c2b7")
+    if len(runs) > 1:
+        axes[0].legend(frameon=False, fontsize=8, labelcolor="#0b0b0b")
+    fig.suptitle(
+        f"GRPO, media móvil de {window} pasos", x=0.01, ha="left", fontsize=11, color="#0b0b0b"
     )
-    fig, (ax_r, ax_l) = plt.subplots(1, 2, figsize=(11, 4))
-    for key in ["reward", *reward_keys]:
-        ax_r.plot(steps, [h.get(key) for h in history if "reward" in h], label=key)
-    ax_r.set_xlabel("step")
-    ax_r.set_title("recompensas")
-    ax_r.legend(fontsize=7)
-    length_key = next(
-        (
-            k
-            for k in ("completions/mean_length", "completion_length")
-            if any(k in h for h in history)
-        ),
-        None,
-    )
-    if length_key:
-        ax_l.plot(steps, [h.get(length_key) for h in history if "reward" in h])
-    ax_l.set_xlabel("step")
-    ax_l.set_title("longitud media de la respuesta (tokens)")
     fig.tight_layout()
-    fig.savefig(path, dpi=150)
+    fig.savefig(path, dpi=150, facecolor="#fcfcfb")
 
 
 def main() -> None:
@@ -174,13 +207,20 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--out", default="reports/phase1_eval.json")
     parser.add_argument("--history", default=None, help="trainer_state.json to plot")
+    parser.add_argument(
+        "--compare",
+        nargs="*",
+        default=[],
+        help="with --history: name=trainer_state.json pairs drawn on the same panels",
+    )
     args = parser.parse_args()
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     if args.history:
         target = out.with_name(Path(args.history).parent.name + "_curves.png")
-        plot_history(Path(args.history), target)
+        compare = dict(pair.split("=", 1) for pair in args.compare)
+        plot_history(Path(args.history), target, {k: Path(v) for k, v in compare.items()})
         print(f"curves -> {target}")
         return
 
