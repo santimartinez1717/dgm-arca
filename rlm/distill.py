@@ -112,7 +112,11 @@ RULES_LEAK = re.compile(
     r"(rules? (provided|given|listed|above|you gave|i was given)|(provided|given|listed) "
     r"(rules?|notes|instructions)|(the|these) notes|system prompt|instructions (provided|given)|"
     r"background knowledge|reglas (dadas|proporcionadas|indicadas|del dominio)|hoja de reglas|"
-    r"solution key|answer key|private key)",
+    r"solution key|answer key|private key|according to the key|"
+    # "the key says 3,673", "that matches the key", but not "the key points of the problem"
+    r"\b(the|my|this|that) key (says|said|states|shows|gives|lists|values?|answers?|figures?)\b|"
+    r"\bthe key'?s\b|\b(matches|match|matching|matched|per|from|with|against|to|than|in) "
+    r"the key\b(?!\s+(points?|facts?|information|data|details?|elements?|steps?|ideas?|factors?)))",
     re.IGNORECASE,
 )
 
