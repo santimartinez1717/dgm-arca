@@ -1,10 +1,10 @@
 #!/bin/bash
-# GRPO 2 desde el SFT 3: 2048 tokens, recompensa por pasos, learning rate 2e-5 (4 veces el del
-# GRPO 1, constante para que las dos etapas lo compartan) y pistas de nivel 2 en irpf_rental y cash_on_cash (rlm/hints.py) durante los primeros
-# 250 pasos; los 150 últimos sin pistas. Después, evaluación en test a 2048.
-# Uso: nohup bash grpo2.sh > grpo2.log 2>&1 &   (~80 s por paso: unas 9 h en total)
-# Si la sesión se corta: cambiar --resume-from-checkpoint al último checkpoint-XXX y relanzar
-# la etapa que falte.
+# GRPO 2 desde el SFT 3: 2048 tokens, recompensa por pasos, learning rate 2e-5 constante
+# (4 veces el del GRPO 1; constante para que las dos etapas lo compartan) y pistas de nivel 2
+# en irpf_rental y cash_on_cash (rlm/hints.py) los 250 primeros pasos; los 150 últimos sin
+# pistas. Después, evaluación en test a 2048. ~80 s por paso: unas 9 h en total.
+# Uso: nohup bash grpo2.sh > grpo2.log 2>&1 &
+# Si la sesión se corta, el mismo comando continúa desde el último checkpoint (cada 25 pasos).
 set -e
 cd ~/clusters/dgx/dgm-arca
 source smoke/dgx_env.sh
