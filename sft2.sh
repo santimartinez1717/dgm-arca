@@ -23,8 +23,8 @@ uv run python -m rlm.evaluate --data rlm/data/test.jsonl --model Qwen/Qwen3-1.7B
 
 echo "=== Muestreo de las familias difíciles (k=8)"
 uv run python -m rlm.sample_check --adapter rlm/weights/sft2_lora \
-    --families irpf_rental legal_rent cash_on_cash --n-per-family 12 --out reports/sample_check_sft2.json
+    --families irpf_rental legal_rent cash_on_cash --n-per-family 8 --out reports/sample_check_sft2.json
 uv run python -m rlm.sample_check --adapter rlm/weights/sft2_lora \
-    --families acquisition_cost --branch new_build=True --n-per-family 10 \
+    --families acquisition_cost --branch new_build=True --n-per-family 6 \
     --out reports/sample_check_sft2_obra_nueva.json
 echo "=== TODO TERMINADO"
