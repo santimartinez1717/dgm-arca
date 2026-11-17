@@ -209,7 +209,7 @@ parte de las trazas del profesor pasa el verificador, antes de lanzar la destila
    murió con el fin de la sesión de Slurm (12:02) sin guardar nada, porque `distill.py`
    escribía solo al final. Lo repetimos a las 12:17.
 2. **Con hoja de reglas** (`TEACHER_RULES` en el prompt de sistema del profesor, commit
-   `b770a6a`): 1536 tokens nuevos. Con lotes de 4 se quedó sin memoria en el primer lote
+   `12bafcf`): 1536 tokens nuevos. Con lotes de 4 se quedó sin memoria en el primer lote
    (15,8 GB en uso); repetido con lotes de 2 y `expandable_segments`:
    `PYTHONUNBUFFERED=1 uv run python -m rlm.distill --data rlm/data/train.jsonl
    --teacher Qwen/Qwen3-4B --limit 20 --batch-size 2 --output
@@ -268,7 +268,7 @@ respuestas equivocadas**. Las trazas aceptadas tienen una mediana de 799 tokens.
 
 **Qué hicimos.** `PYTHONUNBUFFERED=1 uv run python -m rlm.distill --data rlm/data/train.jsonl
 --teacher Qwen/Qwen3-4B --limit 400 --batch-size 2 --resume --output
-rlm/data/sft_traces.jsonl` (commit `18492e0`: instrucción anti-cita en inglés, 2048 tokens).
+rlm/data/sft_traces.jsonl` (commit `884136c`: instrucción anti-cita en inglés, 2048 tokens).
 De 15:45 a 23:41, en la MIG de 17 GB; el fin de la sesión la cortó en el lote 103 de 200.
 Unos 5 min por lote; el primero tarda unos 15 más porque incluye la carga del modelo.
 
@@ -303,7 +303,7 @@ familias fáciles, que ya tienen de sobra. En su lugar, una pasada solo con las 
 **Qué queríamos saber.** Si arreglos dirigidos a la causa de cada fallo suben la aceptación
 de `legal_rent`, `irpf_rental` y `cash_on_cash`.
 
-**Qué hicimos.** `distill_hard.sh` (commit `438f0aa`), con problemas nuevos de train
+**Qué hicimos.** `distill_hard.sh` (commit `dde430d`), con problemas nuevos de train
 (`--families`, `--exclude rlm/data/sft_traces.jsonl`):
 1. `legal_rent` + `irpf_rental`, 100 problemas, 2048 tokens. La hoja explica el caso de
    `legal_rent` que fallaba siempre, presenta las reducciones del IRPF como art. 23.2 y pide
@@ -338,7 +338,7 @@ Total de trazas verificadas, sumando las tres tandas: **698**.
   `cash_on_cash` es longitud: con 3072 tokens se cortan la mitad que antes.
 - `irpf_rental` es larga y numéricamente delicada para el 4B; las citas no eran la causa.
   Queda una tanda con 3072 tokens y un orden fijo de cálculo (`distill_irpf.sh`, commit
-  `d515476`), que no cupo en la sesión.
+  `0ef55ae`), que no cupo en la sesión.
 - Las familias que más le cuestan al profesor son las de más pasos encadenados: es de esperar
   lo mismo en el alumno, y es donde una herramienta de cálculo (fase 2) aportaría más.
 - Siguiente paso: SFT con las tres tandas y `--max-per-problem 3 --max-per-family 150`.
@@ -402,7 +402,7 @@ qué aporta la recompensa del dominio.
 400 pasos (un problema por paso, 8 respuestas), `--max-completion-length 1536`, lr 5e-6,
 sin KL, pesos 0,5 / 2,0 / 0,5 (formato / exactitud / dominio), 10 % de control GSM8K. En la
 MIG de 17 GB hizo falta desactivar la atención de cuDNN (falla en el primer forward de
-entrenamiento) y procesar las respuestas en micro-lotes de 2 (commit `59e9685`): 10,6 GB de
+entrenamiento) y procesar las respuestas en micro-lotes de 2 (commit `0ed5df0`): 10,6 GB de
 pico, ~50 s por paso, 5 h 21 min en total.
 
 Hubo dos ejecuciones:
@@ -410,7 +410,7 @@ Hubo dos ejecuciones:
    `grpo_sin_dominio.log`). Se quedó en 0,01-0,05: exigía la unidad dentro de `<answer>`,
    y la hoja del profesor pedía el número sin unidades; y leía "240,700" como 240,7. La
    cortó el fin de la sesión.
-2. **18/10, 400 pasos, recompensa arreglada** (commit `82a2e71`; `rlm/weights/final_rlm_lora`,
+2. **18/10, 400 pasos, recompensa arreglada** (commit `310f048`; `rlm/weights/final_rlm_lora`,
    `grpo.log`). Con las respuestas del SFT, 0,99 de media en aciertos y 0,25 en fallos.
 
 **Qué pasó.** Curvas de la ejecución 2, medias de 100 pasos:
@@ -527,7 +527,7 @@ vuelvan repetitivas.
 ninguna traza verificada (0 de 4 en cada uno). Al prompt del profesor (Qwen3-4B, con la hoja
 de reglas) se añade una clave privada: los valores intermedios del motor con nombre y en
 orden aleatorio, la reducción que aplica y la respuesta (`--privileged --only-unsolved`,
-commit `4ec7b69` y siguientes). 4 muestras por problema, 2.048 tokens. Después,
+commit `4fe8f38` y siguientes). 4 muestras por problema, 2.048 tokens. Después,
 `rlm/rewrite_traces.py`: el mismo profesor, sin modo de pensamiento, reescribe cada traza
 correcta como si no hubiera visto la clave, y la traza se verifica de nuevo (respuesta,
 valores intermedios calculados tras "=" o una operación, ninguna cita, en inglés).
