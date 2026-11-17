@@ -772,3 +772,10 @@ redondean resultados intermedios.
 - `irpf_rental` falla en dos sitios: la regla de la reducción y la aritmética del suelo. La
   pista de nivel 1 pasa a incluir el orden de las reducciones, y la de nivel 2 también la
   reducción que corresponde; se está midiendo de nuevo.
+
+**Añadido 23:10.** Con la pista nueva (orden de las reducciones y la que corresponde),
+`irpf_rental` pasa a pass@8 = 8/8, 8/8 problemas útiles y 23 % de respuestas correctas
+(`reports/sample_check_sft3_pista2_irpf_v2.json`). Prueba de 3 pasos del GRPO 2 a 2048 tokens
+desde el SFT 3 con pistas: cabe en la MIG, ~80 s por paso. La prueba enseñó que el learning
+rate bajaba en línea recta hasta 0 al final de cada ejecución, lo que rompe una ejecución en
+dos etapas: `--lr-scheduler constant`. `grpo2.sh` queda listo para la próxima sesión.
