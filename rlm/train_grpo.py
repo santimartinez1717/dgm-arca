@@ -151,7 +151,7 @@ def main() -> None:
         default=2,
         help="completions per forward pass; must divide --num-generations (MIG 1g.18gb: 2)",
     )
-    parser.add_argument("--max-completion-length", type=int, default=768)
+    parser.add_argument("--max-completion-length", type=int, default=2048)
     parser.add_argument("--learning-rate", type=float, default=5e-6)
     parser.add_argument("--temperature", type=float, default=1.0)
     parser.add_argument("--beta", type=float, default=0.0, help="KL coefficient (0 disables it)")

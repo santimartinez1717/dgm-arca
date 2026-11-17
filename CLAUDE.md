@@ -34,7 +34,9 @@ Para lanzar y vigilar procesos largos, usar la skill `lanzar-dgx`.
 ## Fase 1: estado y decisiones
 
 - Alumno: **Qwen3-1.7B** + LoRA r16. Profesor: Qwen3-4B con la hoja `TEACHER_RULES`.
-  pass@1 en test (1024 tokens): base 3,3 % → SFT 32,0 % → GRPO 36,3 %. Detalle en EXPERIMENTS.md;
+  pass@1 en test (1024 tokens): base 3,3 % → SFT 32,0 % → GRPO 36,3 %; con 2048: 10,3 / 37,7 /
+  38,3 %. Desde el 18/11 la cifra principal es la de **2048 tokens** (evaluación, muestreo y
+  GRPO 2): las trazas del profesor miden ~1.900 tokens y cortar a 1024 las penalizaba. Detalle en EXPERIMENTS.md;
   cinco fallos analizados en `docs/analisis_fallos_fase1.md`.
 - `rlm/realestate_rules.py` es la única fuente de verdad del dominio. `TEACHER_RULES` en
   `rlm/distill.py` la resume para el profesor: **si cambia una regla, cambiar las dos**.

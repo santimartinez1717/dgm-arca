@@ -203,7 +203,7 @@ def main() -> None:
         help="name=path pairs; use 'none' for the bare base model",
     )
     parser.add_argument("--n-examples", type=int, default=None)
-    parser.add_argument("--max-new-tokens", type=int, default=1024)
+    parser.add_argument("--max-new-tokens", type=int, default=2048)
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--out", default="reports/phase1_eval.json")
     parser.add_argument("--history", default=None, help="trainer_state.json to plot")

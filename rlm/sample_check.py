@@ -36,7 +36,7 @@ def main() -> None:
     parser.add_argument("--n-per-family", type=int, default=15)
     parser.add_argument("--k", type=int, default=8, help="answers per problem, as in GRPO")
     parser.add_argument("--temperature", type=float, default=1.0)
-    parser.add_argument("--max-new-tokens", type=int, default=1536)
+    parser.add_argument("--max-new-tokens", type=int, default=2048)
     parser.add_argument("--batch-size", type=int, default=2, help="problems per batch")
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument("--out", default="reports/sample_check.json")
