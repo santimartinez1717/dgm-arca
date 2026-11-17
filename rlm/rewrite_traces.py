@@ -19,6 +19,8 @@ from __future__ import annotations
 
 import argparse
 import json
+from collections import Counter
+from collections.abc import Iterator
 from pathlib import Path
 
 from rlm.distill import (
@@ -59,13 +61,16 @@ def rewrite(
     batch_size: int,
     max_new_tokens: int,
     min_think_words: int,
-) -> list[dict]:
-    """Rewrite every correct, finished trace; return the rewritten traces, verified again."""
+    limit: int | None = None,
+) -> Iterator[list[dict]]:
+    """Rewrite every correct, finished trace; yield the rewritten traces of each batch, verified
+    again, with ``rejected`` naming the first check that failed (None when kept)."""
     candidates = [t for t in traces if t["trace"].startswith("<think>") and not t["truncated"]]
     candidates = [t for t in candidates if verify_row(t["trace"], rows[t["question"]])[0]]
+    candidates = candidates[:limit] if limit else candidates
     print(f"{len(candidates)} correct finished traces of {len(traces)} to rewrite", flush=True)
     editor = Generator(teacher, enable_thinking=False, system_prompt=REWRITE_SYSTEM_PROMPT).load()
-    out = []
+    kept = done = 0
     for chunk in batched(candidates, batch_size):
         prompts = [
             REWRITE_REQUEST.format(
@@ -74,6 +79,7 @@ def rewrite(
             for t in chunk
         ]
         outputs = editor.generate(prompts, max_new_tokens=max_new_tokens, temperature=0.3)
+        batch = []
         for t, [(text, n_tokens, truncated)] in zip(chunk, outputs, strict=True):
             answer = ANSWER.search(t["trace"]).group("answer").strip()
             thinking = text.replace("<think>", "").replace("</think>", "").strip()
@@ -81,19 +87,21 @@ def rewrite(
             row = rows[t["question"]]
             mentions = bool(RULES_LEAK.search(thinking))
             derived = derived_share(thinking, row)
-            ok = (
-                not truncated
-                and has_valid_format(trace)
-                and verify_row(trace, row)[0]
-                and len(thinking.split()) >= min_think_words
-                and not mentions
-                and derived == 1.0
-            )
-            out.append(
+            checks = [
+                ("truncated", not truncated),
+                ("format", has_valid_format(trace)),
+                ("wrong answer", verify_row(trace, row)[0]),
+                ("too short", len(thinking.split()) >= min_think_words),
+                ("mentions key or sheet", not mentions),
+                ("value not computed", derived == 1.0),
+            ]
+            rejected = next((name for name, passed in checks if not passed), None)
+            batch.append(
                 {
                     **t,
                     "trace": trace,
-                    "verified": ok,
+                    "verified": rejected is None,
+                    "rejected": rejected,
                     "truncated": truncated,
                     "mentions_rules": mentions,
                     "derived": derived,
@@ -101,9 +109,11 @@ def rewrite(
                     "n_tokens": n_tokens,
                 }
             )
-        kept = sum(t["verified"] for t in out)
-        print(f"{len(out)} rewritten, {kept} verified", flush=True)
-    return out
+        done += len(batch)
+        kept += sum(t["verified"] for t in batch)
+        reasons = Counter(t["rejected"] for t in batch if t["rejected"])
+        print(f"{done} rewritten, {kept} verified · rejected now: {dict(reasons)}", flush=True)
+        yield batch
 
 
 def main() -> None:
@@ -116,6 +126,7 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--max-new-tokens", type=int, default=1536)
     parser.add_argument("--min-think-words", type=int, default=30)
+    parser.add_argument("--limit", type=int, default=None, help="only the first N traces")
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
 
@@ -124,10 +135,20 @@ def main() -> None:
         for r in (json.loads(line) for line in Path(args.data).read_text().splitlines())
     }
     traces = read_traces(Path(args.input))
-    out = rewrite(
-        traces, rows, args.teacher, args.batch_size, args.max_new_tokens, args.min_think_words
-    )
-    Path(args.output).write_text("".join(json.dumps(t, ensure_ascii=False) + "\n" for t in out))
+    out = []
+    with Path(args.output).open("w", encoding="utf-8") as handle:
+        for batch in rewrite(
+            traces,
+            rows,
+            args.teacher,
+            args.batch_size,
+            args.max_new_tokens,
+            args.min_think_words,
+            args.limit,
+        ):
+            handle.write("".join(json.dumps(t, ensure_ascii=False) + "\n" for t in batch))
+            handle.flush()
+            out.extend(batch)
     report = acceptance_report(out)
     print(f"acceptance {100 * report['overall']:.1f}% -> {args.output}")
 

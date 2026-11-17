@@ -196,13 +196,21 @@ def solution_key(row: dict, rng: random.Random) -> str:
 
 
 EQUALS_BEFORE = re.compile(r"(=|≈)\s*\S{0,3}\s*$")
-NUMBER = re.compile(r"-?\d[\d.,]*")
+# "0.03 × 293,000 gives 4,274.35" computes; "the depreciation is 4,274.35" only quotes.
+VERB_BEFORE = re.compile(r"\b(gives?|is|are|equals?|makes|comes to|results? in)\s*\S{0,3}\s*$")
+OPERATION = re.compile(
+    r"\d\s*(×|\*|/|÷|\+|-|−|x)\s*\(?\d"
+    r"|\b(multiplied by|times|divided by|minus|plus|subtracting|adding)\s+\(?\d",
+    re.IGNORECASE,
+)
+NUMBER = re.compile(r"[-−]?\d[\d.,]*")
 
 
 def derived_share(thinking: str, row: dict) -> float:
     """Share of the key's intermediate values that the reasoning *computes*, not just quotes.
 
-    A value counts when it appears right after an "=" or "≈" somewhere in the reasoning, within
+    A value counts when it appears right after an "=" or "≈", or after "gives", "is"… preceded
+    by an arithmetic operation, somewhere in the reasoning, within
     0.5 % (computed by hand, a mortgage payment can be off by a few cents and still lead to
     the right answer). Values already in the statement (a tax base equal to the price) are
     skipped. Calibrated on the unprivileged verified traces: 77-99 % of them pass, by family.
@@ -218,9 +226,13 @@ def derived_share(thinking: str, row: dict) -> float:
         return 1.0
     derived = set()
     for match in NUMBER.finditer(thinking):
-        if not EQUALS_BEFORE.search(thinking[max(0, match.start() - 14) : match.start()]):
+        before = thinking[max(0, match.start() - 60) : match.start()]
+        computed = EQUALS_BEFORE.search(before[-14:]) or (
+            VERB_BEFORE.search(before) and OPERATION.search(before)
+        )
+        if not computed:
             continue
-        for value in readings(match.group(0)):
+        for value in readings(match.group(0).replace("−", "-")):
             derived.update(
                 i for i, t in enumerate(targets) if abs(value - t) <= max(0.01, 0.005 * abs(t))
             )
