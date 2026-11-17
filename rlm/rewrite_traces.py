@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from collections import Counter
 from collections.abc import Iterator
 from pathlib import Path
@@ -35,6 +36,9 @@ from rlm.generation import Generator, batched
 from rlm.realestate_rewards import verify_row
 from rlm.rewards import has_valid_format
 
+# The student's other traces are in English; 6 of 59 rewrites in the pilot came out in Spanish.
+SPANISH_WORDS = re.compile(r"\b(el|la|los|las|que|del|por|es|una|para|con|se)\b", re.IGNORECASE)
+
 REWRITE_SYSTEM_PROMPT = "You edit worked solutions so that they read as an expert's own reasoning."
 REWRITE_REQUEST = """\
 Below is a problem and a worked solution to it. The solver had a private answer key and \
@@ -44,7 +48,8 @@ problem out alone, from the statement only:
 values, and any detour or doubt that only came from comparing with them;
 - keep every calculation with its numbers, written as "expression = result";
 - keep the legal and financial justification of each step;
-- write in English, in the first person, with no headings; be concise.
+- write in English even though the problem is in Spanish, in the first person, with no \
+headings; be concise.
 Output only the rewritten reasoning: no tags, no final answer line.
 
 Problem:
@@ -92,6 +97,10 @@ def rewrite(
                 ("format", has_valid_format(trace)),
                 ("wrong answer", verify_row(trace, row)[0]),
                 ("too short", len(thinking.split()) >= min_think_words),
+                (
+                    "not English",
+                    len(SPANISH_WORDS.findall(thinking)) <= 0.08 * len(thinking.split()),
+                ),
                 ("mentions key or sheet", not mentions),
                 ("value not computed", derived == 1.0),
             ]

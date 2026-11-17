@@ -514,3 +514,59 @@ Curvas de las dos ejecuciones en `reports/grpo_curvas.png`.
   IVA (0 de 11), cash-on-cash sin cuota, IRPF sin amortización, divisiones mal hechas en
   `max_price` y bucles de repetición. Además, el alumno escribe "From the background knowledge"
   en 80 de 300 respuestas: la frase de la hoja del profesor se coló en 143 de las 703 trazas.
+
+---
+
+### 2026-11-17 · Fase 1 · Piloto de destilación con información privilegiada (`irpf_rental`)
+
+**Qué queríamos saber.** Si darle al profesor la solución del motor de reglas le permite
+resolver los problemas que no resolvía solo, sin que las trazas citen esa ayuda ni se
+vuelvan repetitivas.
+
+**Qué hicimos.** 20 problemas de `irpf_rental` en los que el profesor sin ayuda no consiguió
+ninguna traza verificada (0 de 4 en cada uno). Al prompt del profesor (Qwen3-4B, con la hoja
+de reglas) se añade una clave privada: los valores intermedios del motor con nombre y en
+orden aleatorio, la reducción que aplica y la respuesta (`--privileged --only-unsolved`,
+commit `4ec7b69` y siguientes). 4 muestras por problema, 2.048 tokens. Después,
+`rlm/rewrite_traces.py`: el mismo profesor, sin modo de pensamiento, reescribe cada traza
+correcta como si no hubiera visto la clave, y la traza se verifica de nuevo (respuesta,
+valores intermedios calculados tras "=" o una operación, ninguna cita, en inglés).
+70 min de destilación (pico de 13,2 GB) y unos 20 min de reescritura.
+
+**Qué pasó.**
+
+| | Sin clave (antes) | Con clave | Con clave y reescritas |
+|---|---|---|---|
+| Problemas con alguna traza correcta | 0 / 20 | 19 / 20 | — |
+| Trazas correctas (de las terminadas) | — | 59 / 59 | — |
+| Cortadas a 2.048 tokens | — | 21 / 80 | — |
+| Citan la clave | — | 53 de las 59 correctas | 0 |
+| **Trazas verificadas** | 0 | 6 | **42** (19 problemas) |
+| Palabras del razonamiento (mediana) | 728* | — | 171 |
+
+\* Trazas verificadas de `irpf_rental` sin clave, de otros problemas.
+
+Rechazos en la reescritura: 15 por perder algún valor intermedio y 2 por estar en español.
+Al revisar los primeros rechazos encontramos tres fallos del filtro, ya corregidos: no
+reconocía "multiplied by 0.4055 gives 3,673.94", el signo "−" ni la frase "the key says…".
+
+Repetición, con una traza por problema (similitud media de 4-gramas entre trazas de
+problemas distintos, con los números sustituidos):
+
+| | Sin clave | Con clave, reescritas |
+|---|---|---|
+| Similitud media | 0,071 | 0,075 |
+| Aperturas distintas | 3 / 54 | 13 / 19 |
+
+**Qué concluimos.**
+- La clave resuelve lo que faltaba: el profesor ya sabía razonar estos problemas, le faltaba
+  dar con la amortización y la reducción correctas.
+- Sin la reescritura, la clave casi no sirve: casi todas las trazas correctas la citan
+  ("which matches the private key's value", "but the key says 3,673…") y razonan a partir de
+  ella. Pedirle en el prompt que no la mencione no basta.
+- Las trazas reescritas no son más repetitivas que las del profesor sin ayuda, y empiezan de
+  formas más variadas. Son mucho más cortas (171 frente a 728 palabras): soluciones limpias,
+  sin las dudas y comprobaciones del modo de pensamiento. Conviene mezclarlas con las
+  naturales, no sustituirlas.
+- Siguiente paso: lo mismo en el resto de problemas sin resolver de `irpf_rental`,
+  `cash_on_cash` y `legal_rent`, y más trazas de obra nueva.

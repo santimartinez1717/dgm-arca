@@ -430,6 +430,12 @@ def main() -> None:
         help="trace files of earlier runs: their problems are not drawn again",
     )
     parser.add_argument(
+        "--branch",
+        nargs="+",
+        default=[],
+        help="only problems whose generator branches match, e.g. new_build=True",
+    )
+    parser.add_argument(
         "--privileged",
         action="store_true",
         help="show the teacher the engine's intermediate values (solution_key)",
@@ -447,6 +453,9 @@ def main() -> None:
     rows = [json.loads(line) for line in Path(args.data).read_text().splitlines()]
     if args.families:
         rows = [row for row in rows if row.get("family") in args.families]
+    for condition in args.branch:
+        key, value = condition.split("=", 1)
+        rows = [row for row in rows if (row.get("branches") or {}).get(key) == value]
     seen = {t["question"] for path in args.exclude for t in read_traces(Path(path))}
     rows = [row for row in rows if row["question"] not in seen]
     if args.only_unsolved:
