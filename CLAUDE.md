@@ -33,16 +33,23 @@ Para lanzar y vigilar procesos largos, usar la skill `lanzar-dgx`.
 
 ## Fase 1: estado y decisiones
 
-- Alumno: **Qwen3-1.7B** (línea base 3,3 % pass@1, se corta el 81 % con 1024 tokens).
-  Profesor: Qwen3-4B. Detalle y números en EXPERIMENTS.md.
+- Alumno: **Qwen3-1.7B** + LoRA r16. Profesor: Qwen3-4B con la hoja `TEACHER_RULES`.
+  pass@1 en test (1024 tokens): base 3,3 % → SFT 32,0 % → GRPO 36,3 %. Detalle en EXPERIMENTS.md;
+  cinco fallos analizados en `docs/analisis_fallos_fase1.md`.
 - `rlm/realestate_rules.py` es la única fuente de verdad del dominio. `TEACHER_RULES` en
   `rlm/distill.py` la resume para el profesor: **si cambia una regla, cambiar las dos**.
-- Destilación: con la hoja de reglas, 37,5 % de aceptación (4B, 1536 tokens); lo que se
-  pierde es longitud y trazas que citan la hoja, no errores. Ahora 2048 tokens por defecto.
-  En la MIG de 17 GB, lotes de 2 (con 4 se queda sin memoria); guardado por lote y `--resume`.
-- Plan de la sesión de 24 h con 71 GiB, paso a paso: `docs/sesion_24h_fase1.md`.
-- Pendiente: medir memoria de SFT (1,7B, 2048 tokens) y de GRPO (1,7B, 1024 tokens) con una
-  prueba corta en GPU antes de lanzarlos.
+- Lo que GRPO no arregló: `irpf_rental` (se salta la amortización), `cash_on_cash` (cuota a mano)
+  y obra nueva (IVA). GRPO solo aprende de grupos con algún acierto; en irpf hubo 0 de 552.
+- Ronda 2 en curso (nov 2026): destilación con información privilegiada (`--privileged
+  --only-unsolved`: el profesor ve la clave del motor) + `rlm/rewrite_traces.py` (reescribe sin
+  citar la clave) → SFT 2 (`sft2.sh`) → `rlm/sample_check.py` → GRPO con `--third-reward process`
+  y un learning rate mayor. `cash_on_cash` con clave queda pendiente: `bash distill_priv.sh`
+  continúa con `--resume`.
+- Filtro de fugas (`RULES_LEAK`): la hoja ("background knowledge") y la clave ("the key says…")
+  no pueden llegar al alumno; `train_sft` las limpia (`scrub_leaks`) o descarta la traza.
+- Memoria en la MIG de 17 GB: destilación lotes de 2; SFT 1,7B con `--batch-size 2 --grad-accum
+  8 --max-length 3328` (5,3 GB); GRPO con micro-lotes de 2 y sin atención de cuDNN (10,6 GB).
+- La GPU está libre solo si `pgrep -af "python -m rlm"` no devuelve nada.
 
 ## EXPERIMENTS.md
 
