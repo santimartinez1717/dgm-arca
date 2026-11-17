@@ -48,6 +48,23 @@ def ungated_domain_reward(prompts: Sequence, completions: Sequence, **kwargs) ->
     return breakdown_reward(prompts, completions, gate_on_correct=False, **kwargs)
 
 
+def write_hinted_data(args: argparse.Namespace) -> str:
+    """Write the training problems plus hinted copies (``rlm/hints.py``) next to the output."""
+    import json
+    from pathlib import Path
+
+    from rlm.hints import add_hints
+
+    rows = [json.loads(line) for line in Path(args.data).read_text().splitlines()]
+    rows = add_hints(rows, args.hint_families, args.hint_share, args.hint_level, args.seed)
+    path = Path(args.output) / "train_hinted.jsonl"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in rows) + "\n")
+    hinted = sum(r["hint_level"] > 0 for r in rows)
+    print(f"{hinted} hinted copies added ({args.hint_families}, level {args.hint_level}) -> {path}")
+    return str(path)
+
+
 def train(args: argparse.Namespace) -> None:
     import torch
     from peft import LoraConfig
@@ -62,7 +79,10 @@ def train(args: argparse.Namespace) -> None:
         dataset = load_gsm8k("train", n_examples=args.n_examples, seed=args.seed)
         reward_funcs = [format_reward, accuracy_reward]
     else:
-        dataset = load_mixed_dataset(args.data, args.control_fraction, args.seed)
+        data = args.data
+        if args.hint_families:
+            data = write_hinted_data(args)
+        dataset = load_mixed_dataset(data, args.control_fraction, args.seed)
         third = {
             "process": process_reward,
             "breakdown": domain_reward,
@@ -166,6 +186,14 @@ def main() -> None:
     parser.add_argument(
         "--control-fraction", type=float, default=0.1, help="share of GSM8K control problems"
     )
+    parser.add_argument(
+        "--hint-families",
+        nargs="*",
+        default=[],
+        help="add hinted copies of these families' problems (rlm/hints.py), e.g. irpf_rental",
+    )
+    parser.add_argument("--hint-share", type=float, default=0.5, help="share of them hinted")
+    parser.add_argument("--hint-level", type=int, default=2, help="1: method, 2: + first value")
     parser.add_argument(
         "--reward-weights",
         type=float,

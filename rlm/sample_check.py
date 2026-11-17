@@ -39,6 +39,12 @@ def main() -> None:
     parser.add_argument("--max-new-tokens", type=int, default=2048)
     parser.add_argument("--batch-size", type=int, default=2, help="problems per batch")
     parser.add_argument("--seed", type=int, default=1)
+    parser.add_argument(
+        "--hint-level",
+        type=int,
+        default=0,
+        help="append rlm/hints.py hints (1 or 2) to see if they give signal",
+    )
     parser.add_argument("--out", default="reports/sample_check.json")
     args = parser.parse_args()
 
@@ -51,6 +57,14 @@ def main() -> None:
     for family in args.families:
         pool = [r for r in rows if r["family"] == family]
         chosen += rng.sample(pool, min(args.n_per_family, len(pool)))
+
+    if args.hint_level:
+        from rlm.hints import hint_text
+
+        chosen = [
+            dict(r, question=f"{r['question']}\n\n{hint_text(r, args.hint_level)}".rstrip())
+            for r in chosen
+        ]
 
     generator = Generator(args.model, adapter_path=args.adapter).load()
     per_problem = []
