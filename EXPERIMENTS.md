@@ -635,3 +635,45 @@ cuentas están bien). Entraron así en el SFT 2.
 - Para la próxima tanda, `rewrite_traces` debe rechazar las trazas en minúsculas.
 - Pendiente: `cash_on_cash` con clave (`bash distill_priv.sh` continúa), `sample_check` del
   SFT 2 si no termina hoy, y GRPO 2.
+
+---
+
+### 2026-11-18 · Fase 1 · Decisión: el límite de 1024 tokens no cuadra con las trazas
+
+**Qué queríamos saber.** Por qué `legal_rent` y `cash_on_cash` se cortan tanto en test y si
+`irpf_rental` falla por longitud o por razonar mal.
+
+**Qué hicimos.** Medir con el tokenizador de Qwen3 las trazas verificadas que entraron en el
+SFT 2 y, en las evaluaciones guardadas, contar los aciertos solo entre las respuestas que
+terminan.
+
+**Qué pasó.**
+
+| Trazas de entrenamiento | Mediana de tokens | Más largas que 1024 |
+|---|---|---|
+| cash_on_cash | 1.870 | 93 % |
+| irpf_rental (profesor sin clave) | 1.437 | 90 % |
+| legal_rent (profesor sin clave) | 1.053 | 52 % |
+| irpf_rental / legal_rent reescritas | 383 / 190 | 0 % |
+| acquisition_cost | 645 | 3 % |
+
+En el SFT no se cortó ninguna (la más larga, ~3.100 tokens con la pregunta; límite 3328).
+El corte está solo en la evaluación (`rlm/evaluate.py`, 1024 por defecto, heredado del
+`--max-completion-length 1024` del plan para GRPO).
+
+| Familia | Evaluación | Terminadas | Aciertos entre terminadas |
+|---|---|---|---|
+| legal_rent | SFT 1, 2048 | 23 | 15 |
+| legal_rent | SFT 2, 1024 | 10 | 9 |
+| irpf_rental | SFT 1, 2048 | 24 | 0 |
+| irpf_rental | SFT 2, 1024 | 29 | 1 |
+| cash_on_cash | SFT 1, 2048 | 19 | 0 |
+
+**Qué concluimos.**
+- Error nuestro: subimos el límite del profesor (2048, 3072) para que terminara, sin controlar
+  la longitud, y evaluamos al alumno con 1024. Hay que elegir: o el alumno tiene el mismo
+  presupuesto que las trazas, o las trazas caben en el del alumno.
+- `legal_rent` es solo longitud: cuando termina, acierta casi siempre.
+- `irpf_rental` y `cash_on_cash` razonan mal aunque terminen: no es cuestión de tokens.
+- La cifra principal pasa a ser la de 2048 tokens (`eval_sft2_2048.sh`, en cola) y el GRPO 2
+  usará al menos 1536.
