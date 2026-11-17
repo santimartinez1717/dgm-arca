@@ -26,7 +26,7 @@ import argparse
 from collections.abc import Sequence
 
 from rlm.data import load_gsm8k, load_mixed_dataset
-from rlm.realestate_rewards import breakdown_reward, euro_accuracy_reward
+from rlm.realestate_rewards import breakdown_reward, euro_accuracy_reward, process_reward
 from rlm.rewards import accuracy_reward, format_reward
 
 GATE_ON_CORRECT = True
@@ -63,7 +63,11 @@ def train(args: argparse.Namespace) -> None:
         reward_funcs = [format_reward, accuracy_reward]
     else:
         dataset = load_mixed_dataset(args.data, args.control_fraction, args.seed)
-        third = ungated_domain_reward if args.ungated_breakdown else domain_reward
+        third = {
+            "process": process_reward,
+            "breakdown": domain_reward,
+            "breakdown-ungated": ungated_domain_reward,
+        }[args.third_reward]
         reward_funcs = [format_reward, euro_accuracy_reward, third]
     print(f"{len(dataset)} training problems")
 
@@ -167,12 +171,15 @@ def main() -> None:
         type=float,
         nargs="+",
         default=[0.5, 2.0, 0.5],
-        help="format / accuracy / breakdown",
+        help="format / accuracy / third reward",
     )
     parser.add_argument(
-        "--ungated-breakdown",
-        action="store_true",
-        help="ablation: breakdown reward also on wrong answers",
+        "--third-reward",
+        choices=["process", "breakdown", "breakdown-ungated"],
+        default="process",
+        help="process: share of the engine's intermediate values computed, right answer or not "
+        "(realestate_rewards.process_reward). breakdown: unit + checkpoints only when correct, "
+        "the reward of the 2026-10-18 run; the ablation showed no gain from it",
     )
     parser.add_argument("--seed", type=int, default=0)
     train(parser.parse_args())

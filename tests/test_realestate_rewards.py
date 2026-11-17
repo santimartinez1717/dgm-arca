@@ -4,6 +4,7 @@ from rlm.realestate_rewards import (
     breakdown_reward,
     checkpoint_coverage,
     euro_accuracy_reward,
+    process_reward,
     unit_ok,
     unit_stated,
 )
@@ -63,3 +64,19 @@ def test_unit_next_to_the_final_figure_in_the_reasoning_counts():
 
 def test_coverage_reads_english_thousands_separators():
     assert checkpoint_coverage("base 195,000 € and tax 13,650.00", [195000.0, 13650.0]) == 1.0
+
+
+PROMPT = [{"role": "user", "content": "Precio 195.000 €, ITP del 7 %. ¿Coste total?"}]
+
+
+def test_process_reward_pays_computed_steps_even_when_the_answer_is_wrong():
+    row = dict(unit=["eur"], checkpoints=[[195000.0, 13650.0]])
+    computed = "<think>ITP = 0.07 × 195,000 = 13,650 €.</think><answer>207800.00</answer>"
+    quoted = "<think>The ITP is 13,650 €.</think><answer>207800.00</answer>"
+    unfinished = "<think>ITP = 0.07 × 195,000 = 13,650 €. Then"
+    # 195,000 is in the statement, so only the ITP counts: computed scores 1, quoted 0.
+    assert process_reward([PROMPT], [computed], ["208850.00"], **row) == [1.0]
+    assert process_reward([PROMPT], [quoted], ["208850.00"], **row) == [0.0]
+    assert process_reward([PROMPT], [unfinished], ["208850.00"], **row) == [0.0]
+    control = dict(unit=[None], checkpoints=[[]])
+    assert process_reward([PROMPT], [computed], ["1"], **control) == [0.0]

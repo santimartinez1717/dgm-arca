@@ -113,6 +113,48 @@ def checkpoint_coverage(thinking: str, checkpoints: Sequence[float], tol: float 
     return hits / len(checkpoints)
 
 
+EQUALS_BEFORE = re.compile(r"(=|≈)\s*\S{0,3}\s*$")
+# "0.03 × 293,000 gives 4,274.35" computes; "the depreciation is 4,274.35" only quotes.
+VERB_BEFORE = re.compile(r"\b(gives?|is|are|equals?|makes|comes to|results? in)\s*\S{0,3}\s*$")
+OPERATION = re.compile(
+    r"\d\s*(×|\*|/|÷|\+|-|−|x)\s*\(?\d"
+    r"|\b(multiplied by|times|divided by|minus|plus|subtracting|adding)\s+\(?\d",
+    re.IGNORECASE,
+)
+NUMBER = re.compile(r"[-−]?\d[\d.,]*")
+
+
+def derived_share(thinking: str, row: dict) -> float:
+    """Share of the key's intermediate values that the reasoning *computes*, not just quotes.
+
+    A value counts when it appears right after an "=" or "≈", or after "gives", "is"… preceded
+    by an arithmetic operation, somewhere in the reasoning, within
+    0.5 % (computed by hand, a mortgage payment can be off by a few cents and still lead to
+    the right answer). Values already in the statement (a tax base equal to the price) are
+    skipped. Calibrated on the unprivileged verified traces: 77-99 % of them pass, by family.
+    """
+    targets = [
+        v
+        for v in row.get("checkpoints") or []
+        if not any(abs(r - v) <= 0.01 for r in readings(row["question"]))
+    ]
+    if not targets:
+        return 1.0
+    derived = set()
+    for match in NUMBER.finditer(thinking):
+        before = thinking[max(0, match.start() - 60) : match.start()]
+        computed = EQUALS_BEFORE.search(before[-14:]) or (
+            VERB_BEFORE.search(before) and OPERATION.search(before)
+        )
+        if not computed:
+            continue
+        for value in readings(match.group(0).replace("−", "-")):
+            derived.update(
+                i for i, t in enumerate(targets) if abs(value - t) <= max(0.01, 0.005 * abs(t))
+            )
+    return len(derived) / len(targets)
+
+
 def breakdown_reward(
     prompts: Sequence,
     completions: Sequence,
@@ -145,6 +187,42 @@ def breakdown_reward(
         if not gate_on_correct or is_correct(text, expected, ta, tr):
             score += 0.5 * checkpoint_coverage(thinking, cps or [])
         rewards.append(score)
+    return rewards
+
+
+def _prompt_text(prompt) -> str:
+    """The user's question in a prompt that is a string or a list of chat messages."""
+    if isinstance(prompt, str):
+        return prompt
+    users = [m.get("content", "") for m in prompt or [] if m.get("role") == "user"]
+    return users[-1] if users else ""
+
+
+def process_reward(
+    prompts: Sequence, completions: Sequence, answer: Sequence[str], **kwargs
+) -> list[float]:
+    """Share of the reference solution's intermediate values that the reasoning computes.
+
+    Step-level credit from the rule engine, given whether the final answer is right or not:
+    when all 8 completions of a group are wrong, the one that got the depreciation right still
+    scores above the one that skipped it, so GRPO has something to learn from. Three guards
+    against gaming it: values already in the statement do not count, a value only counts when
+    it follows an "=" or an arithmetic operation (``derived_share``), and an unfinished
+    completion (no ``<answer>``) scores 0, so that long reasoning that never ends is not paid.
+    Rows without ``unit`` (GSM8K control) get 0.0.
+    """
+    n = len(completions)
+    units = _column(kwargs, "unit", n, None)
+    checkpoints = _column(kwargs, "checkpoints", n, [])
+    rewards = []
+    for prompt, c, unit, cps in zip(prompts, completions, units, checkpoints, strict=True):
+        text = _completion_text(c)
+        match = THINK_BLOCK.search(text)
+        if unit is None or not cps or match is None or extract_answer(text) is None:
+            rewards.append(0.0)
+            continue
+        row = {"checkpoints": list(cps), "question": _prompt_text(prompt)}
+        rewards.append(derived_share(match.group("think"), row))
     return rewards
 
 

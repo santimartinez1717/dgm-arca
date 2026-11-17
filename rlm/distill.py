@@ -41,7 +41,7 @@ from pathlib import Path
 
 from rlm.data import R1_ZERO_SYSTEM_PROMPT
 from rlm.generation import Generator, batched
-from rlm.realestate_rewards import verify_row
+from rlm.realestate_rewards import derived_share, verify_row
 from rlm.rewards import has_valid_format
 
 THINK = re.compile(r"<think>(?P<think>.*?)</think>", re.DOTALL)
@@ -193,50 +193,6 @@ def solution_key(row: dict, rng: random.Random) -> str:
     rng.shuffle(lines)
     lines.append(f"- final answer: {float(row['answer']):,.2f} {unit}")
     return KEY_NOTE + "\n".join(lines)
-
-
-EQUALS_BEFORE = re.compile(r"(=|≈)\s*\S{0,3}\s*$")
-# "0.03 × 293,000 gives 4,274.35" computes; "the depreciation is 4,274.35" only quotes.
-VERB_BEFORE = re.compile(r"\b(gives?|is|are|equals?|makes|comes to|results? in)\s*\S{0,3}\s*$")
-OPERATION = re.compile(
-    r"\d\s*(×|\*|/|÷|\+|-|−|x)\s*\(?\d"
-    r"|\b(multiplied by|times|divided by|minus|plus|subtracting|adding)\s+\(?\d",
-    re.IGNORECASE,
-)
-NUMBER = re.compile(r"[-−]?\d[\d.,]*")
-
-
-def derived_share(thinking: str, row: dict) -> float:
-    """Share of the key's intermediate values that the reasoning *computes*, not just quotes.
-
-    A value counts when it appears right after an "=" or "≈", or after "gives", "is"… preceded
-    by an arithmetic operation, somewhere in the reasoning, within
-    0.5 % (computed by hand, a mortgage payment can be off by a few cents and still lead to
-    the right answer). Values already in the statement (a tax base equal to the price) are
-    skipped. Calibrated on the unprivileged verified traces: 77-99 % of them pass, by family.
-    """
-    from rlm.realestate_rewards import readings
-
-    targets = [
-        v
-        for v in row.get("checkpoints") or []
-        if not any(abs(r - v) <= 0.01 for r in readings(row["question"]))
-    ]
-    if not targets:
-        return 1.0
-    derived = set()
-    for match in NUMBER.finditer(thinking):
-        before = thinking[max(0, match.start() - 60) : match.start()]
-        computed = EQUALS_BEFORE.search(before[-14:]) or (
-            VERB_BEFORE.search(before) and OPERATION.search(before)
-        )
-        if not computed:
-            continue
-        for value in readings(match.group(0).replace("−", "-")):
-            derived.update(
-                i for i, t in enumerate(targets) if abs(value - t) <= max(0.01, 0.005 * abs(t))
-            )
-    return len(derived) / len(targets)
 
 
 # The citations are almost always one of these phrases ("Let me recall the rules provided"),
