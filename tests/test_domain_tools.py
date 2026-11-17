@@ -153,8 +153,35 @@ def test_rental_income_tax_derives_the_reduction(registry):
     assert result["reduction_pct"] == 70
     old = run(registry, "rental_income_tax", contract_date="2022-01-10", **base)
     assert old["reduction_pct"] == 60
+    # Same facts after 01/12/2026: first rental, stressed zone, tenant under 35 -> 95 %.
     new = run(registry, "rental_income_tax", contract_date="2026-12-15", **base)
-    assert any("RDL 29/2026" in w for w in new["warnings"])
+    assert new["reduction_pct"] == 95 and "RDL 29/2026" in new["reduction_rule"]
+    # Below the SERPAVI limit it reaches 100 %, and nothing is taxed.
+    below = run(
+        registry,
+        "rental_income_tax",
+        contract_date="2026-12-15",
+        monthly_rent=850,
+        index_max_rent=900,
+        **base,
+    )
+    assert below["reduction_pct"] == 100 and below["reduced_net_income"] == 0
+
+
+def test_rental_income_tax_new_regime_needs_the_rent_change(registry):
+    base = dict(
+        annual_rent=12000,
+        acquisition_cost_total=200000,
+        cadastral_value=100000,
+        land_share_pct=40,
+        contract_date="2027-01-01",
+    )
+    record = registry.call("rental_income_tax", base)
+    assert not record.ok and "previous_rent" in record.error
+    raised = run(registry, "rental_income_tax", monthly_rent=1250, previous_rent=1000, **base)
+    assert raised["reduction_pct"] == 15  # +25 %
+    cut = run(registry, "rental_income_tax", monthly_rent=900, previous_rent=1000, **base)
+    assert cut["reduction_pct"] == 70  # -10 %, no other condition
 
 
 def test_portfolio_saves_deduplicates_and_detects_large_holder(registry):

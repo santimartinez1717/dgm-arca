@@ -30,11 +30,6 @@ from tool_use.registry import tool
 Euros = Annotated[float, Field(ge=0)]
 Pct = Annotated[float, Field(ge=0, le=100)]
 
-# Ley 12/2023 entered into force on 26/05/2023; RDL 29/2026 changes art. 23.2 LIRPF for
-# contracts signed from 01/12/2026 (secondary sources, pending a reading of the BOE text).
-LEY_VIVIENDA = date(2023, 5, 26)
-RDL_29_2026 = date(2026, 12, 1)
-
 
 @tool
 def acquisition_cost(
@@ -298,7 +293,11 @@ def rental_income_tax(
     repairs: Euros = 0.0,
     stressed_zone: bool = False,
     previously_rented: bool = True,
-    rent_cut_over_5pct: bool = False,
+    monthly_rent: Euros | None = None,
+    previous_rent: Euros | None = None,
+    index_max_rent: Euros | None = None,
+    large_holder: bool = False,
+    same_tenant_after_term: bool = False,
     tenant_age: Annotated[int, Field(ge=18, le=120)] | None = None,
     social_tenant: bool = False,
     rehabilitation_last_2y: bool = False,
@@ -307,7 +306,9 @@ def rental_income_tax(
 
     Deducts expenses and the 3 % depreciation of the building (never of the land), caps
     interest plus repairs at the income, and decides which reduction applies from the
-    contract's facts. Use this for "¿cuánto tributo?", "rendimiento neto" or "IRPF del alquiler".
+    contract's date and facts: 60 % before 26/05/2023, the Ley 12/2023 scale until
+    01/12/2026, and the RDL 29/2026 scale after, which depends on how the rent changed.
+    Use this for "¿cuánto tributo?", "rendimiento neto" or "IRPF del alquiler".
 
     Args:
         annual_rent: Rent collected in the year, in euros.
@@ -323,33 +324,68 @@ def rental_income_tax(
         repairs: Repair and maintenance costs of the year, in euros.
         stressed_zone: True if the dwelling is in a declared stressed zone.
         previously_rented: False if the dwelling had never been rented before this contract.
-        rent_cut_over_5pct: True if the new rent is more than 5 % below the previous one.
-        tenant_age: Age of the tenant, only needed for the young-tenant reduction.
+        monthly_rent: Initial monthly rent of this contract, in euros.
+        previous_rent: Last monthly rent of the previous contract, updated, in euros.
+        index_max_rent: Monthly rent limit of the SERPAVI reference index for this dwelling.
+        large_holder: True if the landlord was a "gran tenedor" when signing.
+        same_tenant_after_term: True if the contract renews with the same tenant after the
+            minimum five-year term and its extensions.
+        tenant_age: Age of the tenant, only needed for the young-tenant reductions.
         social_tenant: True if the tenant is a public administration or a non-profit that
             sublets it as social housing.
         rehabilitation_last_2y: True if a rehabilitation finished in the two years before
             the contract.
     """
     warnings: list[str] = []
-    if contract_date < LEY_VIVIENDA:
-        reduction, why = 60, "contrato anterior al 26/05/2023: reducción general del 60 %"
-    else:
+    change = None
+    if monthly_rent is not None and previous_rent:
+        change = 100 * (monthly_rent - previous_rent) / previous_rent
+    age = tenant_age if tenant_age is not None else 0
+
+    if contract_date < rules.LEY_VIVIENDA_IN_FORCE:
+        reduction = 60
+        why = "contrato anterior al 26/05/2023: 60 % (art. 23.2 en su redacción de 2021)"
+    elif contract_date < rules.RDL_29_2026_CONTRACTS:
         reduction = rules.rental_reduction_pct(
             stressed_zone=stressed_zone,
             previously_rented=previously_rented,
-            rent_cut_over_5pct=rent_cut_over_5pct,
-            tenant_age=tenant_age if tenant_age is not None else 0,
+            rent_cut_over_5pct=change is not None and change < -5,
+            tenant_age=age,
             public_or_social_tenant=social_tenant,
             rehabilitation_last_2y=rehabilitation_last_2y,
         )
-        why = f"art. 23.2 LIRPF tras la Ley 12/2023: {reduction} %"
-        if stressed_zone and not previously_rented and tenant_age is None and not social_tenant:
-            warnings.append("sin la edad del inquilino no se puede aplicar el 70 % por joven")
-        if contract_date >= RDL_29_2026:
-            warnings.append(
-                "contrato desde el 01/12/2026: el RDL 29/2026 cambia la escala de reducciones "
-                "y aún no está implementado; el porcentaje es el del régimen de 2023"
+        why = f"contrato del 26/05/2023 al 30/11/2026, escala de la Ley 12/2023: {reduction} %"
+        if previously_rented and stressed_zone and change is None:
+            warnings.append("sin la renta anterior y la nueva no se puede aplicar el 90 %")
+    else:
+        if previously_rented and change is None and not (social_tenant or large_holder):
+            raise ValueError(
+                "contracts from 01/12/2026 on a dwelling rented before need monthly_rent and "
+                "previous_rent: the reduction depends on how much the rent changed"
             )
+        below_index = (
+            index_max_rent is not None
+            and monthly_rent is not None
+            and monthly_rent < index_max_rent
+        )
+        reduction = rules.rental_reduction_pct_2026(
+            large_holder=large_holder,
+            previously_rented=previously_rented,
+            rent_change_pct=change,
+            same_tenant_after_term=same_tenant_after_term,
+            below_index=below_index,
+            stressed_zone=stressed_zone,
+            tenant_age=age,
+            public_or_social_tenant=social_tenant,
+            rehabilitation_last_2y=rehabilitation_last_2y,
+        )
+        why = f"contrato desde el 01/12/2026, escala del RDL 29/2026: {reduction} %"
+        if index_max_rent is None and (not previously_rented or (change or 0) < -5):
+            warnings.append("sin el límite del índice SERPAVI no se puede aplicar el 100 %")
+        if large_holder:
+            warnings.append("un gran tenedor no tiene la reducción general desde el RDL 29/2026")
+    if change is not None:
+        warnings.append(f"variación de la renta frente al contrato anterior: {change:+.2f} %")
     result = rules.rental_income_tax(
         annual_rent=annual_rent,
         ibi=ibi,
