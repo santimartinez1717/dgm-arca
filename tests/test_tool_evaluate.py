@@ -115,3 +115,21 @@ def test_summary_by_category():
     summary = summarise(rows)
     assert summary["tool_selection_accuracy"] == 0.5 and summary["false_call_rate"] == 1.0
     assert summary["by_category"]["single"]["arguments"] == 0.0
+
+
+def test_phase1_compare_summary_by_variant_and_family():
+    from tool_use.phase1_compare import registry_for
+    from tool_use.phase1_compare import summarise as summarise_phase1
+
+    assert list(registry_for("arithmetic").tools) == ["calculator"]
+    assert not registry_for("none").tools
+    ok = {"ok": True}
+    rows = [
+        {"variant": "none", "family": "net_yield", "correct": False, "tool_calls": []},
+        {"variant": "domain", "family": "net_yield", "correct": True, "tool_calls": [ok]},
+        {"variant": "domain", "family": "irpf_rental", "correct": False, "tool_calls": [ok]},
+    ]
+    summary = summarise_phase1(rows)
+    assert summary["none"]["pass_at_1"] == 0.0 and summary["domain"]["pass_at_1"] == 0.5
+    assert summary["domain"]["by_family"] == {"irpf_rental": 0.0, "net_yield": 1.0}
+    assert summary["domain"]["used_a_tool"] == 1.0
