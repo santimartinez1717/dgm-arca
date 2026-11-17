@@ -98,13 +98,14 @@ def lookup_property(
 ) -> dict[str, Any]:
     """Look up a property in the Spanish cadastre: use, built area, year built, municipality.
 
-    Give an address or a cadastral reference. A building with several units returns the
-    list of dwellings unless floor and door identify one. Use this to check the m2 of a
+    Only call it when the user gives an address or a cadastral reference; never make one
+    up. A building with several units returns the list of dwellings unless floor and door
+    identify one. Use this to check the m2 of a
     listing or to find the municipality and region of an address. It does not return the
     cadastral value or the reference value (they are not public).
 
     Args:
-        address: Street, number and municipality, e.g. "Calle Embajadores 100, Madrid".
+        address: The street, number and municipality exactly as the user wrote them.
         cadastral_ref: Cadastral reference, 14 characters (building) or 20 (unit).
         floor: Floor of the dwelling, e.g. "2", "BJ" for ground floor.
         door: Door of the dwelling, e.g. "B" or "IZ".
