@@ -1011,3 +1011,38 @@ Después, el mismo banco con el mismo modelo y la misma configuración:
      4 minutos por caso (2 casos en 8 minutos; ejecución cortada en
      `reports/phase2_bench_base_thinking_cortado.json`). Los 40 no caben en una sesión, así
      que va una muestra de 10.
+
+---
+
+### 2026-11-17 · Fase 2 · Thinking en el bucle de herramientas: muestra de 10 casos
+
+**Qué queríamos saber.** Si dejar pensar a Qwen3 antes de cada turno (`enable_thinking`)
+mejora la elección de herramienta y, sobre todo, el encadenado, que es lo que más falla sin
+thinking.
+
+**Qué hicimos.** Primero, el banco completo con `--thinking`. Lo cortamos tras 2 casos
+porque iba a unos 4 minutos por caso (los 40 no caben en una sesión):
+[`reports/phase2_bench_base_thinking_cortado.json`](reports/phase2_bench_base_thinking_cortado.json).
+
+Después, una muestra de 10 casos elegidos por tipo de fallo, con el código de `9d147b8`, el
+mismo del segundo banco:
+`uv run python -m tool_use.evaluate --thinking --ids acq-01 map-02 yield-02 irpf-01 cap-01 chain-02 chain-05 par-01 none-01 rates-02 --out reports/phase2_bench_thinking_muestra.json`.
+Tardó 16 minutos, con 2.048 tokens por turno.
+
+**Qué pasó.** Acierta 4 de 10, **los mismos 4 que sin thinking** (acq-01, map-02, none-01 y
+par-01): [`reports/phase2_bench_thinking_muestra.json`](reports/phase2_bench_thinking_muestra.json).
+- **En `yield-02` e `irpf-01` se acaban los tokens pensando.** Calcula la cuota de la
+  hipoteca o el IRPF a mano dentro de `<think>` (más de 6.000 caracteres) y no llega a llamar
+  a la herramienta. Es el vicio de la fase 1, ahora dentro del razonamiento.
+- **Encadenar no mejora:**
+  - `chain-02` hace solo la primera llamada;
+  - `chain-05` llama a `rental_returns` antes de `get_market_rates`, igual que sin thinking.
+- `acq-01` acierta, pero repite la misma llamada tres veces.
+
+**Qué concluimos.**
+- **`/tools` va sin thinking.** En esta muestra no gana ningún caso, tarda unas 6 veces más
+  y tiene un modo de fallo propio: ponerse a calcular en vez de llamar.
+- 10 casos no bastan para descartar un efecto pequeño, pero no hay ninguna señal a favor que
+  justifique el coste del banco completo.
+- El encadenado no se arregla pensando más. Quedan el prompt (ya cambiado en `d795830`,
+  pendiente de medir) y, si no basta, un SFT con trazas de llamadas encadenadas.
