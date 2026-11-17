@@ -718,3 +718,57 @@ potencia (1+i)^-300 la dan como "aproximadamente 0,4666" sin desarrollarla.
   familia, y las pruebas sobre el SFT 3, que será el punto de partida del GRPO 2.
 - La potencia de la cuota sigue siendo aritmética que el 1,7B tiene que memorizar: en
   `cash_on_cash` la solución de fondo es la calculadora de la fase 2.
+
+---
+
+### 2026-11-18 · Fase 1 · SFT 3, evaluación a 2048 y muestreo con pistas
+
+**Qué queríamos saber.** Si el SFT con todas las trazas de la ronda 2 (incluidas las 51 de
+`cash_on_cash` con clave) mejora al SFT 1 y al GRPO 1 con el presupuesto justo de 2048 tokens,
+y si las pistas dan señal para el GRPO 2 en `irpf_rental` y `cash_on_cash`.
+
+**Qué hicimos.** `sft3.sh`: SFT desde el modelo base con las nueve tandas de trazas,
+`--max-per-problem 3 --max-per-family 200` (857 trazas: acquisition_cost 200, legal_rent 200,
+irpf_rental 169, cash_on_cash 105, max_price 92, net_yield 91), 108 pasos, 35 min
+(`rlm/weights/sft3_lora`). Evaluación en test con 2048 tokens (80 min) y `sample_check` en irpf
+y cash (8 problemas × 8 respuestas, 2048 tokens) sin pista y con pista de nivel 2.
+
+**Qué pasó.** Test, 2048 tokens (`reports/eval_sft3_17b_2048.json`), aciertos:
+
+| Familia | SFT 1 | GRPO 1 | SFT 3 |
+|---|---|---|---|
+| acquisition_cost (50) | 36 | 37 | **43** |
+| — obra nueva (11) | 0 | 0 | **6** |
+| net_yield (50) | 34 | 32 | 35 |
+| max_price (50) | **28** | 21 | 23 |
+| legal_rent (50) | 15 | **23** | 14 |
+| irpf_rental (50) | 0 | 2 | **3** |
+| cash_on_cash (50) | 0 | 0 | **3** |
+| **Total (300)** | 37,7 % | 38,3 % | **40,3 %** |
+| Cortadas | 31 % | 8 % | 23 % |
+
+Ninguna diferencia del total es significativa: frente al SFT 1, 29 problemas solo los acierta
+el SFT 3 y 21 solo el SFT 1 (McNemar exacto p = 0,32); frente al GRPO 1, 33 y 27 (p = 0,52).
+`legal_rent` sigue cortándose (termina 22 de 50; acierta 14 de esas 22).
+
+Muestreo (`reports/sample_check_sft3_pista{0,2}.json`):
+
+| | Sin pista: pass@8 | Sin pista: correctas | Pista 2: pass@8 | Pista 2: correctas |
+|---|---|---|---|---|
+| irpf_rental | 1/8 | 2 % | 1/8 | 3 % |
+| cash_on_cash | 1/8 | 2 % | **8/8** | **77 %** |
+
+Con la cuota de la hipoteca dada, `cash_on_cash` sale casi siempre: su único problema es esa
+cuenta. En `irpf_rental` dar la amortización no basta. Revisando las 36 respuestas terminadas
+de irpf en test: de las 28 con rendimiento positivo, 15 eligen mal la reducción (sobre todo 70 %
+en vez de 90 %, y 50 % en vez de 60 %) y 19 calculan mal la amortización, casi siempre por
+la parte del suelo (1 − 114.500 / 201.000 escrito como 0,463 en vez de 0,430). Otras 6
+respuestas quedan a menos del 0,5 % del valor correcto pero fuera de la tolerancia de 0,05 %:
+redondean resultados intermedios.
+
+**Qué concluimos.**
+- El SFT 3 es el mejor punto de partida para el GRPO 2 (40,3 %, primeros aciertos en cash).
+- `cash_on_cash`: pistas de nivel 2 en el GRPO 2 dan señal de sobra.
+- `irpf_rental` falla en dos sitios: la regla de la reducción y la aritmética del suelo. La
+  pista de nivel 1 pasa a incluir el orden de las reducciones, y la de nivel 2 también la
+  reducción que corresponde; se está midiendo de nuevo.
