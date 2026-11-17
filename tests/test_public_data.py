@@ -107,6 +107,22 @@ def test_zone_list_parsing_handles_boe_typos():
     assert normalise_name("L'Hospitalet de Llobregat") == "hospitalet de llobregat"
 
 
+@pytest.mark.parametrize(
+    ("name", "expected"),
+    [
+        ("Coruña, A", "coruna"),  # INE writes the article at the end
+        ("A Coruña", "coruna"),
+        ("Rozas de Madrid, Las", "rozas de madrid"),
+        ("Olot", "olot"),  # starts like the article "o"
+        ("Alella", "alella"),  # starts like "a"
+        ("Lasarte-Oria", "lasarte-oria"),  # starts like "la"
+        ("Móra la Nova", "mora la nova"),
+    ],
+)
+def test_normalise_name_only_strips_whole_articles(name, expected):
+    assert normalise_name(name) == expected
+
+
 def test_parse_resolution_reads_the_table():
     xml = """<documento><metadatos><fecha_publicacion>20260202</fecha_publicacion></metadatos>
     <texto><table><tbody><tr><td>País Vasco.</td><td>Hernani.</td>

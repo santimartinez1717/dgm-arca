@@ -60,10 +60,11 @@ PARTIAL_MARKERS = ("(", "excepto", "distrito", "barrio", "núcleo")
 
 
 def normalise_name(name: str) -> str:
-    """Lowercase, no accents, no leading article: 'L'Hospitalet' -> 'hospitalet'."""
+    """Lowercase, no accents, no article: 'L'Hospitalet' and 'Coruña, A' lose theirs."""
     text = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode().lower()
+    text = re.sub(r"^(.*),\s*(el|la|les|els|los|las|a|o|l')$", r"\2 \1", text.strip())  # INE
     text = re.sub(r"[^a-z0-9/' -]", " ", text)
-    text = re.sub(r"^(el|la|les|els|los|las|a|o|l')\s*", "", text.strip())
+    text = re.sub(r"^((el|la|les|els|los|las|a|o)\s+|l'\s*)", "", text.strip())
     return " ".join(text.replace("'", " ").split())
 
 

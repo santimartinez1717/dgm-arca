@@ -146,6 +146,10 @@ class ToolLoop:
     prompt_style: PromptStyle = "native"
     confirm_policy: ConfirmPolicy = "auto"
     use_tools: bool = True  # False: the same model and prompt with no tools, for comparison
+    # Turn of each call of the last run (parallel calls share one). Not part of the API
+    # response; the benchmark uses it to check that independent calls went out together.
+    call_turns: list[int] = field(default_factory=list)
+    raw_outputs: list[str] = field(default_factory=list)
 
     def run(self, query: str, max_turns: int = 5) -> ToolsResponse:
         registry = self.registry if self.use_tools else ToolRegistry()
@@ -158,10 +162,12 @@ class ToolLoop:
             {"role": "user", "content": query},
         ]
         records: list[ToolCallRecord] = []
+        self.call_turns, self.raw_outputs = [], []
         last_text = ""
 
         for turn in range(1, max_turns + 1):
             raw = self.model.generate(messages, tools)  # step 2
+            self.raw_outputs.append(raw)
             parsed = parse_tool_calls(raw)
             last_text = parsed.text
             if not parsed.tool_calls:  # step 5: a plain answer ends the loop
@@ -182,6 +188,7 @@ class ToolLoop:
             for call in parsed.tool_calls:  # parallel calls: all of them, in order
                 record = self._execute(call.name, call.arguments, call.error, registry)
                 records.append(record)
+                self.call_turns.append(turn)
                 payload = record.result if record.ok else {"error": record.error}
                 messages.append(  # step 4
                     {
