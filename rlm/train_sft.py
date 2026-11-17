@@ -67,9 +67,10 @@ def load_sft_dataset(
     text) and ``answer``. Only traces marked ``verified: true`` are used. Several files (the
     main distillation, targeted passes, rewritten privileged traces) are concatenated; their
     extra fields differ, so only what SFT needs is kept. Mentions of the teacher's rule sheet
-    are scrubbed (``distill.scrub_leaks``) and traces that still cite it are dropped.
+    are scrubbed (``distill.scrub_leaks``), all-lowercase traces are recapitalised
+    (``distill.recapitalize``) and traces that still cite the sheet are dropped.
     """
-    from rlm.distill import RULES_LEAK, read_traces, scrub_leaks
+    from rlm.distill import RULES_LEAK, read_traces, recapitalize, scrub_leaks
 
     if not isinstance(paths, list):
         paths = [paths]
@@ -80,6 +81,7 @@ def load_sft_dataset(
                 continue
             trace = scrub_leaks(t["trace"])
             scrubbed += trace != t["trace"]
+            trace = recapitalize(trace)
             if RULES_LEAK.search(trace):
                 dropped += 1
                 continue

@@ -226,6 +226,21 @@ def scrub_leaks(text: str) -> str:
     return re.sub(r",\s*,", ",", text)
 
 
+SENTENCE_START = re.compile(r"(^|[.!?]\s+|\n\s*)([a-z])")
+
+
+def recapitalize(text: str) -> str:
+    """Capitalise sentence starts and "i" when the editor wrote the whole trace in lowercase.
+
+    The rewrite pass (2026-11-17) returned 48 of 63 legal_rent traces in lowercase. Traces
+    with any capitalised sentence start are left as they are.
+    """
+    if re.search(r"(^|[.!?]\s+|\n\s*)[A-Z]", text):
+        return text
+    text = SENTENCE_START.sub(lambda m: m.group(1) + m.group(2).upper(), text)
+    return re.sub(r"\bi\b(?=[ '’])", "I", text)
+
+
 def scrub_citations(text: str) -> str:
     """Replace the usual ways of citing the rule sheet with a neutral "the rules"."""
 

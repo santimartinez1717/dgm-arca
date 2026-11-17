@@ -31,6 +31,7 @@ from rlm.distill import (
     acceptance_report,
     derived_share,
     read_traces,
+    recapitalize,
 )
 from rlm.generation import Generator, batched
 from rlm.realestate_rewards import verify_row
@@ -87,7 +88,7 @@ def rewrite(
         batch = []
         for t, [(text, n_tokens, truncated)] in zip(chunk, outputs, strict=True):
             answer = ANSWER.search(t["trace"]).group("answer").strip()
-            thinking = text.replace("<think>", "").replace("</think>", "").strip()
+            thinking = recapitalize(text.replace("<think>", "").replace("</think>", "").strip())
             trace = f"<think>\n{thinking}\n</think>\n<answer>{answer}</answer>"
             row = rows[t["question"]]
             mentions = bool(RULES_LEAK.search(thinking))
