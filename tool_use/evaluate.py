@@ -192,7 +192,7 @@ def main() -> None:
     parser.add_argument("--thinking", action="store_true", help="let Qwen3 think each turn")
     parser.add_argument("--prompt-style", choices=["native", "course"], default="native")
     parser.add_argument("--max-turns", type=int, default=4)
-    parser.add_argument("--max-new-tokens", type=int, default=1024)
+    parser.add_argument("--max-new-tokens", type=int, default=2048)
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--ids", nargs="*", help="only these case ids")
     args = parser.parse_args()

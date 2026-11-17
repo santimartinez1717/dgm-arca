@@ -90,7 +90,7 @@ class HFChatModel:
     model_id: str = "Qwen/Qwen3-1.7B"
     adapter_path: str | None = None
     enable_thinking: bool = False
-    max_new_tokens: int = 1024
+    max_new_tokens: int = 2048
 
     @property
     def name(self) -> str:

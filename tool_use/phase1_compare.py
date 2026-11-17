@@ -73,7 +73,7 @@ def main() -> None:
     parser.add_argument("--adapter", default=None)
     parser.add_argument("--thinking", action="store_true")
     parser.add_argument("--max-turns", type=int, default=5)
-    parser.add_argument("--max-new-tokens", type=int, default=1024)
+    parser.add_argument("--max-new-tokens", type=int, default=2048)
     parser.add_argument("--limit", type=int, default=None, help="first N problems")
     parser.add_argument("--out", default="reports/phase2_vs_phase1.json")
     args = parser.parse_args()
