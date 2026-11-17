@@ -32,3 +32,13 @@ def test_request_validation():
 
 def test_docs_available():
     assert client.get("/docs").status_code == 200
+
+
+def test_tools_endpoint_runs_the_loop_and_reports_the_calls():
+    response = client.post("/tools", json={"query": "¿Barcelona es zona tensionada?"})
+    assert response.status_code == 200
+    body = response.json()
+    assert body["turns"] == 2 and body["answer"] == "Barcelona es zona tensionada."
+    [call] = body["tool_calls"]
+    assert call["name"] == "get_rent_reference" and call["ok"]
+    assert call["result"]["stressed_zone"] is True and call["latency_ms"] >= 0
