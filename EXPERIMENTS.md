@@ -884,3 +884,130 @@ medida: solo comprueba que las piezas encajan.
   1. el banco de 40 casos con Qwen3-1.7B base, con y sin thinking;
   2. el banco con el adaptador de GRPO;
   3. `phase1_compare` sobre el test de la fase 1.
+
+---
+
+### 2026-11-17 · Fase 2 · Primer banco: Qwen3-1.7B base frente al adaptador de GRPO de la fase 1
+
+**Qué queríamos saber.** Cómo usa las 10 herramientas el modelo de 1,7B sin entrenar para
+ello, y si el adaptador de la fase 1 (SFT + GRPO, `final_rlm_lora`) ayuda o estorba.
+
+**Qué hicimos.** El banco de 40 casos en la GPU, con `fase2_bench.sh`:
+`uv run python -m tool_use.evaluate --out reports/phase2_bench_base.json` y lo mismo con
+`--adapter …/final_rlm_lora`. Las condiciones:
+- formato nativo de Qwen3;
+- sin thinking;
+- 4 turnos como máximo;
+- 2.048 tokens por turno;
+- decodificación voraz.
+
+Unos 7 minutos por ejecución.
+
+Las cifras son tras `--rescore` con el evaluador corregido (entrada siguiente): `cap-02` se
+daba por fallado cuando el modelo acertaba, y unos argumentos rechazados por la validación ya
+no cuentan como correctos.
+
+**Qué pasó.** Casos acertados, de 40:
+
+| | Selección | Argumentos | Secuencia (10 encadenados y paralelos) | Llamadas innecesarias (8) |
+|---|---|---|---|---|
+| Base | 34 | 24 | 4 | 0 |
+| + GRPO fase 1 | 27 | 18 | 2 | 0 |
+
+Informes: [`reports/phase2_bench_base.json`](reports/phase2_bench_base.json) y
+[`reports/phase2_bench_grpo.json`](reports/phase2_bench_grpo.json).
+
+- **El modelo base elige bien y se equivoca en los argumentos.** Selección del 85 %, pero
+  en los casos `single` solo acierta los argumentos el 50 %. Cuatro causas:
+  - **Inventa la comunidad:** Sevilla → `extremadura`, Málaga → `extremadura`, Bilbao →
+    `baleares`, Barcelona → `"barcelona"` (que la validación rechaza). El esquema estricto
+    (`Literal` con 17 comunidades) le pide una traducción que no sabe hacer.
+  - **Rellena todos los opcionales con 0.** Sin hipoteca pone `loan_years: 0` y la
+    validación lo rechaza (≥ 1). En `par-01` hizo bien las dos llamadas en paralelo y falló
+    solo por esto.
+  - **No encadena:** 1 de 6 casos. Lanza las dos llamadas a la vez, con `price: 0` en la
+    segunda (`chain-02`), o se salta la consulta y se inventa el dato (euríbor al 2,5 % en
+    `chain-05`).
+  - **Confunde mensual y anual** en `rental_income_tax` (`monthly_rent: 15000`).
+- **Los 8 casos que no necesitan herramienta se responden sin llamar a ninguna** en los dos
+  modelos.
+- **El adaptador de GRPO ha perdido el formato de llamada.** 7 casos empeoran en selección y
+  ninguno mejora (McNemar exacto, p = 0,016). En 10 de los 32 casos que necesitan
+  herramienta no llama a ninguna (el base, en 1). Lo que hace en su lugar:
+  - en 3 escribe `<function name=… />` o `<function_call>`;
+  - en 1 escribe el JSON sin etiquetas;
+  - en 6 describe en prosa la llamada que haría ("necesitamos utilizar la función
+    `rental_returns`…") y hace las cuentas él mismo.
+
+**Qué concluimos.**
+- **`/tools` lo atiende el modelo base, sin adaptador.** El SFT y el GRPO con trazas de
+  razonamiento sin herramientas desplazan el formato `<tool_call>` que Qwen3 trae del
+  post-entrenamiento. Si en la fase 4 se quiere el "cerebro" de la fase 1 con herramientas,
+  hará falta mezclar trazas con llamadas en el SFT.
+- Los fallos del base son de definición más que de capacidad: tres de las cuatro causas se
+  pueden atacar en las herramientas y el prompt, sin entrenar. Siguiente entrada.
+
+---
+
+### 2026-11-17 · Fase 2 · Arreglos en herramientas, prompt y evaluador, y segundo banco
+
+**Qué queríamos saber.** Si los fallos del primer banco se arreglan cambiando las
+definiciones, sin tocar el modelo.
+
+**Qué hicimos.** Commit `9d147b8`:
+- **`region` acepta comunidad, provincia o municipio**
+  ([`tool_use/regions.py`](tool_use/regions.py)). Lo traduce con el código INE de los 2.616
+  municipios del SERPAVI, también en catalán o euskera; si el nombre es ambiguo, error con las
+  opciones.
+- **Un 0 en `loan_years` significa sin hipoteca.** El precio y la inversión tienen que ser
+  > 0, para que una llamada encadenada que todavía no tiene el valor falle en vez de calcular
+  con 0.
+- **Prompt de sistema:** dejar fuera los opcionales que no dé el usuario y, si un argumento
+  sale de otra herramienta, llamarla primero y esperar.
+- **`monthly_rent` y `previous_rent`** dicen que son mensuales.
+- **Evaluador:**
+  - la región se compara por comunidad;
+  - un argumento rechazado por la validación no cuenta como correcto;
+  - un 0 donde el valor por defecto es `None` se acepta;
+  - `--rescore` vuelve a puntuar un informe guardado sin generar.
+
+Después, el mismo banco con el mismo modelo y la misma configuración:
+[`reports/phase2_bench_base_v2.json`](reports/phase2_bench_base_v2.json).
+
+**Qué pasó.**
+
+| Qwen3-1.7B base | Selección | Argumentos | Secuencia (10) | `single` arg. (20) | `chain` sec. (6) | `parallel` sec. (4) |
+|---|---|---|---|---|---|---|
+| Antes | 34/40 | 24/40 | 4 | 10 | 1 | 3 |
+| Después | **37/40** | **32/40** | 5 | 13 | 1 | **4** |
+
+- **Argumentos:** 8 casos mejoran y ninguno empeora (McNemar exacto, p = 0,008). Son los de
+  la región (acq-01, acq-03, map-02), los ceros (par-01) y el mensual y anual (irpf-02).
+  Llamadas innecesarias: sigue en 0 de 8.
+- **Encadenar sigue en 1 de 6:**
+  - `chain-02` sigue lanzando las dos llamadas a la vez. Ahora la segunda falla con "price
+    must be > 0", pero el modelo no la repite con el precio.
+  - En `chain-03` se inventa una llamada a `lookup_property` con "Calle Embajadores 100,
+    Madrid", **la dirección de ejemplo de la descripción** de la herramienta.
+  - En `chain-01` olvida el IBI en la segunda llamada.
+- **Efecto secundario del prompt.** "Deja fuera los opcionales" hace que en `yield-02` y
+  `chain-05` omita `loan_years: 25`, que el usuario sí daba. En `chain-05` lo pone al
+  reintentar tras el error.
+- **Sin cambios:**
+  - `irpf-01` sigue eligiendo `rental_returns` para una pregunta de IRPF;
+  - `port-01` se inventa una referencia catastral;
+  - `yield-01` pone `vacant_months: 12` cuando el usuario dice uno.
+
+**Qué concluimos.**
+- **El esquema tolerante gana al estricto en este modelo.** Una tabla hace sin error la
+  traducción de ciudad a comunidad, y el modelo no.
+- 40 casos es poco. Las mejoras por categoría (`parallel` de 3 a 4, `mapping` de 1 a 2) son
+  de uno o dos casos y no son concluyentes por sí solas.
+- **Siguiente:**
+  1. Ejemplos de las descripciones que no sean valores plausibles (el de `lookup_property`
+     acaba en la llamada).
+  2. Afinar el prompt para que no quite lo que el usuario da.
+  3. Probar si con thinking el modelo encadena mejor. Con thinking, el banco tarda unos
+     4 minutos por caso (2 casos en 8 minutos; ejecución cortada en
+     `reports/phase2_bench_base_thinking_cortado.json`). Los 40 no caben en una sesión, así
+     que va una muestra de 10.
