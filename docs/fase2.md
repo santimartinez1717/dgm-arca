@@ -96,9 +96,21 @@ números mejor de lo que los convierte.
 Las 10 definiciones ocupan **4.767 tokens** con el tokenizador de Qwen3. La más larga es
 `rental_income_tax`, con 1.022. Es el precio de poner todo el registro en cada turno.
 
-*Pendiente de los resultados del banco:* qué descripciones funcionaron y cuáles no. El primer
-candidato es `region`: con el 0,6B, el modelo puso la ciudad ("sevilla") en vez de la comunidad
-(sección 4).
+**Qué funcionó y qué no**, según el banco (sección 4):
+- **Un `Literal` con las 17 comunidades no funcionó.** El modelo elegía una al azar:
+  Sevilla → `extremadura`, Bilbao → `baleares`. Ahora `region` acepta lo que escribe el
+  usuario (comunidad, provincia o municipio) y lo traduce una tabla
+  ([`regions.py`](../tool_use/regions.py)). Los argumentos correctos pasaron de 24 a 32 sobre
+  40.
+- **Un ejemplo con un valor real se copia.** La descripción de `address` ponía de ejemplo
+  "Calle Embajadores 100, Madrid", y el modelo llamó a `lookup_property` con esa dirección en
+  un caso que no daba ninguna. Ahora la descripción dice "tal como la escribió el usuario" y
+  que nunca se invente una.
+- **El modelo rellena todos los opcionales con 0.** Las herramientas lo aceptan donde 0
+  significa "no hay" (`loan_years` sin hipoteca). Además, el precio y la inversión tienen que
+  ser > 0, para que una llamada que todavía no tiene el valor falle en vez de calcular con 0.
+- **Decir en la descripción si una cantidad es mensual o anual** evitó que pusiera la renta
+  anual en `monthly_rent`.
 
 ## 3. El bucle de cinco pasos
 
@@ -155,8 +167,35 @@ Las métricas están en [`tool_use/evaluate.py`](../tool_use/evaluate.py):
 
 ### Resultados
 
-*Pendiente: banco con Qwen3-1.7B base sin thinking, con thinking y con el adaptador de GRPO
-de la fase 1.*
+Casos acertados, de 40. Formato nativo, sin thinking, decodificación voraz.
+
+| Modelo | Selección | Argumentos | Secuencia (10) | Llamadas innecesarias (8) |
+|---|---|---|---|---|
+| Qwen3-1.7B + GRPO de la fase 1 | 27 | 18 | 2 | 0 |
+| Qwen3-1.7B base | 34 | 24 | 4 | 0 |
+| Qwen3-1.7B base, tras los arreglos | **37** | **32** | 5 | 0 |
+
+Informes en `reports/phase2_bench_*.json`. Detalle y pruebas estadísticas en EXPERIMENTS.md.
+
+- **El modelo base elige bien la herramienta y no llama cuando no hace falta.** Sus errores
+  estaban en los argumentos, y la mayoría se arreglaron en las definiciones sin tocar el
+  modelo: 8 casos mejoran y ninguno empeora (McNemar exacto, p = 0,008).
+- **El adaptador de la fase 1 ha perdido el formato de llamada.** Escribe
+  `<function name=…/>`, JSON sin etiquetas o la llamada en prosa, y hace las cuentas él
+  mismo. 7 casos empeoran en selección y ninguno mejora (p = 0,016). Por eso `/tools` usa el
+  modelo base.
+- **Encadenar es lo que sigue fallando (1 de 6).** El modelo lanza a la vez las llamadas que
+  dependen una de otra, o se salta la consulta y se inventa el dato. Las paralelas sí salen
+  bien (4 de 4).
+
+### De una llamada a varias
+
+Con una sola herramienta, el modelo acierta 13 de 20 casos tras los arreglos. Con llamadas
+independientes en paralelo, 4 de 4. Con llamadas que dependen una de otra, 1 de 6. Lo difícil
+no es hacer varias llamadas, sino **esperar** al resultado de una para construir la
+siguiente: el modelo planea toda la respuesta en el primer turno. El bucle sí lo permite (el
+error "price must be > 0" vuelve como observación), pero el modelo no reintenta con el valor
+que ya tiene.
 
 ## 5. Con y sin herramientas, sobre el test de la fase 1
 
