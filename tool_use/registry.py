@@ -19,12 +19,13 @@ from __future__ import annotations
 
 import inspect
 import json
+import re
 import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Annotated, Any
 
-from pydantic import BaseModel, ValidationError, create_model
+from pydantic import BaseModel, Field, ValidationError, create_model
 
 from api.schemas import ToolCallRecord
 
@@ -40,8 +41,7 @@ class Tool:
     @property
     def definition(self) -> dict[str, Any]:
         """Tool definition in the JSON format used by Qwen and most chat templates."""
-        schema = self.args_model.model_json_schema()
-        schema.pop("title", None)
+        schema = _drop_titles(self.args_model.model_json_schema())
         return {
             "type": "function",
             "function": {"name": self.name, "description": self.description, "parameters": schema},
@@ -55,12 +55,71 @@ class Tool:
         return self.fn(**self.validate(arguments))
 
 
-def _args_model_from_signature(fn: Callable[..., Any]) -> type[BaseModel]:
-    """Build a Pydantic model whose fields mirror the function parameters."""
+def _drop_titles(schema: Any) -> Any:
+    """Remove Pydantic's auto-generated ``title`` keys: they repeat the property name and
+    cost prompt tokens on every turn. A property literally called ``title`` is a dict, not a
+    string, so it is kept."""
+    if isinstance(schema, dict):
+        return {
+            k: _drop_titles(v)
+            for k, v in schema.items()
+            if not (k == "title" and isinstance(v, str))
+        }
+    if isinstance(schema, list):
+        return [_drop_titles(v) for v in schema]
+    return schema
+
+
+_ARG_LINE = re.compile(r"^(?P<indent>\s+)(?P<name>\w+)\s*(?:\([^)]*\))?:\s*(?P<text>.*)$")
+
+
+def split_docstring(doc: str) -> tuple[str, dict[str, str]]:
+    """Split a Google-style docstring into the tool description and one text per argument.
+
+    Without this, the ``Args:`` section reaches the model only inside one long description,
+    and each property of the JSON Schema has a type but no meaning. A small model fills
+    ``itp_rate`` far better when the property itself says "fraction: 0.08 means 8 %".
+    """
+    lines = inspect.cleandoc(doc).splitlines()
+    start = next((i for i, line in enumerate(lines) if line.strip() == "Args:"), None)
+    if start is None:
+        return "\n".join(lines).strip(), {}
+    args: dict[str, str] = {}
+    current: str | None = None
+    arg_indent: int | None = None
+    end = len(lines)
+    for i in range(start + 1, len(lines)):
+        line = lines[i]
+        if line.strip() and not line[0].isspace():  # the next section, e.g. "Returns:"
+            end = i
+            break
+        match = _ARG_LINE.match(line)
+        indent = len(line) - len(line.lstrip())
+        if match and (arg_indent is None or indent == arg_indent):
+            arg_indent = indent
+            current = match.group("name")
+            args[current] = match.group("text").strip()
+        elif current and line.strip():  # continuation of the previous argument
+            args[current] = f"{args[current]} {line.strip()}"
+    description = "\n".join(lines[:start] + lines[end:]).strip()
+    return description, args
+
+
+def _args_model_from_signature(
+    fn: Callable[..., Any], arg_docs: dict[str, str] | None = None
+) -> type[BaseModel]:
+    """Build a Pydantic model whose fields mirror the function parameters.
+
+    Each field takes its description from the docstring's ``Args:`` section. Constraints
+    go in the annotation, e.g. ``Annotated[float, Field(ge=0)]`` or ``Literal[...]``.
+    """
+    arg_docs = arg_docs or {}
     fields: dict[str, Any] = {}
-    for name, param in inspect.signature(fn).parameters.items():
+    for name, param in inspect.signature(fn, eval_str=True).parameters.items():
         annotation = param.annotation if param.annotation is not inspect.Parameter.empty else Any
         default = ... if param.default is inspect.Parameter.empty else param.default
+        if name in arg_docs:
+            annotation = Annotated[annotation, Field(description=arg_docs[name])]
         fields[name] = (annotation, default)
     return create_model(f"{fn.__name__}_args", **fields)
 
@@ -71,11 +130,12 @@ def tool(fn: Callable[..., Any] | None = None, *, requires_confirmation: bool = 
     def wrap(func: Callable[..., Any]) -> Tool:
         if not func.__doc__:
             raise ValueError(f"tool {func.__name__} needs a docstring: it is what the model reads")
+        description, arg_docs = split_docstring(func.__doc__)
         return Tool(
             name=func.__name__,
-            description=inspect.cleandoc(func.__doc__),
+            description=description,
             fn=func,
-            args_model=_args_model_from_signature(func),
+            args_model=_args_model_from_signature(func, arg_docs),
             requires_confirmation=requires_confirmation,
         )
 
