@@ -24,17 +24,21 @@ from typing import Annotated, Any
 from pydantic import Field
 
 from rlm import realestate_rules as rules
-from tool_use.itp_rates import ITP_GENERAL, SOURCE, Region
+from tool_use.itp_rates import ITP_GENERAL, SOURCE
+from tool_use.regions import resolve_region
 from tool_use.registry import tool
 
 Euros = Annotated[float, Field(ge=0)]
+PositiveEuros = Annotated[float, Field(gt=0)]
+# A community, province or municipality; resolve_region turns it into a community.
+Place = Annotated[str, Field(min_length=2, max_length=60)]
 Pct = Annotated[float, Field(ge=0, le=100)]
 
 
 @tool
 def acquisition_cost(
-    price: Euros,
-    region: Region,
+    price: PositiveEuros,
+    region: Place,
     new_build: bool = False,
     reference_value: Euros | None = None,
     notary_registry: Euros = 0.0,
@@ -51,7 +55,8 @@ def acquisition_cost(
 
     Args:
         price: Purchase price in euros.
-        region: Autonomous community where the dwelling is, e.g. "madrid", "cataluna".
+        region: Where the dwelling is: the city as the user wrote it (e.g. "Sevilla") or
+            the autonomous community. The tool finds the community and its ITP rate.
         new_build: True for a new build bought from the developer (VAT + AJD instead of ITP).
         reference_value: Cadastral reference value ("valor de referencia") in euros, if known.
         notary_registry: Notary, registry and agency paperwork costs in euros.
@@ -60,6 +65,7 @@ def acquisition_cost(
         itp_rate_pct: ITP rate in percent (8 means 8 %), only to override the regional table.
         ajd_rate_pct: AJD rate in percent; required for new builds (e.g. 1.5).
     """
+    region = resolve_region(region)
     warnings: list[str] = []
     if reference_value is None:
         reference_value = 0.0
@@ -90,13 +96,13 @@ def acquisition_cost(
         if new_build
         else f"ITP {itp_rate_pct:g} % sobre max(precio, valor de referencia) (Ley 11/2021)"
     )
-    return {**asdict(result), "rule": rule, "warnings": warnings}
+    return {**asdict(result), "region": region, "rule": rule, "warnings": warnings}
 
 
 @tool
 def rental_returns(
-    monthly_rent: Euros,
-    total_investment: Euros,
+    monthly_rent: PositiveEuros,
+    total_investment: PositiveEuros,
     vacant_months: Annotated[float, Field(ge=0, le=12)] = 0.0,
     ibi: Euros = 0.0,
     community_monthly: Euros = 0.0,
@@ -105,7 +111,7 @@ def rental_returns(
     management_pct: Pct = 0.0,
     loan: Euros = 0.0,
     interest_rate_pct: Pct | None = None,
-    loan_years: Annotated[int, Field(ge=1, le=40)] | None = None,
+    loan_years: Annotated[int, Field(ge=0, le=40)] | None = None,
     rate_shock_pct: Annotated[float, Field(ge=0, le=10)] = 0.0,
 ) -> dict[str, Any]:
     """Yield of a rental: gross and net yield and, with a mortgage, cash-on-cash return.
@@ -125,7 +131,7 @@ def rental_returns(
         management_pct: Property manager fee as a percent of collected rent.
         loan: Mortgage principal in euros; 0 if bought in cash.
         interest_rate_pct: Annual mortgage interest rate in percent (3.2 means 3.2 %).
-        loan_years: Mortgage term in years.
+        loan_years: Mortgage term in years; leave it out (or 0) if there is no loan.
         rate_shock_pct: Extra interest points for a stress scenario (2 means +2 points).
     """
     noi = rules.net_yield(
@@ -143,7 +149,7 @@ def rental_returns(
         **asdict(noi),
     }
     if loan > 0:
-        if interest_rate_pct is None or loan_years is None:
+        if interest_rate_pct is None or not loan_years:
             raise ValueError("a loan needs interest_rate_pct and loan_years")
         coc = rules.cash_on_cash(
             total_investment=total_investment,
@@ -170,7 +176,7 @@ def rental_returns(
 def max_offer_price(
     target_net_yield_pct: Annotated[float, Field(gt=0, le=100)],
     monthly_rent: Euros,
-    region: Region,
+    region: Place,
     vacant_months: Annotated[float, Field(ge=0, le=12)] = 0.0,
     ibi: Euros = 0.0,
     community_monthly: Euros = 0.0,
@@ -188,7 +194,8 @@ def max_offer_price(
     Args:
         target_net_yield_pct: Target net yield in percent (5 means 5 %).
         monthly_rent: Expected monthly rent in euros.
-        region: Autonomous community, used to look up the ITP rate.
+        region: Where the dwelling is: the city as the user wrote it or the autonomous
+            community. The tool finds the community and its ITP rate.
         vacant_months: Months per year without a tenant.
         ibi: Annual property tax (IBI) in euros.
         community_monthly: Monthly homeowners' community fee in euros.
@@ -198,6 +205,7 @@ def max_offer_price(
         fixed_costs: Costs that do not depend on the price (notary, agency, renovation).
         itp_rate_pct: ITP rate in percent, only to override the regional table.
     """
+    region = resolve_region(region)
     warnings = ["supone que el valor de referencia no supera el precio"]
     if itp_rate_pct is None:
         itp_rate_pct = ITP_GENERAL[region].rate_pct
@@ -221,6 +229,7 @@ def max_offer_price(
     return {
         "max_price": price,
         "annual_net_income": noi.net_income,
+        "region": region,
         "itp_rate_pct": itp_rate_pct,
         "warnings": warnings,
     }
@@ -324,8 +333,10 @@ def rental_income_tax(
         repairs: Repair and maintenance costs of the year, in euros.
         stressed_zone: True if the dwelling is in a declared stressed zone.
         previously_rented: False if the dwelling had never been rented before this contract.
-        monthly_rent: Initial monthly rent of this contract, in euros.
-        previous_rent: Last monthly rent of the previous contract, updated, in euros.
+        monthly_rent: Rent per MONTH of this contract (e.g. 1250), not the yearly total.
+            Only needed for contracts from 01/12/2026.
+        previous_rent: Rent per MONTH the previous tenant paid (e.g. 1000). Only needed
+            for contracts from 01/12/2026.
         index_max_rent: Monthly rent limit of the SERPAVI reference index for this dwelling.
         large_holder: True if the landlord was a "gran tenedor" when signing.
         same_tenant_after_term: True if the contract renews with the same tenant after the

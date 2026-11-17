@@ -15,10 +15,11 @@ Metrics, overall and by category:
 
 * ``tool_selection_accuracy``: the first call names the expected tool, or there is no call
   when ``needs_tool`` is false;
-* ``argument_accuracy``: the first call also has the expected arguments. Only the keys in
-  the case are compared (numbers within 0.5 %, text without case or accents, ``"*"`` matches
-  anything); extra keys are allowed only if they hold the tool's default value, so a model
-  that invents an IBI is wrong;
+* ``argument_accuracy``: the first call also has the expected arguments and passed
+  validation. Only the keys in the case are compared (numbers within 0.5 %, text without
+  case or accents, ``"*"`` matches anything, a place is compared by its community); extra
+  keys are allowed only if they change nothing (the default, or 0 where the default is
+  None), so a model that invents an IBI is wrong;
 * ``sequence_accuracy`` (chained and parallel cases): every expected call appears, in order,
   with its arguments, and calls marked with the same turn went out in the same generation;
 * ``false_call_rate``: share of no-tool cases where the model called a tool anyway.
@@ -27,6 +28,7 @@ Run::
 
     uv run python -m tool_use.evaluate --out reports/phase2_bench.json
     uv run python -m tool_use.evaluate --adapter rlm/weights/final_rlm_lora --out ...
+    uv run python -m tool_use.evaluate --rescore reports/phase2_bench_*.json
 """
 
 from __future__ import annotations
@@ -39,6 +41,7 @@ from pathlib import Path
 from typing import Any
 
 from tool_use.build_data import normalise_name
+from tool_use.regions import resolve_region
 
 NUMERIC_TOLERANCE = 0.005
 
@@ -73,14 +76,37 @@ def arguments_match(
     expected: dict[str, Any], actual: dict[str, Any], defaults: dict[str, Any]
 ) -> bool:
     for key, value in expected.items():
-        if key not in actual or not values_match(value, actual[key]):
+        if key not in actual:
+            return False
+        if key == "region" and value != "*":  # "Sevilla" is as good as "andalucia"
+            if _region(actual[key]) != value:
+                return False
+        elif not values_match(value, actual[key]):
             return False
     for key, value in actual.items():  # extra keys must be harmless defaults
-        if key not in expected and not (
-            value is None or (key in defaults and values_match(defaults[key], value))
-        ):
+        if key not in expected and not _harmless(value, key, defaults):
             return False
     return True
+
+
+def _region(value: Any) -> str | None:
+    try:
+        return resolve_region(str(value))
+    except ValueError:
+        return None
+
+
+def _harmless(value: Any, key: str, defaults: dict[str, Any]) -> bool:
+    """An extra argument that changes nothing: the default, or 0/False where it is None
+    (the tools read an empty value and a missing one the same way)."""
+    if value is None:
+        return True
+    if key not in defaults:
+        return False
+    default = defaults[key]
+    if default is None:
+        return value in (0, False, "")
+    return values_match(default, value)
 
 
 def tool_defaults(registry) -> dict[str, dict[str, Any]]:
@@ -119,10 +145,14 @@ def score_case(
     selection_ok = first is not None and first["name"] == case["expected_tool"]
     # In a parallel case the first call may be any of the first turn's expected calls.
     candidates = [c for c in wanted if c.get("turn") == 1] or wanted[:1]
-    arguments_ok = selection_ok and any(
-        c["tool"] == first["name"]
-        and arguments_match(c["arguments"], first["arguments"], defaults.get(c["tool"], {}))
-        for c in candidates
+    arguments_ok = (
+        selection_ok
+        and first.get("ok", True)
+        and any(
+            c["tool"] == first["name"]
+            and arguments_match(c["arguments"], first["arguments"], defaults.get(c["tool"], {}))
+            for c in candidates
+        )
     )
 
     # Match expected calls in order; calls with the same expected turn may come in any order.
@@ -181,6 +211,27 @@ def summarise(rows: list[dict[str, Any]]) -> dict[str, Any]:
     return summary
 
 
+def rescore(report: str | Path, bench: str | Path) -> dict[str, Any]:
+    """Score a saved report again with the current bench and scorer, without generating.
+
+    The report keeps every call the model made, so a fix to a case or to the scorer applies
+    to past runs too and they stay comparable.
+    """
+    from tool_use.tools import default_registry
+
+    data = json.loads(Path(report).read_text())
+    cases = {c["id"]: c for c in load_bench(bench)}
+    defaults = tool_defaults(default_registry())
+    rows = []
+    for row in data["rows"]:
+        case = cases[row["id"]]
+        scores = score_case(case, row["tool_calls"], row["call_turns"], defaults)
+        rows.append({**row, **case, **scores})
+    data["rows"] = rows
+    data["summary"] = summarise(rows)
+    return data
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -195,7 +246,19 @@ def main() -> None:
     parser.add_argument("--max-new-tokens", type=int, default=2048)
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--ids", nargs="*", help="only these case ids")
+    parser.add_argument(
+        "--rescore", nargs="+", metavar="REPORT", help="score saved reports again, in place"
+    )
     args = parser.parse_args()
+
+    if args.rescore:
+        for report in args.rescore:
+            data = rescore(report, args.bench)
+            Path(report).write_text(json.dumps(data, indent=2, ensure_ascii=False, default=str))
+            print(
+                report, json.dumps({k: v for k, v in data["summary"].items() if k != "by_category"})
+            )
+        return
 
     # A fresh portfolio per run, so save_to_portfolio cases do not leak between runs.
     os.environ["ARCA_PORTFOLIO_DB"] = str(Path(tempfile.mkdtemp()) / "portfolio.sqlite")

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 
+from tool_use.regions import resolve_region
 from tool_use.registry import split_docstring
 from tool_use.tools import arithmetic_registry, calculator, default_registry
 
@@ -79,9 +80,63 @@ def test_acquisition_cost_new_build_needs_ajd(registry):
     assert result["vat"] == 20000 and result["stamp_duty"] == 1500 and result["transfer_tax"] == 0
 
 
-def test_bad_region_is_a_validation_error(registry):
-    record = registry.call("acquisition_cost", {"price": 1, "region": "valencia"})
+@pytest.mark.parametrize(
+    "place, region",
+    [
+        ("andalucia", "andalucia"),
+        ("Cataluña", "cataluna"),
+        ("Catalunya", "cataluna"),
+        ("Comunidad de Madrid", "madrid"),
+        ("La Rioja", "la_rioja"),
+        ("Castilla-La Mancha", "castilla_la_mancha"),
+        ("Sevilla", "andalucia"),  # the bench failures of the 1.7B model
+        ("Málaga", "andalucia"),
+        ("Bilbao", "pais_vasco"),
+        ("Barcelona", "cataluna"),
+        ("Valencia", "comunidad_valenciana"),
+        ("Bizkaia", "pais_vasco"),
+        ("A Coruña", "galicia"),
+        ("Donostia", "pais_vasco"),
+        ("Sant Cugat del Vallès", "cataluna"),
+    ],
+)
+def test_resolve_region_accepts_communities_provinces_and_towns(place, region):
+    assert resolve_region(place) == region
+
+
+def test_unknown_place_is_an_observation_with_the_options(registry):
+    record = registry.call("acquisition_cost", {"price": 1, "region": "Narnia"})
     assert not record.ok and "comunidad_valenciana" in record.error
+
+
+def test_acquisition_cost_resolves_the_city(registry):
+    result = run(registry, "acquisition_cost", price=185000, region="Sevilla")
+    assert result["region"] == "andalucia" and result["transfer_tax"] == pytest.approx(
+        185000 * 0.07
+    )
+
+
+def test_a_zero_price_is_rejected_so_a_chain_waits_for_it(registry):
+    record = registry.call("acquisition_cost", {"price": 0, "region": "madrid"})
+    assert not record.ok and "price" in record.error
+
+
+def test_zero_loan_fields_mean_no_mortgage(registry):
+    result = run(
+        registry,
+        "rental_returns",
+        monthly_rent=950,
+        total_investment=210000,
+        loan=0,
+        interest_rate_pct=0,
+        loan_years=0,
+    )
+    assert "financing" not in result
+    record = registry.call(
+        "rental_returns",
+        {"monthly_rent": 950, "total_investment": 210000, "loan": 1000, "loan_years": 0},
+    )
+    assert not record.ok and "loan_years" in record.error
 
 
 def test_rental_returns_with_mortgage_and_stress(registry):

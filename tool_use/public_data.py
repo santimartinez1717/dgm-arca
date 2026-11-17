@@ -27,6 +27,7 @@ import httpx
 from pydantic import Field
 
 from tool_use.build_data import SERPAVI_FILE, ZONES_FILE, normalise_name
+from tool_use.regions import PROVINCE_REGION
 from tool_use.registry import tool
 
 CARTOCIUDAD = "https://www.cartociudad.es/geocoder/api/geocoder/findJsonp"
@@ -38,26 +39,6 @@ INE_IRAV = "https://servicios.ine.es/wstempus/js/ES/DATOS_SERIE/IRAV1"
 TIMEOUT = 15.0
 MAX_UNITS_LISTED = 25
 
-# INE province code -> the region names used by acquisition_cost.
-PROVINCE_REGION = {
-    **dict.fromkeys(["04", "11", "14", "18", "21", "23", "29", "41"], "andalucia"),
-    **dict.fromkeys(["22", "44", "50"], "aragon"),
-    "33": "asturias",
-    "07": "baleares",
-    **dict.fromkeys(["35", "38"], "canarias"),
-    "39": "cantabria",
-    **dict.fromkeys(["02", "13", "16", "19", "45"], "castilla_la_mancha"),
-    **dict.fromkeys(["05", "09", "24", "34", "37", "40", "42", "47", "49"], "castilla_y_leon"),
-    **dict.fromkeys(["08", "17", "25", "43"], "cataluna"),
-    **dict.fromkeys(["03", "12", "46"], "comunidad_valenciana"),
-    **dict.fromkeys(["06", "10"], "extremadura"),
-    **dict.fromkeys(["15", "27", "32", "36"], "galicia"),
-    "26": "la_rioja",
-    "28": "madrid",
-    "30": "murcia",
-    "31": "navarra",
-    **dict.fromkeys(["01", "20", "48"], "pais_vasco"),
-}
 FORAL_PROVINCES = {"01", "20", "31", "48"}  # own cadastres, not in the Catastro service
 
 

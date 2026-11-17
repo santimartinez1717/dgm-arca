@@ -59,6 +59,21 @@ def test_extra_arguments_must_be_defaults(defaults):
     assert arguments_match({"price": 1}, {"price": 1, "new_build": False}, d)
     assert arguments_match({"price": 1}, {"price": 1, "reference_value": None}, d)
     assert not arguments_match({"price": 1}, {"price": 1, "renovation": 5000}, d)
+    loan = defaults["rental_returns"]
+    assert arguments_match({"loan": 0}, {"loan": 0, "loan_years": 0, "interest_rate_pct": 0}, loan)
+
+
+def test_region_is_compared_by_community(defaults):
+    d = defaults["acquisition_cost"]
+    assert arguments_match({"region": "andalucia"}, {"region": "Sevilla"}, d)
+    assert not arguments_match({"region": "andalucia"}, {"region": "extremadura"}, d)
+    assert not arguments_match({"region": "andalucia"}, {"region": "Narnia"}, d)
+
+
+def test_arguments_that_failed_validation_are_not_right(defaults):
+    case = {"needs_tool": True, "expected_tool": "get_market_rates", "expected_arguments": {}}
+    bad = call("get_market_rates", ok=False)
+    assert not score_case(case, [bad], defaults=defaults)["arguments_ok"]
 
 
 def test_single_and_no_tool_cases(defaults):

@@ -16,3 +16,8 @@ echo "=== Banco: Qwen3-1.7B base, con thinking ($(date +%H:%M))"
 uv run python -m tool_use.evaluate --thinking --out reports/phase2_bench_base_thinking.json
 
 echo "=== TODO TERMINADO ($(date +%H:%M))"
+
+# After the fixes to region, zero loan fields and the system prompt (same model as the first run).
+echo "=== Banco: Qwen3-1.7B base, sin thinking, tras los arreglos ($(date +%H:%M))"
+uv run python -m tool_use.evaluate --out reports/phase2_bench_base_v2.json
+echo "=== TODO TERMINADO v2 ($(date +%H:%M))"
