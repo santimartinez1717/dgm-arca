@@ -718,3 +718,169 @@ potencia (1+i)^-300 la dan como "aproximadamente 0,4666" sin desarrollarla.
   familia, y las pruebas sobre el SFT 3, que será el punto de partida del GRPO 2.
 - La potencia de la cuota sigue siendo aritmética que el 1,7B tiene que memorizar: en
   `cash_on_cash` la solución de fondo es la calculadora de la fase 2.
+
+---
+
+### 2026-11-17 · Fase 2 · Qué herramientas construir: investigación del dominio y decisión
+
+**Qué queríamos saber.** Qué herramientas tienen sentido para Umbral. No las que cumplen el
+mínimo, sino las que aportan algo que no haga ya otro producto, y que un modelo de 1,7B pueda
+usar.
+
+**Qué hicimos.** Investigamos cuatro frentes con búsquedas en la web y pruebas de cada API
+desde la DGX:
+- qué recomiendan los inversores con experiencia;
+- qué palancas legales y fiscales hay;
+- qué herramientas existen ya (portales, Invisor, TaxDown, Vivara, apps de ChatGPT);
+- qué datos públicos se pueden consultar de verdad.
+
+El informe está en [`docs/investigacion_fase2.md`](docs/investigacion_fase2.md).
+
+**Qué pasó.**
+- **Ninguna herramienta revisada aplica la norma por el usuario.** Le preguntan justo lo que no
+  sabe:
+  - el tipo de ITP de su comunidad;
+  - si la base es el precio o el valor de referencia;
+  - qué reducción del art. 23.2 le toca (TaxDown la pone en un desplegable de 0 a 100 %).
+- Ninguna dice si la renta de un piso concreto es legal.
+- Esos son también los fallos del alumno de la fase 1: la obra nueva sin IVA, el IRPF sin
+  amortización y la cuota del `cash_on_cash`.
+- **APIs que responden sin clave:** CartoCiudad, el servicio libre del Catastro, Euríbor del
+  BdE e IRAV del INE.
+- **Lo que no hay en abierto:** el valor catastral ni el de referencia, una fuente legible por
+  máquina de los tipos de ITP o de las zonas tensionadas, ni una API de subastas del BOE (su
+  `robots.txt` lo prohíbe todo).
+- La cuota de unas 100 llamadas al mes de Idealista no aparece en ninguna fuente primaria.
+
+**Qué concluimos.**
+- **10 herramientas:**
+  - Consulta: `lookup_property`, `get_market_rates` y `get_rent_reference`.
+  - Cálculo, sobre el motor de la fase 1: `acquisition_cost`, `rental_returns`,
+    `max_offer_price`, `legal_rent_cap` y `rental_income_tax`.
+  - Acción con estado: `save_to_portfolio` y `get_portfolio`.
+- Las calculadoras **deducen** lo que la gente suele equivocar en vez de pedirlo:
+  - el ITP, a partir de la comunidad;
+  - la reducción del IRPF, a partir de la fecha y los datos del contrato.
+- Idealista queda como opcional, porque con esa cuota no aguanta el desarrollo, el banco y la
+  corrección.
+- `calculator`, la calculadora genérica de la plantilla, sale del registro del endpoint. Se
+  queda solo para una ablación: con ella, el modelo aún tiene que aplicar las reglas por su
+  cuenta.
+
+---
+
+### 2026-11-17 · Fase 2 · El RDL 29/2026, leído en el BOE: la reducción del IRPF tiene tres regímenes
+
+**Qué queríamos saber.** Si lo que decían tres despachos sobre el RDL 29/2026 era cierto, y qué
+reglas del motor deja anticuadas.
+
+**Qué hicimos.** Leímos el texto del BOE
+([BOE-A-2026-20823](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20823)), sacado con la
+API de sumarios. Nos centramos en el art. 6, que reescribe el art. 23.2 de la LIRPF, y en la
+disposición transitoria 38.ª. Resumen en [`docs/rdl_29_2026.md`](docs/rdl_29_2026.md).
+
+**Qué pasó.**
+- **La reducción conserva tres regímenes según la fecha de firma del contrato:**
+  - antes del 26/05/2023: 60 %;
+  - del 26/05/2023 al 01/12/2026: la escala de la Ley 12/2023;
+  - desde el 01/12/2026: una escala nueva.
+- **La escala nueva**, solo si el arrendador no es gran tenedor:
+  - bajar la renta más de un 5 % da 100/95/90/85/70 %;
+  - no subirla da el 50 %;
+  - subirla da del 40 % al 15 % según el tramo;
+  - el primer alquiler tiene su propia escala, con el 100 % por debajo del índice SERPAVI.
+- Al gran tenedor solo le quedan el 70 % (alquiler social) y el 60 % (rehabilitación).
+- La fecha del 1 de diciembre que daban los despachos era correcta. El "2 % de subida máxima
+  hasta 2027" que también daban **no aparece en el texto**.
+
+**Qué concluimos.**
+- La escala nueva va al motor como **función nueva**, `rental_reduction_pct_2026`, con un test
+  por cada letra del artículo (23 casos). Las funciones de la fase 1 no cambian, porque su
+  dataset es anterior y la escala de 2023 sigue vigente para esos contratos.
+- `rental_income_tax` elige el régimen por la fecha y calcula la variación de la renta a
+  partir de la renta anterior y la nueva.
+- Es el mejor ejemplo de por qué la regla debe vivir en la herramienta y no en los pesos: el
+  alumno, entrenado con la escala de 2023, no puede saber la nueva.
+- **No están modelados:** el reparto entre varios inquilinos de edades distintas, el 80 % de la
+  prórroga tácita y las habitaciones.
+
+---
+
+### 2026-11-17 · Fase 2 · Zonas tensionadas del BOE y rentas del SERPAVI como datos de las herramientas
+
+**Qué queríamos saber.** Si se puede responder "¿es zona tensionada?" y "¿cuánto se paga de
+alquiler aquí?" sin que el usuario lo sepa.
+
+**Qué hicimos.** `tool_use/build_data.py` construye dos ficheros:
+- **Zonas tensionadas.** Lee las 10 resoluciones trimestrales del Ministerio en el BOE, de
+  marzo de 2024 a octubre de 2026.
+- **Rentas del SERPAVI.** Usa la hoja de municipios del Excel del SERPAVI (71 MB, no se
+  versiona): pisos, último año con datos y solo municipios con al menos 10 contratos.
+
+**Qué pasó.**
+- **322 zonas:**
+  - por comunidad: Cataluña 272, País Vasco 21, Navarra 21, Asturias 6 y Galicia 2;
+  - 8 cubren solo una parte del municipio (un distrito de Galdakao, barrios de Gijón y Avilés,
+    núcleos de Llanes…) y la herramienta lo avisa;
+  - en 312 la declaración baja el umbral de gran tenedor a 5 viviendas; Bilbao y Asturias no;
+  - las 322 aplican el tope del índice a las viviendas sin contrato previo.
+
+  Son justo dos argumentos de `legal_rent_cap` (`zone_lowers_threshold` y
+  `declaration_caps_unrented`) que el usuario no suele conocer.
+- **SERPAVI:** 2.616 municipios, 2.555 con datos de 2024. Son rentas declaradas a Hacienda de
+  contratos en vigor, no precios de anuncio. Madrid da una mediana de 13,97 €/m² y Barcelona
+  de 13,68 €/m², muy por debajo de lo que piden los portales.
+- **Un error encontrado al montar el banco.** `normalise_name` quitaba como si fuera un
+  artículo el principio de cualquier nombre que empezara por "a", "o" o "la": "Olot" quedaba
+  en "lot", "Alella" en "lella" y "Lasarte-Oria" en "sarte-oria". **34 de las 322 zonas** no
+  se habrían encontrado nunca. Además, el formato del INE "Coruña, A" no cruzaba con
+  "A Coruña". Corregido y con test.
+- **Detalles del BOE que el parser maneja a mano:**
+  - una coma que falta en la lista catalana ("Manresa el Masnou");
+  - "Vitoria-Gasteiz, excepto la zona rural…", que se partía por la coma.
+
+**Qué concluimos.**
+- `get_rent_reference` combina las dos fuentes. Funciona por nombre (también bilingüe:
+  "San Sebastián" encuentra "Donostia / San Sebastián") o por código INE, que es lo que
+  devuelve `lookup_property`, así que encadenan sin ambigüedad.
+- **Lo que no da** es el índice legal SERPAVI de una vivienda concreta: eso sale del visor
+  del Ministerio con su referencia catastral. La herramienta lo dice.
+- **Pendiente:**
+  - Cataluña amplió la lista a unos 302 municipios en julio de 2026, pero aún no aparece en
+    ninguna resolución del BOE;
+  - las declaraciones parciales están a nivel de municipio, sin el cruce por sección censal.
+
+---
+
+### 2026-11-17 · Fase 2 · Primera prueba del bucle con un modelo real (Qwen3-0.6B, CPU, un caso)
+
+**Qué queríamos saber.** Si el bucle funciona de principio a fin con un modelo de verdad: el
+formato nativo de Qwen3, el parser, la validación y la vuelta del error al modelo.
+
+**Qué hicimos.**
+`CUDA_VISIBLE_DEVICES="" uv run python -m tool_use.evaluate --model Qwen/Qwen3-0.6B --ids acq-01 --max-new-tokens 120 --max-turns 2`.
+
+Fue en CPU porque la GPU estaba ocupada con el SFT 2. Es un solo caso, así que no es una
+medida: solo comprueba que las piezas encajan.
+
+**Qué pasó.**
+- El modelo eligió `acquisition_cost` y copió bien el precio, el valor de referencia y la
+  notaría.
+- Pero puso `region: "sevilla"`, la ciudad en vez de la comunidad. La validación lo rechazó y
+  le devolvió el error, un mensaje largo con las 17 comunidades.
+- En el segundo turno no corrigió la llamada: **abandonó y se inventó la respuesta**
+  (187.500 €, sin ITP).
+- Selección 1/1 y argumentos 0/1.
+- Las 10 definiciones ocupan 4.767 tokens con el tokenizador de Qwen3. La más larga es
+  `rental_income_tax`, con 1.022.
+
+**Qué concluimos.**
+- El bucle funciona de principio a fin con un modelo real.
+- Con un 0,6B no sacamos conclusiones. Pero el fallo apunta a una decisión de diseño que
+  mediremos con el 1,7B: un esquema estricto, que obliga al modelo a traducir ciudad →
+  comunidad, o una herramienta tolerante, que acepta "Sevilla" y la traduce ella con la tabla
+  de provincias.
+- **Siguiente, en cuanto la GPU quede libre:**
+  1. el banco de 40 casos con Qwen3-1.7B base, con y sin thinking;
+  2. el banco con el adaptador de GRPO;
+  3. `phase1_compare` sobre el test de la fase 1.
