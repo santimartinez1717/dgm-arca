@@ -298,7 +298,7 @@ def generate_traces(
             for raw, n_tokens, truncated in completions:
                 trace = canonicalize(raw)
                 if trace is not None:
-                    trace = scrub_citations(trace)
+                    trace = scrub_leaks(scrub_citations(trace))
                 mentions_rules = bool(RULES_LEAK.search(trace or raw))
                 ok = False
                 derived = None
