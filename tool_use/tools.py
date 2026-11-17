@@ -3,7 +3,7 @@
 * ``calculators.py``: the phase 1 rule engine as tools (acquisition cost, yields, maximum
   offer, legal rent cap, IRPF of the rental).
 * ``portfolio.py``: the investor's portfolio in SQLite, a tool with state and an effect.
-* the public-data tools (Catastro, Euribor and IRAV, SERPAVI) come next.
+* ``public_data.py``: cadastre lookup, Euribor and IRAV, stressed zones and SERPAVI rents.
 
 ``calculator`` is the generic arithmetic tool from the course template. It is not in the
 default registry: it exists for the ablation that gives the model arithmetic but no rules,
@@ -17,6 +17,7 @@ import operator
 
 from tool_use.calculators import CALCULATORS
 from tool_use.portfolio import PORTFOLIO_TOOLS
+from tool_use.public_data import PUBLIC_DATA_TOOLS
 from tool_use.registry import ToolRegistry, tool
 
 _ALLOWED_OPS = {
@@ -54,7 +55,7 @@ def calculator(expression: str) -> float:
 
 def default_registry() -> ToolRegistry:
     """The registry behind POST /tools and the phase 4 agent."""
-    return ToolRegistry().register(*CALCULATORS, *PORTFOLIO_TOOLS)
+    return ToolRegistry().register(*PUBLIC_DATA_TOOLS, *CALCULATORS, *PORTFOLIO_TOOLS)
 
 
 def arithmetic_registry() -> ToolRegistry:
