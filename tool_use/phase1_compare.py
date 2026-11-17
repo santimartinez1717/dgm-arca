@@ -18,7 +18,7 @@ because the verifier accepts exactly one number there.
 Run::
 
     uv run python -m tool_use.phase1_compare --variants none arithmetic domain \\
-        --limit 60 --out reports/phase2_vs_phase1.json
+        --per-family 10 --out reports/phase2_vs_phase1.json
 """
 
 from __future__ import annotations
@@ -75,6 +75,12 @@ def main() -> None:
     parser.add_argument("--max-turns", type=int, default=5)
     parser.add_argument("--max-new-tokens", type=int, default=2048)
     parser.add_argument("--limit", type=int, default=None, help="first N problems")
+    parser.add_argument(
+        "--per-family", type=int, default=None, help="first N problems of each family"
+    )
+    parser.add_argument(
+        "--resume", action="store_true", help="keep the rows already in --out and skip them"
+    )
     parser.add_argument("--out", default="reports/phase2_vs_phase1.json")
     args = parser.parse_args()
 
@@ -83,6 +89,14 @@ def main() -> None:
     from tool_use.executor import HFChatModel, ToolLoop
 
     problems = [json.loads(line) for line in Path(args.data).read_text().splitlines() if line]
+    if args.per_family:
+        seen: dict[str, int] = defaultdict(int)
+        kept = []
+        for problem in problems:
+            if seen[problem["family"]] < args.per_family:
+                seen[problem["family"]] += 1
+                kept.append(problem)
+        problems = kept
     problems = problems[: args.limit]
     model = HFChatModel(
         model_id=args.model,
@@ -94,9 +108,15 @@ def main() -> None:
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     rows: list[dict[str, Any]] = []
+    if args.resume and out.exists():  # a session cut mid-run: keep what was done
+        rows = json.loads(out.read_text())["rows"]
+        print(f"resuming with {len(rows)} rows already done", flush=True)
+    done = {(r["variant"], r["question"]) for r in rows}
     for variant in args.variants:
         loop = ToolLoop(model=model, registry=registry_for(variant), use_tools=variant != "none")
         for i, problem in enumerate(problems, 1):
+            if (variant, problem["question"]) in done:
+                continue
             response = loop.run(problem["question"] + ANSWER_INSTRUCTION, max_turns=args.max_turns)
             verifier = EuroVerifier(
                 problem.get("tolerance_abs", 0.01), problem.get("tolerance_rel", 0.0)

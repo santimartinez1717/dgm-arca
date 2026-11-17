@@ -105,7 +105,8 @@ def lookup_property(
     cadastral value or the reference value (they are not public).
 
     Args:
-        address: The street, number and municipality exactly as the user wrote them.
+        address: Only the street, number and municipality the user gave (no floor, door or
+            staircase: those go in floor and door).
         cadastral_ref: Cadastral reference, 14 characters (building) or 20 (unit).
         floor: Floor of the dwelling, e.g. "2", "BJ" for ground floor.
         door: Door of the dwelling, e.g. "B" or "IZ".
