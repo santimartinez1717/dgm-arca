@@ -570,3 +570,68 @@ problemas distintos, con los números sustituidos):
   naturales, no sustituirlas.
 - Siguiente paso: lo mismo en el resto de problemas sin resolver de `irpf_rental`,
   `cash_on_cash` y `legal_rent`, y más trazas de obra nueva.
+
+---
+
+### 2026-11-17 · Fase 1 · Ronda 2 de datos (clave en irpf y legal, obra nueva) y SFT 2
+
+**Qué queríamos saber.** Si con trazas de los problemas que el profesor no resolvía solo
+(`irpf_rental`, `legal_rent`) y de obra nueva, el alumno empieza a acertar esas familias, y si
+así GRPO tendrá señal en ellas.
+
+**Qué hicimos.** `distill_priv.sh` (Qwen3-4B, lotes de 2, `--privileged --only-unsolved`, cada
+tanda seguida de `rlm.rewrite_traces`) y después `sft2.sh`:
+
+| Tanda | Trazas | Verificadas | Problemas cubiertos | Tras reescribir |
+|---|---|---|---|---|
+| `irpf_rental` con clave (2048 tokens) | 64 | 17 (26,6 %) | 10/16 | 30 de 46 (13 problemas) |
+| Obra nueva, sin clave | — | 141 | 40/40 | — |
+| `legal_rent` con clave (2048 tokens) | 80 | 29 (36,2 %) | 17/20 | **63 de 63** (20 problemas) |
+
+`cash_on_cash` con clave quedó para la próxima sesión (`relevo.sh` paró la cadena a las 14:46
+para que el SFT 2 cupiera). La reescritura de `legal_rent` acepta más trazas que las
+verificadas porque reescribe las que aciertan aunque se salten un cálculo intermedio, y al
+reescribirlas el profesor los escribe todos.
+
+SFT 2: Qwen3-1.7B desde el modelo base, mismo LoRA y mismos hiperparámetros que el SFT 1
+(`--max-per-problem 3 --max-per-family 150 --max-length 3328`, 2 épocas, 86 pasos, 34 min,
+loss final 0,35). 974 trazas verificadas, 688 tras el tope: acquisition_cost 150, legal_rent
+150, irpf_rental 150, max_price 92, net_yield 91, cash_on_cash 55. Evaluación en test con
+1024 tokens (`reports/eval_sft2_17b.json`).
+
+**Qué pasó.**
+
+| Familia (n=50) | SFT 1 | SFT 2 | Truncadas SFT 1 → 2 |
+|---|---|---|---|
+| acquisition_cost | 74 % | 76 % | 6 → 8 % |
+| — de ellas obra nueva (n=11) | **1/11** | **9/11** | |
+| cash_on_cash | 0 % | 0 % | 98 → 98 % |
+| irpf_rental | 0 % | 2 % | **80 → 42 %** |
+| legal_rent | 18 % | 18 % | 72 → 80 % |
+| max_price | 36 % | 26 % | 44 → 38 % |
+| net_yield | 64 % | 58 % | 16 → 18 % |
+| **Total (300)** | **32,0 %** | **30,0 %** | 53 → 47 % |
+
+- Obra nueva: de 1/11 a 9/11 (Fisher p = 0,002). El modelo ya suma el IVA del 10 %.
+- El total baja 2 puntos, pero no es significativo: 31 problemas los acierta solo el SFT 1 y
+  25 solo el SFT 2 (McNemar exacto p = 0,50). La bajada de max_price (18 → 13 de 50) tampoco
+  lo es (Fisher p = 0,39).
+- `irpf_rental`: ahora termina el 58 % de las veces (antes el 20 %), pero acierta 1 de 50. De
+  las 29 respuestas terminadas, solo 7 mencionan la amortización y casi todas dan una cifra muy
+  por encima de la esperada (4.886 frente a 3.912; 6.544 frente a 2.274): sigue sin restar la
+  amortización ni aplicar bien la reducción.
+- `legal_rent` y `cash_on_cash` siguen cortándose en 1024 tokens (80 % y 98 %).
+
+Defecto encontrado en los datos: 48 de las 63 trazas reescritas de `legal_rent` y 21 de las 30
+de `irpf_rental` están escritas enteras en minúsculas (manía del profesor al reescribir; las
+cuentas están bien). Entraron así en el SFT 2.
+
+**Qué concluimos.**
+- Las trazas de obra nueva funcionan: es la única mejora clara del SFT 2.
+- En `irpf_rental` las trazas con clave le enseñan a terminar, no a calcular bien. Antes de
+  GRPO hay que ver con `sample_check` si con 8 muestras acierta alguna vez; si no, GRPO
+  seguirá sin señal y harán falta pistas.
+- `legal_rent` y `cash_on_cash` necesitan más tokens que 1024 o razonamientos más cortos.
+- Para la próxima tanda, `rewrite_traces` debe rechazar las trazas en minúsculas.
+- Pendiente: `cash_on_cash` con clave (`bash distill_priv.sh` continúa), `sample_check` del
+  SFT 2 si no termina hoy, y GRPO 2.
