@@ -677,3 +677,44 @@ El corte está solo en la evaluación (`rlm/evaluate.py`, 1024 por defecto, here
 - `irpf_rental` y `cash_on_cash` razonan mal aunque terminen: no es cuestión de tokens.
 - La cifra principal pasa a ser la de 2048 tokens (`eval_sft2_2048.sh`, en cola) y el GRPO 2
   usará al menos 1536.
+
+---
+
+### 2026-11-18 · Fase 1 · Muestreo del SFT 2, `cash_on_cash` con clave y pistas para GRPO
+
+**Qué queríamos saber.** Si el SFT 2 acierta alguna vez las familias difíciles con 8 intentos
+(si no, GRPO no tiene señal en ellas) y si la destilación con clave funciona en `cash_on_cash`.
+
+**Qué hicimos.** `sesion3.sh`: `rlm.sample_check` sobre el SFT 2 (8 problemas de train por
+familia, 8 respuestas a temperatura 1,0, 1536 tokens; obra nueva con 6 problemas), y después
+`cash_on_cash` con clave (3072 tokens, `--only-unsolved`) y su reescritura.
+
+**Qué pasó.** Muestreo (`reports/sample_check_sft2*.json`):
+
+| Familia | pass@8 | Problemas útiles | Respuestas correctas | Cortadas |
+|---|---|---|---|---|
+| legal_rent | 7/8 | 7/8 | 53 % | 16 % |
+| obra nueva | 6/6 | 6/6 | 62 % | 4 % |
+| irpf_rental | **0/8** | 0/8 | 0 de 64 | 22 % |
+| cash_on_cash | **0/8** | 0/8 | 0 de 64 | 62 % |
+
+La recompensa por pasos media de las respuestas fallidas de irpf es 0,07: el error está al
+principio (la amortización), no hay crédito parcial que aprovechar.
+
+`cash_on_cash` con clave: 32 problemas que el profesor nunca resolvió, 128 trazas, las 128 con
+la respuesta correcta pero 36 de las primeras 48 citan la clave ("The answer provided in the
+key is 1.31%"). Tras la reescritura, 51 verificadas de 26 problemas; 76 rechazadas por
+saltarse algún valor intermedio. Las que pasan calculan la cuota con la fórmula, pero la
+potencia (1+i)^-300 la dan como "aproximadamente 0,4666" sin desarrollarla.
+
+**Qué concluimos.**
+- `legal_rent` y obra nueva ya tienen señal para GRPO.
+- `irpf_rental` y `cash_on_cash` no: hacen falta pistas. `rlm/hints.py` añade copias de esos
+  problemas con una pista al final del enunciado (nivel 1: el método; nivel 2: además el
+  primer valor intermedio), dejando también los originales (`--hint-families` en
+  `train_grpo`, `--hint-level` en `sample_check`). Idea de Scaf-GRPO / Guide-GRPO.
+- Cambio de orden: en vez de evaluar el SFT 2 a 2048 y muestrear con pistas sobre él, SFT 3
+  desde el modelo base con todas las trazas (incluidas las 51 de cash) y tope de 200 por
+  familia, y las pruebas sobre el SFT 3, que será el punto de partida del GRPO 2.
+- La potencia de la cuota sigue siendo aritmética que el 1,7B tiene que memorizar: en
+  `cash_on_cash` la solución de fondo es la calculadora de la fase 2.
