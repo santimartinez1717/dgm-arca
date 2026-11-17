@@ -248,6 +248,28 @@ CITATION = re.compile(
 )
 
 
+# Before the rule sheet's opening was added to RULES_LEAK, 143 of 703 verified traces said
+# "From the background knowledge, the formula is…", and the student learnt to say it. Most
+# mentions are a removable prefix or complement; whatever is left after this still counts as
+# a leak and the trace is dropped.
+BACKGROUND_PREFIX = re.compile(
+    r"(?:^|(?<=[.!?:]\s)|(?<=\n))(From|According to|Based on|Per) the background knowledge,\s*(\w)",
+    re.MULTILINE,
+)
+BACKGROUND_COMPLEMENT = re.compile(
+    r"\s*\b((provided|outlined|given|described|stated) )?(in|from) the background knowledge"
+    r"( provided)?",
+    re.IGNORECASE,
+)
+
+
+def scrub_leaks(text: str) -> str:
+    """Remove the removable mentions of the rule sheet's "background knowledge"."""
+    text = BACKGROUND_PREFIX.sub(lambda m: m.group(2).upper(), text)
+    text = BACKGROUND_COMPLEMENT.sub("", text)
+    return re.sub(r",\s*,", ",", text)
+
+
 def scrub_citations(text: str) -> str:
     """Replace the usual ways of citing the rule sheet with a neutral "the rules"."""
 

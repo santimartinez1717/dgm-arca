@@ -22,7 +22,7 @@ import random
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from datasets import Dataset, load_dataset
+from datasets import Dataset
 
 from rlm.data import build_prompt
 
@@ -65,17 +65,35 @@ def load_sft_dataset(
 
     Expected JSONL fields: ``question``, ``trace`` (the full ``<think>…</think><answer>…</answer>``
     text) and ``answer``. Only traces marked ``verified: true`` are used. Several files (the
-    main distillation plus targeted passes for hard families) are concatenated.
+    main distillation, targeted passes, rewritten privileged traces) are concatenated; their
+    extra fields differ, so only what SFT needs is kept. Mentions of the teacher's rule sheet
+    are scrubbed (``distill.scrub_leaks``) and traces that still cite it are dropped.
     """
+    from rlm.distill import RULES_LEAK, read_traces, scrub_leaks
+
     if not isinstance(paths, list):
         paths = [paths]
-    dataset = load_dataset("json", data_files=[str(p) for p in paths], split="train")
-    if "verified" in dataset.column_names:
-        dataset = dataset.filter(lambda ex: bool(ex["verified"]))
+    rows, scrubbed, dropped = [], 0, 0
+    for path in paths:
+        for t in read_traces(Path(path)):
+            if not t.get("verified", True):
+                continue
+            trace = scrub_leaks(t["trace"])
+            scrubbed += trace != t["trace"]
+            if RULES_LEAK.search(trace):
+                dropped += 1
+                continue
+            rows.append(
+                {"question": t["question"], "trace": trace, "family": t.get("family", "control")}
+            )
+    print(
+        f"{len(rows)} verified traces; {scrubbed} scrubbed of rule-sheet mentions, {dropped} "
+        "dropped because they still cite it"
+    )
     if max_per_problem or max_per_family:
-        rows = cap_traces(dataset.to_list(), max_per_problem, max_per_family)
+        rows = cap_traces(rows, max_per_problem, max_per_family)
         print(f"per family after capping: {dict(Counter(r.get('family') for r in rows))}")
-        dataset = Dataset.from_list(rows)
+    dataset = Dataset.from_list(rows)
     return dataset.map(
         lambda ex: {
             "prompt": build_prompt(ex["question"]),
