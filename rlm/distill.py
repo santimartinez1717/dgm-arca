@@ -111,9 +111,118 @@ Remember: reason as an expert who knows all this; never refer to these notes."""
 RULES_LEAK = re.compile(
     r"(rules? (provided|given|listed|above|you gave|i was given)|(provided|given|listed) "
     r"(rules?|notes|instructions)|(the|these) notes|system prompt|instructions (provided|given)|"
-    r"background knowledge|reglas (dadas|proporcionadas|indicadas|del dominio)|hoja de reglas)",
+    r"background knowledge|reglas (dadas|proporcionadas|indicadas|del dominio)|hoja de reglas|"
+    r"solution key|answer key|private key)",
     re.IGNORECASE,
 )
+
+# Privileged distillation (STaR's "rationalization"; on-policy self-distillation with
+# privileged information): the teacher also sees the engine's intermediate values for the
+# problem, named, and derives them in its own words. The student never sees the key: the
+# saved trace keeps the plain question. Names follow realestate_problems.solve(), which
+# stores the values as ``checkpoints`` in this order.
+KEY_NAMES = {
+    "acquisition_cost": {
+        "True": [
+            "tax base (higher of price and reference value)",
+            "VAT (10 % of the price)",
+            "AJD stamp duty",
+        ],
+        "False": ["tax base (higher of price and reference value)", "ITP transfer tax"],
+    },
+    "net_yield": [
+        "rent actually collected in the year",
+        "annual operating costs",
+        "net operating income",
+    ],
+    "legal_rent": ["maximum monthly rent"],
+    "irpf_rental": ["depreciation of the building", "net rental income before the reduction"],
+    "cash_on_cash": [
+        "monthly mortgage payment",
+        "annual cash flow after the mortgage",
+        "equity (own money put in)",
+    ],
+    "max_price": ["total investment that gives the target yield"],
+}
+LEGAL_RULE = {
+    "no_zone": "not in a stressed zone, so no cap: the market rent applies",
+    "zone_uncapped": "stressed zone, but no cap applies to this dwelling: the market rent applies",
+    "market_below_cap": "the market rent is below every cap that applies",
+    "previous_rent": "the binding cap is the last updated rent of the previous contract "
+    "(10 % more only if an exception applies)",
+    "index": "the binding cap is the upper reference index times the area",
+}
+KEY_NOTE = (
+    "\n\n---\nPrivate solution key, for checking your own work only. Never mention it, never "
+    "say that values were given to you, and never copy a value without computing it from the "
+    "statement: reason as if you had worked everything out yourself.\n"
+)
+
+
+def solution_key(row: dict, rng: random.Random) -> str:
+    """The engine's named intermediate values and decisive branch for one problem.
+
+    The order of the values is shuffled per problem, so that traces do not all follow the
+    order of the key instead of an order of their own.
+    """
+    family = row.get("family")
+    branches = row.get("branches") or {}
+    names = KEY_NAMES.get(family)
+    if isinstance(names, dict):
+        names = names[branches.get("new_build", "False")]
+    if not names:
+        return ""
+    unit = "%" if row.get("unit") == "pct" else "€"
+    values = zip(names, row["checkpoints"], strict=True)
+    lines = [f"- {name}: {value:,.2f} €" for name, value in values]
+    if family == "irpf_rental":
+        pct = branches.get("reduction", "0")
+        lines.append(
+            "- reduction that applies: none (net income not positive)"
+            if pct == "0"
+            else f"- reduction that applies: {pct} %"
+        )
+    if family == "legal_rent":
+        lines.append(f"- why: {LEGAL_RULE.get(branches.get('rule'), branches.get('rule'))}")
+        holder = branches.get("large_holder") == "True"
+        lines.append(f"- the landlord {'is' if holder else 'is not'} a large holder")
+    rng.shuffle(lines)
+    lines.append(f"- final answer: {float(row['answer']):,.2f} {unit}")
+    return KEY_NOTE + "\n".join(lines)
+
+
+EQUALS_BEFORE = re.compile(r"(=|≈)\s*\S{0,3}\s*$")
+NUMBER = re.compile(r"-?\d[\d.,]*")
+
+
+def derived_share(thinking: str, row: dict) -> float:
+    """Share of the key's intermediate values that the reasoning *computes*, not just quotes.
+
+    A value counts when it appears right after an "=" or "≈" somewhere in the reasoning, within
+    0.5 % (computed by hand, a mortgage payment can be off by a few cents and still lead to
+    the right answer). Values already in the statement (a tax base equal to the price) are
+    skipped. Calibrated on the unprivileged verified traces: 77-99 % of them pass, by family.
+    """
+    from rlm.realestate_rewards import readings
+
+    targets = [
+        v
+        for v in row.get("checkpoints") or []
+        if not any(abs(r - v) <= 0.01 for r in readings(row["question"]))
+    ]
+    if not targets:
+        return 1.0
+    derived = set()
+    for match in NUMBER.finditer(thinking):
+        if not EQUALS_BEFORE.search(thinking[max(0, match.start() - 14) : match.start()]):
+            continue
+        for value in readings(match.group(0)):
+            derived.update(
+                i for i, t in enumerate(targets) if abs(value - t) <= max(0.01, 0.005 * abs(t))
+            )
+    return len(derived) / len(targets)
+
+
 # The citations are almost always one of these phrases ("Let me recall the rules provided"),
 # 31 of 104 irpf_rental traces in the main run. Rewritten to "the rules", the sentence reads
 # as plain legal reasoning, so the trace can still be verified instead of being thrown away.
@@ -166,6 +275,8 @@ def generate_traces(
     temperature: float,
     min_think_words: int,
     system_prompt: str = R1_ZERO_SYSTEM_PROMPT,
+    privileged: bool = False,
+    seed: int = 0,
 ) -> Iterator[list[dict]]:
     """For each problem, sample ``samples`` teacher completions, canonicalise and verify them.
 
@@ -175,11 +286,15 @@ def generate_traces(
     verifier, it was not truncated, the reasoning has at least ``min_think_words`` words
     (a cheap filter against answers that are right by luck with no reasoning) and it does
     not cite the teacher's rule sheet.
+
+    With ``privileged`` the teacher also sees ``solution_key`` after the question, and a
+    trace must in addition compute every intermediate value that is not in the statement.
     """
+    rng = random.Random(seed)
     generator = Generator(teacher, enable_thinking=True, system_prompt=system_prompt).load()
     for chunk in batched(rows, batch_size):
         outputs = generator.generate(
-            [row["question"] for row in chunk],
+            [row["question"] + (solution_key(row, rng) if privileged else "") for row in chunk],
             num_return_sequences=samples,
             max_new_tokens=max_new_tokens,
             temperature=temperature,
@@ -192,10 +307,14 @@ def generate_traces(
                     trace = scrub_citations(trace)
                 mentions_rules = bool(RULES_LEAK.search(trace or raw))
                 ok = False
+                derived = None
                 if trace is not None and not truncated and has_valid_format(trace):
                     correct, _ = verify_row(trace, row)
-                    think_words = len(THINK.search(trace).group("think").split())
-                    ok = correct and think_words >= min_think_words and not mentions_rules
+                    thinking = THINK.search(trace).group("think")
+                    ok = correct and len(thinking.split()) >= min_think_words and not mentions_rules
+                    if privileged:
+                        derived = derived_share(thinking, row)
+                        ok = ok and derived == 1.0
                 batch.append(
                     {
                         "question": row["question"],
@@ -205,6 +324,8 @@ def generate_traces(
                         "verified": ok,
                         "truncated": truncated,
                         "mentions_rules": mentions_rules,
+                        "privileged": privileged,
+                        "derived": derived,
                         "n_tokens": n_tokens,
                         "teacher": teacher,
                     }
@@ -292,6 +413,18 @@ def main() -> None:
         default=[],
         help="trace files of earlier runs: their problems are not drawn again",
     )
+    parser.add_argument(
+        "--privileged",
+        action="store_true",
+        help="show the teacher the engine's intermediate values (solution_key)",
+    )
+    parser.add_argument(
+        "--only-unsolved",
+        nargs="+",
+        default=[],
+        help="trace files of earlier runs: keep only their problems with no verified trace "
+        "(STaR rationalizes only what the unaided teacher could not solve)",
+    )
     parser.add_argument("--output", default="rlm/data/sft_traces.jsonl")
     args = parser.parse_args()
 
@@ -300,6 +433,11 @@ def main() -> None:
         rows = [row for row in rows if row.get("family") in args.families]
     seen = {t["question"] for path in args.exclude for t in read_traces(Path(path))}
     rows = [row for row in rows if row["question"] not in seen]
+    if args.only_unsolved:
+        earlier = [t for path in args.only_unsolved for t in read_traces(Path(path))]
+        solved = {t["question"] for t in earlier if t["verified"]}
+        unsolved = {t["question"] for t in earlier} - solved
+        rows = [row for row in rows if row["question"] in unsolved]
     if args.limit:
         rows = random.Random(args.seed).sample(rows, min(args.limit, len(rows)))
 
@@ -333,6 +471,8 @@ def main() -> None:
             args.temperature,
             args.min_think_words,
             system_prompt,
+            args.privileged,
+            args.seed,
         )
         for i, batch in enumerate(batches, 1):
             handle.write("".join(json.dumps(t, ensure_ascii=False) + "\n" for t in batch))
