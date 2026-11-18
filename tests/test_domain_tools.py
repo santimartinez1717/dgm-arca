@@ -276,3 +276,34 @@ def test_save_to_portfolio_requires_confirmation(registry):
 def test_arithmetic_registry_is_only_the_calculator():
     assert list(arithmetic_registry().tools) == ["calculator"]
     assert calculator(expression="2 ** 10") == 1024
+
+
+def test_annual_net_income_instead_of_the_rent(registry):
+    # Phase 1 test problems state the yearly net income; the tool must not read it as rent.
+    result = run(
+        registry,
+        "rental_returns",
+        total_investment=200000,
+        annual_net_income=9840,
+        loan=105000,
+        interest_rate_pct=2.75,
+        loan_years=15,
+    )
+    assert result["financing"]["cash_on_cash_pct"] == pytest.approx(1.36, abs=0.01)
+    offer = run(
+        registry,
+        "max_offer_price",
+        target_net_yield_pct=7,
+        annual_net_income=19770,
+        itp_rate_pct=8,
+        fixed_costs=11800,
+    )
+    assert offer["max_price"] == pytest.approx(250582.01, abs=0.01)
+
+
+def test_rent_or_net_income_but_not_both(registry):
+    both = {"total_investment": 1e5, "monthly_rent": 800, "annual_net_income": 8000}
+    assert not registry.call("rental_returns", both).ok
+    assert not registry.call("rental_returns", {"total_investment": 1e5}).ok
+    no_rate = {"target_net_yield_pct": 5, "monthly_rent": 800}
+    assert "itp_rate_pct" in registry.call("max_offer_price", no_rate).error

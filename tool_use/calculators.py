@@ -99,10 +99,36 @@ def acquisition_cost(
     return {**asdict(result), "region": region, "rule": rule, "warnings": warnings}
 
 
+def _net_income(
+    monthly_rent: float | None, annual_net_income: float | None, **costs: float
+) -> dict[str, float]:
+    """Annual net operating income, from the rent and costs or as given by the user."""
+    if (monthly_rent is None) == (annual_net_income is None):
+        raise ValueError("pass monthly_rent (with the costs) or annual_net_income, not both")
+    if annual_net_income is not None:
+        return {"net_income": annual_net_income}
+    noi = rules.net_yield(
+        monthly_rent=monthly_rent,
+        vacant_months=costs["vacant_months"],
+        ibi=costs["ibi"],
+        community_monthly=costs["community_monthly"],
+        insurance=costs["insurance"],
+        maintenance_pct=costs["maintenance_pct"] / 100,
+        management_pct=costs["management_pct"] / 100,
+        total_investment=1.0,  # the yield is computed by the caller
+    )
+    return {
+        "collected_rent": noi.collected_rent,
+        "operating_costs": noi.operating_costs,
+        "net_income": noi.net_income,
+    }
+
+
 @tool
 def rental_returns(
-    monthly_rent: PositiveEuros,
     total_investment: PositiveEuros,
+    monthly_rent: PositiveEuros | None = None,
+    annual_net_income: PositiveEuros | None = None,
     vacant_months: Annotated[float, Field(ge=0, le=12)] = 0.0,
     ibi: Euros = 0.0,
     community_monthly: Euros = 0.0,
@@ -121,8 +147,11 @@ def rental_returns(
     investor's own money. Use this for "rentabilidad", "yield", "cash flow" or "¿me compensa?".
 
     Args:
-        monthly_rent: Monthly rent in euros.
         total_investment: All the money invested in euros (price, taxes, costs, renovation).
+        monthly_rent: Rent per MONTH in euros (e.g. 900).
+        annual_net_income: Net income per YEAR after costs and before the mortgage, only when
+            the user gives it instead of the rent (e.g. "genera 9.840 € netos al año"). Then
+            leave out monthly_rent and the costs.
         vacant_months: Months per year without a tenant.
         ibi: Annual property tax (IBI) in euros.
         community_monthly: Monthly homeowners' community fee in euros.
@@ -134,20 +163,23 @@ def rental_returns(
         loan_years: Mortgage term in years; leave it out (or 0) if there is no loan.
         rate_shock_pct: Extra interest points for a stress scenario (2 means +2 points).
     """
-    noi = rules.net_yield(
-        monthly_rent=monthly_rent,
+    income = _net_income(
+        monthly_rent,
+        annual_net_income,
         vacant_months=vacant_months,
         ibi=ibi,
         community_monthly=community_monthly,
         insurance=insurance,
-        maintenance_pct=maintenance_pct / 100,
-        management_pct=management_pct / 100,
-        total_investment=total_investment,
+        maintenance_pct=maintenance_pct,
+        management_pct=management_pct,
     )
+    net_income = income["net_income"]
     out: dict[str, Any] = {
-        "gross_yield_pct": rules.round2(100 * 12 * monthly_rent / total_investment),
-        **asdict(noi),
+        **income,
+        "net_yield_pct": rules.round2(100 * net_income / total_investment),
     }
+    if monthly_rent is not None:
+        out["gross_yield_pct"] = rules.round2(100 * 12 * monthly_rent / total_investment)
     if loan > 0:
         if interest_rate_pct is None or not loan_years:
             raise ValueError("a loan needs interest_rate_pct and loan_years")
@@ -156,7 +188,7 @@ def rental_returns(
             loan=loan,
             annual_rate=interest_rate_pct / 100,
             years=loan_years,
-            annual_net_operating_income=noi.net_income,
+            annual_net_operating_income=net_income,
         )
         out["financing"] = asdict(coc)
         if rate_shock_pct > 0:
@@ -165,7 +197,7 @@ def rental_returns(
                 loan=loan,
                 annual_rate=(interest_rate_pct + rate_shock_pct) / 100,
                 years=loan_years,
-                annual_net_operating_income=noi.net_income,
+                annual_net_operating_income=net_income,
             )
             out["stress"] = {"interest_rate_pct": interest_rate_pct + rate_shock_pct}
             out["stress"].update(asdict(stressed))
@@ -175,8 +207,9 @@ def rental_returns(
 @tool
 def max_offer_price(
     target_net_yield_pct: Annotated[float, Field(gt=0, le=100)],
-    monthly_rent: Euros,
-    region: Place,
+    monthly_rent: PositiveEuros | None = None,
+    annual_net_income: PositiveEuros | None = None,
+    region: Place | None = None,
     vacant_months: Annotated[float, Field(ge=0, le=12)] = 0.0,
     ibi: Euros = 0.0,
     community_monthly: Euros = 0.0,
@@ -193,9 +226,12 @@ def max_offer_price(
 
     Args:
         target_net_yield_pct: Target net yield in percent (5 means 5 %).
-        monthly_rent: Expected monthly rent in euros.
+        monthly_rent: Expected rent per MONTH in euros.
+        annual_net_income: Net income per YEAR after costs, only when the user gives it
+            instead of the rent; then leave out monthly_rent and the costs.
         region: Where the dwelling is: the city as the user wrote it or the autonomous
-            community. The tool finds the community and its ITP rate.
+            community. The tool finds the community and its ITP rate. Not needed if the
+            user gives the ITP rate.
         vacant_months: Months per year without a tenant.
         ibi: Annual property tax (IBI) in euros.
         community_monthly: Monthly homeowners' community fee in euros.
@@ -203,32 +239,37 @@ def max_offer_price(
         maintenance_pct: Maintenance reserve as a percent of collected rent.
         management_pct: Property manager fee as a percent of collected rent.
         fixed_costs: Costs that do not depend on the price (notary, agency, renovation).
-        itp_rate_pct: ITP rate in percent, only to override the regional table.
+        itp_rate_pct: ITP rate in percent when the user gives it (8 means 8 %); otherwise
+            the tool takes the region's.
     """
-    region = resolve_region(region)
     warnings = ["supone que el valor de referencia no supera el precio"]
+    if region is not None:
+        region = resolve_region(region)
     if itp_rate_pct is None:
+        if region is None:
+            raise ValueError("pass region (to look up the ITP rate) or itp_rate_pct")
         itp_rate_pct = ITP_GENERAL[region].rate_pct
         warnings.append(f"tipo de ITP sin verificar con la comunidad ({SOURCE})")
-    noi = rules.net_yield(
-        monthly_rent=monthly_rent,
+    income = _net_income(
+        monthly_rent,
+        annual_net_income,
         vacant_months=vacant_months,
         ibi=ibi,
         community_monthly=community_monthly,
         insurance=insurance,
-        maintenance_pct=maintenance_pct / 100,
-        management_pct=management_pct / 100,
-        total_investment=1.0,  # unused: only the net income is needed here
+        maintenance_pct=maintenance_pct,
+        management_pct=management_pct,
     )
+    net_income = income["net_income"]
     price = rules.max_price_for_target_yield(
-        annual_net_operating_income=noi.net_income,
+        annual_net_operating_income=net_income,
         target_yield=target_net_yield_pct / 100,
         itp_rate=itp_rate_pct / 100,
         fixed_costs=fixed_costs,
     )
     return {
         "max_price": price,
-        "annual_net_income": noi.net_income,
+        "annual_net_income": net_income,
         "region": region,
         "itp_rate_pct": itp_rate_pct,
         "warnings": warnings,

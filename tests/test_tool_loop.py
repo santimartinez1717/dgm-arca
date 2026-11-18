@@ -127,3 +127,15 @@ def test_native_prompt_passes_definitions_and_no_tools_mode_hides_them(registry)
     response = ToolLoop(bare, registry, use_tools=False).run("q")
     assert bare.tools_seen[0] is None and "add" not in bare.seen[0][0]["content"]
     assert not response.tool_calls[0].ok  # no tools registered: the call is refused
+
+
+def test_repeated_calls_run_once_and_a_turn_has_a_cap(registry):
+    same = "\n".join([call("add", a=1, b=1)] * 17)
+    response = ToolLoop(ScriptedModel(same, "2."), registry).run("1+1")
+    assert [r.result for r in response.tool_calls] == [2]
+
+    many = "\n".join(call("add", a=i, b=0) for i in range(6))
+    response = ToolLoop(ScriptedModel(many, "ok"), registry).run("varios")
+    ran = [r for r in response.tool_calls if r.ok]
+    held = [r for r in response.tool_calls if not r.ok]
+    assert len(ran) == 4 and len(held) == 2 and "at most 4" in held[0].error

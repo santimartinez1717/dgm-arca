@@ -32,6 +32,7 @@ Phase 4 decides what the agent does with the flag.
 
 from __future__ import annotations
 
+import json
 import os
 from dataclasses import dataclass, field
 from typing import Any, Literal, Protocol
@@ -69,6 +70,11 @@ tools returned."""
 
 NO_TOOLS_PROMPT = """You are Umbral, an analyst for buy-to-let residential investment in Spain.
 Answer in the user's language, showing the calculation and the final figure."""
+
+# Greedy decoding sometimes loops: the same call 17 times, or every tool in the registry at
+# once (phase 1 test, legal_rent). Identical calls in one turn run once, and a turn runs at
+# most this many; the rest come back as an observation telling the model to wait.
+MAX_CALLS_PER_TURN = 4
 
 PromptStyle = Literal["native", "course"]
 ConfirmPolicy = Literal["auto", "deny"]
@@ -179,19 +185,29 @@ class ToolLoop:
                 return ToolsResponse(
                     answer=parsed.text, tool_calls=records, turns=turn, model=self.model.name
                 )
+            calls = _unique(parsed.tool_calls)
             messages.append(
                 {
                     "role": "assistant",
                     "content": parsed.text,
                     "tool_calls": [
                         {"type": "function", "function": {"name": c.name, "arguments": c.arguments}}
-                        for c in parsed.tool_calls
+                        for c in calls
                         if c.error is None
                     ],
                 }
             )
-            for call in parsed.tool_calls:  # parallel calls: all of them, in order
-                record = self._execute(call.name, call.arguments, call.error, registry)
+            for i, call in enumerate(calls):  # parallel calls: all of them, in order
+                if i < MAX_CALLS_PER_TURN:
+                    record = self._execute(call.name, call.arguments, call.error, registry)
+                else:
+                    record = ToolCallRecord(
+                        name=call.name or "<unparsed>",
+                        arguments=call.arguments,
+                        ok=False,
+                        error=f"not run: at most {MAX_CALLS_PER_TURN} calls per turn. Call only "
+                        "the tools this question needs and wait for their results",
+                    )
                 records.append(record)
                 self.call_turns.append(turn)
                 payload = record.result if record.ok else {"error": record.error}
@@ -228,6 +244,18 @@ class ToolLoop:
                 error=f"{name} has side effects: ask the user to confirm before calling it",
             )
         return registry.call(name, arguments)
+
+
+def _unique(calls: list) -> list:
+    """The calls of one generation without exact repeats, in order."""
+    seen: set[str] = set()
+    out = []
+    for call in calls:
+        key = json.dumps([call.name, call.arguments], sort_keys=True, default=str)
+        if key not in seen:
+            seen.add(key)
+            out.append(call)
+    return out
 
 
 _loop: ToolLoop | None = None
