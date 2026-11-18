@@ -79,6 +79,12 @@ def main() -> None:
         "--per-family", type=int, default=None, help="first N problems of each family"
     )
     parser.add_argument(
+        "--skip-per-family",
+        type=int,
+        default=0,
+        help="skip the first N of each family (a fresh sample after tuning on the first ones)",
+    )
+    parser.add_argument(
         "--resume", action="store_true", help="keep the rows already in --out and skip them"
     )
     parser.add_argument("--out", default="reports/phase2_vs_phase1.json")
@@ -93,8 +99,9 @@ def main() -> None:
         seen: dict[str, int] = defaultdict(int)
         kept = []
         for problem in problems:
-            if seen[problem["family"]] < args.per_family:
-                seen[problem["family"]] += 1
+            rank = seen[problem["family"]]
+            seen[problem["family"]] += 1
+            if args.skip_per_family <= rank < args.skip_per_family + args.per_family:
                 kept.append(problem)
         problems = kept
     problems = problems[: args.limit]

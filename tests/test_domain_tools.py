@@ -301,11 +301,9 @@ def test_annual_net_income_instead_of_the_rent(registry):
     assert offer["max_price"] == pytest.approx(250582.01, abs=0.01)
 
 
-def test_net_income_wins_over_a_rent_and_one_of_them_is_needed(registry):
+def test_rent_or_net_income_but_not_both(registry):
     both = {"total_investment": 1e5, "monthly_rent": 800, "annual_net_income": 8000}
-    result = registry.call("rental_returns", both).result
-    assert result["net_yield_pct"] == 8.0
-    assert "note" in result and "gross_yield_pct" not in result
+    assert "exactly one" in registry.call("rental_returns", both).error
     assert not registry.call("rental_returns", {"total_investment": 1e5}).ok
     no_rate = {"target_net_yield_pct": 5, "monthly_rent": 800}
     assert "itp_rate_pct" in registry.call("max_offer_price", no_rate).error
@@ -334,3 +332,15 @@ def test_a_yearly_figure_is_not_a_monthly_rent(registry):
     args = {"target_net_yield_pct": 7, "monthly_rent": 19770, "itp_rate_pct": 8}
     record = registry.call("max_offer_price", args)
     assert not record.ok and "annual_net_income" in record.error
+
+
+def test_cash_on_cash_comes_first_with_its_sign(registry):
+    args = {
+        "total_investment": 256000,
+        "annual_net_income": 12290,
+        "loan": 194000,
+        "interest_rate_pct": 4.05,
+        "loan_years": 20,
+    }
+    result = registry.call("rental_returns", args).result
+    assert next(iter(result)) == "cash_on_cash_pct" and result["cash_on_cash_pct"] == -3.03

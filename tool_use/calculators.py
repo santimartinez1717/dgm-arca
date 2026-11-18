@@ -108,15 +108,15 @@ def _net_income(
     monthly_rent: float | None, annual_net_income: float | None, **costs: float
 ) -> dict[str, Any]:
     """Annual net operating income, from the rent and costs or as given by the user."""
-    # With both, the net income wins: it is already net, and when the user gives it the model
-    # tends to add a made-up rent next to it (phase 1 test, cash_on_cash).
+    # Neither can win when both come: the model invents a rent next to a net income the user
+    # gave, and a net income next to a rent (phase 1 test, cash_on_cash and net_yield).
+    if (monthly_rent is None) == (annual_net_income is None):
+        raise ValueError(
+            "pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, "
+            "or annual_net_income if the user gave a net income per year"
+        )
     if annual_net_income is not None:
-        out: dict[str, Any] = {"net_income": annual_net_income}
-        if monthly_rent is not None:
-            out["note"] = "used annual_net_income; monthly_rent and the costs were ignored"
-        return out
-    if monthly_rent is None:
-        raise ValueError("pass monthly_rent (with the costs) or annual_net_income")
+        return {"net_income": annual_net_income}
     if monthly_rent >= MAX_MONTHLY_RENT:
         raise ValueError(
             f"monthly_rent is per MONTH and {monthly_rent:g} looks like a yearly figure: pass a "
@@ -142,8 +142,8 @@ def _net_income(
 @tool
 def rental_returns(
     total_investment: PositiveEuros,
-    annual_net_income: PositiveEuros | None = None,
     monthly_rent: PositiveEuros | None = None,
+    annual_net_income: PositiveEuros | None = None,
     vacant_months: Annotated[float, Field(ge=0, le=12)] = 0.0,
     ibi: Euros = 0.0,
     community_monthly: Euros = 0.0,
@@ -163,10 +163,10 @@ def rental_returns(
 
     Args:
         total_investment: All the money invested in euros (price, taxes, costs, renovation).
+        monthly_rent: Rent per MONTH in euros (e.g. 900). A yearly figure is not a rent.
         annual_net_income: Net income per YEAR after costs and before the mortgage, only when
             the user gives it instead of the rent (e.g. "genera 9.840 € netos al año"). Then
-            leave out monthly_rent and the costs.
-        monthly_rent: Rent per MONTH in euros (e.g. 900). A yearly figure is not a rent.
+            leave out monthly_rent and the costs. Never work it out yourself.
         vacant_months: Months per year without a tenant.
         ibi: Annual property tax (IBI) in euros.
         community_monthly: Monthly homeowners' community fee in euros.
@@ -205,7 +205,14 @@ def rental_returns(
             years=loan_years,
             annual_net_operating_income=net_income,
         )
-        out["financing"] = asdict(coc)
+        # First in the result: with the figure nested, the model answered with the net yield
+        # or dropped the sign of a negative return (phase 1 test, cash_on_cash).
+        out = {
+            "cash_on_cash_pct": coc.cash_on_cash_pct,
+            "annual_cash_flow": coc.annual_cash_flow,
+            **out,
+            "financing": asdict(coc),
+        }
         if rate_shock_pct > 0:
             stressed = rules.cash_on_cash(
                 total_investment=total_investment,
@@ -222,8 +229,9 @@ def rental_returns(
 @tool
 def max_offer_price(
     target_net_yield_pct: Annotated[float, Field(gt=0, le=100)],
-    annual_net_income: PositiveEuros | None = None,
     monthly_rent: PositiveEuros | None = None,
+    annual_net_income: PositiveEuros | None = None,
+    itp_rate_pct: Pct | None = None,
     region: Place | None = None,
     vacant_months: Annotated[float, Field(ge=0, le=12)] = 0.0,
     ibi: Euros = 0.0,
@@ -232,7 +240,6 @@ def max_offer_price(
     maintenance_pct: Pct = 0.0,
     management_pct: Pct = 0.0,
     fixed_costs: Euros = 0.0,
-    itp_rate_pct: Pct | None = None,
 ) -> dict[str, Any]:
     """Highest price to offer for a second-hand dwelling so that it reaches a target net yield.
 
@@ -241,14 +248,16 @@ def max_offer_price(
 
     Args:
         target_net_yield_pct: Target net yield in percent (5 means 5 %).
-        annual_net_income: Net income per YEAR after costs, only when the user gives it
-            instead of the rent (e.g. "generaría 19.770 € netos al año"); then leave out
-            monthly_rent and the costs.
         monthly_rent: Expected rent per MONTH in euros (e.g. 900). A yearly figure is not a
             rent.
-        region: Where the dwelling is: the city as the user wrote it or the autonomous
-            community. The tool finds the community and its ITP rate. Not needed if the
-            user gives the ITP rate.
+        annual_net_income: Net income per YEAR after costs, only when the user gives it
+            instead of the rent (e.g. "generaría 19.770 € netos al año"); then leave out
+            monthly_rent and the costs. Never work it out yourself.
+        itp_rate_pct: The ITP ("impuesto de transmisiones") rate in percent when the user
+            gives it (8 means 8 %). Then region is not needed.
+        region: Where the dwelling is, only if the user names a place and gives no ITP rate:
+            the city as written or the autonomous community. The tool finds its ITP rate.
+            Never guess a place.
         vacant_months: Months per year without a tenant.
         ibi: Annual property tax (IBI) in euros.
         community_monthly: Monthly homeowners' community fee in euros.
@@ -256,8 +265,6 @@ def max_offer_price(
         maintenance_pct: Maintenance reserve as a percent of collected rent.
         management_pct: Property manager fee as a percent of collected rent.
         fixed_costs: Costs that do not depend on the price (notary, agency, renovation).
-        itp_rate_pct: ITP rate in percent when the user gives it (8 means 8 %); otherwise
-            the tool takes the region's.
     """
     warnings = ["supone que el valor de referencia no supera el precio"]
     if region is not None:
