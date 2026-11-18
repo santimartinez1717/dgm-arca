@@ -235,9 +235,23 @@ pero con su prompt, thinking y una sola generación.
   orden de dos argumentos movió la rentabilidad neta de 5 a 2 de 10, así que si llegan dos
   cifras incompatibles, la herramienta da error en vez de elegir una.
 
-Hemos ajustado la interfaz mirando estos 60 problemas, así que el 20/60 es optimista. Por eso
-la última versión se mide también sobre los 10 problemas siguientes de cada familia, que no
-se han usado para ajustar (detalle en EXPERIMENTS.md).
+Hemos ajustado la interfaz mirando estos 60 problemas. Por eso, la última versión (`4e028dd`)
+se ha medido también sobre los 10 problemas siguientes de cada familia, que no se habían
+usado para ajustar:
+
+| | 60 de ajuste | 60 nuevos | Total (120) |
+|---|---|---|---|
+| Base + herramientas del dominio (`4e028dd`) | 24 | 27 | **51** |
+| Fase 1: SFT 3 | 20 | 26 | 46 |
+| Fase 1: GRPO 2 | 24 | 30 | 54 |
+| Fase 1: base con thinking | 5 | 9 | 14 |
+
+**El modelo base con herramientas rinde lo mismo que el mejor modelo entrenado de la fase 1**
+(McNemar exacto frente a GRPO 2: p = 0,78), pero acierta problemas distintos:
+- el IRPF sale con herramientas (12 de 20 frente a 1 de 20), porque la regla vive en el código;
+- la renta legal y el precio máximo salen mejor con GRPO 2.
+
+Detalle en EXPERIMENTS.md.
 
 ## 6. Limitaciones conocidas
 

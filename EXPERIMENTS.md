@@ -1141,3 +1141,74 @@ Llamadas por problema: 10,0 en la v1, 4,1 en la v2 y 3,75 en la v3.
   (`--skip-per-family 10`), que no se han mirado, y se compara con la fase 1 en esos mismos.
 - Para la sesión que comparta la GPU: comprobar `pgrep -af "python -m (rlm|tool_use)"`, no
   solo `rlm`.
+
+---
+
+### 2026-11-18 · Fase 2 · Herramientas v4 sobre 60 problemas que no habíamos mirado
+
+**Qué queríamos saber.** Si el 20/60 de la v3 se sostiene en problemas que no habíamos usado
+para ajustar las herramientas, y si los arreglos de la v4 recuperan la rentabilidad neta que
+perdió la v3.
+
+**Qué hicimos.** Código `4e028dd`, con tres cambios respecto a la v3:
+- **renta o ingreso neto, nunca las dos:** si el modelo pasa ambas, error diciendo cuál
+  corresponde;
+- **`monthly_rent` vuelve antes que `annual_net_income`** en la firma;
+- **`cash_on_cash_pct` va lo primero del resultado**, e `itp_rate_pct` antes que `region`,
+  con "nunca te inventes un lugar".
+
+`fase2_compare4.sh` lanzó dos pasadas de la variante `domain`, mismo modelo y ajustes:
+1. sobre los problemas 11.º a 20.º de cada familia (`--skip-per-family 10`):
+   [`reports/phase2_vs_phase1_domain_v4_nuevos.json`](reports/phase2_vs_phase1_domain_v4_nuevos.json);
+2. sobre los 60 de la entrada anterior:
+   [`reports/phase2_vs_phase1_domain_v4.json`](reports/phase2_vs_phase1_domain_v4.json).
+
+Tardó 24 y 30 minutos.
+
+**Qué pasó.** Aciertos por familia (de 10):
+
+| | acq. | cash-on-cash | IRPF | renta legal | precio máx. | rent. neta | **Total** |
+|---|---|---|---|---|---|---|---|
+| v4, problemas nuevos | 9 | 1 | 6 | 1 | 4 | 6 | **27** |
+| *Fase 1:* GRPO 2, los mismos | 10 | 1 | 1 | 5 | 7 | 6 | 30 |
+| *Fase 1:* SFT 3, los mismos | 9 | 1 | 0 | 3 | 6 | 7 | 26 |
+| *Fase 1:* base con thinking, los mismos | 2 | 0 | 0 | 2 | 0 | 5 | 9 |
+| v4, los 60 de antes | 8 | 1 | 6 | 3 | 2 | 4 | **24** |
+| v3, los 60 de antes | 9 | 3 | 5 | 1 | 0 | 2 | 20 |
+
+Juntando los 120 problemas, McNemar exacto de la v4 (51 aciertos) frente a la fase 1:
+
+| Referencia | Aciertos | v4 gana | v4 pierde | p |
+|---|---|---|---|---|
+| Base con thinking | 14 | 42 | 5 | < 0,001 |
+| SFT | 44 | 27 | 20 | 0,38 |
+| GRPO | 41 | 30 | 20 | 0,20 |
+| SFT 3 | 46 | 23 | 18 | 0,53 |
+| GRPO 2 | 54 | 23 | 26 | 0,78 |
+
+Frente a la v3, sobre los mismos 60: gana 8 y pierde 4 (p = 0,39). Hace 4,1 llamadas por
+problema en los 60 de antes y 2,9 en los nuevos.
+
+- **El resultado se sostiene fuera de lo que miramos.** En los problemas nuevos, 27/60: entre
+  SFT 3 y GRPO 2.
+- **Los dos enfoques fallan en sitios distintos.** El IRPF sale con herramientas (12 de 20) y
+  no con entrenamiento (1 de 20 con GRPO 2), porque la regla vive en el código. La renta legal
+  y el precio máximo salen mejor con GRPO 2: el modelo con herramientas llama a casi todo el
+  registro en `legal_rent` (el tope de 4 deja fuera la llamada que importa) y responde con la
+  renta mensual cuando se pide la anual.
+- **Fallos que quedan en la v4:**
+  - el error "pass exactly one" se repite en bucle en 8 problemas: el modelo no corrige los
+    argumentos aunque el error diga cuáles;
+  - en 3 problemas el modelo se come el signo negativo: escribe 2.991,87 cuando es −2.991,87;
+  - en 9 problemas alguna llamada sale como JSON inválido (una coma de menos).
+
+**Qué concluimos.**
+- **Con las herramientas del dominio, Qwen3-1.7B base, sin entrenar y sin thinking, rinde lo
+  mismo que el mejor modelo entrenado de la fase 1:** 51 frente a 54 de 120, p = 0,78. Las
+  herramientas sustituyen al entrenamiento en las familias con regla fija (IRPF,
+  adquisición), no en las que exigen elegir bien entre varias herramientas.
+- **Lo siguiente sería combinar ambos:** un SFT corto con trazas de llamadas, para que el
+  adaptador no pierda el formato `<tool_call>` como le pasó al de la fase 1. También quitar
+  `legal_rent_cap` del "todo a la vez": que el prompt pida una herramienta por pregunta, salvo
+  si son independientes.
+- `/tools` se queda con el modelo base y el código de `4e028dd`.
