@@ -101,7 +101,7 @@ class ReasoningModel:
         self.model = model.eval()
         self.verifier = VERIFIERS[self.verifier_name]()
 
-    def generate(self, question: str, max_new_tokens: int = 1024) -> tuple[str, int]:
+    def generate(self, question: str, max_new_tokens: int = 2048) -> tuple[str, int]:
         """Return the raw completion and the number of generated tokens."""
         import torch
 
@@ -113,16 +113,15 @@ class ReasoningModel:
             out = self.model.generate(
                 **inputs,
                 max_new_tokens=max_new_tokens,
-                do_sample=True,
-                temperature=0.6,
-                top_p=0.95,
+                # Greedy, like rlm/evaluate.py: the API must agree with the reported pass@1.
+                do_sample=False,
                 pad_token_id=self.tokenizer.pad_token_id or self.tokenizer.eos_token_id,
             )
         new_tokens = out[0, inputs["input_ids"].shape[1] :]
         return self.tokenizer.decode(new_tokens, skip_special_tokens=True), int(new_tokens.numel())
 
     def answer(
-        self, question: str, expected_answer: str | None = None, max_new_tokens: int = 1024
+        self, question: str, expected_answer: str | None = None, max_new_tokens: int = 2048
     ) -> ReasoningResponse:
         raw, n_tokens = self.generate(question, max_new_tokens)
         thinking, answer = split_thinking(raw)

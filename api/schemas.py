@@ -39,7 +39,7 @@ class ReasoningRequest(BaseModel):
         default=None,
         description="Optional ground truth; when given, the response includes the verifier verdict",
     )
-    max_new_tokens: int = Field(default=1024, ge=16, le=8192)
+    max_new_tokens: int = Field(default=2048, ge=16, le=8192)
 
 
 class VerifierVerdict(BaseModel):
