@@ -1046,3 +1046,98 @@ par-01): [`reports/phase2_bench_thinking_muestra.json`](reports/phase2_bench_thi
   justifique el coste del banco completo.
 - El encadenado no se arregla pensando más. Quedan el prompt (ya cambiado en `d795830`,
   pendiente de medir) y, si no basta, un SFT con trazas de llamadas encadenadas.
+
+---
+
+### 2026-11-18 · Fase 2 · Con y sin herramientas sobre el test de la fase 1 (60 problemas)
+
+**Qué queríamos saber.** Si las herramientas del dominio sustituyen al entrenamiento de la
+fase 1: ¿el Qwen3-1.7B base, sin adaptador y sin thinking, resuelve con ellas los problemas
+del test que la fase 1 solo resolvía tras SFT y GRPO? Y si basta con una calculadora genérica.
+
+**Qué hicimos.** `tool_use.phase1_compare` sobre los 10 primeros problemas de cada familia de
+`rlm/data/test.jsonl` (60), con decodificación greedy, 2.048 tokens por turno y hasta 5 turnos.
+La respuesta se verifica con el `EuroVerifier` de la fase 1. Tres variantes:
+- `none`: el mismo modelo y un prompt sin herramientas;
+- `arithmetic`: solo una calculadora genérica;
+- `domain`: el registro completo.
+
+La variante `domain` se midió tres veces, cambiando las herramientas entre una pasada y otra
+según los fallos de la anterior:
+
+| Versión | Código | Informe |
+|---|---|---|
+| v1 | `240de15` | [`phase2_vs_phase1.json`](reports/phase2_vs_phase1.json) |
+| v2 | `542d499`: `annual_net_income` y tope de 4 llamadas por turno | [`…_domain_v2.json`](reports/phase2_vs_phase1_domain_v2.json) |
+| v3 | `12275a8`: `land_value` en euros, una renta mensual ≥ 10.000 € se rechaza, el ingreso neto manda sobre la renta | [`…_domain_v3.json`](reports/phase2_vs_phase1_domain_v3.json) |
+
+La v1 se cortó en 42/60 a las 11:05 por un OOM: otra sesión lanzó `eval_ood.sh` en la GPU, y
+su comprobación (`pgrep "python -m rlm"`) no ve `python -m tool_use`. Los 18 problemas que
+faltaban se completaron con `--resume` y el mismo código, desde un worktree en `240de15`
+(`fase2_compare2.sh` y `fase2_compare3.sh`). Cada variante tarda unos 35 minutos.
+
+Para comparar con la fase 1 usamos las filas de `eval_*_17b_2048.json` para los mismos 60
+problemas. Ojo: esos modelos van con el prompt R1-Zero, thinking y una sola generación.
+
+**Qué pasó.** Aciertos por familia, sobre 10 problemas cada una:
+
+| | acq. | cash-on-cash | IRPF | renta legal | precio máx. | rent. neta | **Total** |
+|---|---|---|---|---|---|---|---|
+| Base sin herramientas | 1 | 0 | 0 | 0 | 0 | 0 | **1** |
+| Base + calculadora | 1 | 0 | 0 | 0 | 0 | 0 | **1** |
+| Base + dominio v1 | 9 | 0 | 0 | 1 | 0 | 7 | **17** |
+| Base + dominio v2 | 8 | 1 | 0 | 3 | 0 | 5 | **17** |
+| Base + dominio v3 | 9 | 3 | 5 | 1 | 0 | 2 | **20** |
+| *Fase 1:* base con thinking | 1 | 0 | 0 | 2 | 0 | 2 | 5 |
+| *Fase 1:* SFT | 5 | 0 | 0 | 5 | 4 | 6 | 20 |
+| *Fase 1:* GRPO | 5 | 0 | 0 | 2 | 3 | 7 | 17 |
+| *Fase 1:* SFT 3 | 8 | 0 | 1 | 2 | 2 | 7 | 20 |
+| *Fase 1:* GRPO 2 | 8 | 2 | 0 | 5 | 1 | 8 | 24 |
+
+McNemar exacto, v3 frente a cada referencia (problemas que gana · que pierde · p):
+
+| Referencia | Gana | Pierde | p |
+|---|---|---|---|
+| Sin herramientas | 19 | 0 | < 0,001 |
+| Fase 1: base con thinking | 18 | 3 | 0,002 |
+| Fase 1: GRPO | 14 | 11 | 0,69 |
+| Fase 1: GRPO 2 | 10 | 14 | 0,54 |
+| Dominio v1 | 9 | 6 | 0,61 |
+
+Llamadas por problema: 10,0 en la v1, 4,1 en la v2 y 3,75 en la v3.
+
+- **La calculadora genérica no sirve.** El modelo la usa en 16 de 60 problemas, y cuando la
+  usa sigue aplicando mal las reglas: el problema era el dominio, no la aritmética.
+- **Por qué fallaban v1 y v2.** Casi todo era de interfaz, no de elección de herramienta (el
+  modelo llama a una herramienta en 60 de 60):
+  - **cash-on-cash:** el enunciado da el ingreso neto anual. En la v1 no había argumento para
+    él; en la v2, el modelo lo pasaba junto a una `monthly_rent: 900` inventada, la herramienta
+    rechazaba las dos cifras y el modelo repetía la llamada idéntica cinco turnos.
+  - **precio máximo:** el modelo metía los "19.770 € netos al año" en `monthly_rent`, y el
+    precio salía unas 12 veces mayor.
+  - **IRPF:** el modelo calculaba a mano la parte del suelo y la redondeaba (46 % en vez de
+    114.300 / 232.000 = 49,27 %). Con la parte exacta salen las cifras esperadas.
+  - **renta legal:** el modelo llama a casi todo el registro en un turno y responde con la
+    renta mensual cuando se pide la anual.
+- **v3: IRPF de 0 a 5 y cash-on-cash de 1 a 3, pero rentabilidad neta de 5 a 2.** Al poner
+  `annual_net_income` antes que `monthly_rent` en la firma, el modelo se inventa un ingreso
+  neto (1.740 €, la renta mensual; 10.680 €) junto a la renta del usuario, y como el ingreso
+  neto mandaba, la herramienta ignoraba la renta buena.
+- **Quedan errores del modelo al leer el resultado.** En cash-on-cash, `rental_returns`
+  devuelve −3,03 % y el modelo contesta 3,03, o contesta con la rentabilidad neta (5,86) en
+  vez del cash-on-cash (5,36). En precio máximo, ignora el "8 %" de ITP del enunciado y se
+  inventa Andalucía como región.
+
+**Qué concluimos.**
+- **Con las herramientas del dominio, el modelo base sin entrenar llega al nivel de la
+  fase 1:** 20/60 frente a 17 (GRPO) y 24 (GRPO 2), sin diferencia significativa con
+  ninguno, y muy por encima del mismo modelo sin herramientas (1/60). La diferencia está en
+  las herramientas del dominio, no en tener una calculadora.
+- **El diseño de la interfaz mueve tanto como el modelo:** cambiar el orden de dos
+  argumentos movió la rentabilidad neta de 5 a 2 de 10. Nunca dejar que una cifra mande en
+  silencio sobre otra: si llegan las dos, error, diciendo cuál pasar.
+- **Hemos ajustado las herramientas mirando estos 60 problemas**, así que la v3 es optimista.
+  La v4 (`4e028dd`, ya lanzada) se mide sobre los 10 problemas siguientes de cada familia
+  (`--skip-per-family 10`), que no se han mirado, y se compara con la fase 1 en esos mismos.
+- Para la sesión que comparta la GPU: comprobar `pgrep -af "python -m (rlm|tool_use)"`, no
+  solo `rlm`.
