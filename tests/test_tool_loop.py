@@ -139,3 +139,11 @@ def test_repeated_calls_run_once_and_a_turn_has_a_cap(registry):
     ran = [r for r in response.tool_calls if r.ok]
     held = [r for r in response.tool_calls if not r.ok]
     assert len(ran) == 4 and len(held) == 2 and "at most 4" in held[0].error
+
+
+def test_a_failed_call_repeated_in_a_later_turn_says_so(registry):
+    bad = call("add", a="uno", b=1)
+    response = ToolLoop(ScriptedModel(bad, bad, "no sé"), registry).run("uno más uno")
+    first, second = response.tool_calls
+    assert not first.ok and "already made this exact call" not in first.error
+    assert not second.ok and "already made this exact call" in second.error

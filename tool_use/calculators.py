@@ -101,12 +101,17 @@ def acquisition_cost(
 
 def _net_income(
     monthly_rent: float | None, annual_net_income: float | None, **costs: float
-) -> dict[str, float]:
+) -> dict[str, Any]:
     """Annual net operating income, from the rent and costs or as given by the user."""
-    if (monthly_rent is None) == (annual_net_income is None):
-        raise ValueError("pass monthly_rent (with the costs) or annual_net_income, not both")
+    # With both, the net income wins: it is already net, and when the user gives it the model
+    # tends to add a made-up rent next to it (phase 1 test, cash_on_cash).
     if annual_net_income is not None:
-        return {"net_income": annual_net_income}
+        out: dict[str, Any] = {"net_income": annual_net_income}
+        if monthly_rent is not None:
+            out["note"] = "used annual_net_income; monthly_rent and the costs were ignored"
+        return out
+    if monthly_rent is None:
+        raise ValueError("pass monthly_rent (with the costs) or annual_net_income")
     noi = rules.net_yield(
         monthly_rent=monthly_rent,
         vacant_months=costs["vacant_months"],
@@ -178,7 +183,7 @@ def rental_returns(
         **income,
         "net_yield_pct": rules.round2(100 * net_income / total_investment),
     }
-    if monthly_rent is not None:
+    if "collected_rent" in income:
         out["gross_yield_pct"] = rules.round2(100 * 12 * monthly_rent / total_investment)
     if loan > 0:
         if interest_rate_pct is None or not loan_years:
@@ -261,6 +266,8 @@ def max_offer_price(
         management_pct=management_pct,
     )
     net_income = income["net_income"]
+    if "note" in income:
+        warnings.append(income["note"])
     price = rules.max_price_for_target_yield(
         annual_net_operating_income=net_income,
         target_yield=target_net_yield_pct / 100,

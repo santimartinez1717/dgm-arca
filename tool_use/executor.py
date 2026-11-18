@@ -173,6 +173,7 @@ class ToolLoop:
             {"role": "user", "content": query},
         ]
         records: list[ToolCallRecord] = []
+        failed: set[str] = set()  # calls that already failed in an earlier turn
         self.call_turns, self.raw_outputs = [], []
         last_text = ""
 
@@ -200,6 +201,13 @@ class ToolLoop:
             for i, call in enumerate(calls):  # parallel calls: all of them, in order
                 if i < MAX_CALLS_PER_TURN:
                     record = self._execute(call.name, call.arguments, call.error, registry)
+                    if not record.ok:
+                        if _key(call) in failed:  # the model ignored the error last time
+                            record.error = (
+                                f"{record.error}. You already made this exact call and it "
+                                "failed: change the arguments or answer without this tool"
+                            )
+                        failed.add(_key(call))
                 else:
                     record = ToolCallRecord(
                         name=call.name or "<unparsed>",
@@ -251,11 +259,14 @@ def _unique(calls: list) -> list:
     seen: set[str] = set()
     out = []
     for call in calls:
-        key = json.dumps([call.name, call.arguments], sort_keys=True, default=str)
-        if key not in seen:
-            seen.add(key)
+        if _key(call) not in seen:
+            seen.add(_key(call))
             out.append(call)
     return out
+
+
+def _key(call) -> str:
+    return json.dumps([call.name, call.arguments], sort_keys=True, default=str)
 
 
 _loop: ToolLoop | None = None
