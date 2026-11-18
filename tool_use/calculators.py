@@ -99,6 +99,11 @@ def acquisition_cost(
     return {**asdict(result), "region": region, "rule": rule, "warnings": warnings}
 
 
+# Above this a "monthly" rent is a yearly figure in the wrong argument (phase 1 test,
+# max_price: 19.770 EUR net a year went in as the rent and the price came out 12 times higher).
+MAX_MONTHLY_RENT = 10_000
+
+
 def _net_income(
     monthly_rent: float | None, annual_net_income: float | None, **costs: float
 ) -> dict[str, Any]:
@@ -112,6 +117,11 @@ def _net_income(
         return out
     if monthly_rent is None:
         raise ValueError("pass monthly_rent (with the costs) or annual_net_income")
+    if monthly_rent >= MAX_MONTHLY_RENT:
+        raise ValueError(
+            f"monthly_rent is per MONTH and {monthly_rent:g} looks like a yearly figure: pass a "
+            "net yearly income as annual_net_income, or divide a yearly rent by 12"
+        )
     noi = rules.net_yield(
         monthly_rent=monthly_rent,
         vacant_months=costs["vacant_months"],
@@ -132,8 +142,8 @@ def _net_income(
 @tool
 def rental_returns(
     total_investment: PositiveEuros,
-    monthly_rent: PositiveEuros | None = None,
     annual_net_income: PositiveEuros | None = None,
+    monthly_rent: PositiveEuros | None = None,
     vacant_months: Annotated[float, Field(ge=0, le=12)] = 0.0,
     ibi: Euros = 0.0,
     community_monthly: Euros = 0.0,
@@ -153,10 +163,10 @@ def rental_returns(
 
     Args:
         total_investment: All the money invested in euros (price, taxes, costs, renovation).
-        monthly_rent: Rent per MONTH in euros (e.g. 900).
         annual_net_income: Net income per YEAR after costs and before the mortgage, only when
             the user gives it instead of the rent (e.g. "genera 9.840 € netos al año"). Then
             leave out monthly_rent and the costs.
+        monthly_rent: Rent per MONTH in euros (e.g. 900). A yearly figure is not a rent.
         vacant_months: Months per year without a tenant.
         ibi: Annual property tax (IBI) in euros.
         community_monthly: Monthly homeowners' community fee in euros.
@@ -212,8 +222,8 @@ def rental_returns(
 @tool
 def max_offer_price(
     target_net_yield_pct: Annotated[float, Field(gt=0, le=100)],
-    monthly_rent: PositiveEuros | None = None,
     annual_net_income: PositiveEuros | None = None,
+    monthly_rent: PositiveEuros | None = None,
     region: Place | None = None,
     vacant_months: Annotated[float, Field(ge=0, le=12)] = 0.0,
     ibi: Euros = 0.0,
@@ -231,9 +241,11 @@ def max_offer_price(
 
     Args:
         target_net_yield_pct: Target net yield in percent (5 means 5 %).
-        monthly_rent: Expected rent per MONTH in euros.
         annual_net_income: Net income per YEAR after costs, only when the user gives it
-            instead of the rent; then leave out monthly_rent and the costs.
+            instead of the rent (e.g. "generaría 19.770 € netos al año"); then leave out
+            monthly_rent and the costs.
+        monthly_rent: Expected rent per MONTH in euros (e.g. 900). A yearly figure is not a
+            rent.
         region: Where the dwelling is: the city as the user wrote it or the autonomous
             community. The tool finds the community and its ITP rate. Not needed if the
             user gives the ITP rate.
@@ -341,8 +353,9 @@ def rental_income_tax(
     annual_rent: Euros,
     acquisition_cost_total: Euros,
     cadastral_value: Euros,
-    land_share_pct: Pct,
     contract_date: date,
+    land_value: Euros | None = None,
+    land_share_pct: Pct | None = None,
     ibi: Euros = 0.0,
     community_annual: Euros = 0.0,
     insurance: Euros = 0.0,
@@ -371,9 +384,11 @@ def rental_income_tax(
         annual_rent: Rent collected in the year, in euros.
         acquisition_cost_total: Purchase price plus the purchase expenses and taxes, in euros.
         cadastral_value: Total cadastral value ("valor catastral") from the IBI receipt.
-        land_share_pct: Share of the cadastral value that is land, in percent (from the IBI
-            receipt; 40 means 40 %).
         contract_date: Date the rental contract was signed, YYYY-MM-DD.
+        land_value: Cadastral value of the land ("valor del suelo") in euros, when the user
+            gives it as an amount. Pass it as written; the tool computes the share.
+        land_share_pct: Share of the cadastral value that is land, in percent, only when the
+            user gives a percentage (40 means 40 %). Pass land_value or land_share_pct.
         ibi: Annual property tax (IBI) in euros.
         community_annual: Annual homeowners' community fees in euros.
         insurance: Annual insurance premiums in euros.
@@ -396,6 +411,15 @@ def rental_income_tax(
             the contract.
     """
     warnings: list[str] = []
+    # The model rounds a share it works out by hand (49.27 % became 46 %): take the euros.
+    if land_value is not None:
+        if not 0 <= land_value <= cadastral_value or cadastral_value == 0:
+            raise ValueError("land_value must be between 0 and cadastral_value")
+        land_share = land_value / cadastral_value
+    elif land_share_pct is not None:
+        land_share = land_share_pct / 100
+    else:
+        raise ValueError("pass land_value (in euros) or land_share_pct")
     change = None
     if monthly_rent is not None and previous_rent:
         change = 100 * (monthly_rent - previous_rent) / previous_rent
@@ -454,7 +478,7 @@ def rental_income_tax(
         repairs=repairs,
         acquisition_cost_total=acquisition_cost_total,
         cadastral_value=cadastral_value,
-        land_share=land_share_pct / 100,
+        land_share=land_share,
         reduction_pct=reduction,
     )
     if interest + repairs > annual_rent:

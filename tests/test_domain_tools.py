@@ -309,3 +309,28 @@ def test_net_income_wins_over_a_rent_and_one_of_them_is_needed(registry):
     assert not registry.call("rental_returns", {"total_investment": 1e5}).ok
     no_rate = {"target_net_yield_pct": 5, "monthly_rent": 800}
     assert "itp_rate_pct" in registry.call("max_offer_price", no_rate).error
+
+
+def test_land_value_in_euros_instead_of_a_share(registry):
+    # Phase 1 test, irpf_rental: the model passed 46 % for 114.300 / 232.000 (49,27 %).
+    facts = dict(
+        annual_rent=15900,
+        acquisition_cost_total=295000,
+        cadastral_value=232000,
+        contract_date="2025-03-01",
+        ibi=554,
+        community_annual=730,
+        insurance=346,
+        rehabilitation_last_2y=True,
+    )
+    result = run(registry, "rental_income_tax", land_value=114300, **facts)
+    assert result["reduced_net_income"] == 3912.06
+    assert not registry.call("rental_income_tax", facts).ok
+    too_big = registry.call("rental_income_tax", {**facts, "land_value": 300000})
+    assert not too_big.ok
+
+
+def test_a_yearly_figure_is_not_a_monthly_rent(registry):
+    args = {"target_net_yield_pct": 7, "monthly_rent": 19770, "itp_rate_pct": 8}
+    record = registry.call("max_offer_price", args)
+    assert not record.ok and "annual_net_income" in record.error
