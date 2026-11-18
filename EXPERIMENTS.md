@@ -877,3 +877,22 @@ Ejemplo de max_price: plantea bien `1,09·P + 6.000 = 425.333,33` y calcula
 - max_price razona bien casi siempre (49 de 49 a menos del 1 %) y falla la división. Con
   cash_on_cash pasa algo parecido. Son errores de aritmética, no de dominio: es exactamente lo
   que resuelve la calculadora de la fase 2.
+
+---
+
+### 2026-11-18 · Fase 1 · Curvas del GRPO 2, reward hacking y fallos actualizados
+
+**Qué hicimos.** Curvas de entrenamiento del GRPO 2 frente al GRPO 1
+(`reports/grpo2_vs_grpo1_curves.png`, media móvil de 25 pasos, línea en el paso 250 donde se
+quitan las pistas; la "tercera recompensa" es la de desglose en el GRPO 1 y la de pasos en el
+GRPO 2, no son comparables entre sí). Revisión de las 3.200 respuestas guardadas del GRPO 2
+buscando reward hacking, y recuento de los cinco patrones de fallo en el GRPO 2
+(`docs/analisis_fallos_fase1.md`, sección "Ronda 2").
+
+**Qué pasó.** Sin reward hacking: densidad de números estable (13-14 por cada 100 palabras) y
+las fallidas con recompensa por pasos completa usan menos cifras distintas que el resto (23,9
+frente a 28,5). Patrones: obra nueva 0 → 8 de 11, cash sin cuota 22 → 9 fallos, irpf sin
+amortización 34 → 8 fallos, citas a "background knowledge" 80 → 0, bucles 43 → 31.
+
+**Qué concluimos.** El conocimiento del dominio se arregló con datos y la longitud con GRPO; lo
+que queda es aritmética (fase 2) y la regla de la reducción del IRPF.
