@@ -837,3 +837,43 @@ solo los acierta el GRPO 2 y 30 solo el SFT 3 (p = 0,026); frente al GRPO 1, 48 
 - `irpf_rental` no mejora (3 → 2) pese a acertar el 23 % con pista durante el muestreo: lo
   aprendido con la pista no pasa a los problemas sin ella. Es la familia pendiente.
 - max_price sigue por debajo del SFT 1 (28 → 22): pierde algo con cada ronda.
+
+---
+
+### 2026-11-18 · Fase 1 · Por qué fallan irpf, cash y max_price tras el GRPO 2
+
+**Qué queríamos saber.** Por qué `irpf_rental` no mejora con el GRPO 2 pese a las pistas, y
+qué limita a `cash_on_cash` y max_price.
+
+**Qué hicimos.** Revisar las respuestas terminadas de test (`reports/eval_{sft3,grpo2}_17b_2048.json`):
+la reducción que aplica el modelo en irpf frente a la correcta, si la amortización coincide con
+la del motor, y a qué distancia del valor correcto quedan las respuestas fallidas.
+
+**Qué pasó.**
+
+Reducción elegida en irpf (respuestas terminadas con rendimiento positivo):
+
+| | Bien | Mal | Error más común |
+|---|---|---|---|
+| SFT 3 | 13 de 28 | 15 | 90 % → 70 % (4) |
+| GRPO 2 | **5 de 36** | 31 | **50 % → 70 % (11)** |
+
+Respuestas que quedan cerca del valor correcto (la tolerancia del verificador es 0,05 %):
+
+| Familia, GRPO 2 | Aciertos | A menos del 0,5 % | A menos del 1 % | Terminadas |
+|---|---|---|---|---|
+| max_price | 22 | 43 | **49** | 49 |
+| cash_on_cash | 8 | 9 | 15 | 43 |
+| irpf_rental | 2 | 4 | 4 | 46 |
+
+Ejemplo de max_price: plantea bien `1,09·P + 6.000 = 425.333,33` y calcula
+`419.333,33 / 1,09 ≈ 385.333,33` (es 384.709,48).
+
+**Qué concluimos.**
+- En irpf el GRPO 2 empeoró la elección de la reducción: aplica el 70 % casi por defecto
+  ("la renta bajó más de un 5 % → 70 %", cuando esa condición da el 90 % y solo en zona
+  tensionada). La pista de nivel 2 le daba la reducción hecha, así que el GRPO premió copiarla
+  en vez de deducirla, y sin pista adivina. Si se repite, mejor pista de nivel 1 (solo la regla).
+- max_price razona bien casi siempre (49 de 49 a menos del 1 %) y falla la división. Con
+  cash_on_cash pasa algo parecido. Son errores de aritmética, no de dominio: es exactamente lo
+  que resuelve la calculadora de la fase 2.
