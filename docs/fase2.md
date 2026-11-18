@@ -209,7 +209,35 @@ problemas y el mismo verificador que la fase 1, en tres variantes:
 La diferencia entre `none` y `arithmetic` mide cuánto de los fallos de la fase 1 era
 aritmética. La diferencia entre `arithmetic` y `domain` mide cuánto eran reglas.
 
-*Pendiente de ejecutar.*
+Medido sobre los 10 primeros problemas de cada familia (60), con Qwen3-1.7B base, sin thinking,
+2.048 tokens por turno y hasta 5 turnos. La fase 1 está medida sobre los mismos 60 problemas,
+pero con su prompt, thinking y una sola generación.
+
+| | Aciertos (de 60) |
+|---|---|
+| Base sin herramientas | 1 |
+| Base + calculadora | 1 |
+| Base + herramientas del dominio (primera versión) | 17 |
+| Base + herramientas del dominio (tras ajustar la interfaz) | **20** |
+| Fase 1: base con thinking | 5 |
+| Fase 1: GRPO | 17 |
+| Fase 1: GRPO 2 | 24 |
+
+- **La aritmética no era el problema.** Con la calculadora el resultado no cambia: el modelo
+  la usa en 16 de 60 problemas, y cuando la usa aplica igual de mal las reglas.
+- **Las reglas, sí.** Con las herramientas del dominio, el modelo base sin entrenar llega al
+  nivel de la fase 1 (sin diferencia significativa con GRPO ni GRPO 2). Además, resuelve
+  problemas de IRPF (5 de 10), que ningún modelo de la fase 1 resolvía. Le sigue costando el
+  precio máximo, que en la fase 1 sí salía.
+- **Los fallos que quedan son de interfaz.** El modelo copia una cifra en el argumento
+  equivocado (el ingreso neto anual como renta mensual) o se inventa la que no le dan.
+  Después, lee mal el resultado: se come el signo de un cash-on-cash negativo. Cambiar el
+  orden de dos argumentos movió la rentabilidad neta de 5 a 2 de 10, así que si llegan dos
+  cifras incompatibles, la herramienta da error en vez de elegir una.
+
+Hemos ajustado la interfaz mirando estos 60 problemas, así que el 20/60 es optimista. Por eso
+la última versión se mide también sobre los 10 problemas siguientes de cada familia, que no
+se han usado para ajustar (detalle en EXPERIMENTS.md).
 
 ## 6. Limitaciones conocidas
 
