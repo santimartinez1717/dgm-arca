@@ -896,3 +896,44 @@ amortización 34 → 8 fallos, citas a "background knowledge" 80 → 0, bucles 4
 
 **Qué concluimos.** El conocimiento del dominio se arregló con datos y la longitud con GRPO; lo
 que queda es aritmética (fase 2) y la regla de la reducción del IRPF.
+
+---
+
+### 2026-11-18 · Fase 1 · ¿SFT memoriza, RL generaliza? Evaluación fuera de distribución
+
+**Qué queríamos saber.** Cómo se degradan SFT y GRPO en problemas de dos composiciones de
+reglas que no aparecen en entrenamiento (`rlm/data/test_ood.jsonl`: `becomes_large_holder` y
+`max_price_capped`, 75 cada una).
+
+**Qué hicimos.** `eval_ood.sh`: los cuatro modelos con 2048 tokens y greedy, de 10:11 a 14:00
+(`reports/eval_ood_{sft,grpo,sft3,grpo2}_2048.json`).
+
+**Qué pasó.**
+
+| Modelo | Test | Fuera de distribución | Conserva | large_holder | max_price_capped | Cortadas |
+|---|---|---|---|---|---|---|
+| SFT 1 | 37,7 % | 6,0 % | 16 % | 7 | 2 | 113 / 150 |
+| GRPO 1 | 38,3 % | 18,0 % | 47 % | 21 | 6 | 55 / 150 |
+| SFT 3 | 40,3 % | 9,3 % | 23 % | 11 | 3 | 88 / 150 |
+| GRPO 2 | 47,3 % | **20,7 %** | 44 % | **28** | 3 | 47 / 150 |
+
+En las dos rondas GRPO generaliza mucho mejor que el SFT del que parte (McNemar exacto):
+SFT 1 → GRPO 1, 5 frente a 23 problemas (p = 0,001); SFT 3 → GRPO 2, 1 frente a 18
+(p = 0,0001). Entre GRPO 1 y GRPO 2 no hay diferencia fuera de distribución (11 frente a 15,
+p = 0,56), aunque en test el GRPO 2 es mejor.
+
+Aciertos solo entre las respuestas que terminan: SFT 1 24 % (9/37), GRPO 1 28 % (27/95),
+SFT 3 23 % (14/62), GRPO 2 30 % (31/103).
+
+**Qué concluimos.**
+- Se reproduce "SFT memoriza, RL generaliza": los SFT conservan el 16-23 % de su nota fuera de
+  distribución; los GRPO, el 44-47 %.
+- Pero la mayor parte de la ventaja viene de **terminar**: ante un problema nuevo el SFT se
+  enreda y se corta (75 % y 59 % de cortadas), y GRPO aprendió a razonar de forma concisa y
+  cerrar. Entre las respuestas que terminan, el GRPO acierta solo algo más (28-30 % frente a
+  23-24 %). La generalización que aporta RL aquí es sobre todo de **cómo** razonar (longitud,
+  cierre), más que de **qué** reglas aplicar.
+- `max_price_capped` (precio máximo con un tope legal) sigue casi a 0 en los cuatro: combina
+  dos familias y la aritmética de max_price, que ya fallaba dentro de distribución.
+- Lo que la ronda 2 añadió (datos con la clave, pistas) mejora el test pero no la
+  generalización: el GRPO 2 y el GRPO 1 están empatados fuera de distribución.
