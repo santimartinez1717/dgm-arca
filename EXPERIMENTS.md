@@ -937,3 +937,36 @@ SFT 3 23 % (14/62), GRPO 2 30 % (31/103).
   dos familias y la aritmética de max_price, que ya fallaba dentro de distribución.
 - Lo que la ronda 2 añadió (datos con la clave, pistas) mejora el test pero no la
   generalización: el GRPO 2 y el GRPO 1 están empatados fuera de distribución.
+
+---
+
+### 2026-11-22 · Fase 3 · Corpus descargado con un script
+
+**Qué queríamos saber.** Si el corpus de la propuesta (normativa del BOE, manual de la AEAT,
+guías oficiales) se puede montar de forma reproducible y con qué tamaño sale.
+
+**Qué hicimos.** `uv run python -m rag.download_corpus` (`rag/download_corpus.py`; fuentes,
+licencias y decisiones en `rag/CORPUS.md`). Las leyes consolidadas se fijan a la versión
+vigente el 2026-11-22. Después, `rag.ingest` y el troceado recursivo por defecto (800/100).
+
+**Qué pasó.**
+
+| Carpeta | Documentos | Fragmentos recursivos (800/100) |
+|---|---|---|
+| `boe/` (11 leyes consolidadas) | 11 | 4.004 |
+| `aeat/` (Manual de Renta 2025) | 28 | 212 |
+| `boe_diario/` (SERPAVI, zonas tensionadas) | 11 | 174 |
+| `pdf/` (INE IRAV, BdE) | 2 | 27 |
+| **Total** | **52** (2,6 M caracteres) | **4.417** (media 600) |
+
+Las dos preguntas de la propuesta tienen respuesta en el corpus (art. 23.2 LIRPF, 70 %;
+art. 17.6 LAU, contrato de diez o más años). Hay 29 fragmentos de menos de 50 caracteres
+(«7», «II»…): números de apartado que el troceado recursivo deja sueltos.
+
+**Qué concluimos.**
+- El corpus está muy desequilibrado: el 91 % de los fragmentos son de leyes del BOE, y LIRPF y
+  su reglamento traen mucho texto que no trata de alquileres. Es deliberado (distractores),
+  pero el conjunto dorado debe repartir preguntas entre las cuatro fuentes, no solo leyes.
+- Los fragmentos minúsculos son un argumento para el troceado semántico o por artículo.
+- Siguiente: anotar el conjunto dorado por documento y artículo (o cita literal) y no por id
+  de fragmento, para que sirva a las dos estrategias de troceado.
