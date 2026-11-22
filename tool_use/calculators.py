@@ -178,7 +178,9 @@ def rental_returns(
         maintenance_pct: Maintenance reserve as a percent of collected rent (3 means 3 %).
         management_pct: Property manager fee as a percent of collected rent.
         loan: Mortgage principal in euros; 0 if bought in cash.
-        interest_rate_pct: Annual mortgage interest rate in percent (3.2 means 3.2 %).
+        interest_rate_pct: Annual mortgage interest rate in percent, as the user gives it.
+            Only if the user gives no rate and says "Euribor plus a spread": call
+            get_market_rates first and add the spread to its Euribor.
         loan_years: Mortgage term in years; leave it out (or 0) if there is no loan.
         rate_shock_pct: Extra interest points for a stress scenario (2 means +2 points).
     """
