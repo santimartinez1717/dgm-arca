@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from tool_use.executor import ToolLoop
+from tool_use.executor import CHAIN_HINT, ToolLoop
 from tool_use.registry import ToolRegistry, tool
 
 
@@ -69,7 +69,7 @@ def test_multi_step_feeds_each_result_back(registry):
     assert response.turns == 3 and response.answer == "Son 15."
     last_prompt = model.seen[-1]
     tool_messages = [m for m in last_prompt if m["role"] == "tool"]
-    assert [m["content"] for m in tool_messages] == ["5", "15"]
+    assert [m["content"] for m in tool_messages] == ["5" + CHAIN_HINT, "15" + CHAIN_HINT]
     assistant = [m for m in last_prompt if m["role"] == "assistant"][0]
     assert assistant["tool_calls"][0]["function"] == {"name": "add", "arguments": {"a": 2, "b": 3}}
 

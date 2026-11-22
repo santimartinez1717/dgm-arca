@@ -76,6 +76,13 @@ Answer in the user's language, showing the calculation and the final figure."""
 # most this many; the rest come back as an observation telling the model to wait.
 MAX_CALLS_PER_TURN = 4
 
+# Appended to the last result of each turn. Without it the model answers after the first
+# result even when the question asks for a second step that needs it (bench, chain-02, 04, 06).
+CHAIN_HINT = (
+    "\n\nIf the user's question still needs another tool that uses these results, call it "
+    "now; otherwise answer."
+)
+
 PromptStyle = Literal["native", "course"]
 ConfirmPolicy = Literal["auto", "deny"]
 
@@ -157,6 +164,7 @@ class ToolLoop:
     prompt_style: PromptStyle = "native"
     confirm_policy: ConfirmPolicy = "auto"
     use_tools: bool = True  # False: the same model and prompt with no tools, for comparison
+    chain_hint: bool = True  # remind the model, after each turn's results, to chain if needed
     # Turn of each call of the last run (parallel calls share one). Not part of the API
     # response; the benchmark uses it to check that independent calls went out together.
     call_turns: list[int] = field(default_factory=list)
@@ -226,6 +234,8 @@ class ToolLoop:
                         "content": format_tool_result(record.name, payload),
                     }
                 )
+            if self.chain_hint:
+                messages[-1]["content"] += CHAIN_HINT
 
         answer = last_text or (
             f"No he llegado a una respuesta en {max_turns} turnos; "

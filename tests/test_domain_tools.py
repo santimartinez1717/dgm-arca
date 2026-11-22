@@ -344,3 +344,9 @@ def test_cash_on_cash_comes_first_with_its_sign(registry):
     }
     result = registry.call("rental_returns", args).result
     assert next(iter(result)) == "cash_on_cash_pct" and result["cash_on_cash_pct"] == -3.03
+
+
+def test_a_zero_rent_or_net_income_is_not_given(registry):
+    # Bench, chain-01: the model fills the arguments it does not know with zeros.
+    args = {"total_investment": 221000, "monthly_rent": 1000, "annual_net_income": 0, "ibi": 500}
+    assert registry.call("rental_returns", args).ok

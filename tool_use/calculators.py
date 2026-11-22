@@ -108,6 +108,10 @@ def _net_income(
     monthly_rent: float | None, annual_net_income: float | None, **costs: float
 ) -> dict[str, Any]:
     """Annual net operating income, from the rent and costs or as given by the user."""
+    # A 0 is "not given": the model fills the optional arguments it does not know with zeros
+    # (bench, chain-01: annual_net_income 0 next to the user's rent, three turns in a row).
+    monthly_rent = monthly_rent or None
+    annual_net_income = annual_net_income or None
     # Neither can win when both come: the model invents a rent next to a net income the user
     # gave, and a net income next to a rent (phase 1 test, cash_on_cash and net_yield).
     if (monthly_rent is None) == (annual_net_income is None):
@@ -142,8 +146,8 @@ def _net_income(
 @tool
 def rental_returns(
     total_investment: PositiveEuros,
-    monthly_rent: PositiveEuros | None = None,
-    annual_net_income: PositiveEuros | None = None,
+    monthly_rent: Euros | None = None,
+    annual_net_income: Euros | None = None,
     vacant_months: Annotated[float, Field(ge=0, le=12)] = 0.0,
     ibi: Euros = 0.0,
     community_monthly: Euros = 0.0,
@@ -174,7 +178,9 @@ def rental_returns(
         maintenance_pct: Maintenance reserve as a percent of collected rent (3 means 3 %).
         management_pct: Property manager fee as a percent of collected rent.
         loan: Mortgage principal in euros; 0 if bought in cash.
-        interest_rate_pct: Annual mortgage interest rate in percent (3.2 means 3.2 %).
+        interest_rate_pct: Annual mortgage interest rate in percent (3.2 means 3.2 %). If
+            the user refers to the current Euribor, call get_market_rates first and add
+            their spread to it; never assume the Euribor.
         loan_years: Mortgage term in years; leave it out (or 0) if there is no loan.
         rate_shock_pct: Extra interest points for a stress scenario (2 means +2 points).
     """
@@ -229,8 +235,8 @@ def rental_returns(
 @tool
 def max_offer_price(
     target_net_yield_pct: Annotated[float, Field(gt=0, le=100)],
-    monthly_rent: PositiveEuros | None = None,
-    annual_net_income: PositiveEuros | None = None,
+    monthly_rent: Euros | None = None,
+    annual_net_income: Euros | None = None,
     itp_rate_pct: Pct | None = None,
     region: Place | None = None,
     vacant_months: Annotated[float, Field(ge=0, le=12)] = 0.0,
