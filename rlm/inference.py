@@ -24,6 +24,7 @@ import os
 import re
 import sys
 import threading
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -101,12 +102,18 @@ class ReasoningModel:
         else:
             device = "cpu"
         dtype = torch.float32 if device == "cpu" else torch.bfloat16
+        # ARCA_RLM_DTYPE=float16 for Macs where bfloat16 on MPS is slow (no native support).
+        if os.environ.get("ARCA_RLM_DTYPE"):
+            dtype = getattr(torch, os.environ["ARCA_RLM_DTYPE"])
+        print(f"phase 1 model on {device} in {dtype}", file=sys.stderr, flush=True)
         self.tokenizer = AutoTokenizer.from_pretrained(self.base_model)
         model = AutoModelForCausalLM.from_pretrained(
             self.base_model, dtype=dtype, device_map=device
         )
         if self.adapter_path:
-            model = PeftModel.from_pretrained(model, self.adapter_path)
+            # Merged into the base weights: the API never trains, and the unmerged LoRA adds
+            # two small matmuls per linear layer to every generated token.
+            model = PeftModel.from_pretrained(model, self.adapter_path).merge_and_unload()
         self.model = model.eval()
         self.verifier = VERIFIERS[self.verifier_name]()
 
@@ -118,6 +125,7 @@ class ReasoningModel:
             build_prompt(question), tokenize=False, add_generation_prompt=True
         )
         inputs = self.tokenizer(text, return_tensors="pt").to(self.model.device)
+        started = time.perf_counter()
         # One generation at a time: concurrent requests on a laptop GPU run out of memory.
         with self._lock, torch.no_grad():
             out = self.model.generate(
@@ -128,6 +136,13 @@ class ReasoningModel:
                 pad_token_id=self.tokenizer.pad_token_id or self.tokenizer.eos_token_id,
             )
         new_tokens = out[0, inputs["input_ids"].shape[1] :]
+        seconds = time.perf_counter() - started
+        print(
+            f"generated {new_tokens.numel()} tokens in {seconds:.1f}s "
+            f"({new_tokens.numel() / seconds:.1f} tokens/s)",
+            file=sys.stderr,
+            flush=True,
+        )
         return self.tokenizer.decode(new_tokens, skip_special_tokens=True), int(new_tokens.numel())
 
     def answer(
