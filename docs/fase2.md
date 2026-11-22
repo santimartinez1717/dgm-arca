@@ -173,7 +173,8 @@ Casos acertados, de 40. Formato nativo, sin thinking, decodificación voraz.
 |---|---|---|---|---|
 | Qwen3-1.7B + GRPO de la fase 1 | 27 | 18 | 2 | 0 |
 | Qwen3-1.7B base | 34 | 24 | 4 | 0 |
-| Qwen3-1.7B base, tras los arreglos | **37** | **32** | 5 | 0 |
+| Qwen3-1.7B base, tras los arreglos | 37 | 32 | 5 | 0 |
+| Qwen3-1.7B base, con los arreglos del encadenado (`eca9bc9`) | **40** | **33** | **6** | 0 |
 
 Informes en `reports/phase2_bench_*.json`. Detalle y pruebas estadísticas en EXPERIMENTS.md.
 
@@ -184,7 +185,8 @@ Informes en `reports/phase2_bench_*.json`. Detalle y pruebas estadísticas en EX
   `<function name=…/>`, JSON sin etiquetas o la llamada en prosa, y hace las cuentas él
   mismo. 7 casos empeoran en selección y ninguno mejora (p = 0,016). Por eso `/tools` usa el
   modelo base.
-- **Encadenar es lo que sigue fallando (1 de 6).** El modelo lanza a la vez las llamadas que
+- **Encadenar es lo que sigue fallando:** 1 de 6, y 2 de 6 tras añadir un recordatorio
+  después de cada resultado y afinar los errores. El modelo lanza a la vez las llamadas que
   dependen una de otra, o se salta la consulta y se inventa el dato. Las paralelas sí salen
   bien (4 de 4).
 

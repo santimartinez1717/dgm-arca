@@ -1541,3 +1541,58 @@ Banco completo, mismo modelo y ajustes que la entrada anterior: `fase2_bench_v5.
 - **El fallo que queda es lanzar en paralelo llamadas que dependen una de otra.** Con prompt y
   bucle no se arregla del todo, así que el paso siguiente sería un SFT con trazas que esperan
   al resultado.
+
+---
+
+### 2026-11-22 · Fase 2 · Encadenado por partes: qué aporta cada cambio (bancos v6 a v8)
+
+**Qué queríamos saber.** El banco v5 subió el encadenado de 0 a 2 de 6, pero perdió
+`yield-03`. Queríamos saber cuál de los cambios lo estropeaba, y si se podía quedar lo bueno
+sin lo malo.
+
+**Qué hicimos.** Tres bancos completos, mismo modelo y ajustes (Qwen3-1.7B base, sin
+thinking, 2.048 tokens), cambiando una cosa cada vez sobre `ccc536b`:
+
+| Banco | Código | Cambio |
+|---|---|---|
+| v6 | `91965a2` | quitar de `interest_rate_pct` la instrucción de pedir el Euríbor (queda el recordatorio) |
+| v7 | `b42e71b` | volver a ponerla, pero solo "si el usuario no da tipo y habla de euríbor más diferencial" |
+| v8 | `eca9bc9` | el error del préstamo nombra solo lo que falta; `vacant_months` de 12 se rechaza y su descripción dice "meses VACÍOS" |
+
+Informes: `reports/phase2_bench_base_v6.json`, `_v7.json` y `_v8.json`. Unos 9 minutos cada uno.
+
+**Qué pasó.**
+
+| | Selección | Argumentos | Secuencia (10) | Encadenado (6) | Llamadas innecesarias (8) |
+|---|---|---|---|---|---|
+| v4 (`a2a59c4`) | 37 | 32 | 4 | 0 | 0 |
+| v5 (`ccc536b`) | 38 | 31 | 6 | 2 | 0 |
+| v6 | 37 | 32 | 5 | 1 | 0 |
+| v7 | 39 | 31 | 6 | 2 | 0 |
+| **v8** | **40** | **33** | **6** | **2** | **0** |
+
+- **El recordatorio solo (v6) ya gana `chain-06`.** El modelo mira la cartera después de la
+  zona tensionada.
+- **La instrucción del Euríbor gana `chain-05` y, si es incondicional, estropea `yield-03`.**
+  Con la versión condicionada (v7), `yield-03` siguió fallando, pero por otra razón: el modelo
+  daba el tipo y olvidaba el plazo, y el error "a loan needs interest_rate_pct and loan_years"
+  le hacía creer que le faltaba el tipo, así que iba a por el Euríbor. Con el error que nombra
+  solo `loan_years` (v8), acierta a la primera.
+- **`yield-01`** pasaba "un mes vacío al año" como `vacant_months: 12` en v5 y v7. Con la
+  descripción "meses VACÍOS", en v8 pasa 1.
+- **v8 frente a v4:** gana `irpf-01`, `irpf-03` y `chain-05` en selección, y `chain-05` y
+  `chain-06` en secuencia, sin perder ningún caso en ninguna medida (McNemar: p = 0,25 y
+  0,5). Es el mejor banco hasta ahora, pero con 40 casos ninguna diferencia es significativa
+  por sí sola.
+
+**Qué concluimos.**
+- **Nos quedamos con `eca9bc9`:** 40/40 en selección, 33/40 en argumentos y sin llamadas
+  innecesarias.
+- **Los mensajes de error son parte de la interfaz, igual que las descripciones:** un error
+  que pide algo que el modelo ya dio lo manda en la dirección equivocada. Cada error debe
+  nombrar solo lo que falta.
+- **Una instrucción en una descripción tiene que llevar su condición.** "Pide el Euríbor"
+  sin más se aplica también cuando el usuario ya da el tipo.
+- **Siguen sin encadenar:** `chain-01` y `chain-03` lanzan a la vez llamadas que dependen una
+  de otra, y `chain-02` y `chain-04` responden tras el primer resultado. Esto ya no parece
+  arreglable con texto. El siguiente paso sería un SFT con trazas que esperan al resultado.
