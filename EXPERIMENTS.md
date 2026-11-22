@@ -1486,3 +1486,58 @@ enunciado da un 45 %.
   quedamos con `land_value` primero.
 - **El encadenado sigue sin resolverse** (0-1 de 6 según la pasada). Es lo siguiente que
   habría que atacar, con trazas de SFT y no con más prompt.
+
+---
+
+### 2026-11-22 · Fase 2 · Encadenado: recordatorio tras cada resultado, ceros como "no dado" y Euríbor
+
+**Qué queríamos saber.** Si se puede mejorar el encadenado (0 de 6 en el banco de esta tarde)
+sin entrenar, solo con el bucle y las definiciones.
+
+**Qué hicimos.** Partimos de los fallos de `chain-*` en
+[`phase2_bench_base_v4.json`](reports/phase2_bench_base_v4.json):
+- **`chain-01`:** encadena bien, pero mete `annual_net_income: 0` junto a la renta y la
+  llamada falla tres veces;
+- **`chain-02`, `chain-04` y `chain-06`:** paran tras el primer resultado (en `chain-04` se
+  inventa el precio por m²);
+- **`chain-05`:** se inventa el Euríbor.
+
+Con tres cambios (`ccc536b`):
+- **un 0 en `monthly_rent` o `annual_net_income` cuenta como no dado**, igual que ya hacía
+  el evaluador;
+- **el bucle añade al último resultado de cada turno** "If the user's question still needs
+  another tool that uses these results, call it now; otherwise answer" (`CHAIN_HINT`);
+- **`interest_rate_pct` pide llamar a `get_market_rates`** si el usuario habla del Euríbor
+  actual.
+
+Banco completo, mismo modelo y ajustes que la entrada anterior: `fase2_bench_v5.sh`. Tardó
+9 minutos: [`reports/phase2_bench_base_v5.json`](reports/phase2_bench_base_v5.json).
+
+**Qué pasó.**
+
+| | Selección | Argumentos | Secuencia (10) | Encadenado (6) | Llamadas innecesarias (8) | Turnos |
+|---|---|---|---|---|---|---|
+| v4 (`a2a59c4`) | 37 | 32 | 4 | 0 | 0 | 1,98 |
+| v5 (`ccc536b`) | 38 | 31 | 6 | 2 | 0 | 2,15 |
+
+- **Gana `chain-05` y `chain-06`.** Ahora el modelo pide primero `get_market_rates` y
+  después calcula con ese tipo, y mira la cartera después de la zona tensionada.
+- **Pierde `yield-01` y `yield-03`:**
+  - en `yield-01` pone `vacant_months: 12` en vez de 1, un error de copia;
+  - en `yield-03` omite `loan_years`, y tras el error va a por el Euríbor aunque el usuario
+    da el tipo (3,2 %). Es un efecto secundario de la nueva descripción.
+- **Siguen sin encadenar:**
+  - `chain-02` y `chain-04` responden tras el primer resultado, pese al recordatorio;
+  - en `chain-01` y `chain-03` el modelo lanza en paralelo la segunda llamada sin esperar
+    al resultado de la primera.
+- McNemar exacto, p = 1 en las tres medidas: con 6 casos de encadenado, la mejora no es
+  significativa.
+
+**Qué concluimos.**
+- **Nos quedamos con `ccc536b`.** Sin llamadas innecesarias y con +2 en encadenado, a
+  cambio de −1 en argumentos. Pero el cambio es pequeño y no está demostrado.
+- **Falta separar los tres cambios.** La descripción del Euríbor es la que probablemente
+  estropea `yield-03`. Lo siguiente es medir el recordatorio solo, en la próxima sesión.
+- **El fallo que queda es lanzar en paralelo llamadas que dependen una de otra.** Con prompt y
+  bucle no se arregla del todo, así que el paso siguiente sería un SFT con trazas que esperan
+  al resultado.
