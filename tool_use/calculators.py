@@ -104,6 +104,15 @@ def acquisition_cost(
 MAX_MONTHLY_RENT = 10_000
 
 
+def _vacant(months: float) -> float:
+    # "Un mes vacío al año" came in as 12 (bench, yield-01): 12 would mean no rent at all.
+    if months >= 12:
+        raise ValueError(
+            "vacant_months is the number of EMPTY months per year; 12 means it is never rented"
+        )
+    return months
+
+
 def _net_income(
     monthly_rent: float | None, annual_net_income: float | None, **costs: float
 ) -> dict[str, Any]:
@@ -128,7 +137,7 @@ def _net_income(
         )
     noi = rules.net_yield(
         monthly_rent=monthly_rent,
-        vacant_months=costs["vacant_months"],
+        vacant_months=_vacant(costs["vacant_months"]),
         ibi=costs["ibi"],
         community_monthly=costs["community_monthly"],
         insurance=costs["insurance"],
@@ -171,7 +180,8 @@ def rental_returns(
         annual_net_income: Net income per YEAR after costs and before the mortgage, only when
             the user gives it instead of the rent (e.g. "genera 9.840 € netos al año"). Then
             leave out monthly_rent and the costs. Never work it out yourself.
-        vacant_months: Months per year without a tenant.
+        vacant_months: Months per year the dwelling is EMPTY, without a tenant (not the
+            months it is rented).
         ibi: Annual property tax (IBI) in euros.
         community_monthly: Monthly homeowners' community fee in euros.
         insurance: Annual insurance premium in euros (home and rent default).
@@ -202,8 +212,15 @@ def rental_returns(
     if "collected_rent" in income:
         out["gross_yield_pct"] = rules.round2(100 * 12 * monthly_rent / total_investment)
     if loan > 0:
-        if interest_rate_pct is None or not loan_years:
-            raise ValueError("a loan needs interest_rate_pct and loan_years")
+        # Name only what is missing: "needs interest_rate_pct and loan_years" sent the model
+        # to look up the Euribor when it had given the rate and forgotten the term (yield-03).
+        missing = []
+        if interest_rate_pct is None:
+            missing.append("interest_rate_pct")
+        if not loan_years:
+            missing.append("loan_years")
+        if missing:
+            raise ValueError(f"a loan also needs {' and '.join(missing)}")
         coc = rules.cash_on_cash(
             total_investment=total_investment,
             loan=loan,
@@ -264,7 +281,8 @@ def max_offer_price(
         region: Where the dwelling is, only if the user names a place and gives no ITP rate:
             the city as written or the autonomous community. The tool finds its ITP rate.
             Never guess a place.
-        vacant_months: Months per year without a tenant.
+        vacant_months: Months per year the dwelling is EMPTY, without a tenant (not the
+            months it is rented).
         ibi: Annual property tax (IBI) in euros.
         community_monthly: Monthly homeowners' community fee in euros.
         insurance: Annual insurance premium in euros.

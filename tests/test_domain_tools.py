@@ -350,3 +350,15 @@ def test_a_zero_rent_or_net_income_is_not_given(registry):
     # Bench, chain-01: the model fills the arguments it does not know with zeros.
     args = {"total_investment": 221000, "monthly_rent": 1000, "annual_net_income": 0, "ibi": 500}
     assert registry.call("rental_returns", args).ok
+
+
+def test_a_loan_error_names_only_what_is_missing(registry):
+    # Bench, yield-03: the rate was given and the term forgotten.
+    args = {"total_investment": 230000, "monthly_rent": 1000, "loan": 160000}
+    error = registry.call("rental_returns", {**args, "interest_rate_pct": 3.2}).error
+    assert "loan_years" in error and "interest_rate_pct" not in error
+
+
+def test_twelve_vacant_months_is_rejected(registry):
+    args = {"total_investment": 210000, "monthly_rent": 950, "vacant_months": 12}
+    assert "EMPTY" in registry.call("rental_returns", args).error
