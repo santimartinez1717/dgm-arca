@@ -1431,3 +1431,58 @@ problema en los 60 de antes y 2,9 en los nuevos.
   `legal_rent_cap` del "todo a la vez": que el prompt pida una herramienta por pregunta, salvo
   si son independientes.
 - `/tools` se queda con el modelo base y el código de `4e028dd`.
+
+---
+
+### 2026-11-22 · Fase 2 · Banco con el código actual, y una prueba de orden en el IRPF que no funcionó
+
+**Qué queríamos saber.**
+- Si los arreglos que salieron de la comparación con la fase 1 (`8b35ffe` a `4e028dd`)
+  mejoran o empeoran el banco de 40 casos.
+- Si poner `land_share_pct` antes que `land_value` recupera `irpf-02` sin perder el IRPF del
+  test de la fase 1.
+
+**Qué hicimos.**
+- **Banco:** `fase2_bench_v4.sh`, es decir,
+  `uv run python -m tool_use.evaluate --out reports/phase2_bench_base_v4.json`. Qwen3-1.7B
+  base, sin thinking, código `a2a59c4` (el de `4e028dd` con `main` unida). Tardó 9 minutos.
+- **Prueba del IRPF:** sin commitear y ya deshecha. Pusimos `land_share_pct` antes que
+  `land_value`, y un ejemplo con cifras en cada descripción ("un 35 % de suelo", "114.300 €
+  corresponde al suelo"). La medimos sobre los 3 casos de IRPF del banco y los 20 problemas de
+  IRPF de las dos pasadas de la v4.
+
+**Qué pasó.** El banco frente al anterior
+([`phase2_bench_base_v2.json`](reports/phase2_bench_base_v2.json), código `9d147b8`):
+
+| | Selección | Argumentos | Secuencia | Llamadas innecesarias |
+|---|---|---|---|---|
+| v2 | 37/40 | 32/40 | 20/40 | 0 |
+| v4 | 37/40 | 32/40 | 16/40 | 0 |
+
+En argumentos, la v4 gana `yield-01`, `yield-02` y `rates-02`, y pierde `irpf-02`, `cad-01` y
+`chain-02` (McNemar, p = 1). En secuencia, el cambio de `chain-02` a `chain-05` deja el
+encadenado en 0 de 6:
+- **`irpf-02`:** el usuario da "un 35 % de suelo". El modelo deja vacíos `land_value` y
+  `land_share_pct`, y al reintentar se inventa `land_value: 100000`.
+- **`cad-01`:** vuelve a meter "escalera A, 2.º B" en la dirección, el fallo que se arregló
+  en `d795830`. No es estable.
+- **`chain-05`:** calcula la cuota con el Euríbor que se inventa, sin llamar a
+  `get_market_rates`.
+
+La prueba del IRPF empeora las dos medidas: 0/3 en argumentos en el banco (antes 1/3) y 10/20
+en el test de la fase 1 (antes 12/20). El motivo está en las trazas: **el modelo copia en
+`land_value` el "114.300" del ejemplo de la descripción**, también en `irpf-03`, cuyo
+enunciado da un 45 %.
+
+**Qué concluimos.**
+- **Los arreglos para el test de la fase 1 no han costado nada en el banco:** mismas cifras
+  de selección y argumentos, y siguen sin llamadas innecesarias. Se queda `4e028dd`.
+- **Las descripciones no llevan cifras de ejemplo.** Es la segunda vez que el modelo las
+  copia; la primera fue la dirección de ejemplo de `lookup_property`. Los ejemplos van en
+  palabras ("el valor del suelo en euros"), nunca con un número que pueda pasar como argumento.
+- **El orden de los argumentos de la misma magnitud decide cuál rellena el modelo.** Con
+  `land_value` primero, gana el IRPF del test de la fase 1 (que da euros) y pierde `irpf-02`
+  (que da un porcentaje). Como el banco tiene 3 casos de IRPF y la fase 1 tiene 20, nos
+  quedamos con `land_value` primero.
+- **El encadenado sigue sin resolverse** (0-1 de 6 según la pasada). Es lo siguiente que
+  habría que atacar, con trazas de SFT y no con más prompt.
