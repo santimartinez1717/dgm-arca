@@ -90,8 +90,15 @@ class ReasoningModel:
         from peft import PeftModel
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-        dtype = torch.bfloat16 if device == "cuda" else torch.float32
+        # CUDA on the DGX; on a Mac, the Apple GPU (MPS) in bfloat16: half the memory of float32
+        # on CPU (~3.5 GB for 1.7B instead of ~7 GB) and much faster.
+        if torch.cuda.is_available():
+            device = "cuda"
+        elif torch.backends.mps.is_available():
+            device = "mps"
+        else:
+            device = "cpu"
+        dtype = torch.float32 if device == "cpu" else torch.bfloat16
         self.tokenizer = AutoTokenizer.from_pretrained(self.base_model)
         model = AutoModelForCausalLM.from_pretrained(
             self.base_model, dtype=dtype, device_map=device
