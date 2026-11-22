@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import logging
 import os
+import threading
 from collections.abc import Callable
 from typing import Any
 
@@ -34,10 +35,17 @@ class Backends:
     def __init__(self) -> None:
         self._cache: dict[str, Any] = {}
         self._errors: dict[str, str] = {}
+        # FastAPI runs sync endpoints in a thread pool: without the lock, requests that arrive
+        # while a model is loading would each load their own copy.
+        self._lock = threading.Lock()
 
     # -- loaders --------------------------------------------------------------
 
     def _load(self, phase: str, factory: Callable[[], Any]) -> Any:
+        with self._lock:
+            return self._load_locked(phase, factory)
+
+    def _load_locked(self, phase: str, factory: Callable[[], Any]) -> Any:
         if phase in self._cache:
             return self._cache[phase]
         try:
