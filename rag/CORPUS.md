@@ -15,7 +15,7 @@ el sha256 de cada fichero.
 
 | Carpeta | Qué | Cuántos | Cómo se descarga |
 |---|---|---|---|
-| `boe/` | Leyes consolidadas: LAU, Ley 12/2023 de vivienda, RDL 26/2026, LIRPF y su reglamento, TRLITPAJD, TRL del Catastro, Ley 5/2019 de crédito inmobiliario, Ley de Propiedad Horizontal, TRLRHL (solo arts. 60-77, IBI, y 104-110, plusvalía) y LIVA (solo arts. 20, 90 y 91) | 11 | API de datos abiertos del BOE, XML por artículos → Markdown con un `### Artículo N` por artículo |
+| `boe/` | Leyes consolidadas: LAU, Ley 12/2023 de vivienda, RDL 29/2026, LIRPF y su reglamento, TRLITPAJD, TRL del Catastro, Ley 5/2019 de crédito inmobiliario, Ley de Propiedad Horizontal, TRLRHL (solo arts. 60-77, IBI, y 104-110, plusvalía) y LIVA (solo arts. 20, 90 y 91) | 11 | API de datos abiertos del BOE, XML por artículos → Markdown con un `### Artículo N` por artículo |
 | `boe_diario/` | Resoluciones del sistema de índices de precios de referencia (SERPAVI, 2024 y 2026) y las ocho relaciones trimestrales de zonas tensionadas (mar. 2024 – jul. 2026) con su corrección de erratas | 11 | `diario_boe/xml.php` → Markdown |
 | `aeat/` | Manual práctico de Renta 2025: capítulo 4 (rendimientos del capital inmobiliario) y régimen de imputación de rentas inmobiliarias del capítulo 10 | 28 | HTML de la sede, solo el `<main>` → Markdown, una página por fichero |
 | `pdf/` | Metodología del IRAV (INE, dic. 2024) y folleto del Banco de España sobre préstamos hipotecarios | 2 | PDF tal cual; `rag/ingest.py` lo lee con pypdf |
@@ -48,5 +48,10 @@ texto hasta los fragmentos.
   recortan porque son enormes y solo nos importan el IBI, la plusvalía y el IVA de la vivienda.
 - **Ley 11/2021 fuera.** Es una ley que modifica otras; el valor de referencia vive en el
   TRL del Catastro y el TRLITPAJD, que ya están.
+- **Nada derogado.** El RDL 26/2026 (septiembre) no se convalidó y está derogado. Lo
+  sustituyó el RDL 29/2026 de 6 de octubre, que es el que entra. El script se niega a
+  descargar una ley con `estatus_derogacion = S`, y quita la «nota inicial» del BOE.
+- **Sin interfaz de la AEAT.** El diálogo «Generar PDF… Cancelar» que la sede mete dentro de
+  `<main>` se recorta: aparecía igual en las 28 páginas.
 - **Metodología del SERPAVI fuera.** El PDF del ministerio devuelve 403 al descargarlo con un
   script; entran las resoluciones del BOE que lo determinan.

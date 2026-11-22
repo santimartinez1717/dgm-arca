@@ -72,7 +72,7 @@ class Source:
 BOE_LAWS = [  # (id, file name, article ranges to keep; empty = whole law)
     ("BOE-A-1994-26003", "lau", ()),  # Ley 29/1994, LAU
     ("BOE-A-2023-12203", "ley-vivienda", ()),  # Ley 12/2023
-    ("BOE-A-2026-20266", "rdl-26-2026", ()),  # RDL 26/2026, función social
+    ("BOE-A-2026-20823", "rdl-29-2026", ()),  # RDL 29/2026 (replaces the repealed 26/2026)
     ("BOE-A-2006-20764", "lirpf", ()),  # Ley 35/2006, IRPF
     ("BOE-A-2007-6820", "rirpf", ()),  # RD 439/2007, Reglamento IRPF
     ("BOE-A-1993-25359", "trlitpajd", ()),  # RDLeg 1/1993, ITP y AJD
@@ -196,7 +196,7 @@ def boe_consolidated_to_markdown(
     latest = ""
     for block in root.iter("bloque"):
         kind, block_id = block.get("tipo"), block.get("id", "")
-        if kind == "firma":
+        if kind in ("firma", "nota_inicial"):
             continue
         if articles and not (
             kind == "precepto" and _in_ranges(_article_number(block_id), articles)
@@ -309,6 +309,8 @@ def aeat_page_to_markdown(page_html: str, url: str) -> tuple[str, str]:
     # table rows come out as "| a | b" (each cell opens with " | "): close them
     lines = [html.unescape(ln + " |" if ln.startswith("| ") else ln) for ln in parser.lines]
     title = next((ln[2:] for ln in lines if ln.startswith("# ")), url.rsplit("/", 1)[-1])
+    if "Generar PDF" in lines:  # the "export to PDF" dialog sits inside <main>: drop it
+        lines = lines[: lines.index("Generar PDF")]
     body = [ln for ln in lines if not ln.startswith("# ")]
     return "\n".join(
         [f"# {title}", "", f"Fuente: {url}", "", *_paragraphs(body)]
@@ -338,7 +340,10 @@ def fetch(client: httpx.Client, source: Source, as_of: str) -> tuple[Path, dict]
     entry = {"kind": source.kind, "id": source.id, "license": source.license}
     if source.kind == "boe":
         meta = _get(client, BOE_API.format(id=source.id, part="metadatos"), "application/xml")
-        title = _text(ET.fromstring(meta.text).find("data/metadatos/titulo"))
+        metadata = ET.fromstring(meta.text).find("data/metadatos")
+        title = _text(metadata.find("titulo"))
+        if _text(metadata.find("estatus_derogacion")) == "S":
+            raise ValueError(f"{source.id} ({title}) is repealed: drop it from BOE_LAWS")
         url = BOE_HTML.format(id=source.id)
         xml = _get(client, BOE_API.format(id=source.id, part="texto"), "application/xml")
         text, version = boe_consolidated_to_markdown(xml.text, title, url, as_of, source.articles)

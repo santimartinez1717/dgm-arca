@@ -970,3 +970,41 @@ art. 17.6 LAU, contrato de diez o más años). Hay 29 fragmentos de menos de 50 
 - Los fragmentos minúsculos son un argumento para el troceado semántico o por artículo.
 - Siguiente: anotar el conjunto dorado por documento y artículo (o cita literal) y no por id
   de fragmento, para que sirva a las dos estrategias de troceado.
+
+---
+
+### 2026-11-22 · Fase 3 · Conjunto dorado anotado por artículo y cita
+
+**Qué queríamos saber.** Cómo escribir las 50 preguntas para que sirvan a las dos estrategias de
+troceado, y si son demasiado fáciles para BM25.
+
+**Qué hicimos.** Leímos el corpus artículo a artículo y escribimos 51 preguntas con respuesta
+(`rag/gold/gold.jsonl`) y 6 sin respuesta (`rag/gold/unanswerable.jsonl`). Cada pregunta
+guarda documento, sección y una cita literal. `rag/gold.py` las traduce a ids para cualquier
+troceado: es relevante el fragmento que contiene al menos la mitad de una cita. Formato y
+criterios en `rag/gold/README.md`. Prueba rápida con BM25 sobre el troceado recursivo (800/100).
+
+Al leer apareció que el RDL 26/2026 estaba **derogado** (no se convalidó). Lo cambiamos por
+el RDL 29/2026, que lo sustituye, y el script ahora se niega a descargar normas derogadas.
+También quitamos de las 28 páginas de la AEAT el texto del diálogo «Generar PDF».
+
+**Qué pasó.**
+
+| | Valor |
+|---|---|
+| Preguntas con más de una ubicación válida | 7 (ley + reglamento + manual, ley + preámbulo…) |
+| Fragmentos relevantes por pregunta (recursivo 800/100) | 1 en 43 preguntas, 2 en 7, 3 en 1 |
+| BM25: acierto@1 / @5 / @10 | 7,8 % / 27,5 % / 31,4 % |
+| BM25: MRR@10 | 0,147 |
+
+BM25 no encuentra en los 10 primeros 35 de las 51 preguntas. Las preguntas usan las palabras de
+un inversor («honorarios de la agencia», «piso vacío») y no las de la norma («gastos de gestión
+inmobiliaria», «desocupados con carácter permanente»).
+
+**Qué concluimos.**
+- El conjunto es exigente para recuperación léxica, que es lo que queríamos: deja margen para
+  medir el denso y el híbrido. Si el denso tampoco llega, habrá que mirar si las preguntas son
+  demasiado indirectas.
+- Hay conflictos reales entre fuentes (Manual de Renta 2025 frente a LIRPF vigente, folleto
+  del BdE frente a Ley 5/2019): son preguntas para el análisis de fallos de la generación.
+- Siguiente: troceado semántico, retriever denso con Qwen3-Embedding y barrido de λ.
