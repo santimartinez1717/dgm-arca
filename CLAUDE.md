@@ -50,7 +50,8 @@ Para lanzar y vigilar procesos largos, usar la skill `lanzar-dgx`.
   no pueden llegar al alumno; `train_sft` las limpia (`scrub_leaks`) o descarta la traza.
 - Memoria en la MIG de 17 GB: destilación lotes de 2; SFT 1,7B con `--batch-size 2 --grad-accum
   8 --max-length 3328` (5,3 GB); GRPO con micro-lotes de 2 y sin atención de cuDNN (10,6 GB).
-- La GPU está libre solo si `pgrep -af "python -m rlm"` no devuelve nada.
+- La GPU está libre solo si `pgrep -af "python -m (rlm|tool_use)"` no devuelve nada (la fase 2
+  corre como `python -m tool_use`; mirar solo `rlm` provocó un OOM el 18/11).
 
 ## EXPERIMENTS.md
 
