@@ -721,6 +721,225 @@ potencia (1+i)^-300 la dan como "aproximadamente 0,4666" sin desarrollarla.
 
 ---
 
+### 2026-11-18 · Fase 1 · SFT 3, evaluación a 2048 y muestreo con pistas
+
+**Qué queríamos saber.** Si el SFT con todas las trazas de la ronda 2 (incluidas las 51 de
+`cash_on_cash` con clave) mejora al SFT 1 y al GRPO 1 con el presupuesto justo de 2048 tokens,
+y si las pistas dan señal para el GRPO 2 en `irpf_rental` y `cash_on_cash`.
+
+**Qué hicimos.** `sft3.sh`: SFT desde el modelo base con las nueve tandas de trazas,
+`--max-per-problem 3 --max-per-family 200` (857 trazas: acquisition_cost 200, legal_rent 200,
+irpf_rental 169, cash_on_cash 105, max_price 92, net_yield 91), 108 pasos, 35 min
+(`rlm/weights/sft3_lora`). Evaluación en test con 2048 tokens (80 min) y `sample_check` en irpf
+y cash (8 problemas × 8 respuestas, 2048 tokens) sin pista y con pista de nivel 2.
+
+**Qué pasó.** Test, 2048 tokens (`reports/eval_sft3_17b_2048.json`), aciertos:
+
+| Familia | SFT 1 | GRPO 1 | SFT 3 |
+|---|---|---|---|
+| acquisition_cost (50) | 36 | 37 | **43** |
+| — obra nueva (11) | 0 | 0 | **6** |
+| net_yield (50) | 34 | 32 | 35 |
+| max_price (50) | **28** | 21 | 23 |
+| legal_rent (50) | 15 | **23** | 14 |
+| irpf_rental (50) | 0 | 2 | **3** |
+| cash_on_cash (50) | 0 | 0 | **3** |
+| **Total (300)** | 37,7 % | 38,3 % | **40,3 %** |
+| Cortadas | 31 % | 8 % | 23 % |
+
+Ninguna diferencia del total es significativa: frente al SFT 1, 29 problemas solo los acierta
+el SFT 3 y 21 solo el SFT 1 (McNemar exacto p = 0,32); frente al GRPO 1, 33 y 27 (p = 0,52).
+`legal_rent` sigue cortándose (termina 22 de 50; acierta 14 de esas 22).
+
+Muestreo (`reports/sample_check_sft3_pista{0,2}.json`):
+
+| | Sin pista: pass@8 | Sin pista: correctas | Pista 2: pass@8 | Pista 2: correctas |
+|---|---|---|---|---|
+| irpf_rental | 1/8 | 2 % | 1/8 | 3 % |
+| cash_on_cash | 1/8 | 2 % | **8/8** | **77 %** |
+
+Con la cuota de la hipoteca dada, `cash_on_cash` sale casi siempre: su único problema es esa
+cuenta. En `irpf_rental` dar la amortización no basta. Revisando las 36 respuestas terminadas
+de irpf en test: de las 28 con rendimiento positivo, 15 eligen mal la reducción (sobre todo 70 %
+en vez de 90 %, y 50 % en vez de 60 %) y 19 calculan mal la amortización, casi siempre por
+la parte del suelo (1 − 114.500 / 201.000 escrito como 0,463 en vez de 0,430). Otras 6
+respuestas quedan a menos del 0,5 % del valor correcto pero fuera de la tolerancia de 0,05 %:
+redondean resultados intermedios.
+
+**Qué concluimos.**
+- El SFT 3 es el mejor punto de partida para el GRPO 2 (40,3 %, primeros aciertos en cash).
+- `cash_on_cash`: pistas de nivel 2 en el GRPO 2 dan señal de sobra.
+- `irpf_rental` falla en dos sitios: la regla de la reducción y la aritmética del suelo. La
+  pista de nivel 1 pasa a incluir el orden de las reducciones, y la de nivel 2 también la
+  reducción que corresponde; se está midiendo de nuevo.
+
+**Añadido 23:10.** Con la pista nueva (orden de las reducciones y la que corresponde),
+`irpf_rental` pasa a pass@8 = 8/8, 8/8 problemas útiles y 23 % de respuestas correctas
+(`reports/sample_check_sft3_pista2_irpf_v2.json`). Prueba de 3 pasos del GRPO 2 a 2048 tokens
+desde el SFT 3 con pistas: cabe en la MIG, ~80 s por paso. La prueba enseñó que el learning
+rate bajaba en línea recta hasta 0 al final de cada ejecución, lo que rompe una ejecución en
+dos etapas: `--lr-scheduler constant`. `grpo2.sh` queda listo para la próxima sesión.
+
+---
+
+### 2026-11-18 · Fase 1 · GRPO 2 desde el SFT 3, con pistas y recompensa por pasos
+
+**Qué queríamos saber.** Si el GRPO con las mejoras de la ronda 2 (punto de partida SFT 3,
+2048 tokens, recompensa por pasos, learning rate 4 veces mayor y pistas en las familias sin
+señal) mejora claramente al SFT 3 y al GRPO 1.
+
+**Qué hicimos.** `grpo2.sh` (de 23:55 a 07:14, en una sesión): 400 pasos, un problema y 8
+respuestas por paso, `--max-completion-length 2048 --learning-rate 2e-5 --lr-scheduler constant
+--third-reward process`, pesos 0,5 / 2,0 / 0,5, 10 % de control GSM8K. Pasos 1–250 con copias
+con pista de nivel 2 de los 400 problemas de `irpf_rental` y los 400 de `cash_on_cash`
+(`--hint-share 1.0`, 3.556 problemas en total); pasos 251–400 sin pistas, continuando del
+checkpoint 250. ~40 s por paso. Evaluación en test con 2048 tokens (69 min).
+
+**Qué pasó.** Entrenamiento, medias de 50 pasos (`rlm/weights/grpo2_lora/checkpoint-400/trainer_state.json`):
+
+| Pasos | Exactitud | Recompensa por pasos | Pasos sin señal | Longitud media | Cortadas |
+|---|---|---|---|---|---|
+| 1–50 | 0,51 | 0,49 | 11 | 1171 | 21 % |
+| 51–100 | 0,46 | 0,64 | 4 | 1074 | 16 % |
+| 101–150 | 0,48 | 0,64 | 9 | 918 | 7 % |
+| 151–200 | 0,48 | 0,64 | 10 | 888 | 4 % |
+| 201–250 | 0,53 | 0,65 | 7 | 898 | 6 % |
+| 251–300 (sin pistas) | 0,43 | 0,48 | 9 | 1073 | 11 % |
+| 301–350 | 0,42 | 0,54 | 8 | 1040 | 10 % |
+| 351–400 | 0,40 | 0,61 | 7 | 1013 | 7 % |
+
+La exactitud cae al quitar las pistas (los problemas pasan a ser más difíciles), no por
+olvido: la recompensa por pasos se recupera de 0,48 a 0,61.
+
+Test, 2048 tokens (`reports/eval_grpo2_17b_2048.json`), aciertos:
+
+| Familia | SFT 1 | GRPO 1 | SFT 3 | **GRPO 2** |
+|---|---|---|---|---|
+| acquisition_cost (50) | 36 | 37 | 43 | **46** |
+| — obra nueva (11) | 0 | 0 | 6 | **8** |
+| net_yield (50) | 34 | 32 | 35 | 34 |
+| max_price (50) | **28** | 21 | 23 | 22 |
+| legal_rent (50) | 15 | 23 | 14 | **30** |
+| irpf_rental (50) | 0 | 2 | **3** | 2 |
+| cash_on_cash (50) | 0 | 0 | 3 | **8** |
+| **Total (300)** | 37,7 % | 38,3 % | 40,3 % | **47,3 %** |
+| Cortadas | 31 % | 8 % | 23 % | 6 % |
+
+Por primera vez las mejoras son significativas (McNemar exacto): frente al SFT 3, 51 problemas
+solo los acierta el GRPO 2 y 30 solo el SFT 3 (p = 0,026); frente al GRPO 1, 48 y 21
+(p = 0,002); frente al SFT 1, 51 y 22 (p = 0,001).
+
+**Qué concluimos.**
+- El GRPO 2 es el mejor modelo de la fase 1: 47,3 % en test, +9 puntos sobre el GRPO 1.
+- La mayor parte de la mejora es `legal_rent` (14 → 30): GRPO acorta las respuestas (de 1062
+  a 896 tokens; cortadas del 23 % al 6 %) y esa familia ya sabía resolverse cuando terminaba.
+- `cash_on_cash` sube de 3 a 8 con las pistas; sigue limitada por la potencia de la cuota.
+- `irpf_rental` no mejora (3 → 2) pese a acertar el 23 % con pista durante el muestreo: lo
+  aprendido con la pista no pasa a los problemas sin ella. Es la familia pendiente.
+- max_price sigue por debajo del SFT 1 (28 → 22): pierde algo con cada ronda.
+
+---
+
+### 2026-11-18 · Fase 1 · Por qué fallan irpf, cash y max_price tras el GRPO 2
+
+**Qué queríamos saber.** Por qué `irpf_rental` no mejora con el GRPO 2 pese a las pistas, y
+qué limita a `cash_on_cash` y max_price.
+
+**Qué hicimos.** Revisar las respuestas terminadas de test (`reports/eval_{sft3,grpo2}_17b_2048.json`):
+la reducción que aplica el modelo en irpf frente a la correcta, si la amortización coincide con
+la del motor, y a qué distancia del valor correcto quedan las respuestas fallidas.
+
+**Qué pasó.**
+
+Reducción elegida en irpf (respuestas terminadas con rendimiento positivo):
+
+| | Bien | Mal | Error más común |
+|---|---|---|---|
+| SFT 3 | 13 de 28 | 15 | 90 % → 70 % (4) |
+| GRPO 2 | **5 de 36** | 31 | **50 % → 70 % (11)** |
+
+Respuestas que quedan cerca del valor correcto (la tolerancia del verificador es 0,05 %):
+
+| Familia, GRPO 2 | Aciertos | A menos del 0,5 % | A menos del 1 % | Terminadas |
+|---|---|---|---|---|
+| max_price | 22 | 43 | **49** | 49 |
+| cash_on_cash | 8 | 9 | 15 | 43 |
+| irpf_rental | 2 | 4 | 4 | 46 |
+
+Ejemplo de max_price: plantea bien `1,09·P + 6.000 = 425.333,33` y calcula
+`419.333,33 / 1,09 ≈ 385.333,33` (es 384.709,48).
+
+**Qué concluimos.**
+- En irpf el GRPO 2 empeoró la elección de la reducción: aplica el 70 % casi por defecto
+  ("la renta bajó más de un 5 % → 70 %", cuando esa condición da el 90 % y solo en zona
+  tensionada). La pista de nivel 2 le daba la reducción hecha, así que el GRPO premió copiarla
+  en vez de deducirla, y sin pista adivina. Si se repite, mejor pista de nivel 1 (solo la regla).
+- max_price razona bien casi siempre (49 de 49 a menos del 1 %) y falla la división. Con
+  cash_on_cash pasa algo parecido. Son errores de aritmética, no de dominio: es exactamente lo
+  que resuelve la calculadora de la fase 2.
+
+---
+
+### 2026-11-18 · Fase 1 · Curvas del GRPO 2, reward hacking y fallos actualizados
+
+**Qué hicimos.** Curvas de entrenamiento del GRPO 2 frente al GRPO 1
+(`reports/grpo2_vs_grpo1_curves.png`, media móvil de 25 pasos, línea en el paso 250 donde se
+quitan las pistas; la "tercera recompensa" es la de desglose en el GRPO 1 y la de pasos en el
+GRPO 2, no son comparables entre sí). Revisión de las 3.200 respuestas guardadas del GRPO 2
+buscando reward hacking, y recuento de los cinco patrones de fallo en el GRPO 2
+(`docs/analisis_fallos_fase1.md`, sección "Ronda 2").
+
+**Qué pasó.** Sin reward hacking: densidad de números estable (13-14 por cada 100 palabras) y
+las fallidas con recompensa por pasos completa usan menos cifras distintas que el resto (23,9
+frente a 28,5). Patrones: obra nueva 0 → 8 de 11, cash sin cuota 22 → 9 fallos, irpf sin
+amortización 34 → 8 fallos, citas a "background knowledge" 80 → 0, bucles 43 → 31.
+
+**Qué concluimos.** El conocimiento del dominio se arregló con datos y la longitud con GRPO; lo
+que queda es aritmética (fase 2) y la regla de la reducción del IRPF.
+
+---
+
+### 2026-11-18 · Fase 1 · ¿SFT memoriza, RL generaliza? Evaluación fuera de distribución
+
+**Qué queríamos saber.** Cómo se degradan SFT y GRPO en problemas de dos composiciones de
+reglas que no aparecen en entrenamiento (`rlm/data/test_ood.jsonl`: `becomes_large_holder` y
+`max_price_capped`, 75 cada una).
+
+**Qué hicimos.** `eval_ood.sh`: los cuatro modelos con 2048 tokens y greedy, de 10:11 a 14:00
+(`reports/eval_ood_{sft,grpo,sft3,grpo2}_2048.json`).
+
+**Qué pasó.**
+
+| Modelo | Test | Fuera de distribución | Conserva | large_holder | max_price_capped | Cortadas |
+|---|---|---|---|---|---|---|
+| SFT 1 | 37,7 % | 6,0 % | 16 % | 7 | 2 | 113 / 150 |
+| GRPO 1 | 38,3 % | 18,0 % | 47 % | 21 | 6 | 55 / 150 |
+| SFT 3 | 40,3 % | 9,3 % | 23 % | 11 | 3 | 88 / 150 |
+| GRPO 2 | 47,3 % | **20,7 %** | 44 % | **28** | 3 | 47 / 150 |
+
+En las dos rondas GRPO generaliza mucho mejor que el SFT del que parte (McNemar exacto):
+SFT 1 → GRPO 1, 5 frente a 23 problemas (p = 0,001); SFT 3 → GRPO 2, 1 frente a 18
+(p = 0,0001). Entre GRPO 1 y GRPO 2 no hay diferencia fuera de distribución (11 frente a 15,
+p = 0,56), aunque en test el GRPO 2 es mejor.
+
+Aciertos solo entre las respuestas que terminan: SFT 1 24 % (9/37), GRPO 1 28 % (27/95),
+SFT 3 23 % (14/62), GRPO 2 30 % (31/103).
+
+**Qué concluimos.**
+- Se reproduce "SFT memoriza, RL generaliza": los SFT conservan el 16-23 % de su nota fuera de
+  distribución; los GRPO, el 44-47 %.
+- Pero la mayor parte de la ventaja viene de **terminar**: ante un problema nuevo el SFT se
+  enreda y se corta (75 % y 59 % de cortadas), y GRPO aprendió a razonar de forma concisa y
+  cerrar. Entre las respuestas que terminan, el GRPO acierta solo algo más (28-30 % frente a
+  23-24 %). La generalización que aporta RL aquí es sobre todo de **cómo** razonar (longitud,
+  cierre), más que de **qué** reglas aplicar.
+- `max_price_capped` (precio máximo con un tope legal) sigue casi a 0 en los cuatro: combina
+  dos familias y la aritmética de max_price, que ya fallaba dentro de distribución.
+- Lo que la ronda 2 añadió (datos con la clave, pistas) mejora el test pero no la
+  generalización: el GRPO 2 y el GRPO 1 están empatados fuera de distribución.
+
+---
+
 ### 2026-11-17 · Fase 2 · Qué herramientas construir: investigación del dominio y decisión
 
 **Qué queríamos saber.** Qué herramientas tienen sentido para Umbral. No las que cumplen el

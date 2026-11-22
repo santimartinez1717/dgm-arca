@@ -90,8 +90,15 @@ class ReasoningModel:
         from peft import PeftModel
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-        dtype = torch.bfloat16 if device == "cuda" else torch.float32
+        # CUDA on the DGX; on a Mac, the Apple GPU (MPS) in bfloat16: half the memory of float32
+        # on CPU (~3.5 GB for 1.7B instead of ~7 GB) and much faster.
+        if torch.cuda.is_available():
+            device = "cuda"
+        elif torch.backends.mps.is_available():
+            device = "mps"
+        else:
+            device = "cpu"
+        dtype = torch.float32 if device == "cpu" else torch.bfloat16
         self.tokenizer = AutoTokenizer.from_pretrained(self.base_model)
         model = AutoModelForCausalLM.from_pretrained(
             self.base_model, dtype=dtype, device_map=device
@@ -101,7 +108,7 @@ class ReasoningModel:
         self.model = model.eval()
         self.verifier = VERIFIERS[self.verifier_name]()
 
-    def generate(self, question: str, max_new_tokens: int = 1024) -> tuple[str, int]:
+    def generate(self, question: str, max_new_tokens: int = 2048) -> tuple[str, int]:
         """Return the raw completion and the number of generated tokens."""
         import torch
 
@@ -113,16 +120,15 @@ class ReasoningModel:
             out = self.model.generate(
                 **inputs,
                 max_new_tokens=max_new_tokens,
-                do_sample=True,
-                temperature=0.6,
-                top_p=0.95,
+                # Greedy, like rlm/evaluate.py: the API must agree with the reported pass@1.
+                do_sample=False,
                 pad_token_id=self.tokenizer.pad_token_id or self.tokenizer.eos_token_id,
             )
         new_tokens = out[0, inputs["input_ids"].shape[1] :]
         return self.tokenizer.decode(new_tokens, skip_special_tokens=True), int(new_tokens.numel())
 
     def answer(
-        self, question: str, expected_answer: str | None = None, max_new_tokens: int = 1024
+        self, question: str, expected_answer: str | None = None, max_new_tokens: int = 2048
     ) -> ReasoningResponse:
         raw, n_tokens = self.generate(question, max_new_tokens)
         thinking, answer = split_thinking(raw)

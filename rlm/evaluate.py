@@ -127,7 +127,8 @@ def plot_pass1(results: dict, path: Path) -> None:
 HISTORY_PANELS = [
     ("Formato", "rewards/format_reward/mean", 1.0),
     ("Exactitud", "rewards/euro_accuracy_reward/mean", 1.0),
-    ("Recompensa del dominio", "rewards/domain_reward/mean", 1.0),
+    # The third reward of each run: the breakdown reward (GRPO 1) or the process reward (GRPO 2).
+    ("Tercera recompensa", "rewards/domain_reward/mean|rewards/process_reward/mean", 1.0),
     ("Respuestas cortadas (%)", "completions/clipped_ratio", 100.0),
     ("Longitud media (tokens)", "completions/mean_length", 1.0),
 ]
@@ -151,26 +152,30 @@ def plot_history(
     path: Path,
     compare: dict[str, Path] | None = None,
     window: int = 25,
+    name: str = "GRPO con recompensa del dominio",
+    mark: int | None = None,
 ) -> None:
     """GRPO curves from ``trainer_state.json``: one panel per metric, moving averages.
 
     Each step is a single problem, so per-step values are mostly noise; the curves show a
     ``window``-step moving average. ``compare`` adds other runs (name -> trainer_state.json)
-    on the same panels, e.g. an ablation.
+    on the same panels, e.g. an ablation. ``mark`` draws a vertical line at that step (e.g.
+    where the hints stop).
     """
     import matplotlib
 
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    runs = {"GRPO con recompensa del dominio": trainer_state, **(compare or {})}
+    runs = {name: trainer_state, **(compare or {})}
     fig, axes = plt.subplots(1, len(HISTORY_PANELS), figsize=(17, 3.6), sharex=True)
     for color, (name, state_path) in zip(RUN_COLORS, runs.items(), strict=False):
         log = json.loads(Path(state_path).read_text())["log_history"]
         history = [h for h in log if "reward" in h]
         steps = [h["step"] for h in history]
         for ax, (_, key, scale) in zip(axes, HISTORY_PANELS, strict=True):
-            raw = [h[key] * scale if key in h else None for h in history]
+            keys = key.split("|")
+            raw = [next((h[k] * scale for k in keys if k in h), None) for h in history]
             ax.plot(steps, _rolling(raw, window), color=color, linewidth=2, label=name)
     for ax, (title, _, _) in zip(axes, HISTORY_PANELS, strict=True):
         ax.set_title(title, fontsize=10, loc="left", color="#0b0b0b")
@@ -181,6 +186,8 @@ def plot_history(
             ax.spines[side].set_visible(False)
         for side in ("left", "bottom"):
             ax.spines[side].set_color("#c3c2b7")
+        if mark:
+            ax.axvline(mark, color="#8a8984", linewidth=1, linestyle="--")
     if len(runs) > 1:
         axes[0].legend(frameon=False, fontsize=8, labelcolor="#0b0b0b")
     fig.suptitle(
@@ -207,6 +214,8 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--out", default="reports/phase1_eval.json")
     parser.add_argument("--history", default=None, help="trainer_state.json to plot")
+    parser.add_argument("--name", default="GRPO con recompensa del dominio", help="--history run")
+    parser.add_argument("--mark", type=int, default=None, help="--history: vertical line at step")
     parser.add_argument(
         "--compare",
         nargs="*",
@@ -220,7 +229,13 @@ def main() -> None:
     if args.history:
         target = out.with_name(Path(args.history).parent.name + "_curves.png")
         compare = dict(pair.split("=", 1) for pair in args.compare)
-        plot_history(Path(args.history), target, {k: Path(v) for k, v in compare.items()})
+        plot_history(
+            Path(args.history),
+            target,
+            {k: Path(v) for k, v in compare.items()},
+            name=args.name,
+            mark=args.mark,
+        )
         print(f"curves -> {target}")
         return
 

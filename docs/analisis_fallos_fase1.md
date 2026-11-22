@@ -113,3 +113,45 @@ solo, pero es una fuga. Ya hemos añadido la expresión al filtro para futuras d
 - **Una calculadora resolvería el fallo 4 y buena parte del 2 y el 3**: en ellos el
   planteamiento es correcto y falla la aritmética. Es el caso de uso de la herramienta de cálculo
   de la fase 2.
+
+## Ronda 2: qué cambió con el GRPO 2 (18/11)
+
+Tras la ronda 2 (destilación con la clave del motor, SFT 3 y GRPO 2 con pistas y recompensa por
+pasos) el modelo final es `rlm/weights/grpo2_lora`: **47,3 %** en el mismo test y con los mismos
+2.048 tokens (`reports/eval_grpo2_17b_2048.json`). Así quedan los cinco patrones:
+
+| # | Patrón | GRPO 1 | GRPO 2 |
+|---|---|---|---|
+| 1 | Obra nueva sin IVA | 0 de 11 aciertos | **8 de 11** |
+| 2 | Cash-on-cash sin la cuota | 22 de 43 fallos no la calculan | **9 de 35** |
+| 3 | IRPF sin amortización | 34 de 42 fallos no la calculan | **8 de 44** |
+| 4 | max_price: ecuación bien, división mal | 24 de 27 fallos a menos del 1 % | 27 de 27 (49 de 49 terminadas a menos del 1 %) |
+| 5 | Bucle de repetición | 43 de 300 salidas | 31 de 300 |
+| — | Cita "background knowledge" | 80 de 300 | **0 de 300** |
+
+Los patrones de **conocimiento** (1, 2, 3 y la cita de la hoja) se han corregido en buena parte:
+las trazas con la clave le enseñaron al alumno el IVA, la cuota y la amortización, y el filtro de
+fugas eliminó la cita. Lo que queda es otra cosa:
+
+- **IRPF: ahora falla la reducción.** El modelo ya calcula la amortización, pero de las 36
+  respuestas terminadas con rendimiento positivo solo 5 eligen bien la reducción (el SFT 3,
+  13 de 28). Aplica el 70 % casi por defecto: "la renta bajó más de un 5 % → 70 %", cuando esa
+  condición da el 90 % y solo en zona tensionada. Durante el GRPO, la pista de nivel 2 le daba
+  la reducción hecha: aprendió a copiarla en vez de deducirla, y sin pista adivina.
+- **Aritmética.** max_price, cash_on_cash y la parte del suelo de la amortización fallan en
+  divisiones y potencias (1 − 114.500 / 201.000 = 0,463 en vez de 0,430; 419.333,33 / 1,09 =
+  385.333,33 en vez de 384.709,48). El planteamiento es correcto.
+- **Truncado.** Las respuestas cortadas bajan del 23 % (SFT 3) al 6 %: de ahí sale casi toda la
+  mejora de `legal_rent` (14 → 30 de 50), que ya sabía resolverse cuando terminaba.
+
+**Reward hacking.** La recompensa por pasos premia que aparezcan los valores intermedios del
+motor, así que un modelo tramposo podría llenar el razonamiento de cifras. En las 3.200
+respuestas guardadas del GRPO 2 (`rlm/weights/grpo2_lora/completions/`) no ocurre: la densidad
+de números es estable (13-14 por cada 100 palabras de principio a fin) y las respuestas
+fallidas que cobran la recompensa por pasos completa usan menos cifras distintas (23,9) que las
+que no (28,5).
+
+**Qué sacamos de la ronda 2.** El conocimiento del dominio se arregla con datos (trazas con la
+clave) y la longitud con GRPO. Lo que queda es aritmética, que es el caso de uso de la
+calculadora de la fase 2, y la regla de la reducción del IRPF, donde las pistas deben dar solo
+la regla (nivel 1) y no el resultado.

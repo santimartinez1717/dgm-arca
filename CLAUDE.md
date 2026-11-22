@@ -42,11 +42,10 @@ Para lanzar y vigilar procesos largos, usar la skill `lanzar-dgx`.
   `rlm/distill.py` la resume para el profesor: **si cambia una regla, cambiar las dos**.
 - Lo que GRPO no arregló: `irpf_rental` (se salta la amortización), `cash_on_cash` (cuota a mano)
   y obra nueva (IVA). GRPO solo aprende de grupos con algún acierto; en irpf hubo 0 de 552.
-- Ronda 2 en curso (nov 2026): destilación con información privilegiada (`--privileged
+- Ronda 2 (nov 2026): destilación con información privilegiada (`--privileged
   --only-unsolved`: el profesor ve la clave del motor) + `rlm/rewrite_traces.py` (reescribe sin
-  citar la clave). SFT 2 hecho el 17/11 (`rlm/weights/sft2_lora`): 30,0 % en test, obra nueva
-  de 1/11 a 9/11, `irpf_rental` sigue en 1/50. Siguiente: `bash sesion3.sh` (muestreo del SFT 2
-  y `cash_on_cash` con clave) → GRPO con `--third-reward process` y un learning rate mayor.
+  citar la clave) → SFT 3 (40,3 % a 2048) → **GRPO 2** (`grpo2.sh`, `rlm/weights/grpo2_lora`):
+  **47,3 % en test a 2048**, el mejor modelo. Pendiente: `irpf_rental` (2/50) y max_price.
 - Filtro de fugas (`RULES_LEAK`): la hoja ("background knowledge") y la clave ("the key says…")
   no pueden llegar al alumno; `train_sft` las limpia (`scrub_leaks`) o descarta la traza.
 - Memoria en la MIG de 17 GB: destilación lotes de 2; SFT 1,7B con `--batch-size 2 --grad-accum

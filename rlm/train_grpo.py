@@ -96,6 +96,7 @@ def train(args: argparse.Namespace) -> None:
         output_dir=args.output,
         max_steps=args.steps,
         learning_rate=args.learning_rate,
+        lr_scheduler_type=args.lr_scheduler,
         # One problem's group of completions per optimizer step, split into micro-batches:
         # 8 completions of 1536 tokens at once need ~9 GB just for the logits.
         per_device_train_batch_size=args.micro_batch,
@@ -173,6 +174,11 @@ def main() -> None:
     )
     parser.add_argument("--max-completion-length", type=int, default=2048)
     parser.add_argument("--learning-rate", type=float, default=5e-6)
+    parser.add_argument(
+        "--lr-scheduler",
+        default="linear",
+        help="'constant' when a run is split in stages (hints, then no hints)",
+    )
     parser.add_argument("--temperature", type=float, default=1.0)
     parser.add_argument("--beta", type=float, default=0.0, help="KL coefficient (0 disables it)")
     parser.add_argument("--lora-rank", type=int, default=16)

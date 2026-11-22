@@ -7,8 +7,12 @@ family (``reports/sample_check_sft2.json``): no signal. Following hint-scaffolde
 question, so the group has some right answers to learn from; the plain versions stay in the
 dataset, and a second stage without hints checks that the model no longer needs them.
 
-Level 1 states the method (the rule the model skips); level 2 also gives the first
-intermediate value, computed by the rule engine. The hints are in Spanish, like the questions.
+Level 1 states the method (the rules the model gets wrong); level 2 also gives the first
+intermediate value computed by the rule engine and, for irpf_rental, the reduction that
+applies. In the SFT 3 evaluation (2026-11-18), irpf_rental answers that finished picked the
+wrong reduction in 15 of 28 cases and miscomputed the depreciation in 19 of 28 (mostly the
+land share: 1 - 114,500 / 201,000 written as 0.463 instead of 0.430). The hints are in
+Spanish, like the questions.
 """
 
 from __future__ import annotations
@@ -22,7 +26,11 @@ METHOD = {
         "total de adquisición y el valor catastral, aplicado solo a la parte de construcción "
         "(sin el suelo, según el reparto del valor catastral). Los intereses más las "
         "reparaciones no pueden superar los ingresos. La reducción solo se aplica si el "
-        "rendimiento neto es positivo."
+        "rendimiento neto es positivo, y es la primera que se cumpla: 90 % si está en zona "
+        "tensionada, ya estuvo alquilada y la renta bajó más de un 5 %; 70 % si es el primer "
+        "alquiler en zona tensionada a un inquilino de 18 a 35 años, o si el inquilino es una "
+        "administración o entidad sin ánimo de lucro para alquiler social; 60 % si se terminó "
+        "una rehabilitación en los dos años anteriores; 50 % en los demás casos."
     ),
     "cash_on_cash": (
         "Pista: la cuota mensual de la hipoteca sigue el sistema francés, "
@@ -51,6 +59,9 @@ def hint_text(row: dict, level: int) -> str:
     text = METHOD[family]
     if level >= 2 and row.get("checkpoints"):
         text += " " + FIRST_VALUE[family].format(value=spanish_amount(row["checkpoints"][0]))
+        reduction = (row.get("branches") or {}).get("reduction")
+        if family == "irpf_rental" and reduction and reduction != "0":
+            text += f" La reducción que corresponde es del {reduction} %."
     return text
 
 
