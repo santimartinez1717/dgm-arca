@@ -23,7 +23,8 @@ import json
 import os
 import re
 import sys
-from dataclasses import dataclass
+import threading
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from api.schemas import ReasoningResponse, VerifierVerdict
@@ -66,6 +67,7 @@ class ReasoningModel:
     base_model: str
     adapter_path: str | None = None
     verifier_name: str = "numeric"
+    _lock: threading.Lock = field(default_factory=threading.Lock, repr=False)
 
     @classmethod
     def from_env(cls) -> ReasoningModel:
@@ -116,7 +118,8 @@ class ReasoningModel:
             build_prompt(question), tokenize=False, add_generation_prompt=True
         )
         inputs = self.tokenizer(text, return_tensors="pt").to(self.model.device)
-        with torch.no_grad():
+        # One generation at a time: concurrent requests on a laptop GPU run out of memory.
+        with self._lock, torch.no_grad():
             out = self.model.generate(
                 **inputs,
                 max_new_tokens=max_new_tokens,
