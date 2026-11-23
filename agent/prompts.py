@@ -20,7 +20,8 @@ Method:
 1. Save the facts first: record_property and record_investor with every figure the user gave,
    copied as written. Properties from a CSV are already in the case file.
 2. Never compute a number yourself: analyze_property computes taxes, legal rent, yields and
-   IRPF.
+   IRPF. With several properties, call screen_properties once with the user's criterion
+   instead of analysing them one by one; then dig only into the passed and near_miss ones.
 3. Look for levers: find_levers, then what_if with the ids of the quantified ones. Say what
    each lever gains or loses in numbers.
 4. If a fact that changes the decision is missing or contradictory, call what_if with

@@ -43,14 +43,19 @@ from rag.eval_generation import ABSTAIN as RAG_ABSTAIN
 # a letter is part of an id ("P07", "BOE-A-2026") and not a figure.
 NUMBER_TOKEN = re.compile(r"(?<![\w.,])[-−]?\d+(?:[.,]\d+)*")
 
-# What an agent says when it cannot answer, on top of phase 3's wording for passages.
+# What an agent says when it cannot answer, on top of phase 3's wording for passages. English
+# too: abstaining is what the check measures, the language of the answer is measured apart
+# (the thinking brain abstained in English on impossible-01, EXPERIMENTS.md, issue 20).
 AGENT_ABSTAIN = re.compile(
     r"no (?:es posible|se puede|puedo|podemos|sabría) (?:\w+ ){0,2}"
     r"(?:saber|predecir|prever|anticipar|garantizar|determinar|asegurar|calcular|responder)"
     r"|no (?:tengo|dispongo de|hay) (?:\w+ ){0,2}(?:forma|manera|modo|datos|información)"
     r"|nadie (?:puede|sabe)"
     r"|no existe (?:\w+ ){0,3}(?:dato|información|registro|forma)"
-    r"|(?:imposible|no se puede) (?:de )?(?:saber|predecir|prever)",
+    r"|(?:imposible|no se puede) (?:de )?(?:saber|predecir|prever)"
+    r"|(?:can ?not|can't|cannot|unable to|no (?:\w+ )?(?:one|tool|tools|model) can|nobody can)"
+    r" (?:\w+ ){0,2}(?:predict|forecast|know|tell|determine|guarantee)"
+    r"|(?:impossible|not possible) to (?:predict|forecast|know|tell|determine)",
     re.IGNORECASE,
 )
 # A figure with a unit: what an abstention must not invent.
@@ -257,6 +262,8 @@ def run_task(agent: Any, task: dict, brain: str, max_steps: int, hang_s: float |
             }
             crash = f"{type(exc).__name__}: {exc}"
     used = tools_used(response.get("steps", []))
+    # A code agent calls tools from inside its Python: those calls count as used too.
+    used |= {c["name"] for c in response.get("tool_calls", [])}
     passes = check_answer(task, response.get("final_answer", ""))
     audit = response.get("audit") or None
     return {
@@ -276,7 +283,12 @@ def run_task(agent: Any, task: dict, brain: str, max_steps: int, hang_s: float |
         "audit": audit,
         "audit_rejections": int((audit or {}).get("rejections", 0)),
         "open_questions": response.get("open_questions", []),
+        # optional fields of /agent (issue 21): what the traces and the viewer show
+        "levers": response.get("levers", []),
+        "scenarios": response.get("scenarios", []),
+        "case_file": response.get("case_file"),
         "crash": crash,
+        "code_errors": response.get("code_errors"),
         "seconds": round(time.perf_counter() - started, 2),
     }
 
@@ -302,6 +314,9 @@ def summarise(rows: list[dict]) -> dict[str, Any]:
         "audit_rejection_rate": mean([r["audit_rejections"] > 0 for r in audited]),
         "abstention_rate": mean([r["check"] for r in impossible]),
         "crashes": sum(r["crash"] is not None for r in rows),
+        "mean_code_errors": mean(
+            [r["code_errors"] for r in rows if r.get("code_errors") is not None]
+        ),
     }
 
 
@@ -384,13 +399,13 @@ def markdown(results: dict[str, Any]) -> str:
     """Tables ready for the report: brains × configurations, categories, McNemar."""
     runs = results["runs"]
     lines = [
-        "# Fase 4 · Evaluación del agente",
+        f"# Fase 4 · Evaluación del agente ({results.get('agent', 'json')})",
         "",
         "## Cerebros × configuraciones",
         "",
         "| Config. | Cerebro | Éxito | IC 95 % (Wilson) | Pasos | Tokens | Tools requeridas "
-        "| Rechazo auditor | Abstención (imposibles) | Caídas |",
-        "|---|---|---|---|---|---|---|---|---|---|",
+        "| Rechazo auditor | Abstención (imposibles) | Caídas | Errores de código |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for run in runs.values():
         low, high = run["wilson_95"]
@@ -399,7 +414,8 @@ def markdown(results: dict[str, Any]) -> str:
             f"({_pct(run['success_rate'])}) | {100 * low:.0f}–{100 * high:.0f} % "
             f"| {_num(run['mean_steps'])} | {_num(run['mean_tokens'], 0)} "
             f"| {_pct(run['required_tools_rate'])} | {_pct(run['audit_rejection_rate'])} "
-            f"| {_pct(run['abstention_rate'])} | {run['crashes']} |"
+            f"| {_pct(run['abstention_rate'])} | {run['crashes']} "
+            f"| {_num(run.get('mean_code_errors'))} |"
         )
     categories = sorted({c for run in runs.values() for c in run["by_category"]})
     lines += [
@@ -450,7 +466,30 @@ def trace_markdown(row: dict, label: str) -> str:
             lines += [f"**Acción:** `{step['action']['name']}` `{args}`", ""]
         if step.get("observation") is not None:
             lines += ["**Observación:**", "", "```", str(step["observation"])[:2000], "```", ""]
+    if row.get("levers"):
+        lines += ["## Palancas (find_levers)", ""]
+        lines += [
+            f"- `{lv.get('id')}` ({lv.get('level')}): {lv.get('title', '')} · "
+            f"{lv.get('source', '')}"
+            for lv in row["levers"]
+        ]
+        lines.append("")
+    if row.get("scenarios"):
+        lines += ["## Escenarios (what_if)", "", "```json"]
+        lines += [json.dumps(s, ensure_ascii=False) for s in row["scenarios"]]
+        lines += ["```", ""]
+    if row.get("audit"):
+        lines += [
+            "## Auditor",
+            "",
+            "```json",
+            json.dumps(row["audit"], ensure_ascii=False),
+            "```",
+            "",
+        ]
     lines += ["## Respuesta final", "", row["final_answer"] or "—", ""]
+    if row.get("case_file"):
+        lines += ["## Expediente al final", "", "```", row["case_file"], "```", ""]
     return "\n".join(lines)
 
 
@@ -504,6 +543,12 @@ def main() -> None:
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("--bench", default="agent/bench/tasks.jsonl")
+    parser.add_argument(
+        "--agent",
+        choices=["json", "code"],
+        default="json",
+        help="json: our ReAct agent; code: smolagents' CodeAgent with the same tools (issue 16)",
+    )
     parser.add_argument("--brains", nargs="+", default=["rlm"])
     parser.add_argument("--configs", nargs="+", default=["full"], choices=sorted(CONFIGS))
     parser.add_argument("--max-steps", type=int, default=10)
@@ -513,10 +558,14 @@ def main() -> None:
     parser.add_argument("--traces-dir", default="reports/fase4/trazas")
     args = parser.parse_args()
 
-    from agent.react_agent import ReActAgent
+    if args.agent == "code":
+        from agent.code_agent import CodeAgentRunner as Agent
+    else:
+        from agent.react_agent import ReActAgent as Agent
 
     tasks = load_tasks(Path(args.bench), args.ids, args.limit)
-    results = evaluate(tasks, ReActAgent.from_env, args.brains, args.configs, args.max_steps)
+    results = evaluate(tasks, Agent.from_env, args.brains, args.configs, args.max_steps)
+    results["agent"] = args.agent
     for path in write_reports(results, Path(args.out), Path(args.traces_dir)):
         print(f"wrote {path}", flush=True)
     for run in results["runs"].values():
