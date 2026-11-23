@@ -154,8 +154,11 @@ def configure(agent: Any, config: str) -> Any:
         if not hasattr(agent, name):
             raise AttributeError(f"config {config!r} needs ReActAgent.{name} (issue 11)")
         setattr(agent, name, value)
-    for name in spec["drop_tools"]:
-        agent.registry.tools.pop(name, None)
+    if spec["drop_tools"] and hasattr(agent, "use_playbook"):
+        agent.use_playbook = False  # the loop's own switch: it hides the tools from the model
+    else:
+        for name in spec["drop_tools"]:
+            agent.registry.tools.pop(name, None)
     return agent
 
 
@@ -328,23 +331,40 @@ def evaluate(
     max_steps: int = 10,
     hang_s: float | None = None,
     log: Callable[[str], None] = lambda line: print(line, flush=True),
+    checkpoint: Path | None = None,
 ) -> dict[str, Any]:
-    """Every task under every (configuration, brain). ``make_agent`` builds a fresh agent."""
+    """Every task under every (configuration, brain). ``make_agent`` builds a fresh agent.
+
+    With ``checkpoint``, every row is appended to that JSONL as soon as it finishes, and the
+    rows already in it are reused: a run cut by the end of a DGX session resumes where it was.
+    """
     results: dict[str, Any] = {"runs": {}}
     total = len(configs) * len(brains) * len(tasks)
+    done_rows = load_checkpoint(checkpoint) if checkpoint else {}
     done = 0
     for config in configs:
-        agent = configure(make_agent(), config)
+        agent = None  # built lazily: a fully resumed configuration loads nothing
         for brain in brains:
             rows = []
             for task in tasks:
-                row = run_task(agent, task, brain, max_steps, hang_s)
-                row["config"] = config
+                key = (config, brain, task.get("id"))
+                if key in done_rows:
+                    row = done_rows[key]
+                    tag = "(reanudada) "
+                else:
+                    if agent is None:
+                        agent = configure(make_agent(), config)
+                    row = run_task(agent, task, brain, max_steps, hang_s)
+                    row["config"] = config
+                    tag = ""
+                    if checkpoint:
+                        with checkpoint.open("a", encoding="utf-8") as handle:
+                            handle.write(json.dumps(row, ensure_ascii=False, default=list) + "\n")
                 rows.append(row)
                 done += 1
                 mark = "ok " if row["correct"] else ("ERR" if row["crash"] else "no ")
                 log(
-                    f"[{done}/{total}] {config}/{brain} {row['id']}: {mark} "
+                    f"[{done}/{total}] {tag}{config}/{brain} {row['id']}: {mark} "
                     f"steps={row['n_steps']} tokens={row['tokens_used']} {row['seconds']}s"
                 )
             by_category = defaultdict(list)
@@ -359,6 +379,20 @@ def evaluate(
             }
     results["mcnemar"] = compare_brains(results["runs"], configs, brains)
     return results
+
+
+def load_checkpoint(path: Path) -> dict[tuple, dict]:
+    """Rows already evaluated, by (config, brain, task id). A torn last line is ignored."""
+    rows: dict[tuple, dict] = {}
+    if not path.exists():
+        return rows
+    for line in path.read_text(encoding="utf-8").splitlines():
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            continue  # the process died while writing it: that task runs again
+        rows[(row["config"], row["brain"], row["id"])] = row
+    return rows
 
 
 def compare_brains(runs: dict, configs: list[str], brains: list[str]) -> list[dict]:
@@ -556,6 +590,11 @@ def main() -> None:
     parser.add_argument("--limit", type=int, help="only the first N tasks (smoke test)")
     parser.add_argument("--out", default="reports/fase4/phase4_eval.json")
     parser.add_argument("--traces-dir", default="reports/fase4/trazas")
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="reuse the rows of <out>.partial.jsonl from a run that was cut and go on",
+    )
     args = parser.parse_args()
 
     if args.agent == "code":
@@ -564,7 +603,14 @@ def main() -> None:
         from agent.react_agent import ReActAgent as Agent
 
     tasks = load_tasks(Path(args.bench), args.ids, args.limit)
-    results = evaluate(tasks, Agent.from_env, args.brains, args.configs, args.max_steps)
+    out = Path(args.out)
+    checkpoint = out.with_suffix(".partial.jsonl")
+    if checkpoint.exists() and not args.resume:
+        raise SystemExit(f"{checkpoint} exists from an earlier run: pass --resume or move it")
+    checkpoint.parent.mkdir(parents=True, exist_ok=True)
+    results = evaluate(
+        tasks, Agent.from_env, args.brains, args.configs, args.max_steps, checkpoint=checkpoint
+    )
     results["agent"] = args.agent
     for path in write_reports(results, Path(args.out), Path(args.traces_dir)):
         print(f"wrote {path}", flush=True)
