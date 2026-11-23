@@ -5,6 +5,8 @@ Sources (licences in ``rag/CORPUS.md``):
 * **BOE consolidated legislation** through the open-data API, one Markdown file per law with
   one ``### Artículo N`` section per article. Each article is taken in the version in force
   on ``--as-of`` (fixed by default), so two runs on different days give the same text.
+  Every version of every article also goes to ``versions/<law>.jsonl`` with the dates it was
+  in force (``rag/temporal.py``); ``rag/ingest.py`` does not read those files.
 * **BOE daily-gazette documents** (stressed-zone declarations, SERPAVI resolutions) through
   ``diario_boe/xml.php``.
 * **AEAT Renta 2025 practical manual**, chapter 4 (rental income) and the imputed-income
@@ -356,6 +358,16 @@ def fetch(client: httpx.Client, source: Source, as_of: str) -> tuple[Path, dict]
                 f"Fuente: {url}\n", f"Fuente: {url}\n\nSolo los artículos {ranges}.\n", 1
             )
         entry |= {"title": title, "url": url, "as_of": as_of, "latest_version_in_force": version}
+        # every version of every article, for the law-on-a-date retrieval (rag/temporal.py)
+        from rag.temporal import article_versions, save_versions
+
+        versions = [
+            v
+            for v in article_versions(xml.text, source.slug, title)
+            if not source.articles or _in_ranges(_article_number(v.block_id), source.articles)
+        ]
+        save_versions(versions, CORPUS_DIR / "versions" / f"{source.slug}.jsonl")
+        entry["article_versions"] = len(versions)
         path = CORPUS_DIR / "boe" / f"{source.slug}.md"
     elif source.kind == "diario":
         url = BOE_DIARIO.format(id=source.id)

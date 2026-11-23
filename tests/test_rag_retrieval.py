@@ -136,3 +136,21 @@ def test_abstention_is_read_in_the_first_sentence():
     assert not abstains("Sí, se actualiza con el IPC [d-0001]. No hay un pacto expreso.")
     assert not abstains("La información indica que si no se especifica un índice, se usa el IRAV.")
     assert abstains("No se menciona en ningún pasaje. Por tanto no lo sé.")
+
+
+def test_pipeline_answer_with_a_fake_generator():
+    from rag.generate import RagConfig, RagPipeline
+
+    class FakeGenerator:
+        def generate(self, prompts, max_new_tokens):
+            assert "[1] (de d.md)" in prompts[0] and "Pregunta: ¿fianza?" in prompts[0]
+            return [[("<think></think>Una mensualidad [1].", 5, False)] for _ in prompts]
+
+    pipeline = RagPipeline(RagConfig())
+    pipeline.retrievers = {"bm25": BM25Retriever(CHUNKS)}
+    pipeline.temporal = None
+    pipeline.generator = FakeGenerator()
+    response = pipeline.answer("¿fianza?", top_k=2, retriever="bm25")
+    assert response.answer == "Una mensualidad [d-0000]."
+    assert response.citations == ["d-0000"] and response.law_date is None
+    assert response.chunks[0].id == "d-0000"

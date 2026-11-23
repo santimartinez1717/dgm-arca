@@ -55,8 +55,15 @@ def format_chunks(hits: list[Hit]) -> str:
     )
 
 
-def build_prompt(question: str, hits: list[Hit]) -> str:
-    return RAG_PROMPT_TEMPLATE.format(chunks=format_chunks(hits), question=question)
+def build_prompt(question: str, hits: list[Hit], on: str | None = None) -> str:
+    """``on``: date whose law the passages reflect (option 1); said to the model if given."""
+    prompt = RAG_PROMPT_TEMPLATE.format(chunks=format_chunks(hits), question=question)
+    if on:
+        prompt = prompt.replace(
+            "Pasajes recuperados:",
+            f"Los artículos de ley son los que estaban en vigor el {on}.\n\nPasajes recuperados:",
+        )
+    return prompt
 
 
 def number_to_id(answer: str, hits: list[Hit]) -> str:
@@ -111,6 +118,7 @@ class RagConfig:
     embedding_model: str = DEFAULT_EMBEDDING_MODEL
     generator_model: str = "Qwen/Qwen3-1.7B"
     generator_adapter: str | None = None  # e.g. rlm/weights/grpo2_lora (phase-1 model)
+    temporal: bool = False  # option 1: BOE articles in the version in force on the question's date
     thinking: bool = False  # Qwen3 thinking mode before the answer
     max_new_tokens: int = 512
     index_dir: str = "rag/index"
@@ -167,16 +175,30 @@ class RagPipeline:
             "dense": dense,
             "hybrid": HybridRetriever(bm25, dense, weight_bm25=c.weight_bm25),
         }
+        self.temporal = None
+        if c.temporal:
+            from rag.download_corpus import AS_OF
+            from rag.temporal import DateFilteredRetriever, load_versions, version_chunks
+
+            versions = DenseRetriever(version_chunks(load_versions()), self.embedder, c.index_dir)
+            self.temporal = DateFilteredRetriever(chunks, dense, versions, AS_OF, c.weight_bm25)
         self.generator = None
         if generator:
+            self.load_generator()
+
+    def load_generator(self):
+        """The language model; the API loads it on the first question, not in /health."""
+        if self.generator is None:
             from rlm.generation import Generator
 
+            c = self.config
             self.generator = Generator(
                 c.generator_model,
                 adapter_path=c.generator_adapter,
                 enable_thinking=c.thinking,
                 system_prompt=RAG_SYSTEM_PROMPT,
             ).load()
+        return self.generator
 
     @property
     def model_name(self) -> str:
@@ -187,6 +209,8 @@ class RagPipeline:
     def retrieve(self, question: str, top_k: int, retriever: str) -> list[Hit]:
         if retriever not in self.retrievers:
             raise ValueError(f"retriever must be one of {sorted(self.retrievers)}")
+        if self.temporal is not None:
+            return self.temporal.search(question, top_k, mode=retriever)
         return self.retrievers[retriever].search(question, top_k=top_k)
 
     def answer(self, question: str, top_k: int = 5, retriever: str = "hybrid") -> RagResponse:
@@ -196,17 +220,22 @@ class RagPipeline:
         self, questions: list[str], top_k: int = 5, retriever: str = "hybrid"
     ) -> list[RagResponse]:
         """Retrieve -> ``build_prompt`` -> generate (one batch) -> ``to_response``."""
-        hits = [self.retrieve(q, top_k, retriever) for q in questions]
-        prompts = [build_prompt(q, h) for q, h in zip(questions, hits, strict=True)]
+        hits, dates = [], []
+        for q in questions:
+            hits.append(self.retrieve(q, top_k, retriever))
+            dates.append(self.temporal.last_date if self.temporal is not None else None)
+        prompts = [build_prompt(q, h, on) for q, h, on in zip(questions, hits, dates, strict=True)]
         with self._lock:  # one generation at a time on a small GPU
-            outputs = self.generator.generate(prompts, max_new_tokens=self.config.max_new_tokens)
+            generator = self.load_generator()
+            outputs = generator.generate(prompts, max_new_tokens=self.config.max_new_tokens)
         # generate() gives, per question, a list of (text, n_tokens, truncated) samples
-        return [
-            to_response(
-                number_to_id(strip_thinking(samples[0][0]), h), h, retriever, self.model_name
-            )
-            for samples, h in zip(outputs, hits, strict=True)
-        ]
+        responses = []
+        for samples, h, on in zip(outputs, hits, dates, strict=True):
+            answer = number_to_id(strip_thinking(samples[0][0]), h)
+            response = to_response(answer, h, retriever, self.model_name)
+            response.law_date = on
+            responses.append(response)
+        return responses
 
 
 def strip_thinking(text: str) -> str:
@@ -221,7 +250,7 @@ def build_pipeline() -> RagPipeline:
     global _pipeline
     if _pipeline is None:
         pipeline = RagPipeline()
-        pipeline.load()
+        pipeline.load(generator=False)  # the model comes with the first question
         _pipeline = pipeline
     return _pipeline
 

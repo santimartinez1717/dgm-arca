@@ -230,7 +230,9 @@ def main() -> None:
     embedder = Embedder(args.embedding_model or DEFAULT_MODEL)
     cache = SentenceCache(documents, embedder, args.max_chunk_chars, index_dir)
     distances = cache.all_distances()
-    thresholds = {f"p{p}": float(np.percentile(distances, p)) for p in PERCENTILES}
+    # rounded to 4 decimals: the value RagConfig.semantic_threshold stores, so the pipeline
+    # rebuilds exactly the chunks evaluated here
+    thresholds = {f"p{p}": round(float(np.percentile(distances, p)), 4) for p in PERCENTILES}
     report: dict = {
         "embedding_model": embedder.model_id,
         "sentence_distances": {
