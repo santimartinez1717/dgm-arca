@@ -42,7 +42,7 @@ def main() -> None:
     parser.add_argument("--bench", default="agent/bench/example_tasks.jsonl")
     parser.add_argument("--brains", nargs="+", default=["rlm"])
     parser.add_argument("--max-steps", type=int, default=10)
-    parser.add_argument("--out", default="reports/phase4_eval.json")
+    parser.add_argument("--out", default="reports/fase4/phase4_eval.json")
     args = parser.parse_args()
 
     from agent.react_agent import ReActAgent

@@ -1,0 +1,144 @@
+{
+ "args": {
+  "data": "rlm/data/train.jsonl",
+  "model": "Qwen/Qwen3-1.7B",
+  "adapter": "rlm/weights/sft3_lora",
+  "families": [
+   "irpf_rental"
+  ],
+  "branch": [],
+  "n_per_family": 8,
+  "k": 8,
+  "temperature": 1.0,
+  "max_new_tokens": 2048,
+  "batch_size": 2,
+  "seed": 1,
+  "hint_level": 2,
+  "out": "reports/sample_check_sft3_pista2_irpf_v2.json"
+ },
+ "summary": {
+  "irpf_rental": {
+   "problems": 8,
+   "pass@8": 1.0,
+   "useful (some right, some wrong)": 1.0,
+   "right answers": 0.234375,
+   "truncated": 0.265625,
+   "process reward of wrong answers": 0.10204081632653061
+  }
+ },
+ "problems": [
+  {
+   "question": "Ingresos por alquiler del año: 21.000 €. Inquilino: una persona de 29 años, contrato de 2025. El IBI es de 741 €, la comunidad de 710 € al año y el seguro de 323 €. Compré por un coste total, gastos e impuestos incluidos, de 167.000 €. No hubo reparaciones. Está en zona de mercado residencial tensionado. Ya había estado alquilada antes y en el nuevo contrato bajé la renta más de un 5 % respecto al anterior. Pago 2.980 € de intereses de la hipoteca al año. El valor catastral es 121.000 €, del que 42.600 € corresponde al suelo. No he hecho obras de rehabilitación. Calcula el rendimiento neto reducido a efectos del IRPF. Indica la cifra en euros con dos decimales.\n\nPista: antes de aplicar la reducción hay que restar a los ingresos todos los gastos deducibles, incluida la amortización del inmueble: el 3 % del mayor entre el coste total de adquisición y el valor catastral, aplicado solo a la parte de construcción (sin el suelo, según el reparto del valor catastral). Los intereses más las reparaciones no pueden superar los ingresos. La reducción solo se aplica si el rendimiento neto es positivo, y es la primera que se cumpla: 90 % si está en zona tensionada, ya estuvo alquilada y la renta bajó más de un 5 %; 70 % si es el primer alquiler en zona tensionada a un inquilino de 18 a 35 años, o si el inquilino es una administración o entidad sin ánimo de lucro para alquiler social; 60 % si se terminó una rehabilitación en los dos años anteriores; 50 % en los demás casos. La amortización del inmueble sale 3.246,15 €. La reducción que corresponde es del 90 %.",
+   "family": "irpf_rental",
+   "hits": 1,
+   "truncated": 2,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Ingresos por alquiler del año: 17.700 €. Inquilino: una persona de 35 años, contrato de 2025. Es la primera vez que la alquilo. Pago 5.650 € de intereses de la hipoteca al año. El valor catastral es 168.000 €, del que 72.500 € corresponde al suelo. No he hecho obras de rehabilitación. Está en zona de mercado residencial tensionado. El IBI es de 759 €, la comunidad de 1.340 € al año y el seguro de 213 €. Compré por un coste total, gastos e impuestos incluidos, de 269.000 €. Este año gasté 1.460 € en reparaciones. Calcula el rendimiento neto reducido a efectos del IRPF. Da el resultado en euros, con dos decimales.\n\nPista: antes de aplicar la reducción hay que restar a los ingresos todos los gastos deducibles, incluida la amortización del inmueble: el 3 % del mayor entre el coste total de adquisición y el valor catastral, aplicado solo a la parte de construcción (sin el suelo, según el reparto del valor catastral). Los intereses más las reparaciones no pueden superar los ingresos. La reducción solo se aplica si el rendimiento neto es positivo, y es la primera que se cumpla: 90 % si está en zona tensionada, ya estuvo alquilada y la renta bajó más de un 5 %; 70 % si es el primer alquiler en zona tensionada a un inquilino de 18 a 35 años, o si el inquilino es una administración o entidad sin ánimo de lucro para alquiler social; 60 % si se terminó una rehabilitación en los dos años anteriores; 50 % en los demás casos. La amortización del inmueble sale 4.587,41 €. La reducción que corresponde es del 70 %.",
+   "family": "irpf_rental",
+   "hits": 1,
+   "truncated": 2,
+   "process_wrong": [
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Alquilo una vivienda como residencia habitual a una persona de 35 años por 12.100 € al año (contrato firmado en 2025). No he hecho obras de rehabilitación. Es la primera vez que la alquilo. Está en zona de mercado residencial tensionado. El valor catastral es 198.000 €, del que 100.000 € corresponde al suelo. Este año gasté 1.510 € en reparaciones. El IBI es de 227 €, la comunidad de 600 € al año y el seguro de 204 €. Pago 5.760 € de intereses de la hipoteca al año. Compré por un coste total, gastos e impuestos incluidos, de 333.000 €. Es un tercero exterior con ascensor. ¿Cuál es el rendimiento neto reducido del capital inmobiliario que declaro en el IRPF? Responde en euros con dos decimales.\n\nPista: antes de aplicar la reducción hay que restar a los ingresos todos los gastos deducibles, incluida la amortización del inmueble: el 3 % del mayor entre el coste total de adquisición y el valor catastral, aplicado solo a la parte de construcción (sin el suelo, según el reparto del valor catastral). Los intereses más las reparaciones no pueden superar los ingresos. La reducción solo se aplica si el rendimiento neto es positivo, y es la primera que se cumpla: 90 % si está en zona tensionada, ya estuvo alquilada y la renta bajó más de un 5 %; 70 % si es el primer alquiler en zona tensionada a un inquilino de 18 a 35 años, o si el inquilino es una administración o entidad sin ánimo de lucro para alquiler social; 60 % si se terminó una rehabilitación en los dos años anteriores; 50 % en los demás casos. La amortización del inmueble sale 4.944,55 €.",
+   "family": "irpf_rental",
+   "hits": 1,
+   "truncated": 4,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Alquilo una vivienda como residencia habitual a una persona de 35 años por 18.100 € al año (contrato firmado en 2025). Terminé una rehabilitación de la vivienda un año antes de firmar el contrato. Es la primera vez que la alquilo. El IBI es de 897 €, la comunidad de 1.740 € al año y el seguro de 377 €. Compré por un coste total, gastos e impuestos incluidos, de 286.000 €. Está en zona de mercado residencial tensionado. Pago 4.090 € de intereses de la hipoteca al año. Este año gasté 1.340 € en reparaciones. El valor catastral es 171.000 €, del que 89.300 € corresponde al suelo. ¿Cuál es el rendimiento neto reducido del capital inmobiliario que declaro en el IRPF? Responde en euros con dos decimales.\n\nPista: antes de aplicar la reducción hay que restar a los ingresos todos los gastos deducibles, incluida la amortización del inmueble: el 3 % del mayor entre el coste total de adquisición y el valor catastral, aplicado solo a la parte de construcción (sin el suelo, según el reparto del valor catastral). Los intereses más las reparaciones no pueden superar los ingresos. La reducción solo se aplica si el rendimiento neto es positivo, y es la primera que se cumpla: 90 % si está en zona tensionada, ya estuvo alquilada y la renta bajó más de un 5 %; 70 % si es el primer alquiler en zona tensionada a un inquilino de 18 a 35 años, o si el inquilino es una administración o entidad sin ánimo de lucro para alquiler social; 60 % si se terminó una rehabilitación en los dos años anteriores; 50 % en los demás casos. La amortización del inmueble sale 4.099,33 €. La reducción que corresponde es del 70 %.",
+   "family": "irpf_rental",
+   "hits": 1,
+   "truncated": 2,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Ingresos por alquiler del año: 13.600 €. Inquilino: una persona de 36 años, contrato de 2025. Ya había estado alquilada antes y en el nuevo contrato bajé la renta más de un 5 % respecto al anterior. El IBI es de 657 €, la comunidad de 300 € al año y el seguro de 398 €. El valor catastral es 300.000 €, del que 75.500 € corresponde al suelo. Compré por un coste total, gastos e impuestos incluidos, de 380.000 €. No está en zona tensionada. No he hecho obras de rehabilitación. No hubo reparaciones. Pago 2.640 € de intereses de la hipoteca al año. Calcula el rendimiento neto reducido a efectos del IRPF. Responde en euros con dos decimales.\n\nPista: antes de aplicar la reducción hay que restar a los ingresos todos los gastos deducibles, incluida la amortización del inmueble: el 3 % del mayor entre el coste total de adquisición y el valor catastral, aplicado solo a la parte de construcción (sin el suelo, según el reparto del valor catastral). Los intereses más las reparaciones no pueden superar los ingresos. La reducción solo se aplica si el rendimiento neto es positivo, y es la primera que se cumpla: 90 % si está en zona tensionada, ya estuvo alquilada y la renta bajó más de un 5 %; 70 % si es el primer alquiler en zona tensionada a un inquilino de 18 a 35 años, o si el inquilino es una administración o entidad sin ánimo de lucro para alquiler social; 60 % si se terminó una rehabilitación en los dos años anteriores; 50 % en los demás casos. La amortización del inmueble sale 8.531,00 €. La reducción que corresponde es del 50 %.",
+   "family": "irpf_rental",
+   "hits": 3,
+   "truncated": 2,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Ingresos por alquiler del año: 22.800 €. Inquilino: una persona de 35 años, contrato de 2025. No tengo hipoteca. No he hecho obras de rehabilitación. El valor catastral es 141.000 €, del que 56.600 € corresponde al suelo. Está en zona de mercado residencial tensionado. No hubo reparaciones. Es la primera vez que la alquilo. El IBI es de 934 €, la comunidad de 980 € al año y el seguro de 282 €. Compré por un coste total, gastos e impuestos incluidos, de 340.000 €. Calcula el rendimiento neto reducido a efectos del IRPF. Indica la cifra en euros con dos decimales.\n\nPista: antes de aplicar la reducción hay que restar a los ingresos todos los gastos deducibles, incluida la amortización del inmueble: el 3 % del mayor entre el coste total de adquisición y el valor catastral, aplicado solo a la parte de construcción (sin el suelo, según el reparto del valor catastral). Los intereses más las reparaciones no pueden superar los ingresos. La reducción solo se aplica si el rendimiento neto es positivo, y es la primera que se cumpla: 90 % si está en zona tensionada, ya estuvo alquilada y la renta bajó más de un 5 %; 70 % si es el primer alquiler en zona tensionada a un inquilino de 18 a 35 años, o si el inquilino es una administración o entidad sin ánimo de lucro para alquiler social; 60 % si se terminó una rehabilitación en los dos años anteriores; 50 % en los demás casos. La amortización del inmueble sale 6.105,53 €. La reducción que corresponde es del 70 %.",
+   "family": "irpf_rental",
+   "hits": 2,
+   "truncated": 2,
+   "process_wrong": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Ingresos por alquiler del año: 21.500 €. Inquilino: una persona de 39 años, contrato de 2025. Es la primera vez que la alquilo. Está en zona de mercado residencial tensionado. Compré por un coste total, gastos e impuestos incluidos, de 262.000 €. El IBI es de 258 €, la comunidad de 1.610 € al año y el seguro de 230 €. Terminé una rehabilitación de la vivienda un año antes de firmar el contrato. Este año gasté 2.220 € en reparaciones. Pago 3.950 € de intereses de la hipoteca al año. El valor catastral es 83.000 €, del que 35.200 € corresponde al suelo. Calcula el rendimiento neto reducido a efectos del IRPF. Indica la cifra en euros con dos decimales.\n\nPista: antes de aplicar la reducción hay que restar a los ingresos todos los gastos deducibles, incluida la amortización del inmueble: el 3 % del mayor entre el coste total de adquisición y el valor catastral, aplicado solo a la parte de construcción (sin el suelo, según el reparto del valor catastral). Los intereses más las reparaciones no pueden superar los ingresos. La reducción solo se aplica si el rendimiento neto es positivo, y es la primera que se cumpla: 90 % si está en zona tensionada, ya estuvo alquilada y la renta bajó más de un 5 %; 70 % si es el primer alquiler en zona tensionada a un inquilino de 18 a 35 años, o si el inquilino es una administración o entidad sin ánimo de lucro para alquiler social; 60 % si se terminó una rehabilitación en los dos años anteriores; 50 % en los demás casos. La amortización del inmueble sale 4.526,60 €. La reducción que corresponde es del 60 %.",
+   "family": "irpf_rental",
+   "hits": 4,
+   "truncated": 3,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Ingresos por alquiler del año: 14.200 €. Inquilino: una persona de 36 años, contrato de 2025. El valor catastral es 135.000 €, del que 52.300 € corresponde al suelo. El IBI es de 841 €, la comunidad de 1.660 € al año y el seguro de 276 €. Está en zona de mercado residencial tensionado. No hubo reparaciones. Ya había estado alquilada antes, con una renta igual o superior a la actual. Terminé una rehabilitación de la vivienda un año antes de firmar el contrato. Pago 1.030 € de intereses de la hipoteca al año. Compré por un coste total, gastos e impuestos incluidos, de 250.000 €. Calcula el rendimiento neto reducido a efectos del IRPF. Indica la cifra en euros con dos decimales.\n\nPista: antes de aplicar la reducción hay que restar a los ingresos todos los gastos deducibles, incluida la amortización del inmueble: el 3 % del mayor entre el coste total de adquisición y el valor catastral, aplicado solo a la parte de construcción (sin el suelo, según el reparto del valor catastral). Los intereses más las reparaciones no pueden superar los ingresos. La reducción solo se aplica si el rendimiento neto es positivo, y es la primera que se cumpla: 90 % si está en zona tensionada, ya estuvo alquilada y la renta bajó más de un 5 %; 70 % si es el primer alquiler en zona tensionada a un inquilino de 18 a 35 años, o si el inquilino es una administración o entidad sin ánimo de lucro para alquiler social; 60 % si se terminó una rehabilitación en los dos años anteriores; 50 % en los demás casos. La amortización del inmueble sale 4.594,44 €. La reducción que corresponde es del 60 %.",
+   "family": "irpf_rental",
+   "hits": 2,
+   "truncated": 0,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0
+   ]
+  }
+ ]
+}

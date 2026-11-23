@@ -38,7 +38,7 @@ en `~/.config`, que no se conserva:
 
 1. Abrir una sesión en Open OnDemand con duración suficiente (máximo 24 h) para cubrir toda la
    ventana de corrección o la demo.
-2. Terminal 1: `bash serve_dgx.sh`. Espera a que la API responda, la calienta con una pregunta
+2. Terminal 1: `bash scripts/serve_dgx.sh`. Espera a que la API responda, la calienta con una pregunta
    (la primera carga el modelo) y escribe `API lista`.
 3. Terminal 2:
    ```bash
@@ -87,8 +87,8 @@ test (con la API parada, para no tener dos modelos en memoria):
 
 ```bash
 uv run python -m rlm.eval_mlx --model rlm/weights/grpo2_mlx_8bit --n-examples 30 \
-    --batch-size 4 --compare reports/eval_grpo2_17b_2048.json \
-    --out reports/eval_grpo2_mlx8_2048.json
+    --batch-size 4 --compare reports/fase1/eval_grpo2_17b_2048.json \
+    --out reports/fase1/eval_grpo2_mlx8_2048.json
 ```
 
 ## 3. Desde un portátil con Windows y NVIDIA (Docker)

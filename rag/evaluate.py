@@ -57,7 +57,7 @@ def main() -> None:
     )
     parser.add_argument("--gold", default="rag/gold/example_gold.jsonl")
     parser.add_argument("--k", type=int, default=5)
-    parser.add_argument("--out", default="reports/phase3_eval.json")
+    parser.add_argument("--out", default="reports/fase3/phase3_eval.json")
     args = parser.parse_args()
     gold = load_gold(args.gold)
     print(f"{len(gold)} gold questions loaded; results will go to {args.out}")

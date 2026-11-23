@@ -24,8 +24,8 @@ wandb/
 hf_cache/
 
 # Resultados y gráficas grandes
-reports/*.png
-reports/*.csv
+reports/**/*.png
+reports/**/*.csv
 
 # LaTeX (el .tex y el .pdf sí se versionan)
 *.aux

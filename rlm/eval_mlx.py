@@ -8,8 +8,8 @@ PyTorch evaluation.
 On a Mac, with the ``mac`` extra (``uv sync --extra train --extra mac``)::
 
     uv run python -m rlm.eval_mlx --model rlm/weights/grpo2_mlx_8bit --n-examples 30 \
-        --batch-size 4 --compare reports/eval_grpo2_17b_2048.json \
-        --out reports/eval_grpo2_mlx8_2048.json
+        --batch-size 4 --compare reports/fase1/eval_grpo2_17b_2048.json \
+        --out reports/fase1/eval_grpo2_mlx8_2048.json
 """
 
 from __future__ import annotations

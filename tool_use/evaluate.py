@@ -26,9 +26,9 @@ Metrics, overall and by category:
 
 Run::
 
-    uv run python -m tool_use.evaluate --out reports/phase2_bench.json
+    uv run python -m tool_use.evaluate --out reports/fase2/phase2_bench.json
     uv run python -m tool_use.evaluate --adapter rlm/weights/final_rlm_lora --out ...
-    uv run python -m tool_use.evaluate --rescore reports/phase2_bench_*.json
+    uv run python -m tool_use.evaluate --rescore reports/fase2/phase2_bench_*.json
 """
 
 from __future__ import annotations
@@ -237,7 +237,7 @@ def main() -> None:
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("--bench", default="tool_use/bench/cases.jsonl")
-    parser.add_argument("--out", default="reports/phase2_bench.json")
+    parser.add_argument("--out", default="reports/fase2/phase2_bench.json")
     parser.add_argument("--model", default="Qwen/Qwen3-1.7B")
     parser.add_argument("--adapter", default=None, help="LoRA adapter, e.g. the phase 1 one")
     parser.add_argument("--thinking", action="store_true", help="let Qwen3 think each turn")

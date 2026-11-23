@@ -18,7 +18,7 @@ because the verifier accepts exactly one number there.
 Run::
 
     uv run python -m tool_use.phase1_compare --variants none arithmetic domain \\
-        --per-family 10 --out reports/phase2_vs_phase1.json
+        --per-family 10 --out reports/fase2/phase2_vs_phase1.json
 """
 
 from __future__ import annotations
@@ -87,7 +87,7 @@ def main() -> None:
     parser.add_argument(
         "--resume", action="store_true", help="keep the rows already in --out and skip them"
     )
-    parser.add_argument("--out", default="reports/phase2_vs_phase1.json")
+    parser.add_argument("--out", default="reports/fase2/phase2_vs_phase1.json")
     args = parser.parse_args()
 
     os.environ["ARCA_PORTFOLIO_DB"] = str(Path(tempfile.mkdtemp()) / "portfolio.sqlite")

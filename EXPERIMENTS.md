@@ -74,7 +74,7 @@ destilación con Qwen3-4B.
 **Qué queríamos saber.** Si el bucle de GRPO con TRL funciona en la partición MIG de la DGX
 (H200 1g.18gb, 17,2 GB), cuánto tarda y cuánta memoria usa, antes de lanzar nada del dominio.
 
-**Qué hicimos.** `nohup uv run arca-smoke > smoke.log 2>&1 &`: Qwen3-0.6B con LoRA de rango
+**Qué hicimos.** `nohup uv run arca-smoke > logs/fase1/smoke.log 2>&1 &`: Qwen3-0.6B con LoRA de rango
 16 (10,1 M parámetros entrenables, un 1,67 %), 40 pasos, grupo de 8 generaciones, 384 tokens
 como máximo, lr 1e-5, 256 problemas de GSM8K, semilla 0.
 
@@ -110,11 +110,11 @@ test, y una primera idea de dónde parte el modelo base antes de la línea base 
 
 **Qué hicimos.** `rlm.evaluate` con `Qwen/Qwen3-0.6B`, sin adaptador (`base=none`), sobre
 32 problemas de `rlm/data/test.jsonl`, con los valores por defecto (1024 tokens nuevos como
-máximo, lotes de 16). El comando exacto no quedó en `eval_probe.log`; fue el equivalente a
-`--n-examples 32 --out reports/eval_base_06b_probe.json`. Tardó 510 s.
+máximo, lotes de 16). El comando exacto no quedó en `logs/fase1/eval_probe.log`; fue el equivalente a
+`--n-examples 32 --out reports/fase1/eval_base_06b_probe.json`. Tardó 510 s.
 
-**Qué pasó.** Detalle en `reports/eval_base_06b_probe.json` y gráfico en
-`reports/eval_base_06b_probe.png`.
+**Qué pasó.** Detalle en `reports/fase1/eval_base_06b_probe.json` y gráfico en
+`reports/fase1/eval_base_06b_probe.png`.
 
 | Familia | n | pass@1 | Formato válido | Cortadas a 1024 |
 |---|---|---|---|---|
@@ -148,11 +148,11 @@ de los dos usamos (regla de `docs/fase1_plan.md`: si el de 1,7B pasa del 60 %, e
 demasiado fácil).
 
 **Qué hicimos.** Las dos órdenes del paso 1 de `docs/fase1_plan.md`, encadenadas con `nohup`
-(salida en `baseline.log`): `rlm.evaluate` sobre los 300 problemas de `rlm/data/test.jsonl`,
+(salida en `logs/fase1/baseline.log`): `rlm.evaluate` sobre los 300 problemas de `rlm/data/test.jsonl`,
 sin adaptador, con 1024 tokens nuevos como máximo. 0,6B: de 08:50 a 09:18 (~28 min).
 1,7B: de 09:18 a 09:49 (~31 min).
 
-**Qué pasó.** Detalle en `reports/eval_base_06b.json` y `reports/eval_base_17b.json`, con
+**Qué pasó.** Detalle en `reports/fase1/eval_base_06b.json` y `reports/fase1/eval_base_17b.json`, con
 sus gráficos `.png`.
 
 | | Qwen3-0.6B | Qwen3-1.7B |
@@ -303,7 +303,7 @@ familias fáciles, que ya tienen de sobra. En su lugar, una pasada solo con las 
 **Qué queríamos saber.** Si arreglos dirigidos a la causa de cada fallo suben la aceptación
 de `legal_rent`, `irpf_rental` y `cash_on_cash`.
 
-**Qué hicimos.** `distill_hard.sh` (commit `dde430d`), con problemas nuevos de train
+**Qué hicimos.** `scripts/fase1/distill_hard.sh` (commit `dde430d`), con problemas nuevos de train
 (`--families`, `--exclude rlm/data/sft_traces.jsonl`):
 1. `legal_rent` + `irpf_rental`, 100 problemas, 2048 tokens. La hoja explica el caso de
    `legal_rent` que fallaba siempre, presenta las reducciones del IRPF como art. 23.2 y pide
@@ -337,7 +337,7 @@ Total de trazas verificadas, sumando las tres tandas: **698**.
 - El error de reglas de `legal_rent` se arregla explicando el caso en la hoja. Lo de
   `cash_on_cash` es longitud: con 3072 tokens se cortan la mitad que antes.
 - `irpf_rental` es larga y numéricamente delicada para el 4B; las citas no eran la causa.
-  Queda una tanda con 3072 tokens y un orden fijo de cálculo (`distill_irpf.sh`, commit
+  Queda una tanda con 3072 tokens y un orden fijo de cálculo (`scripts/fase1/distill_irpf.sh`, commit
   `0ef55ae`), que no cupo en la sesión.
 - Las familias que más le cuestan al profesor son las de más pasos encadenados: es de esperar
   lo mismo en el alumno, y es donde una herramienta de cálculo (fase 2) aportaría más.
@@ -356,7 +356,7 @@ cuatro tandas de destilación, con `--max-per-problem 3 --max-per-family 150`: 5
 `net_yield` 91, `cash_on_cash` 56). `--max-length 3328`: con el valor por defecto (2048)
 se habrían recortado antes de `</answer>` cerca de la mitad de las trazas de
 `cash_on_cash` (mediana de 1.862 tokens). 76 pasos en 23,6 min, pico de 5,3 GB en la prueba.
-Evaluación con `eval_sft.sh` sobre los 300 problemas de test, en modo greedy.
+Evaluación con `scripts/fase1/eval_sft.sh` sobre los 300 problemas de test, en modo greedy.
 
 **Qué pasó.** La loss baja de 0,52 a 0,28 (acierto por token del 85 al 90 %) sin caer a
 cero.
@@ -373,8 +373,8 @@ cero.
 | `irpf_rental` | 0 % | 0 % | 0 % | 0 % |
 | `cash_on_cash` | 0 % | 0 % | 0 % | 0 % |
 
-Detalle en `reports/eval_sft_17b.json`, `reports/eval_sft_17b_2048.json` y
-`reports/eval_base_17b_2048.json`. Con 2.048 tokens, el 55 % de las respuestas que terminan
+Detalle en `reports/fase1/eval_sft_17b.json`, `reports/fase1/eval_sft_17b_2048.json` y
+`reports/fase1/eval_base_17b_2048.json`. Con 2.048 tokens, el 55 % de las respuestas que terminan
 son correctas.
 
 En `cash_on_cash` e `irpf_rental` más espacio no basta: terminan más respuestas (cortadas
@@ -407,11 +407,11 @@ pico, ~50 s por paso, 5 h 21 min en total.
 
 Hubo dos ejecuciones:
 1. **15/10, 215 pasos, recompensa del dominio rota** (`rlm/weights/grpo_sin_dominio_lora`,
-   `grpo_sin_dominio.log`). Se quedó en 0,01-0,05: exigía la unidad dentro de `<answer>`,
+   `logs/fase1/grpo_sin_dominio.log`). Se quedó en 0,01-0,05: exigía la unidad dentro de `<answer>`,
    y la hoja del profesor pedía el número sin unidades; y leía "240,700" como 240,7. La
    cortó el fin de la sesión.
 2. **18/10, 400 pasos, recompensa arreglada** (commit `310f048`; `rlm/weights/final_rlm_lora`,
-   `grpo.log`). Con las respuestas del SFT, 0,99 de media en aciertos y 0,25 en fallos.
+   `logs/fase1/grpo.log`). Con las respuestas del SFT, 0,99 de media en aciertos y 0,25 en fallos.
 
 **Qué pasó.** Curvas de la ejecución 2, medias de 100 pasos:
 
@@ -425,7 +425,7 @@ Hubo dos ejecuciones:
 Hasta el paso 215, las dos ejecuciones van igual en formato, exactitud, cortadas y longitud
 (los problemas salen en el mismo orden): lo único que cambia es la recompensa del dominio.
 
-Evaluación en test, 300 problemas, 1.024 tokens (`reports/eval_grpo_17b.json`):
+Evaluación en test, 300 problemas, 1.024 tokens (`reports/fase1/eval_grpo_17b.json`):
 
 | | Base | SFT | **GRPO** |
 |---|---|---|---|
@@ -452,7 +452,7 @@ aciertos; McNemar exacto, p = 0,085).
 - La mejora global es probable pero no concluyente con 300 problemas.
 - `cash_on_cash` e `irpf_rental` siguen en 0: terminan más respuestas, pero mal. Sin
   aciertos en el grupo, GRPO no tiene señal en esas familias.
-- Con 2.048 tokens (`reports/eval_grpo_17b_2048.json`), donde el espacio no limita:
+- Con 2.048 tokens (`reports/fase1/eval_grpo_17b_2048.json`), donde el espacio no limita:
 
   | | Base | SFT | **GRPO** |
   |---|---|---|---|
@@ -496,8 +496,8 @@ nula en la otra (`grpo_sin_dominio_lora`, 0,01-0,05 durante todo el entrenamient
 | `net_yield` | 66 % | 60 % |
 
 Cada versión acierta problemas que la otra falla (21 y 29); McNemar exacto, p = 0,32.
-Detalle en `reports/eval_grpo200_dominio.json` y `reports/eval_grpo200_sin_dominio.json`.
-Curvas de las dos ejecuciones en `reports/grpo_curvas.png`.
+Detalle en `reports/fase1/eval_grpo200_dominio.json` y `reports/fase1/eval_grpo200_sin_dominio.json`.
+Curvas de las dos ejecuciones en `reports/fase1/grpo_curvas.png`.
 
 **Qué concluimos.**
 - **No hay evidencia de que la recompensa del dominio ayude.** La versión sin ella sale
@@ -510,7 +510,7 @@ Curvas de las dos ejecuciones en `reports/grpo_curvas.png`.
   SFT): el alumno ya escribe las cifras intermedias, así que apenas distingue entre respuestas
   correctas. Para que aporte haría falta que discriminara más, por ejemplo puntuando solo las
   cifras que el enunciado no da.
-- Análisis de cinco fallos del modelo final en `docs/analisis_fallos_fase1.md`: obra nueva sin
+- Análisis de cinco fallos del modelo final en `docs/fase1/analisis_fallos_fase1.md`: obra nueva sin
   IVA (0 de 11), cash-on-cash sin cuota, IRPF sin amortización, divisiones mal hechas en
   `max_price` y bucles de repetición. Además, el alumno escribe "From the background knowledge"
   en 80 de 300 respuestas: la frase de la hoja del profesor se coló en 143 de las 703 trazas.
@@ -579,8 +579,8 @@ problemas distintos, con los números sustituidos):
 (`irpf_rental`, `legal_rent`) y de obra nueva, el alumno empieza a acertar esas familias, y si
 así GRPO tendrá señal en ellas.
 
-**Qué hicimos.** `distill_priv.sh` (Qwen3-4B, lotes de 2, `--privileged --only-unsolved`, cada
-tanda seguida de `rlm.rewrite_traces`) y después `sft2.sh`:
+**Qué hicimos.** `scripts/fase1/distill_priv.sh` (Qwen3-4B, lotes de 2, `--privileged --only-unsolved`, cada
+tanda seguida de `rlm.rewrite_traces`) y después `scripts/fase1/sft2.sh`:
 
 | Tanda | Trazas | Verificadas | Problemas cubiertos | Tras reescribir |
 |---|---|---|---|---|
@@ -588,7 +588,7 @@ tanda seguida de `rlm.rewrite_traces`) y después `sft2.sh`:
 | Obra nueva, sin clave | — | 141 | 40/40 | — |
 | `legal_rent` con clave (2048 tokens) | 80 | 29 (36,2 %) | 17/20 | **63 de 63** (20 problemas) |
 
-`cash_on_cash` con clave quedó para la próxima sesión (`relevo.sh` paró la cadena a las 14:46
+`cash_on_cash` con clave quedó para la próxima sesión (`scripts/fase1/relevo.sh` paró la cadena a las 14:46
 para que el SFT 2 cupiera). La reescritura de `legal_rent` acepta más trazas que las
 verificadas porque reescribe las que aciertan aunque se salten un cálculo intermedio, y al
 reescribirlas el profesor los escribe todos.
@@ -597,7 +597,7 @@ SFT 2: Qwen3-1.7B desde el modelo base, mismo LoRA y mismos hiperparámetros que
 (`--max-per-problem 3 --max-per-family 150 --max-length 3328`, 2 épocas, 86 pasos, 34 min,
 loss final 0,35). 974 trazas verificadas, 688 tras el tope: acquisition_cost 150, legal_rent
 150, irpf_rental 150, max_price 92, net_yield 91, cash_on_cash 55. Evaluación en test con
-1024 tokens (`reports/eval_sft2_17b.json`).
+1024 tokens (`reports/fase1/eval_sft2_17b.json`).
 
 **Qué pasó.**
 
@@ -633,7 +633,7 @@ cuentas están bien). Entraron así en el SFT 2.
   seguirá sin señal y harán falta pistas.
 - `legal_rent` y `cash_on_cash` necesitan más tokens que 1024 o razonamientos más cortos.
 - Para la próxima tanda, `rewrite_traces` debe rechazar las trazas en minúsculas.
-- Pendiente: `cash_on_cash` con clave (`bash distill_priv.sh` continúa), `sample_check` del
+- Pendiente: `cash_on_cash` con clave (`bash scripts/fase1/distill_priv.sh` continúa), `sample_check` del
   SFT 2 si no termina hoy, y GRPO 2.
 
 ---
@@ -685,11 +685,11 @@ El corte está solo en la evaluación (`rlm/evaluate.py`, 1024 por defecto, here
 **Qué queríamos saber.** Si el SFT 2 acierta alguna vez las familias difíciles con 8 intentos
 (si no, GRPO no tiene señal en ellas) y si la destilación con clave funciona en `cash_on_cash`.
 
-**Qué hicimos.** `sesion3.sh`: `rlm.sample_check` sobre el SFT 2 (8 problemas de train por
+**Qué hicimos.** `scripts/fase1/sesion3.sh`: `rlm.sample_check` sobre el SFT 2 (8 problemas de train por
 familia, 8 respuestas a temperatura 1,0, 1536 tokens; obra nueva con 6 problemas), y después
 `cash_on_cash` con clave (3072 tokens, `--only-unsolved`) y su reescritura.
 
-**Qué pasó.** Muestreo (`reports/sample_check_sft2*.json`):
+**Qué pasó.** Muestreo (`reports/fase1/sample_check_sft2*.json`):
 
 | Familia | pass@8 | Problemas útiles | Respuestas correctas | Cortadas |
 |---|---|---|---|---|
@@ -727,13 +727,13 @@ potencia (1+i)^-300 la dan como "aproximadamente 0,4666" sin desarrollarla.
 `cash_on_cash` con clave) mejora al SFT 1 y al GRPO 1 con el presupuesto justo de 2048 tokens,
 y si las pistas dan señal para el GRPO 2 en `irpf_rental` y `cash_on_cash`.
 
-**Qué hicimos.** `sft3.sh`: SFT desde el modelo base con las nueve tandas de trazas,
+**Qué hicimos.** `scripts/fase1/sft3.sh`: SFT desde el modelo base con las nueve tandas de trazas,
 `--max-per-problem 3 --max-per-family 200` (857 trazas: acquisition_cost 200, legal_rent 200,
 irpf_rental 169, cash_on_cash 105, max_price 92, net_yield 91), 108 pasos, 35 min
 (`rlm/weights/sft3_lora`). Evaluación en test con 2048 tokens (80 min) y `sample_check` en irpf
 y cash (8 problemas × 8 respuestas, 2048 tokens) sin pista y con pista de nivel 2.
 
-**Qué pasó.** Test, 2048 tokens (`reports/eval_sft3_17b_2048.json`), aciertos:
+**Qué pasó.** Test, 2048 tokens (`reports/fase1/eval_sft3_17b_2048.json`), aciertos:
 
 | Familia | SFT 1 | GRPO 1 | SFT 3 |
 |---|---|---|---|
@@ -751,7 +751,7 @@ Ninguna diferencia del total es significativa: frente al SFT 1, 29 problemas sol
 el SFT 3 y 21 solo el SFT 1 (McNemar exacto p = 0,32); frente al GRPO 1, 33 y 27 (p = 0,52).
 `legal_rent` sigue cortándose (termina 22 de 50; acierta 14 de esas 22).
 
-Muestreo (`reports/sample_check_sft3_pista{0,2}.json`):
+Muestreo (`reports/fase1/sample_check_sft3_pista{0,2}.json`):
 
 | | Sin pista: pass@8 | Sin pista: correctas | Pista 2: pass@8 | Pista 2: correctas |
 |---|---|---|---|---|
@@ -775,10 +775,10 @@ redondean resultados intermedios.
 
 **Añadido 23:10.** Con la pista nueva (orden de las reducciones y la que corresponde),
 `irpf_rental` pasa a pass@8 = 8/8, 8/8 problemas útiles y 23 % de respuestas correctas
-(`reports/sample_check_sft3_pista2_irpf_v2.json`). Prueba de 3 pasos del GRPO 2 a 2048 tokens
+(`reports/fase1/sample_check_sft3_pista2_irpf_v2.json`). Prueba de 3 pasos del GRPO 2 a 2048 tokens
 desde el SFT 3 con pistas: cabe en la MIG, ~80 s por paso. La prueba enseñó que el learning
 rate bajaba en línea recta hasta 0 al final de cada ejecución, lo que rompe una ejecución en
-dos etapas: `--lr-scheduler constant`. `grpo2.sh` queda listo para la próxima sesión.
+dos etapas: `--lr-scheduler constant`. `scripts/fase1/grpo2.sh` queda listo para la próxima sesión.
 
 ---
 
@@ -788,7 +788,7 @@ dos etapas: `--lr-scheduler constant`. `grpo2.sh` queda listo para la próxima s
 2048 tokens, recompensa por pasos, learning rate 4 veces mayor y pistas en las familias sin
 señal) mejora claramente al SFT 3 y al GRPO 1.
 
-**Qué hicimos.** `grpo2.sh` (de 23:55 a 07:14, en una sesión): 400 pasos, un problema y 8
+**Qué hicimos.** `scripts/fase1/grpo2.sh` (de 23:55 a 07:14, en una sesión): 400 pasos, un problema y 8
 respuestas por paso, `--max-completion-length 2048 --learning-rate 2e-5 --lr-scheduler constant
 --third-reward process`, pesos 0,5 / 2,0 / 0,5, 10 % de control GSM8K. Pasos 1–250 con copias
 con pista de nivel 2 de los 400 problemas de `irpf_rental` y los 400 de `cash_on_cash`
@@ -811,7 +811,7 @@ checkpoint 250. ~40 s por paso. Evaluación en test con 2048 tokens (69 min).
 La exactitud cae al quitar las pistas (los problemas pasan a ser más difíciles), no por
 olvido: la recompensa por pasos se recupera de 0,48 a 0,61.
 
-Test, 2048 tokens (`reports/eval_grpo2_17b_2048.json`), aciertos:
+Test, 2048 tokens (`reports/fase1/eval_grpo2_17b_2048.json`), aciertos:
 
 | Familia | SFT 1 | GRPO 1 | SFT 3 | **GRPO 2** |
 |---|---|---|---|---|
@@ -845,7 +845,7 @@ solo los acierta el GRPO 2 y 30 solo el SFT 3 (p = 0,026); frente al GRPO 1, 48 
 **Qué queríamos saber.** Por qué `irpf_rental` no mejora con el GRPO 2 pese a las pistas, y
 qué limita a `cash_on_cash` y max_price.
 
-**Qué hicimos.** Revisar las respuestas terminadas de test (`reports/eval_{sft3,grpo2}_17b_2048.json`):
+**Qué hicimos.** Revisar las respuestas terminadas de test (`reports/fase1/eval_{sft3,grpo2}_17b_2048.json`):
 la reducción que aplica el modelo en irpf frente a la correcta, si la amortización coincide con
 la del motor, y a qué distancia del valor correcto quedan las respuestas fallidas.
 
@@ -883,11 +883,11 @@ Ejemplo de max_price: plantea bien `1,09·P + 6.000 = 425.333,33` y calcula
 ### 2026-11-18 · Fase 1 · Curvas del GRPO 2, reward hacking y fallos actualizados
 
 **Qué hicimos.** Curvas de entrenamiento del GRPO 2 frente al GRPO 1
-(`reports/grpo2_vs_grpo1_curves.png`, media móvil de 25 pasos, línea en el paso 250 donde se
+(`reports/fase1/grpo2_vs_grpo1_curves.png`, media móvil de 25 pasos, línea en el paso 250 donde se
 quitan las pistas; la "tercera recompensa" es la de desglose en el GRPO 1 y la de pasos en el
 GRPO 2, no son comparables entre sí). Revisión de las 3.200 respuestas guardadas del GRPO 2
 buscando reward hacking, y recuento de los cinco patrones de fallo en el GRPO 2
-(`docs/analisis_fallos_fase1.md`, sección "Ronda 2").
+(`docs/fase1/analisis_fallos_fase1.md`, sección "Ronda 2").
 
 **Qué pasó.** Sin reward hacking: densidad de números estable (13-14 por cada 100 palabras) y
 las fallidas con recompensa por pasos completa usan menos cifras distintas que el resto (23,9
@@ -905,8 +905,8 @@ que queda es aritmética (fase 2) y la regla de la reducción del IRPF.
 reglas que no aparecen en entrenamiento (`rlm/data/test_ood.jsonl`: `becomes_large_holder` y
 `max_price_capped`, 75 cada una).
 
-**Qué hicimos.** `eval_ood.sh`: los cuatro modelos con 2048 tokens y greedy, de 10:11 a 14:00
-(`reports/eval_ood_{sft,grpo,sft3,grpo2}_2048.json`).
+**Qué hicimos.** `scripts/fase1/eval_ood.sh`: los cuatro modelos con 2048 tokens y greedy, de 10:11 a 14:00
+(`reports/fase1/eval_ood_{sft,grpo,sft3,grpo2}_2048.json`).
 
 **Qué pasó.**
 
@@ -953,7 +953,7 @@ desde la DGX:
 - qué herramientas existen ya (portales, Invisor, TaxDown, Vivara, apps de ChatGPT);
 - qué datos públicos se pueden consultar de verdad.
 
-El informe está en [`docs/investigacion_fase2.md`](docs/investigacion_fase2.md).
+El informe está en [`docs/fase2/investigacion_fase2.md`](docs/fase2/investigacion_fase2.md).
 
 **Qué pasó.**
 - **Ninguna herramienta revisada aplica la norma por el usuario.** Le preguntan justo lo que no
@@ -996,7 +996,7 @@ reglas del motor deja anticuadas.
 **Qué hicimos.** Leímos el texto del BOE
 ([BOE-A-2026-20823](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20823)), sacado con la
 API de sumarios. Nos centramos en el art. 6, que reescribe el art. 23.2 de la LIRPF, y en la
-disposición transitoria 38.ª. Resumen en [`docs/rdl_29_2026.md`](docs/rdl_29_2026.md).
+disposición transitoria 38.ª. Resumen en [`docs/investigacion/rdl_29_2026.md`](docs/investigacion/rdl_29_2026.md).
 
 **Qué pasó.**
 - **La reducción conserva tres regímenes según la fecha de firma del contrato:**
@@ -1111,8 +1111,8 @@ medida: solo comprueba que las piezas encajan.
 **Qué queríamos saber.** Cómo usa las 10 herramientas el modelo de 1,7B sin entrenar para
 ello, y si el adaptador de la fase 1 (SFT + GRPO, `final_rlm_lora`) ayuda o estorba.
 
-**Qué hicimos.** El banco de 40 casos en la GPU, con `fase2_bench.sh`:
-`uv run python -m tool_use.evaluate --out reports/phase2_bench_base.json` y lo mismo con
+**Qué hicimos.** El banco de 40 casos en la GPU, con `scripts/fase2/fase2_bench.sh`:
+`uv run python -m tool_use.evaluate --out reports/fase2/phase2_bench_base.json` y lo mismo con
 `--adapter …/final_rlm_lora`. Las condiciones:
 - formato nativo de Qwen3;
 - sin thinking;
@@ -1133,8 +1133,8 @@ no cuentan como correctos.
 | Base | 34 | 24 | 4 | 0 |
 | + GRPO fase 1 | 27 | 18 | 2 | 0 |
 
-Informes: [`reports/phase2_bench_base.json`](reports/phase2_bench_base.json) y
-[`reports/phase2_bench_grpo.json`](reports/phase2_bench_grpo.json).
+Informes: [`reports/fase2/phase2_bench_base.json`](reports/fase2/phase2_bench_base.json) y
+[`reports/fase2/phase2_bench_grpo.json`](reports/fase2/phase2_bench_grpo.json).
 
 - **El modelo base elige bien y se equivoca en los argumentos.** Selección del 85 %, pero
   en los casos `single` solo acierta los argumentos el 50 %. Cuatro causas:
@@ -1191,7 +1191,7 @@ definiciones, sin tocar el modelo.
   - `--rescore` vuelve a puntuar un informe guardado sin generar.
 
 Después, el mismo banco con el mismo modelo y la misma configuración:
-[`reports/phase2_bench_base_v2.json`](reports/phase2_bench_base_v2.json).
+[`reports/fase2/phase2_bench_base_v2.json`](reports/fase2/phase2_bench_base_v2.json).
 
 **Qué pasó.**
 
@@ -1228,7 +1228,7 @@ Después, el mismo banco con el mismo modelo y la misma configuración:
   2. Afinar el prompt para que no quite lo que el usuario da.
   3. Probar si con thinking el modelo encadena mejor. Con thinking, el banco tarda unos
      4 minutos por caso (2 casos en 8 minutos; ejecución cortada en
-     `reports/phase2_bench_base_thinking_cortado.json`). Los 40 no caben en una sesión, así
+     `reports/fase2/phase2_bench_base_thinking_cortado.json`). Los 40 no caben en una sesión, así
      que va una muestra de 10.
 
 ---
@@ -1241,15 +1241,15 @@ thinking.
 
 **Qué hicimos.** Primero, el banco completo con `--thinking`. Lo cortamos tras 2 casos
 porque iba a unos 4 minutos por caso (los 40 no caben en una sesión):
-[`reports/phase2_bench_base_thinking_cortado.json`](reports/phase2_bench_base_thinking_cortado.json).
+[`reports/fase2/phase2_bench_base_thinking_cortado.json`](reports/fase2/phase2_bench_base_thinking_cortado.json).
 
 Después, una muestra de 10 casos elegidos por tipo de fallo, con el código de `9d147b8`, el
 mismo del segundo banco:
-`uv run python -m tool_use.evaluate --thinking --ids acq-01 map-02 yield-02 irpf-01 cap-01 chain-02 chain-05 par-01 none-01 rates-02 --out reports/phase2_bench_thinking_muestra.json`.
+`uv run python -m tool_use.evaluate --thinking --ids acq-01 map-02 yield-02 irpf-01 cap-01 chain-02 chain-05 par-01 none-01 rates-02 --out reports/fase2/phase2_bench_thinking_muestra.json`.
 Tardó 16 minutos, con 2.048 tokens por turno.
 
 **Qué pasó.** Acierta 4 de 10, **los mismos 4 que sin thinking** (acq-01, map-02, none-01 y
-par-01): [`reports/phase2_bench_thinking_muestra.json`](reports/phase2_bench_thinking_muestra.json).
+par-01): [`reports/fase2/phase2_bench_thinking_muestra.json`](reports/fase2/phase2_bench_thinking_muestra.json).
 - **En `yield-02` e `irpf-01` se acaban los tokens pensando.** Calcula la cuota de la
   hipoteca o el IRPF a mano dentro de `<think>` (más de 6.000 caracteres) y no llega a llamar
   a la herramienta. Es el vicio de la fase 1, ahora dentro del razonamiento.
@@ -1286,14 +1286,14 @@ según los fallos de la anterior:
 
 | Versión | Código | Informe |
 |---|---|---|
-| v1 | `240de15` | [`phase2_vs_phase1.json`](reports/phase2_vs_phase1.json) |
-| v2 | `542d499`: `annual_net_income` y tope de 4 llamadas por turno | [`…_domain_v2.json`](reports/phase2_vs_phase1_domain_v2.json) |
-| v3 | `12275a8`: `land_value` en euros, una renta mensual ≥ 10.000 € se rechaza, el ingreso neto manda sobre la renta | [`…_domain_v3.json`](reports/phase2_vs_phase1_domain_v3.json) |
+| v1 | `240de15` | [`phase2_vs_phase1.json`](reports/fase2/phase2_vs_phase1.json) |
+| v2 | `542d499`: `annual_net_income` y tope de 4 llamadas por turno | [`…_domain_v2.json`](reports/fase2/phase2_vs_phase1_domain_v2.json) |
+| v3 | `12275a8`: `land_value` en euros, una renta mensual ≥ 10.000 € se rechaza, el ingreso neto manda sobre la renta | [`…_domain_v3.json`](reports/fase2/phase2_vs_phase1_domain_v3.json) |
 
-La v1 se cortó en 42/60 a las 11:05 por un OOM: otra sesión lanzó `eval_ood.sh` en la GPU, y
+La v1 se cortó en 42/60 a las 11:05 por un OOM: otra sesión lanzó `scripts/fase1/eval_ood.sh` en la GPU, y
 su comprobación (`pgrep "python -m rlm"`) no ve `python -m tool_use`. Los 18 problemas que
 faltaban se completaron con `--resume` y el mismo código, desde un worktree en `240de15`
-(`fase2_compare2.sh` y `fase2_compare3.sh`). Cada variante tarda unos 35 minutos.
+(`scripts/fase2/fase2_compare2.sh` y `scripts/fase2/fase2_compare3.sh`). Cada variante tarda unos 35 minutos.
 
 Para comparar con la fase 1 usamos las filas de `eval_*_17b_2048.json` para los mismos 60
 problemas. Ojo: esos modelos van con el prompt R1-Zero, thinking y una sola generación.
@@ -1376,11 +1376,11 @@ perdió la v3.
 - **`cash_on_cash_pct` va lo primero del resultado**, e `itp_rate_pct` antes que `region`,
   con "nunca te inventes un lugar".
 
-`fase2_compare4.sh` lanzó dos pasadas de la variante `domain`, mismo modelo y ajustes:
+`scripts/fase2/fase2_compare4.sh` lanzó dos pasadas de la variante `domain`, mismo modelo y ajustes:
 1. sobre los problemas 11.º a 20.º de cada familia (`--skip-per-family 10`):
-   [`reports/phase2_vs_phase1_domain_v4_nuevos.json`](reports/phase2_vs_phase1_domain_v4_nuevos.json);
+   [`reports/fase2/phase2_vs_phase1_domain_v4_nuevos.json`](reports/fase2/phase2_vs_phase1_domain_v4_nuevos.json);
 2. sobre los 60 de la entrada anterior:
-   [`reports/phase2_vs_phase1_domain_v4.json`](reports/phase2_vs_phase1_domain_v4.json).
+   [`reports/fase2/phase2_vs_phase1_domain_v4.json`](reports/fase2/phase2_vs_phase1_domain_v4.json).
 
 Tardó 24 y 30 minutos.
 
@@ -1443,8 +1443,8 @@ problema en los 60 de antes y 2,9 en los nuevos.
   test de la fase 1.
 
 **Qué hicimos.**
-- **Banco:** `fase2_bench_v4.sh`, es decir,
-  `uv run python -m tool_use.evaluate --out reports/phase2_bench_base_v4.json`. Qwen3-1.7B
+- **Banco:** `scripts/fase2/fase2_bench_v4.sh`, es decir,
+  `uv run python -m tool_use.evaluate --out reports/fase2/phase2_bench_base_v4.json`. Qwen3-1.7B
   base, sin thinking, código `a2a59c4` (el de `4e028dd` con `main` unida). Tardó 9 minutos.
 - **Prueba del IRPF:** sin commitear y ya deshecha. Pusimos `land_share_pct` antes que
   `land_value`, y un ejemplo con cifras en cada descripción ("un 35 % de suelo", "114.300 €
@@ -1452,7 +1452,7 @@ problema en los 60 de antes y 2,9 en los nuevos.
   IRPF de las dos pasadas de la v4.
 
 **Qué pasó.** El banco frente al anterior
-([`phase2_bench_base_v2.json`](reports/phase2_bench_base_v2.json), código `9d147b8`):
+([`phase2_bench_base_v2.json`](reports/fase2/phase2_bench_base_v2.json), código `9d147b8`):
 
 | | Selección | Argumentos | Secuencia | Llamadas innecesarias |
 |---|---|---|---|---|
@@ -1495,7 +1495,7 @@ enunciado da un 45 %.
 sin entrenar, solo con el bucle y las definiciones.
 
 **Qué hicimos.** Partimos de los fallos de `chain-*` en
-[`phase2_bench_base_v4.json`](reports/phase2_bench_base_v4.json):
+[`phase2_bench_base_v4.json`](reports/fase2/phase2_bench_base_v4.json):
 - **`chain-01`:** encadena bien, pero mete `annual_net_income: 0` junto a la renta y la
   llamada falla tres veces;
 - **`chain-02`, `chain-04` y `chain-06`:** paran tras el primer resultado (en `chain-04` se
@@ -1510,8 +1510,8 @@ Con tres cambios (`ccc536b`):
 - **`interest_rate_pct` pide llamar a `get_market_rates`** si el usuario habla del Euríbor
   actual.
 
-Banco completo, mismo modelo y ajustes que la entrada anterior: `fase2_bench_v5.sh`. Tardó
-9 minutos: [`reports/phase2_bench_base_v5.json`](reports/phase2_bench_base_v5.json).
+Banco completo, mismo modelo y ajustes que la entrada anterior: `scripts/fase2/fase2_bench_v5.sh`. Tardó
+9 minutos: [`reports/fase2/phase2_bench_base_v5.json`](reports/fase2/phase2_bench_base_v5.json).
 
 **Qué pasó.**
 
@@ -1559,7 +1559,7 @@ thinking, 2.048 tokens), cambiando una cosa cada vez sobre `ccc536b`:
 | v7 | `b42e71b` | volver a ponerla, pero solo "si el usuario no da tipo y habla de euríbor más diferencial" |
 | v8 | `eca9bc9` | el error del préstamo nombra solo lo que falta; `vacant_months` de 12 se rechaza y su descripción dice "meses VACÍOS" |
 
-Informes: `reports/phase2_bench_base_v6.json`, `_v7.json` y `_v8.json`. Unos 9 minutos cada uno.
+Informes: `reports/fase2/phase2_bench_base_v6.json`, `_v7.json` y `_v8.json`. Unos 9 minutos cada uno.
 
 **Qué pasó.**
 

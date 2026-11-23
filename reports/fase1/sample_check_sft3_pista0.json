@@ -1,0 +1,294 @@
+{
+ "args": {
+  "data": "rlm/data/train.jsonl",
+  "model": "Qwen/Qwen3-1.7B",
+  "adapter": "rlm/weights/sft3_lora",
+  "families": [
+   "irpf_rental",
+   "cash_on_cash"
+  ],
+  "branch": [],
+  "n_per_family": 8,
+  "k": 8,
+  "temperature": 1.0,
+  "max_new_tokens": 2048,
+  "batch_size": 2,
+  "seed": 1,
+  "hint_level": 0,
+  "out": "reports/sample_check_sft3_pista0.json"
+ },
+ "summary": {
+  "irpf_rental": {
+   "problems": 8,
+   "pass@8": 0.125,
+   "useful (some right, some wrong)": 0.125,
+   "right answers": 0.015625,
+   "truncated": 0.265625,
+   "process reward of wrong answers": 0.14285714285714285
+  },
+  "cash_on_cash": {
+   "problems": 8,
+   "pass@8": 0.125,
+   "useful (some right, some wrong)": 0.125,
+   "right answers": 0.015625,
+   "truncated": 0.390625,
+   "process reward of wrong answers": 0.25925925925925924
+  }
+ },
+ "problems": [
+  {
+   "question": "Ingresos por alquiler del año: 21.000 €. Inquilino: una persona de 29 años, contrato de 2025. El IBI es de 741 €, la comunidad de 710 € al año y el seguro de 323 €. Compré por un coste total, gastos e impuestos incluidos, de 167.000 €. No hubo reparaciones. Está en zona de mercado residencial tensionado. Ya había estado alquilada antes y en el nuevo contrato bajé la renta más de un 5 % respecto al anterior. Pago 2.980 € de intereses de la hipoteca al año. El valor catastral es 121.000 €, del que 42.600 € corresponde al suelo. No he hecho obras de rehabilitación. Calcula el rendimiento neto reducido a efectos del IRPF. Indica la cifra en euros con dos decimales.",
+   "family": "irpf_rental",
+   "hits": 1,
+   "truncated": 1,
+   "process_wrong": [
+    0.0,
+    0.5,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Ingresos por alquiler del año: 17.700 €. Inquilino: una persona de 35 años, contrato de 2025. Es la primera vez que la alquilo. Pago 5.650 € de intereses de la hipoteca al año. El valor catastral es 168.000 €, del que 72.500 € corresponde al suelo. No he hecho obras de rehabilitación. Está en zona de mercado residencial tensionado. El IBI es de 759 €, la comunidad de 1.340 € al año y el seguro de 213 €. Compré por un coste total, gastos e impuestos incluidos, de 269.000 €. Este año gasté 1.460 € en reparaciones. Calcula el rendimiento neto reducido a efectos del IRPF. Da el resultado en euros, con dos decimales.",
+   "family": "irpf_rental",
+   "hits": 0,
+   "truncated": 3,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ]
+  },
+  {
+   "question": "Alquilo una vivienda como residencia habitual a una persona de 35 años por 12.100 € al año (contrato firmado en 2025). No he hecho obras de rehabilitación. Es la primera vez que la alquilo. Está en zona de mercado residencial tensionado. El valor catastral es 198.000 €, del que 100.000 € corresponde al suelo. Este año gasté 1.510 € en reparaciones. El IBI es de 227 €, la comunidad de 600 € al año y el seguro de 204 €. Pago 5.760 € de intereses de la hipoteca al año. Compré por un coste total, gastos e impuestos incluidos, de 333.000 €. Es un tercero exterior con ascensor. ¿Cuál es el rendimiento neto reducido del capital inmobiliario que declaro en el IRPF? Responde en euros con dos decimales.",
+   "family": "irpf_rental",
+   "hits": 0,
+   "truncated": 1,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Alquilo una vivienda como residencia habitual a una persona de 35 años por 18.100 € al año (contrato firmado en 2025). Terminé una rehabilitación de la vivienda un año antes de firmar el contrato. Es la primera vez que la alquilo. El IBI es de 897 €, la comunidad de 1.740 € al año y el seguro de 377 €. Compré por un coste total, gastos e impuestos incluidos, de 286.000 €. Está en zona de mercado residencial tensionado. Pago 4.090 € de intereses de la hipoteca al año. Este año gasté 1.340 € en reparaciones. El valor catastral es 171.000 €, del que 89.300 € corresponde al suelo. ¿Cuál es el rendimiento neto reducido del capital inmobiliario que declaro en el IRPF? Responde en euros con dos decimales.",
+   "family": "irpf_rental",
+   "hits": 0,
+   "truncated": 1,
+   "process_wrong": [
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.5,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Ingresos por alquiler del año: 13.600 €. Inquilino: una persona de 36 años, contrato de 2025. Ya había estado alquilada antes y en el nuevo contrato bajé la renta más de un 5 % respecto al anterior. El IBI es de 657 €, la comunidad de 300 € al año y el seguro de 398 €. El valor catastral es 300.000 €, del que 75.500 € corresponde al suelo. Compré por un coste total, gastos e impuestos incluidos, de 380.000 €. No está en zona tensionada. No he hecho obras de rehabilitación. No hubo reparaciones. Pago 2.640 € de intereses de la hipoteca al año. Calcula el rendimiento neto reducido a efectos del IRPF. Responde en euros con dos decimales.",
+   "family": "irpf_rental",
+   "hits": 0,
+   "truncated": 2,
+   "process_wrong": [
+    0.5,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.5
+   ]
+  },
+  {
+   "question": "Ingresos por alquiler del año: 22.800 €. Inquilino: una persona de 35 años, contrato de 2025. No tengo hipoteca. No he hecho obras de rehabilitación. El valor catastral es 141.000 €, del que 56.600 € corresponde al suelo. Está en zona de mercado residencial tensionado. No hubo reparaciones. Es la primera vez que la alquilo. El IBI es de 934 €, la comunidad de 980 € al año y el seguro de 282 €. Compré por un coste total, gastos e impuestos incluidos, de 340.000 €. Calcula el rendimiento neto reducido a efectos del IRPF. Indica la cifra en euros con dos decimales.",
+   "family": "irpf_rental",
+   "hits": 0,
+   "truncated": 3,
+   "process_wrong": [
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Ingresos por alquiler del año: 21.500 €. Inquilino: una persona de 39 años, contrato de 2025. Es la primera vez que la alquilo. Está en zona de mercado residencial tensionado. Compré por un coste total, gastos e impuestos incluidos, de 262.000 €. El IBI es de 258 €, la comunidad de 1.610 € al año y el seguro de 230 €. Terminé una rehabilitación de la vivienda un año antes de firmar el contrato. Este año gasté 2.220 € en reparaciones. Pago 3.950 € de intereses de la hipoteca al año. El valor catastral es 83.000 €, del que 35.200 € corresponde al suelo. Calcula el rendimiento neto reducido a efectos del IRPF. Indica la cifra en euros con dos decimales.",
+   "family": "irpf_rental",
+   "hits": 0,
+   "truncated": 1,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Ingresos por alquiler del año: 14.200 €. Inquilino: una persona de 36 años, contrato de 2025. El valor catastral es 135.000 €, del que 52.300 € corresponde al suelo. El IBI es de 841 €, la comunidad de 1.660 € al año y el seguro de 276 €. Está en zona de mercado residencial tensionado. No hubo reparaciones. Ya había estado alquilada antes, con una renta igual o superior a la actual. Terminé una rehabilitación de la vivienda un año antes de firmar el contrato. Pago 1.030 € de intereses de la hipoteca al año. Compré por un coste total, gastos e impuestos incluidos, de 250.000 €. Calcula el rendimiento neto reducido a efectos del IRPF. Indica la cifra en euros con dos decimales.",
+   "family": "irpf_rental",
+   "hits": 0,
+   "truncated": 5,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Con una hipoteca de 130.000 € (15 años, 3,9 %) compro un piso que en total me cuesta 213.000 € y que da 8.110 € netos al año. ¿Cuál es mi rentabilidad sobre fondos propios? Responde en porcentaje con dos decimales.",
+   "family": "cash_on_cash",
+   "hits": 0,
+   "truncated": 3,
+   "process_wrong": [
+    0.6666666666666666,
+    0.0,
+    0.3333333333333333,
+    0.0,
+    0.3333333333333333,
+    0.0,
+    0.3333333333333333,
+    1.0
+   ]
+  },
+  {
+   "question": "Invierto 298.000 € en total en un piso y financio 167.000 € con una hipoteca a 20 años al 3,9 % fijo. El piso genera 15.570 € netos al año antes de la hipoteca. La cocina se reformó hace unos años. ¿Qué rentabilidad obtengo sobre el dinero que pongo yo (cash-on-cash)? Responde en porcentaje con dos decimales.",
+   "family": "cash_on_cash",
+   "hits": 0,
+   "truncated": 3,
+   "process_wrong": [
+    0.0,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.0,
+    0.0,
+    1.0,
+    0.6666666666666666,
+    1.0
+   ]
+  },
+  {
+   "question": "Es un tercero exterior con ascensor. Con una hipoteca de 241.000 € (15 años, 3,15 %) compro un piso que en total me cuesta 439.000 € y que da 20.390 € netos al año. ¿Cuál es mi rentabilidad sobre fondos propios? Expresa la respuesta como porcentaje con dos decimales.",
+   "family": "cash_on_cash",
+   "hits": 0,
+   "truncated": 3,
+   "process_wrong": [
+    0.3333333333333333,
+    0.0,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.0,
+    0.3333333333333333,
+    0.0
+   ]
+  },
+  {
+   "question": "La vivienda tiene orientación sur y dos baños. Con una hipoteca de 266.000 € (25 años, 2,95 %) compro un piso que en total me cuesta 420.000 € y que da 26.520 € netos al año. ¿Cuál es mi rentabilidad sobre fondos propios? Responde en porcentaje con dos decimales.",
+   "family": "cash_on_cash",
+   "hits": 0,
+   "truncated": 6,
+   "process_wrong": [
+    0.3333333333333333,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.3333333333333333,
+    0.0
+   ]
+  },
+  {
+   "question": "Invierto 140.000 € en total en un piso y financio 80.000 € con una hipoteca a 25 años al 3,1 % fijo. El piso genera 9.010 € netos al año antes de la hipoteca. Es un tercero exterior con ascensor. ¿Qué rentabilidad obtengo sobre el dinero que pongo yo (cash-on-cash)? Expresa la respuesta como porcentaje con dos decimales.",
+   "family": "cash_on_cash",
+   "hits": 0,
+   "truncated": 3,
+   "process_wrong": [
+    0.0,
+    0.3333333333333333,
+    1.0,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Invierto 179.000 € en total en un piso y financio 133.000 € con una hipoteca a 15 años al 2,55 % fijo. El piso genera 9.490 € netos al año antes de la hipoteca. ¿Qué rentabilidad obtengo sobre el dinero que pongo yo (cash-on-cash)? Da el resultado en %, con dos decimales.",
+   "family": "cash_on_cash",
+   "hits": 0,
+   "truncated": 5,
+   "process_wrong": [
+    0.0,
+    0.3333333333333333,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.3333333333333333
+   ]
+  },
+  {
+   "question": "Operación: inversión total 449.000 €, préstamo 275.000 € a 25 años, interés fijo del 3,9 %, ingreso neto operativo de 25.390 € anuales. Calcula el flujo de caja sobre capital propio. Expresa la respuesta como porcentaje con dos decimales.",
+   "family": "cash_on_cash",
+   "hits": 1,
+   "truncated": 0,
+   "process_wrong": [
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333
+   ]
+  },
+  {
+   "question": "La cocina se reformó hace unos años. Con una hipoteca de 143.000 € (25 años, 3,7 %) compro un piso que en total me cuesta 185.000 € y que da 11.910 € netos al año. ¿Cuál es mi rentabilidad sobre fondos propios? Responde en porcentaje con dos decimales.",
+   "family": "cash_on_cash",
+   "hits": 0,
+   "truncated": 2,
+   "process_wrong": [
+    1.0,
+    0.6666666666666666,
+    0.0,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.0
+   ]
+  }
+ ]
+}

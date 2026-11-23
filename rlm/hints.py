@@ -2,7 +2,7 @@
 
 GRPO learns only from groups with some right and some wrong answers. After SFT 2, sampling
 8 answers on 8 irpf_rental and 8 cash_on_cash problems gave 0 right answers out of 64 for each
-family (``reports/sample_check_sft2.json``): no signal. Following hint-scaffolded GRPO
+family (``reports/fase1/sample_check_sft2.json``): no signal. Following hint-scaffolded GRPO
 (Scaf-GRPO, Guide-GRPO), part of those problems are shown with a hint appended to the
 question, so the group has some right answers to learn from; the plain versions stay in the
 dataset, and a second stage without hints checks that the model no longer needs them.
