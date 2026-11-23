@@ -49,6 +49,21 @@ en `~/.config`, que no se conserva:
 4. Comprobar desde fuera, por ejemplo desde el móvil o el portátil:
    `https://sculptor-fled-magical.ngrok-free.dev/health`.
 
+**Con Docker, en la misma sesión.** Las sesiones tienen Docker *rootless*, así que también
+se puede servir con `docker compose`, como pide el enunciado. Hace falta
+`smoke/docker_dgx.sh` en lugar de `docker compose`: pasa al contenedor los ficheros de
+nuestra partición MIG, que cambian en cada sesión y sin los cuales torch no ve la GPU. Se usa
+desde `~/clusters/dgx/dgm-arca`, con el `.env` de siempre:
+
+```bash
+smoke/docker_dgx.sh build              # la imagen vive en /tmp: rehacerla en cada sesión (~10 min)
+smoke/docker_dgx.sh run --rm check-gpu # tiene que salir "H200 MIG 1g.18gb"
+smoke/docker_dgx.sh up api             # en lugar del paso 2; ngrok igual que en el paso 3
+```
+
+Probado el 23/11 en la sesión de la rama `fase2`: `/health` con `reasoning` y `tools` en
+`ready`, y `/tools` respondiendo (ver EXPERIMENTS.md).
+
 Mientras la API está en marcha ocupa 4-5 GB de la GPU. No lanzar a la vez evaluaciones ni
 entrenamientos: con 17 GB, el segundo proceso puede tumbar al primero. Cuando la sesión llega a
 su hora, Slurm mata la API y el túnel.
