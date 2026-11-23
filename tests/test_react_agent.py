@@ -219,6 +219,29 @@ def test_text_without_final_answer_is_taken_and_flagged():
     assert response.steps[0].action is None
 
 
+def test_a_labelled_thought_without_a_call_is_not_an_answer():
+    agent, brain = make_agent(
+        "Thought: I need to call ping.",
+        call("ping"),
+        "Thought: still thinking.",
+        "Thought: the answer is pong.",
+    )
+    response = agent.run("tarea", max_steps=6, brain="base")
+    assert response.steps[0].action is None and "called no tool" in response.steps[0].observation
+    assert response.steps[1].action.name == "ping"
+    assert "called no tool" in response.steps[2].observation
+    # two thoughts in a row: the second one is taken as the answer, flagged
+    assert response.steps[3].thought.startswith(NO_TOOL_CALL)
+    assert response.final_answer.startswith("the answer is pong.")
+    assert "called no tool" in brain.seen[1][-1]["content"]
+
+
+def test_invalid_arguments_suggest_leaving_them_out():
+    agent, _ = make_agent(call("ping", n="mucho"), answer("Hecho."))
+    response = agent.run("tarea", max_steps=3, brain="base")
+    assert "leave that argument out" in response.steps[0].observation
+
+
 def test_token_budget_nudges_then_cuts():
     rates = call("ping")
     analyze = call("ping", n=2)

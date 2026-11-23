@@ -99,6 +99,11 @@ TURN_HINT = (
     "sentence on what you know and what you need. Do not repeat a call you already made. "
     "When you have what the user asked for, call final_answer, in Spanish.]"
 )
+THOUGHT_ONLY = (
+    "You wrote a thought but called no tool. Now make the tool call you described, or call "
+    "final_answer with the answer for the user, in Spanish."
+)
+INVALID_ARGS_HINT = " If the user did not give a value, leave that argument out instead of 0."
 NO_TOOL_CALL = "[sin final_answer: el texto se toma como respuesta] "
 EMPTY_OUTPUT = "Your last message had no text and no tool call. Call a tool, or call final_answer."
 
@@ -385,6 +390,15 @@ class ReActAgent:
                     memory.add("assistant", "")
                     memory.add("user", EMPTY_OUTPUT)
                     continue
+                labelled = parsed.text.strip().lower().startswith("thought:")
+                last = state.steps[-1] if state.steps else None
+                thought_before = last is not None and last.observation == THOUGHT_ONLY
+                if labelled and not thought_before:
+                    # "Thought: I need to call what_if" is an intention, not an answer.
+                    state.step(thought, None, THOUGHT_ONLY)
+                    memory.add("assistant", parsed.text)
+                    memory.add("user", THOUGHT_ONLY)
+                    continue
                 response = self._finish(state, text, NO_TOOL_CALL + thought, None)
                 if response is not None:
                     return response
@@ -472,7 +486,8 @@ class ReActAgent:
             observation = format_tool_result(call.name, record.result)
             self._collect(state, call.name, record.result)
         else:
-            observation = f"ERROR: {record.error}.{TOOL_ERROR_HINT}"
+            hint = INVALID_ARGS_HINT if record.error.startswith("invalid arguments") else ""
+            observation = f"ERROR: {record.error}.{hint}{TOOL_ERROR_HINT}"
         if repeats == 2:
             observation += LOOP_WARNING
         state.observations.append(observation)
