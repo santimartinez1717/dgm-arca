@@ -28,6 +28,7 @@ mkdir -p logs reports/fase4
 
 default_brains="base rlm thinking"
 [ "$stage" = "code" ] && default_brains="base thinking"
+[ "$stage" = "smoke" ] && default_brains="base"
 brains="${ARCA_EVAL_BRAINS:-$default_brains}"
 configs="${ARCA_EVAL_CONFIGS:-full no_auditor no_playbook flat_memory}"
 if [ -z "${ARCA_RLM_ADAPTER:-}${ARCA_AGENT_RLM_ADAPTER:-}" ]; then
