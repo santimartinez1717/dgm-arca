@@ -72,6 +72,19 @@ def test_flats_match_the_agent_analysis():
         assert figures["net_yield_pct"] == f.net_yield, f.id
 
 
+def test_lever_checks_accept_the_figures_what_if_returns():
+    """what_if gives income_tax per scenario, analyze_property the reduced base: both pass."""
+    for spec in SPECS:
+        if spec.id not in ("lever-01", "lever-02"):
+            continue
+        a, b = spec.figures.values()
+        reduced = f"{a['reduced_net_income']} y {b['reduced_net_income']}, {b['reduction_pct']} %"
+        tax = f"{a['income_tax']} y {b['income_tax']}, {b['reduction_pct']} %"
+        for figures in (reduced, tax):
+            answer = f"{figures}; firmando el 30/11/2026. Consulta a un asesor."
+            assert check_answer({"check": spec.check}, answer), (spec.id, answer)
+
+
 def test_course_examples_still_validate():
     path = Path(__file__).parents[1] / "agent/bench/example_tasks.jsonl"
     for line in path.read_text(encoding="utf-8").splitlines():
