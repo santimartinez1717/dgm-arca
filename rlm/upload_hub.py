@@ -24,6 +24,23 @@ ADAPTERS = {
         "irpf_rental y cash_on_cash los 250 primeros pasos.",
         "score": "47,3 %",
     },
+    "umbral-qwen3-1.7b-grpo2-mlx-8bit": {
+        "path": "rlm/weights/grpo2_mlx_8bit",
+        "title": "GRPO 2 fusionado y cuantizado a 8 bits con MLX (para servir la API en un Mac)",
+        "how": "El adaptador GRPO 2 fusionado con Qwen3-1.7B y convertido con "
+        "mlx_lm.convert -q --q-bits 8 (1,8 GB). Se carga con ARCA_RLM_MLX.",
+        "score": "47,3 % (el modelo sin cuantizar)",
+        "files": [
+            "config.json",
+            "model.safetensors",
+            "model.safetensors.index.json",
+            "tokenizer.json",
+            "tokenizer_config.json",
+            "chat_template.jinja",
+            "generation_config.json",
+        ],
+        "base": "mlx",
+    },
     "umbral-qwen3-1.7b-sft3-lora": {
         "path": "rlm/weights/sft3_lora",
         "title": "SFT 3 (punto de partida del GRPO 2)",
@@ -49,16 +66,18 @@ FILES = [
 
 
 def model_card(name: str, info: dict) -> str:
+    mlx = info.get("base") == "mlx"
+    kind = "Modelo fusionado con un adaptador" if mlx else "Adaptador"
     return f"""---
 base_model: Qwen/Qwen3-1.7B
-library_name: peft
+library_name: {"mlx" if mlx else "peft"}
 language: [es]
 tags: [lora, grpo, real-estate, reasoning]
 ---
 
 # {name}
 
-{info["title"]}. Adaptador LoRA (r=16, todas las capas lineales) sobre **Qwen/Qwen3-1.7B**,
+{info["title"]}. {kind} LoRA (r=16, todas las capas lineales) sobre **Qwen/Qwen3-1.7B**,
 del equipo Umbral (práctica ARCA, MGD · ICAI 2026-2027): analista de inversión inmobiliaria
 para alquilar en España (coste de adquisición, rentabilidad neta, renta máxima legal, IRPF del
 alquiler, flujo de caja sobre capital propio y precio máximo).
@@ -92,7 +111,7 @@ def main() -> None:
         api.create_repo(repo, private=args.private, exist_ok=True)
         ops = [
             CommitOperationAdd(path_in_repo=f, path_or_fileobj=str(folder / f))
-            for f in FILES
+            for f in info.get("files", FILES)
             if (folder / f).exists()
         ]
         ops.append(

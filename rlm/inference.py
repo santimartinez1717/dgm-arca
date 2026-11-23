@@ -75,9 +75,21 @@ class ReasoningModel:
     base_model: str
     adapter_path: str | None = None
     verifier_name: str = "numeric"
+    # A merged, quantized model converted with mlx_lm (rlm/weights/grpo2_mlx_8bit): on a Mac,
+    # 8 bits fit in 8 GB of shared memory and generate several times faster than PyTorch.
+    mlx_path: str | None = None
 
     @classmethod
     def from_env(cls) -> ReasoningModel:
+        mlx_path = os.environ.get("ARCA_RLM_MLX") or None
+        if mlx_path:
+            if not Path(mlx_path).exists():
+                raise FileNotFoundError(f"ARCA_RLM_MLX points to a missing folder: {mlx_path}")
+            return cls(
+                base_model=mlx_path,
+                mlx_path=mlx_path,
+                verifier_name=os.environ.get("ARCA_RLM_VERIFIER", "numeric"),
+            )
         adapter = os.environ.get("ARCA_RLM_ADAPTER") or None
         if adapter is None:
             raise NotImplementedError(
@@ -98,6 +110,13 @@ class ReasoningModel:
         _MODEL_THREAD.submit(self._load).result()
 
     def _load(self) -> None:
+        self.verifier = VERIFIERS[self.verifier_name]()
+        if self.mlx_path:
+            from mlx_lm import load
+
+            self.model, self.tokenizer = load(self.mlx_path)
+            print(f"phase 1 model on MLX from {self.mlx_path}", file=sys.stderr, flush=True)
+            return
         import torch
         from peft import PeftModel
         from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -111,9 +130,6 @@ class ReasoningModel:
         else:
             device = "cpu"
         dtype = torch.float32 if device == "cpu" else torch.bfloat16
-        # ARCA_RLM_DTYPE=float16 for Macs where bfloat16 on MPS is slow (no native support).
-        if os.environ.get("ARCA_RLM_DTYPE"):
-            dtype = getattr(torch, os.environ["ARCA_RLM_DTYPE"])
         print(f"phase 1 model on {device} in {dtype}", file=sys.stderr, flush=True)
         self.tokenizer = AutoTokenizer.from_pretrained(self.base_model)
         model = AutoModelForCausalLM.from_pretrained(
@@ -124,18 +140,19 @@ class ReasoningModel:
             # two small matmuls per linear layer to every generated token.
             model = PeftModel.from_pretrained(model, self.adapter_path).merge_and_unload()
         self.model = model.eval()
-        self.verifier = VERIFIERS[self.verifier_name]()
 
     def generate(self, question: str, max_new_tokens: int = 2048) -> tuple[str, int]:
         """Return the raw completion and the number of generated tokens."""
         return _MODEL_THREAD.submit(self._generate, question, max_new_tokens).result()
 
     def _generate(self, question: str, max_new_tokens: int) -> tuple[str, int]:
-        import torch
-
         text = self.tokenizer.apply_chat_template(
             build_prompt(question), tokenize=False, add_generation_prompt=True
         )
+        if self.mlx_path:
+            return self._generate_mlx(text, max_new_tokens)
+        import torch
+
         inputs = self.tokenizer(text, return_tensors="pt").to(self.model.device)
         started = time.perf_counter()
         with torch.no_grad():
@@ -155,6 +172,25 @@ class ReasoningModel:
             flush=True,
         )
         return self.tokenizer.decode(new_tokens, skip_special_tokens=True), int(new_tokens.numel())
+
+    def _generate_mlx(self, text: str, max_new_tokens: int) -> tuple[str, int]:
+        from mlx_lm import stream_generate
+
+        started = time.perf_counter()
+        pieces, n_tokens = [], 0
+        # No sampler: mlx_lm decodes greedily, like rlm/evaluate.py.
+        for response in stream_generate(
+            self.model, self.tokenizer, text, max_tokens=max_new_tokens
+        ):
+            pieces.append(response.text)
+            n_tokens = response.generation_tokens
+        seconds = time.perf_counter() - started
+        print(
+            f"generated {n_tokens} tokens in {seconds:.1f}s ({n_tokens / seconds:.1f} tokens/s)",
+            file=sys.stderr,
+            flush=True,
+        )
+        return "".join(pieces), n_tokens
 
     def answer(
         self, question: str, expected_answer: str | None = None, max_new_tokens: int = 2048
@@ -177,7 +213,9 @@ class ReasoningModel:
             has_valid_format=has_valid_format(raw),
             verifier=verdict,
             tokens_generated=n_tokens,
-            model=f"{self.base_model}+{Path(self.adapter_path).name}"
+            model=f"mlx:{Path(self.mlx_path).name}"
+            if self.mlx_path
+            else f"{self.base_model}+{Path(self.adapter_path).name}"
             if self.adapter_path
             else self.base_model,
         )
