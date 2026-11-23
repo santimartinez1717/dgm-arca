@@ -207,6 +207,25 @@ def brains_from_env() -> dict[str, HFBrain]:
     }
 
 
+@dataclass
+class FallbackBrain:
+    """The base brain standing in for one that could not load; the name tells the user."""
+
+    inner: Brain
+    note: str
+
+    @property
+    def name(self) -> str:
+        return f"{self.inner.name} [{self.note}]"
+
+    def count_tokens(self, text: str) -> int:
+        counter = getattr(self.inner, "count_tokens", None)
+        return counter(text) if counter is not None else len(text) // 4
+
+    def generate(self, messages, tools) -> tuple[str, int, int]:
+        return self.inner.generate(messages, tools)
+
+
 # Kept for readers of the spec: what each brain is, as configured right now.
 BRAINS = {name: (lambda b=b: b.name) for name, b in brains_from_env().items()}
 
@@ -327,9 +346,24 @@ class ReActAgent:
         return prompt
 
     def brain(self, name: str) -> Brain:
+        """The brain asked for; ``base`` instead, flagged in its name, if it cannot load.
+
+        ``brain="rlm"`` is the API's default and its adapter is a download of its own: a
+        missing adapter answers with the base model and says so in ``model``, rather than
+        failing the request with a 500.
+        """
         if name not in self.brains:
             raise ValueError(f"unknown brain {name!r}; known: {sorted(self.brains)}")
-        return self.brains[name]
+        chosen = self.brains[name]
+        try:
+            if hasattr(chosen, "load"):
+                chosen.load()
+        except FileNotFoundError as exc:
+            if name == "base" or "base" not in self.brains:
+                raise
+            log.warning("brain %s unavailable, using base: %s", name, exc)
+            return FallbackBrain(self.brains["base"], f"{name} no disponible: responde base")
+        return chosen
 
     def tool_definitions(self) -> list[dict]:
         return [t.definition for t in self._tools().values()]
@@ -473,6 +507,7 @@ class ReActAgent:
         if repeats >= 3:
             state.stuck = repeats >= 4
             return LOOP_STOP
+        arguments, note = self._check_date(state, call)
         tool_ = self._tools().get(call.name)
         if tool_ is not None and tool_.requires_confirmation and not state.confirm:
             state.case.ask(
@@ -490,17 +525,39 @@ class ReActAgent:
                 error=f"unknown tool '{call.name}'. Available: {sorted(self._tools())}",
             )
         else:
-            record = self._call_with_timeout(call.name, call.arguments)
+            record = self._call_with_timeout(call.name, arguments)
         if record.ok:
             observation = format_tool_result(call.name, record.result)
             self._collect(state, call.name, record.result)
         else:
             hint = INVALID_ARGS_HINT if record.error.startswith("invalid arguments") else ""
             observation = f"ERROR: {record.error}.{hint}{TOOL_ERROR_HINT}"
+        observation += note
         if repeats == 2:
             observation += LOOP_WARNING
         state.observations.append(observation)
         return observation
+
+    @staticmethod
+    def _check_date(state: _Run, call: ToolCall) -> tuple[dict[str, Any], str]:
+        """Drop an ``on_date`` the task never gave: the model invented 2023-01-01 and got the
+        law of 2023 (EXPERIMENTS.md, 23/11/2026). A year in the task or a contract date in the
+        case file keeps it."""
+        arguments = call.arguments
+        on = arguments.get("on_date") if call.name == "search_knowledge_base" else None
+        if not on:
+            return arguments, ""
+        year = str(on)[:4]
+        contracts = {
+            str(p.contract_date.year) for p in state.case.properties.values() if p.contract_date
+        }
+        if year in state.task or year in contracts:
+            return arguments, ""
+        kept = {k: v for k, v in arguments.items() if k != "on_date"}
+        return kept, (
+            f"\n\n(on_date {on} ignored: the task gives no date in {year}, so this is today's "
+            "law. Pass on_date only for a date the user wrote.)"
+        )
 
     def _call_with_timeout(self, name: str, arguments: dict[str, Any]) -> ToolCallRecord:
         """``registry.call`` in a thread that sees the active case file, with a deadline.

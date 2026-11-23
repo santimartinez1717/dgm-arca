@@ -30,6 +30,14 @@ NUMBER = re.compile(
     r"(\s*(?:%|€|eur|euros|por ciento|puntos))?",
     re.IGNORECASE,
 )
+# "Artículo 669", "Ley 12/2023", "artículos 643 a 675", "RDL 29/2026": the number names the
+# law, it is not a figure, and a citation must not make the auditor reject an answer.
+LEGAL_REF = re.compile(
+    r"\b(?:art[íi]culos?|arts?\.|leyes|ley|real decreto(?:[- ]ley| legislativo)?|"
+    r"decreto(?: legislativo)?|rdl|rdleg|dleg|rd)\s+\d+(?:/\d{2,4})?"
+    r"(?:\s*(?:,|y|a)\s*\d+(?:/\d{2,4})?)*",
+    re.IGNORECASE,
+)
 CITATION = re.compile(r"\[(K\d+(?:\s*,\s*K\d+)*)\]")
 
 
@@ -79,8 +87,8 @@ def parse_number(text: str) -> float | None:
 
 
 def numbers_in(text: str) -> list[tuple[str, float, bool]]:
-    """(as written, value, has_unit) for every number in ``text``, dates removed."""
-    text = DATE.sub(" ", text)
+    """(as written, value, has_unit) for every number in ``text``, dates and law names removed."""
+    text = LEGAL_REF.sub(" ", DATE.sub(" ", text))
     out = []
     for match in NUMBER.finditer(text):
         value = parse_number(match.group(1))

@@ -280,3 +280,13 @@ def test_memory_keeps_the_task_and_shrinks_old_observations():
     assert all(len(m["content"]) < 320 for m in seen if m["role"] == "tool")
     assert "summary" in memory.render("new system")[0]["content"]
     assert memory.render("new system")[0]["content"].startswith("new system")
+
+
+def test_auditor_does_not_take_law_names_for_figures():
+    answer = (
+        "Según el Artículo 669 de la LEC, los artículos 643 a 675, la Ley 12/2023 y el "
+        "RDL 29/2026, la renta es de 1.030 € [K1]."
+    )
+    result = audit(answer, sources=["1.030 €"], retrieved_ids=["K1"])
+    assert result.ok, result.unsupported_numbers
+    assert not audit("El neto sube a 7.777 € según el artículo 23.", sources=[]).ok
