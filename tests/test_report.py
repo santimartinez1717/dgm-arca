@@ -217,11 +217,19 @@ def test_unknown_id_is_an_observation_listing_the_known_ones(reports_dir):
     assert not reports_dir.exists()  # nothing written
 
 
-def test_no_engine_figures_asks_for_analyze_property(reports_dir):
+def test_no_engine_figures_asks_for_the_missing_facts(reports_dir):
     case = CaseFile(session_id="s", properties={"P1": Property(id="P1", price=100000)})
-    with case_file.active(case), pytest.raises(ValueError, match="analyze_property"):
+    with case_file.active(case), pytest.raises(ValueError, match="record_property"):
         write_investment_report(property_ids=["P1"])
     assert not reports_dir.exists()
+
+
+def test_a_property_not_analysed_yet_is_analysed_by_the_report(reports_dir):
+    flat = Property(id="P1", municipality="Valencia", price=180000, monthly_rent=850)
+    case = CaseFile(session_id="s", properties={"P1": flat})
+    out, text = write(case, property_ids=["P1"])
+    assert any(f.tool == "analyze_property" and f.name == "net_yield_pct" for f in case.figures)
+    assert "Sin cifras del motor" not in text and "warnings" not in out
 
 
 def test_title_in_words_names_the_file_and_figures_are_refused():
