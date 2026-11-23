@@ -28,7 +28,7 @@ from typing import Annotated, Any
 from pydantic import Field
 
 from agent import levers
-from agent.analysis import UNITS
+from agent.analysis import UNITS, analyze
 from agent.auditor import DISCLAIMER, needs_check, numbers_in
 from agent.case_file import CaseFile, Figure, current
 from agent.playbook.schema import load_levers
@@ -416,8 +416,8 @@ def write_investment_report(
 ) -> dict[str, Any]:
     """Write the investment report for these properties to a Markdown file (needs confirmation).
 
-    The report takes every number from the case file, so first call analyze_property (and
-    what_if for the levers) on each property; never pass figures here. It returns the file
+    The report takes every number from the case file: a property not analysed yet is analysed
+    here with the engine, and what_if adds the levers. Never pass figures here. It returns the file
     path, not the text.
 
     Args:
@@ -428,11 +428,21 @@ def write_investment_report(
     case = current()
     _check_title(title)
     ids = _resolve_ids(case, property_ids)
+    missing: dict[str, list[str]] = {}
+    for pid in ids:
+        if not _base(case, pid):
+            # The same engine as analyze_property: running it here saves the model a step.
+            result = analyze(case.property(pid), case.profile)
+            result.record(case, "analyze_property")
+            for name in result.missing:
+                case.ask(f"{pid}: falta {name}")
+            missing[pid] = result.missing
     analysed = [pid for pid in ids if _base(case, pid)]
     if not analysed:
+        lacking = "; ".join(f"{pid}: {', '.join(m) or 'datos'}" for pid, m in missing.items())
         raise ValueError(
-            f"no engine figures for {', '.join(ids)}: call analyze_property first, "
-            "the report takes every number from the case file"
+            f"the engine cannot compute {', '.join(ids)} ({lacking}): save the missing facts "
+            "with record_property, the report takes every number from the case file"
         )
     title = title.strip() if title else f"Informe de inversión: {', '.join(ids)}"
     text, sections = render(case, ids, title)
