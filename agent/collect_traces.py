@@ -117,7 +117,7 @@ def to_sft(rows: list[dict], tokenizer: Any, tools: list[dict]) -> list[dict]:
                     "id": row["id"],
                     "category": row["category"],
                     "prompt": prompt,
-                    "completion": g["raw"] + tokenizer.eos_token,
+                    "completion": g["raw"],  # TRL appends the EOS token
                 }
             )
     return examples
