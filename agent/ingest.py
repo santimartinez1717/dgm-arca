@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import csv
 import logging
+import os
 import re
 import unicodedata
 from dataclasses import dataclass, field
@@ -230,7 +231,7 @@ def _summary(ids: list[str]) -> str:
     return f"[{len(ids)} {noun} en el expediente: {shown}]"
 
 
-def ingest(task: str) -> IngestResult:
+def ingest(task: str, prose: bool | None = None) -> IngestResult:
     """Every table of flats in ``task``, as ``Property`` objects, and the task without them."""
     lines = task.split("\n")
     out_lines: list[str] = []
@@ -277,13 +278,162 @@ def ingest(task: str) -> IngestResult:
     ignored = list(dict.fromkeys(ignored))
     if ignored or bad:
         log.info("ingest: ignored columns %s, unreadable cells %s", ignored, bad)
-    return IngestResult(properties, "\n".join(out_lines), ignored, bad)
+    text = "\n".join(out_lines)
+    if not properties and (prose if prose is not None else prose_enabled()):
+        found = extract_prose(task)
+        if found.property is not None:
+            properties.append(found.property)
+            facts = ", ".join(f for f in found.fields if f != "id")
+            text += f"\n[1 piso cargado en el expediente: P1 ({facts})]"
+    return IngestResult(properties, text, ignored, bad)
 
 
-def extract_properties(task: str) -> tuple[list[Property], str]:
+# --------------------------------------------------------------------------- one flat in prose
+
+# A 1.7B model asked to copy the facts of a sentence into record_property drops some of them:
+# in the first runs of the loop (issue 20) it left out the cadastral value, the previous rent
+# or the contract date in 3 of 4 tasks, and the engine could not compute the IRPF or the cap.
+# These patterns read the facts a Spanish user writes about ONE dwelling. They only fill what
+# they find with certainty; the model can still add or correct with record_property.
+
+EUROS = r"(\d[\d.]*(?:,\d+)?)\s*(?:€|euros?\b)"
+PROSE_PATTERNS: dict[str, list[str]] = {
+    "price": [
+        rf"\b(?:por|sale por|precio de|cuesta|vale|pide[n]?)\s+{EUROS}",
+    ],
+    "monthly_rent": [
+        rf"(?:alquil\w*|cobr\w*|pedir|pagará|renta de)\s+(?:por\s+|a\s+)?{EUROS}",
+        rf"\bmantengo\s+(?:los\s+|la renta en\s+)?{EUROS}",
+    ],
+    "previous_rent": [
+        rf"(?:inquilino anterior|anterior inquilino|último inquilino|el anterior)"
+        rf"\s+pagaba\s+{EUROS}",
+    ],
+    "area_m2": [r"(\d+(?:[.,]\d+)?)\s*m(?:²|2)\b"],
+    "cadastral_value": [rf"valor catastral(?:\s+de|\s+es|:)?\s+{EUROS}"],
+    "land_share_pct": [
+        r"\((\d+(?:[.,]\d+)?)\s*%\s*(?:de\s+)?suelo\)",
+        r"(\d+(?:[.,]\d+)?)\s*%\s*(?:de\s+)?suelo\b",
+    ],
+    "land_value": [rf"de los que\s+{EUROS}\s+son\s+(?:de\s+)?suelo"],
+    "reference_value": [
+        rf"valor de referencia(?:\s+del Catastro)?(?:\s+es|\s+de|:)?\s+(?:de\s+)?{EUROS}",
+    ],
+    "ibi": [rf"\bIBI(?:\s+de|:)?\s+{EUROS}"],
+    "community_monthly": [rf"\bcomunidad(?:\s+de|:)?\s+{EUROS}\s*al mes"],
+    "community_annual": [rf"\bcomunidad(?:\s+de|:)?\s+{EUROS}\s*al año"],
+    "insurance": [rf"\bseguro(?:\s+de|:)?\s+{EUROS}"],
+    "notary_registry": [rf"notar[ií]a(?:\s+y\s+(?:el\s+)?registro)?(?:\s+unos|\s+de)?\s+{EUROS}"],
+    "ajd_rate_pct": [r"\bAJD\s+(?:del?\s+)?(\d+(?:[.,]\d+)?)\s*%"],
+    "tenant_age": [r"inquilino de\s+(\d{2})\s+años"],
+    "contract_date": [
+        r"(?:firm\w*|contrato(?:\s+\w+)?\s+(?:el|del)|desde el)\s+(?:el\s+)?"
+        r"(\d{1,2}/\d{1,2}/\d{4})",
+    ],
+}
+# "por 800 €" after a rent verb is the rent, not the price ("lo alquilo por 800 €").
+RENT_BEFORE = re.compile(r"(?:alquil\w*|cobr\w*|pag\w*|ped\w*|renta)\s+(?:\w+\s+)?$", re.I)
+
+# Several dwellings in the text: one Property would mix their facts.
+SEVERAL = re.compile(
+    r"\b(?:dos|tres|cuatro|cinco|\d+)\s+pisos\b|\bcada uno\b|\bestos pisos\b|\bentre dos\b",
+    re.IGNORECASE,
+)
+REHABILITATION = re.compile(r"rehabilitaci[oó]n|rehabilitad[oa]", re.IGNORECASE)
+NEW_BUILD = re.compile(r"\bobra nueva\b", re.IGNORECASE)
+MUNICIPALITY = re.compile(
+    r"\ben\s+((?:[A-ZÁÉÍÓÚÑ][\wáéíóúñü'-]*)(?:\s+(?:de|del|la|las|los|el|i|d'|[A-ZÁÉÍÓÚÑ][\wáéíóúñü'-]*))*)"
+)
+
+
+def _municipality(text: str) -> str | None:
+    """The first "en <Municipio>" whose name is a Spanish municipality (SERPAVI list)."""
+    from tool_use.build_data import normalise_name
+    from tool_use.public_data import _names, _serpavi
+
+    known = {n for row in _serpavi() for n in _names(row["name"])}
+    for match in MUNICIPALITY.finditer(text):
+        words = match.group(1).split()
+        for end in range(len(words), 0, -1):  # longest first: "Santiago de Compostela"
+            candidate = " ".join(words[:end]).rstrip(",.;:")
+            if normalise_name(candidate) in known:
+                return candidate
+    return None
+
+
+def _values(text: str, patterns: list[str], read, not_after: re.Pattern | None = None) -> set:
+    found = set()
+    for pattern in patterns:
+        for match in re.finditer(pattern, text, re.IGNORECASE):
+            if not_after is not None and not_after.search(
+                text[max(0, match.start() - 30) : match.start()]
+            ):
+                continue
+            try:
+                found.add(read(match.group(1)))
+            except ValueError:
+                continue
+    return found
+
+
+@dataclass
+class ProseResult:
+    property: Property | None
+    fields: list[str] = field(default_factory=list)  # what was read
+    ambiguous: list[str] = field(default_factory=list)  # several values: left to the model
+
+
+def extract_prose(text: str, property_id: str = "P1") -> ProseResult:
+    """The facts of ONE dwelling described in Spanish prose, only those read with certainty.
+
+    Needs a price and a rent or an area (otherwise it is not the description of a flat), and
+    gives up when the text talks about several dwellings. A field with two different values
+    ("una web dice 150.000 € y otra 210.000 €") is left out and reported as ambiguous.
+    """
+    if SEVERAL.search(text):
+        return ProseResult(None)
+    values: dict[str, Any] = {}
+    ambiguous: list[str] = []
+    for name, patterns in PROSE_PATTERNS.items():
+        if name == "contract_date":
+            read = parse_date
+        elif name == "tenant_age":
+            read = lambda cell: int(parse_number(cell))  # noqa: E731
+        else:
+            read = parse_number
+        found = _values(text, patterns, read, RENT_BEFORE if name == "price" else None)
+        if len(found) == 1:
+            values[name] = found.pop()
+        elif len(found) > 1:
+            ambiguous.append(name)
+    if "price" not in values or not ({"monthly_rent", "area_m2", "reference_value"} & set(values)):
+        return ProseResult(None, ambiguous=ambiguous)
+    if "community_annual" in values:
+        annual = values.pop("community_annual")
+        values.setdefault("community_monthly", round(annual / 12, 2))
+    if "land_value" in values and "cadastral_value" in values and "land_share_pct" not in values:
+        values["land_share_pct"] = round(100 * values["land_value"] / values["cadastral_value"], 2)
+    values.pop("land_value", None)
+    if NEW_BUILD.search(text):
+        values["new_build"] = True
+    if REHABILITATION.search(text):
+        values["rehabilitation_last_2y"] = True
+    town = _municipality(text)
+    if town:
+        values["municipality"] = town
+    return ProseResult(Property(id=property_id, **values), sorted(values), ambiguous)
+
+
+def prose_enabled() -> bool:
+    return os.environ.get("ARCA_INGEST_PROSE", "1") != "0"
+
+
+def extract_properties(task: str, prose: bool | None = None) -> tuple[list[Property], str]:
     """The flats of every CSV pasted in ``task`` and the task with each table replaced by a line.
 
-    A task without a table comes back unchanged and with no properties.
+    Without a table, a single dwelling described in prose is read with ``extract_prose``
+    (unless ``prose=False`` or ``ARCA_INGEST_PROSE=0``); the text then keeps the prose and
+    gets one line saying what was loaded. Otherwise it comes back unchanged.
     """
-    result = ingest(task)
+    result = ingest(task, prose)
     return result.properties, result.text
