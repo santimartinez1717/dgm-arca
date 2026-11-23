@@ -2291,6 +2291,11 @@ construcción en paralelo, así que `_pipeline()` lleva ahora un candado.
   puede comparar nada (1/6 frente a 0/5): la tasa la da el banco completo (issue 06).
 - Desviación de la spec (punto 9): un texto que empieza por "Thought:" no es una respuesta, sino
   el pensamiento del paso siguiente. Hay que confirmarlo en la issue.
+- `brain=thinking` con el bucle v4, en dos tareas (`reports/fase4/smoke_react_thinking.json`):
+  funciona. El `thought` de cada paso es el razonamiento de Qwen3, y las dos tareas terminan en
+  3 y 6 pasos (51 s y 90 s), pero ninguna pasa el check. En inconsistent-02 dice que el valor de
+  referencia "no influye" en el neto y no llama a `what_if`; es falso, porque cambia el ITP. En
+  impossible-01 se abstiene bien ("no tools can predict 2027 price drops"), pero en inglés y
+  después de repetir búsquedas hasta el "NOT RUN".
 - Pendiente para el núcleo, fuera del bucle: que `search_knowledge_base` no acepte un `on_date`
-  que la tarea no menciona, y probar `brain=thinking` y `brain=rlm` (aquí no está el adaptador
-  del GRPO 2).
+  que la tarea no menciona, y probar `brain=rlm` (aquí no está el adaptador del GRPO 2).
