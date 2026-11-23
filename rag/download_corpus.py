@@ -83,12 +83,13 @@ BOE_LAWS = [  # (id, file name, article ranges to keep; empty = whole law)
     ("BOE-A-1960-10906", "lph", ()),  # Ley 49/1960, propiedad horizontal
     ("BOE-A-2004-4214", "trlrhl-ibi-plusvalia", ((60, 77), (104, 110))),  # RDLeg 2/2004
     ("BOE-A-1992-28740", "liva-vivienda", ((20, 20), (90, 91))),  # Ley 37/1992
-    # Regional ceded taxes (ITP rates and reductions, regional IRPF deductions for renting),
-    # the four communities with most weight in the bench. BOE consolidates them too.
-    ("BOCM-m-2010-90068", "madrid-tributos-cedidos", ()),  # DLeg 1/2010 Comunidad de Madrid
-    ("BOE-A-2024-6951", "cataluna-codigo-tributario-libro6", ()),  # DLeg 1/2024 Catalunya
-    ("BOE-A-2021-17915", "andalucia-tributos-cedidos", ()),  # Ley 5/2021 Andalucía
-    ("BOE-A-1998-8202", "valenciana-tributos-cedidos", ()),  # Ley 13/1997 Comunitat Valenciana
+    # Regional ceded taxes, the four communities with most weight in the bench: only the ITP
+    # chapter and, for Madrid, the IRPF deductions for letting (8, 8 bis, 8 ter) that the
+    # playbook cites. The whole laws diluted the ranking of the state law (EXPERIMENTS.md).
+    ("BOCM-m-2010-90068", "madrid-tributos-cedidos", ((8, 8), (27, 38))),  # DLeg 1/2010
+    ("BOE-A-2024-6951", "cataluna-codigo-tributario-libro6", ((641, 642),)),  # DLeg 1/2024
+    ("BOE-A-2021-17915", "andalucia-tributos-cedidos", ((41, 51),)),  # Ley 5/2021
+    ("BOE-A-1998-8202", "valenciana-tributos-cedidos", ((13, 13),)),  # Ley 13/1997
     # Sources the levers ask for (issue #10): company tax rate and court auctions.
     ("BOE-A-2014-12328", "lis-tipo-gravamen", ((29, 29),)),  # Ley 27/2014, Sociedades
     ("BOE-A-2000-323", "lec-subastas", ((643, 675),)),  # Ley 1/2000, LEC: subastas
@@ -183,7 +184,14 @@ def _render_xml_blocks(parent: ET.Element) -> list[str]:
     return lines
 
 
-def _article_number(block_id: str) -> int | None:
+def _article_number(block_id: str, heading: str | None = None) -> int | None:
+    """The article's number: from its heading ("Artículo 8 bis" -> 8, "Artículo 641-5" -> 641)
+    when there is one, else from the block id ("a17" -> 17). Regional codes number their
+    blocks their own way ("a2-3" is not article 2), so the heading is the reliable source."""
+    if heading:
+        m = re.match(r"\s*art[íi]culo\s+(\d+)", heading, re.IGNORECASE)
+        if m:
+            return int(m.group(1))
     m = re.fullmatch(r"a(\d+)(-\d+)?", block_id)
     return int(m.group(1)) if m else None
 
@@ -210,7 +218,8 @@ def boe_consolidated_to_markdown(
         if kind in ("firma", "nota_inicial"):
             continue
         if articles and not (
-            kind == "precepto" and _in_ranges(_article_number(block_id), articles)
+            kind == "precepto"
+            and _in_ranges(_article_number(block_id, block.get("titulo")), articles)
         ):
             continue
         # a version with no date is not known to be in force: skip it
@@ -373,7 +382,8 @@ def fetch(client: httpx.Client, source: Source, as_of: str) -> tuple[Path, dict]
         versions = [
             v
             for v in article_versions(xml.text, source.slug, title)
-            if not source.articles or _in_ranges(_article_number(v.block_id), source.articles)
+            if not source.articles
+            or _in_ranges(_article_number(v.block_id, v.heading), source.articles)
         ]
         save_versions(versions, CORPUS_DIR / "versions" / f"{source.slug}.jsonl")
         entry["article_versions"] = len(versions)
