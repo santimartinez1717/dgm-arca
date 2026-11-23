@@ -7,6 +7,10 @@
 #   bash scripts/fase4/eval_agent.sh json    # 24 tasks × base rlm thinking × 4 configurations
 #   bash scripts/fase4/eval_agent.sh code    # 24 tasks × base thinking with the CodeAgent
 #
+# ARCA_EVAL_BRAINS and ARCA_EVAL_CONFIGS narrow a stage (e.g. without the rlm adapter, or the
+# full configuration first when the session is short). Every stage resumes from the same
+# checkpoint, so the last run with every brain and configuration writes the whole report.
+#
 # Launch it with nohup as the lanzar-dgx skill says, e.g.
 #   PYTHONUNBUFFERED=1 nohup bash scripts/fase4/eval_agent.sh json > logs/fase4_eval_json.log 2>&1 &
 set -euo pipefail
@@ -22,15 +26,20 @@ source smoke/dgx_env.sh
 export PYTHONUNBUFFERED=1
 mkdir -p logs reports/fase4
 
-if [ "$stage" != "smoke" ] && [ -z "${ARCA_RLM_ADAPTER:-}${ARCA_AGENT_RLM_ADAPTER:-}" ]; then
+default_brains="base rlm thinking"
+[ "$stage" = "code" ] && default_brains="base thinking"
+brains="${ARCA_EVAL_BRAINS:-$default_brains}"
+configs="${ARCA_EVAL_CONFIGS:-full no_auditor no_playbook flat_memory}"
+if [ -z "${ARCA_RLM_ADAPTER:-}${ARCA_AGENT_RLM_ADAPTER:-}" ]; then
     export ARCA_RLM_ADAPTER=rlm/weights/grpo2_lora
 fi
-if [ "$stage" = "json" ] && [ ! -d "${ARCA_AGENT_RLM_ADAPTER:-$ARCA_RLM_ADAPTER}" ]; then
+if [[ " $brains " == *" rlm "* ]] && [ ! -d "${ARCA_AGENT_RLM_ADAPTER:-$ARCA_RLM_ADAPTER}" ]; then
     echo "brain=rlm needs the GRPO 2 adapter at ${ARCA_AGENT_RLM_ADAPTER:-$ARCA_RLM_ADAPTER}" >&2
     exit 1
 fi
 
 echo "=== Fase 4 · evaluate $stage · $(git log --oneline -1 | cut -c1-7) · $(date +%H:%M)"
+echo "    brains: $brains · configs: $configs"
 echo "    session ends in $(( (${SLURM_JOB_END_TIME:-$(date +%s)} - $(date +%s)) / 60 )) min"
 case "$stage" in
     smoke)
@@ -39,12 +48,13 @@ case "$stage" in
             --resume
         ;;
     json)
-        uv run python -m agent.evaluate --brains base rlm thinking \
-            --configs full no_auditor no_playbook flat_memory \
+        # shellcheck disable=SC2086
+        uv run python -m agent.evaluate --brains $brains --configs $configs \
             --out reports/fase4/phase4_eval.json --traces-dir reports/fase4/trazas --resume
         ;;
     code)
-        uv run python -m agent.evaluate --agent code --brains base thinking --configs full \
+        # shellcheck disable=SC2086
+        uv run python -m agent.evaluate --agent code --brains $brains --configs full \
             --out reports/fase4/phase4_eval_code.json --traces-dir reports/fase4/trazas_code \
             --resume
         ;;
