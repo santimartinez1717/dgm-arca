@@ -1778,3 +1778,64 @@ GRPO.
   sola medida: no está confirmada.
 - Pendiente: comprobar que el pass@1 de la fase 1 servido sin cuDNN no baja. El 47,3 % se
   midió con el backend por defecto.
+
+---
+
+### 2026-11-23 · Fase 2 · Banco v9: modelo base frente al adaptador GRPO 2 en /tools
+
+**Qué queríamos saber.**
+- Si `/tools` mejora con el adaptador de la fase 1 (`grpo2_lora`, 47,3 % en test).
+- Con el modelo compartido (3131fb3) no cuesta memoria: basta con cambiar
+  `ARCA_TOOLS_ADAPTER` en el `.env`.
+- Hasta ahora solo se había probado el adaptador del primer GRPO (`final_rlm_lora`), con un
+  banco antiguo (`reports/fase2/phase2_bench_grpo.json`).
+
+**Qué hicimos.** `bash scripts/fase2/fase2_bench_v9.sh` (d7cb17a):
+- Las dos pasadas usan el mismo código y los mismos 40 casos de la v8: greedy, sin thinking,
+  plantilla nativa, 4 turnos.
+- La base se repitió porque, desde la v8, el código usa el modelo compartido y atención sin
+  cuDNN.
+- Tardó 3 min la base y 11 min el adaptador.
+- Informes: `reports/fase2/phase2_bench_base_v9.json` y `phase2_bench_grpo2_v9.json`.
+
+**Qué pasó.**
+
+| Métrica | Base v8 | Base v9 | + grpo2_lora v9 |
+|---|---|---|---|
+| Selección | 40/40 | 39/40 | **27/40** |
+| Argumentos | 33/40 | 32/40 | **21/40** |
+| Secuencia | 24/40 | 24/40 | 16/40 |
+| Llamadas falsas | 0 | 0 | 0 |
+
+| Categoría (n) | Selección base | Selección grpo2 | Argumentos base | Argumentos grpo2 |
+|---|---|---|---|---|
+| single (20) | 19 | 11 | 13 | 6 |
+| chain (6) | 6 | 4 | 5 | 3 |
+| parallel (4) | 4 | 2 | 4 | 2 |
+| mapping (2) | 2 | 2 | 2 | 2 |
+| no_tool (8) | 8 | 8 | 8 | 8 |
+
+- **Selección por pares:** la base acierta 12 casos que el adaptador falla, y el adaptador no
+  gana ninguno. McNemar exacto bilateral, p = 0,0005.
+- **Por qué falla el adaptador.** De los 12 casos que pierde:
+  - en 9 no llega a hacer una llamada válida. Escribe la llamada entre `<tools>…</tools>`
+    en vez de `<tool_call>…</tool_call>`, la deja sin cerrar, o se pone a razonar y calcular
+    a mano (`yield-02` acaba en LaTeX con un "5.24 %");
+  - en 3 elige otra herramienta. En `irpf-01` y `irpf-03` llama a `rental_returns` con todos
+    los argumentos opcionales a 0.
+- **El GRPO 2 se entrenó para razonar y cerrar con su formato de respuesta, y ha perdido el
+  formato de llamada de Qwen3.**
+- **Base v9 frente a v8:** cambia un solo caso, `rates-02` (subida máxima según el IRAV). En
+  la v9 llama a `get_rent_reference` con «Barcelona» inventada en vez de a
+  `get_market_rates`. Es el cambio de atención (fdef57f): otra aritmética, otro texto greedy
+  en un caso al límite. Una diferencia de 1 sobre 40 no distingue nada.
+
+**Qué concluimos.**
+- `/tools` sigue con el modelo base: `ARCA_TOOLS_ADAPTER` vacío. Es lo que defendemos en la
+  memoria, con estos números.
+- Un adaptador de razonamiento entrenado sin llamadas a herramientas estropea el formato de
+  llamada. Si en la fase 4 el agente usa el GRPO 2, tendrá que generar con el adaptador
+  activado para razonar y desactivado para llamar a herramientas. El modelo compartido ya lo
+  permite por petición.
+- `rates-02` merece una frase más en la descripción de `get_market_rates` ("también el IRAV
+  para actualizar el alquiler") si vuelve a fallar.
