@@ -147,6 +147,22 @@ pasa Santiago: `adapter_config.json`, `adapter_model.safetensors`, `chat_templat
 dir rlm\weights\grpo2_lora
 ```
 
+### Paso 4 bis. El corpus y el índice de la fase 3
+
+`/rag` necesita el corpus (`rag/corpus/`) y los vectores ya calculados (`rag/index/`), que no
+están en git. Calcularlos en el portátil llevaría mucho tiempo, así que se copian de la DGX: el
+paquete es `~/clusters/dgx/rag_demo_fase3.tar.gz` (43 MB, preparado el 23/11). Santiago se lo
+pasa junto con el adaptador, y se descomprime en la carpeta del repositorio:
+
+```powershell
+tar -xzf rag_demo_fase3.tar.gz
+dir rag\index
+```
+
+Tienen que salir tres ficheros `.npy` (las frases, los 2.894 fragmentos y las 8.208 versiones
+de artículos). Si se rehace el corpus con `download_corpus`, el índice deja de coincidir y se
+recalcula al arrancar.
+
 ### Paso 5. El `.env`
 
 ```powershell
@@ -205,3 +221,8 @@ que mandar a los profesores. Comprobar desde el móvil `<URL>/health`.
   4,3 GB de GPU (por separado serían 8,4 GB y no cabrían en 6 GB), con respuestas idénticas
   a las de cada fase cargada sola (comprobado en la DGX el 23/11).
 - Las peticiones se atienden de una en una, también entre fases.
+- `/rag` usa la misma copia de Qwen3-1.7B (sin adaptador). El modelo de embeddings va en CPU
+  (`ARCA_RAG_EMBEDDING_DEVICE=cpu` en el `.env`): con el índice ya calculado solo embebe la
+  pregunta, en menos de un segundo, y no ocupa memoria de la GPU de 6 GB. Probarla con
+  `{"question": "Firmé un contrato de alquiler el 1 de febrero de 2019. ¿Cuál era la duración
+  mínima con las prórrogas?"}`: tiene que devolver `"law_date": "2019-02-01"` y tres años.

@@ -8,8 +8,12 @@ number of chunks, average length, and Recall@k on your gold set.
 
 from __future__ import annotations
 
+import hashlib
 import re
 from dataclasses import dataclass
+from pathlib import Path
+
+import numpy as np
 
 from rag.ingest import Document
 
@@ -53,13 +57,35 @@ def split_sentences(text: str) -> list[str]:
     return [s.strip() for s in sentences if s and s.strip()]
 
 
+def split_long(sentences: list[str], max_chars: int) -> list[str]:
+    """Cut sentences longer than ``max_chars`` at spaces (BOE table rows can be 16k chars)."""
+    out = []
+    for sentence in sentences:
+        while len(sentence) > max_chars:
+            cut = sentence.rfind(" ", 0, max_chars)
+            cut = cut if cut > 0 else max_chars
+            out.append(sentence[:cut].strip())
+            sentence = sentence[cut:].strip()
+        if sentence:
+            out.append(sentence)
+    return out
+
+
+def consecutive_distances(embeddings) -> np.ndarray:
+    """Cosine distance 1 - e_i · e_{i+1} between consecutive L2-normalised rows."""
+    embeddings = np.asarray(embeddings, dtype=np.float32)
+    if len(embeddings) < 2:
+        return np.zeros(0, dtype=np.float32)
+    return 1.0 - np.sum(embeddings[:-1] * embeddings[1:], axis=1)
+
+
 def semantic_chunks(
     documents: list[Document],
     embed_fn,
     distance_threshold: float = 0.25,
     max_chunk_chars: int = 1500,
 ) -> list[Chunk]:
-    """Tu turno: group consecutive sentences while their embeddings stay close.
+    """Group consecutive sentences while their embeddings stay close.
 
     ``embed_fn(list[str]) -> array of shape (n, d)`` with L2-normalised rows (see
     ``rag/embed.py``). The algorithm from the slides:
@@ -72,10 +98,65 @@ def semantic_chunks(
     6. Otherwise close the chunk and start a new one at s_{i+1}.
     7. Also close a chunk when it would exceed ``max_chunk_chars``.
 
-    Plot the distances for one document with the threshold line (as in the slides) and
-    include it in your report: it is the best way to justify the threshold you chose.
+    One addition: sentences longer than ``max_chunk_chars`` (rows of the BOE tables) are cut
+    at spaces first, so that no chunk exceeds the limit.
     """
-    raise NotImplementedError
+    chunks = []
+    for doc in documents:
+        sentences = split_long(split_sentences(doc.text), max_chunk_chars)
+        if not sentences:
+            continue
+        distances = consecutive_distances(embed_fn(sentences))
+        groups, current, size = [], [sentences[0]], len(sentences[0])
+        for sentence, distance in zip(sentences[1:], distances, strict=True):
+            if distance > distance_threshold or size + 1 + len(sentence) > max_chunk_chars:
+                groups.append(current)
+                current, size = [sentence], len(sentence)
+            else:
+                current.append(sentence)
+                size += 1 + len(sentence)
+        groups.append(current)
+        for i, group in enumerate(groups):
+            chunks.append(
+                Chunk(
+                    id=f"{doc.id}-{i:04d}",
+                    doc_id=doc.id,
+                    source=doc.source,
+                    text=" ".join(group),
+                    index=i,
+                )
+            )
+    return chunks
+
+
+class SentenceCache:
+    """Embeds every sentence of the corpus once, cached on disk, and serves as ``embed_fn``.
+
+    Semantic chunking needs one embedding per sentence (~12k in our corpus): without the
+    cache, every start of the API and every threshold tried would embed them again.
+    """
+
+    def __init__(self, documents, embedder, max_chars: int, index_dir: str | Path):
+        self.per_doc = {d.id: split_long(split_sentences(d.text), max_chars) for d in documents}
+        unique = sorted({s for sentences in self.per_doc.values() for s in sentences})
+        key = hashlib.sha1((embedder.model_id + "\0" + "\0".join(unique)).encode()).hexdigest()
+        path = Path(index_dir) / f"sentences-{len(unique)}-{key[:12]}.npy"
+        if path.exists():
+            matrix = np.load(path)
+        else:
+            print(f"embedding {len(unique):,} sentences...", flush=True)
+            matrix = np.asarray(embedder.embed_passages(unique), dtype=np.float32)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            np.save(path, matrix)
+        self.row = {s: i for i, s in enumerate(unique)}
+        self.matrix = matrix
+
+    def __call__(self, sentences: list[str]) -> np.ndarray:
+        return self.matrix[[self.row[s] for s in sentences]]
+
+    def all_distances(self) -> np.ndarray:
+        parts = [consecutive_distances(self(s)) for s in self.per_doc.values() if len(s) > 1]
+        return np.concatenate(parts)
 
 
 def describe(chunks: list[Chunk]) -> dict[str, float]:

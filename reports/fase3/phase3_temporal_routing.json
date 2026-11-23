@@ -1,0 +1,586 @@
+{
+ "summary": {
+  "normal": {
+   "hit@5": 0.5882352941176471,
+   "mrr": 0.4284780578898226
+  },
+  "routed": {
+   "hit@5": 0.5882352941176471,
+   "mrr": 0.4284780578898226
+  },
+  "forced": {
+   "hit@5": 0.6078431372549019,
+   "mrr": 0.41856520385932156
+  },
+  "routed_questions": [
+   "rdl-01",
+   "aeat-03"
+  ],
+  "unresolvable_in_versions": [
+   "lph-01"
+  ]
+ },
+ "per_question": [
+  {
+   "id": "lau-01",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.25,
+   "routed": 0.25,
+   "forced": 0.3333333333333333,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "lau-02",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.5,
+   "routed": 0.5,
+   "forced": 0.5,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "lau-03",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.5,
+   "routed": 0.5,
+   "forced": 1.0,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "lau-04",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 1.0,
+   "routed": 1.0,
+   "forced": 1.0,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "lau-05",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.5,
+   "routed": 0.5,
+   "forced": 0.5,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "lau-06",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.3333333333333333,
+   "routed": 0.3333333333333333,
+   "forced": 0.0,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": false
+  },
+  {
+   "id": "lau-07",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 1.0,
+   "routed": 1.0,
+   "forced": 1.0,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "lau-08",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 1.0,
+   "routed": 1.0,
+   "forced": 0.25,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "lau-09",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.2,
+   "routed": 0.2,
+   "forced": 0.5,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "lau-10",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 1.0,
+   "routed": 1.0,
+   "forced": 1.0,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "lau-11",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.1,
+   "routed": 0.1,
+   "forced": 1.0,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": true
+  },
+  {
+   "id": "lau-12",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.0,
+   "routed": 0.0,
+   "forced": 0.0,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": false
+  },
+  {
+   "id": "viv-01",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 1.0,
+   "routed": 1.0,
+   "forced": 0.5,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "viv-02",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 1.0,
+   "routed": 1.0,
+   "forced": 1.0,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "viv-03",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.0,
+   "routed": 0.0,
+   "forced": 0.0,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": false
+  },
+  {
+   "id": "rdl-01",
+   "routed_to_versions": true,
+   "versions_have_answer": true,
+   "normal": 1.0,
+   "routed": 1.0,
+   "forced": 1.0,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "rdl-02",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 1.0,
+   "routed": 1.0,
+   "forced": 0.5,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "rdl-03",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.5,
+   "routed": 0.5,
+   "forced": 0.2,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "irpf-01",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.0,
+   "routed": 0.0,
+   "forced": 0.25,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": true
+  },
+  {
+   "id": "irpf-02",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.0,
+   "routed": 0.0,
+   "forced": 0.0,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": false
+  },
+  {
+   "id": "irpf-03",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.5,
+   "routed": 0.5,
+   "forced": 0.25,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "irpf-04",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 1.0,
+   "routed": 1.0,
+   "forced": 1.0,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "irpf-05",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.0,
+   "routed": 0.0,
+   "forced": 0.0,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": false
+  },
+  {
+   "id": "aeat-01",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.5,
+   "routed": 0.5,
+   "forced": 0.3333333333333333,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "aeat-02",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.2,
+   "routed": 0.2,
+   "forced": 0.14285714285714285,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": false
+  },
+  {
+   "id": "aeat-03",
+   "routed_to_versions": true,
+   "versions_have_answer": true,
+   "normal": 1.0,
+   "routed": 1.0,
+   "forced": 1.0,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "aeat-04",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.0,
+   "routed": 0.0,
+   "forced": 0.0,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": false
+  },
+  {
+   "id": "aeat-05",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 1.0,
+   "routed": 1.0,
+   "forced": 1.0,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "aeat-06",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.0,
+   "routed": 0.0,
+   "forced": 0.0,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": false
+  },
+  {
+   "id": "aeat-07",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.5,
+   "routed": 0.5,
+   "forced": 0.5,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "itp-01",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 1.0,
+   "routed": 1.0,
+   "forced": 0.1111111111111111,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": false
+  },
+  {
+   "id": "itp-02",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.0,
+   "routed": 0.0,
+   "forced": 0.0,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": false
+  },
+  {
+   "id": "iva-01",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.0,
+   "routed": 0.0,
+   "forced": 0.0,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": false
+  },
+  {
+   "id": "iva-02",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.0,
+   "routed": 0.0,
+   "forced": 0.0,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": false
+  },
+  {
+   "id": "iva-03",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.0,
+   "routed": 0.0,
+   "forced": 0.0,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": false
+  },
+  {
+   "id": "ibi-01",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.1,
+   "routed": 0.1,
+   "forced": 0.3333333333333333,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": true
+  },
+  {
+   "id": "ibi-02",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.16666666666666666,
+   "routed": 0.16666666666666666,
+   "forced": 0.3333333333333333,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": true
+  },
+  {
+   "id": "plus-01",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.14285714285714285,
+   "routed": 0.14285714285714285,
+   "forced": 0.0,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": false
+  },
+  {
+   "id": "cat-01",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.25,
+   "routed": 0.25,
+   "forced": 1.0,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "hip-01",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.1,
+   "routed": 0.1,
+   "forced": 0.5,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": true
+  },
+  {
+   "id": "hip-02",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 1.0,
+   "routed": 1.0,
+   "forced": 0.5,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "hip-03",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.2,
+   "routed": 0.2,
+   "forced": 1.0,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "bde-01",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.16666666666666666,
+   "routed": 0.16666666666666666,
+   "forced": 0.16666666666666666,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": false
+  },
+  {
+   "id": "bde-02",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 1.0,
+   "routed": 1.0,
+   "forced": 1.0,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "lph-01",
+   "routed_to_versions": false,
+   "versions_have_answer": false,
+   "normal": 0.5,
+   "routed": 0.5,
+   "forced": 0.0,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": false
+  },
+  {
+   "id": "zon-01",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.14285714285714285,
+   "routed": 0.14285714285714285,
+   "forced": 0.14285714285714285,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": false
+  },
+  {
+   "id": "zon-02",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.0,
+   "routed": 0.0,
+   "forced": 0.0,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": false
+  },
+  {
+   "id": "zon-03",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.0,
+   "routed": 0.0,
+   "forced": 0.0,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": false
+  },
+  {
+   "id": "ser-01",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.0,
+   "routed": 0.0,
+   "forced": 0.0,
+   "normal_hit5": false,
+   "routed_hit5": false,
+   "forced_hit5": false
+  },
+  {
+   "id": "irav-01",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 1.0,
+   "routed": 1.0,
+   "forced": 1.0,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  },
+  {
+   "id": "irav-02",
+   "routed_to_versions": false,
+   "versions_have_answer": true,
+   "normal": 0.5,
+   "routed": 0.5,
+   "forced": 0.5,
+   "normal_hit5": true,
+   "routed_hit5": true,
+   "forced_hit5": true
+  }
+ ]
+}
