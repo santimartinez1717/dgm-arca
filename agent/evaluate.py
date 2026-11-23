@@ -276,6 +276,10 @@ def run_task(agent: Any, task: dict, brain: str, max_steps: int, hang_s: float |
         "audit": audit,
         "audit_rejections": int((audit or {}).get("rejections", 0)),
         "open_questions": response.get("open_questions", []),
+        # optional fields of /agent (issue 21): what the traces and the viewer show
+        "levers": response.get("levers", []),
+        "scenarios": response.get("scenarios", []),
+        "case_file": response.get("case_file"),
         "crash": crash,
         "seconds": round(time.perf_counter() - started, 2),
     }
@@ -450,7 +454,30 @@ def trace_markdown(row: dict, label: str) -> str:
             lines += [f"**Acción:** `{step['action']['name']}` `{args}`", ""]
         if step.get("observation") is not None:
             lines += ["**Observación:**", "", "```", str(step["observation"])[:2000], "```", ""]
+    if row.get("levers"):
+        lines += ["## Palancas (find_levers)", ""]
+        lines += [
+            f"- `{lv.get('id')}` ({lv.get('level')}): {lv.get('title', '')} · "
+            f"{lv.get('source', '')}"
+            for lv in row["levers"]
+        ]
+        lines.append("")
+    if row.get("scenarios"):
+        lines += ["## Escenarios (what_if)", "", "```json"]
+        lines += [json.dumps(s, ensure_ascii=False) for s in row["scenarios"]]
+        lines += ["```", ""]
+    if row.get("audit"):
+        lines += [
+            "## Auditor",
+            "",
+            "```json",
+            json.dumps(row["audit"], ensure_ascii=False),
+            "```",
+            "",
+        ]
     lines += ["## Respuesta final", "", row["final_answer"] or "—", ""]
+    if row.get("case_file"):
+        lines += ["## Expediente al final", "", "```", row["case_file"], "```", ""]
     return "\n".join(lines)
 
 

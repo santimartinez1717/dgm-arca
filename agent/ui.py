@@ -157,14 +157,21 @@ def render_scenarios(scenarios: list[dict]) -> list[str]:
 
 
 def render_audit(audit: dict | None) -> list[str]:
+    """The auditor's verdict, in the shape the loop returns (``agent/react_agent.py``):
+    ``{enabled, rejections, ok, unsupported_numbers, unknown_citations, disclaimer_added}``,
+    plus an optional ``history`` of the rejected answers."""
     if not audit:
         return []
     rejections = int(audit.get("rejections", 0))
     history = audit.get("history") or []
-    lines = []
-    for i, rejected in enumerate(history, 1):
-        lines.append(f"rechazo {i}: " + _audit_reasons(rejected))
-    if audit.get("ok", True) and not audit.get("unsupported_numbers"):
+    lines = [f"rechazo {i}: " + _audit_reasons(r) for i, r in enumerate(history, 1)]
+    passed = audit.get("ok", True) and not audit.get("unsupported_numbers")
+    if audit.get("enabled") is False:  # the no_auditor ablation: what it would have said
+        verdict = (
+            "la habría aprobado" if passed else "la habría rechazado: " + _audit_reasons(audit)
+        )
+        return [card("AUDITOR · desactivado (ablación)", verdict, "case")]
+    if passed:
         title = "AUDITOR · aprobada" + (f" tras {rejections} rechazo(s)" if rejections else "")
         if audit.get("disclaimer_added"):
             lines.append("se añadió el aviso y la remisión a un asesor")
@@ -172,7 +179,7 @@ def render_audit(audit: dict | None) -> list[str]:
             card(title, "\n".join(lines) or "cada cifra y cada cita salen de una tool", "audit_ok")
         ]
     lines.append(_audit_reasons(audit))
-    title = f"AUDITOR · rechazada ({rejections} rechazo(s))"
+    title = f"AUDITOR · rechazada ({rejections} rechazo(s)); se entrega sin aprobar"
     return [card(title, "\n".join(lines), "audit_rejected")]
 
 

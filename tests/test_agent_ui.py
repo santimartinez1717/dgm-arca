@@ -105,6 +105,29 @@ def test_render_trace_with_every_optional_field():
     assert "3 pasos · 2140 tokens" in page
 
 
+# The shapes the loop of issue 20 returns (agent/react_agent.py::_response).
+LOOP_REJECTED = {
+    "enabled": True,
+    "rejections": 2,
+    "ok": False,
+    "unsupported_numbers": ["6,9 %"],
+    "unknown_citations": [],
+    "disclaimer_added": True,
+}
+LOOP_DISABLED = {**LOOP_REJECTED, "enabled": False, "rejections": 0}
+
+
+def test_audit_in_the_shape_of_the_loop():
+    page = ui.render_trace({**OLD, "audit": LOOP_REJECTED})
+    assert "arca-audit_rejected" in page and "6,9 %" in page and "se entrega sin aprobar" in page
+    page = ui.render_trace({**OLD, "audit": LOOP_DISABLED})
+    assert "desactivado (ablación)" in page and "habría rechazado" in page
+    assert "arca-audit_rejected" not in page
+    ok = {**LOOP_REJECTED, "ok": True, "unsupported_numbers": [], "rejections": 0}
+    assert "habría aprobado" in ui.render_trace({**OLD, "audit": {**ok, "enabled": False}})
+    assert "AUDITOR · aprobada" in ui.render_trace({**OLD, "audit": ok})
+
+
 def test_rejected_audit_is_red():
     page = ui.render_trace(
         {**FULL, "audit": {"ok": False, "rejections": 2, "unsupported_numbers": ["5,1 %"]}}
