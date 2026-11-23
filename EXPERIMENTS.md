@@ -2361,3 +2361,49 @@ construcción en paralelo, así que `_pipeline()` lleva ahora un candado.
   después de repetir búsquedas hasta el "NOT RUN".
 - Pendiente para el núcleo, fuera del bucle: que `search_knowledge_base` no acepte un `on_date`
   que la tarea no menciona, y probar `brain=rlm` (aquí no está el adaptador del GRPO 2).
+
+---
+
+### 2026-11-24 · Fase 4 · Leyes autonómicas recortadas al ITP y a las deducciones por alquilar (issue #13)
+
+**Qué queríamos saber.** Si recortar las cuatro leyes autonómicas recupera la recuperación de la
+fase 3. Las leyes enteras la habían empeorado: R@5 de 0,529 a 0,510 y MRR de 0,421 a 0,395 (entrada
+del 23/11).
+
+**Qué hicimos.** En `rag/download_corpus.py` dejamos de cada ley solo esto:
+
+- Madrid: los artículos 8, 8 bis y 8 ter (deducciones por alquilar, que citan las palancas) y el
+  capítulo del ITP, artículos 27 a 38;
+- Andalucía: los artículos 41 a 51;
+- Cataluña: los artículos 641 a 642;
+- Comunitat Valenciana: el artículo 13.
+
+Las leyes pasan de 169-234 KB a 20-42 KB y el corpus, de 3.883 a 3.126 fragmentos. El filtro de
+artículos toma ahora el número del título del artículo y no el identificador del bloque del BOE,
+que en los códigos autonómicos no coincide.
+
+Volvimos a descargar con `--only boe --force` y repetimos la misma evaluación con
+`scripts/fase4/recortar_autonomicas_eval.sh`, que tardó 956 s.
+
+**Qué pasó.** Semántico p90, híbrido λ = 0,2:
+
+| Corpus | Fragmentos | R@5 (51) | MRR (51) | R@5 (59) | MRR (59) |
+|---|---|---|---|---|---|
+| Fase 3, antes de ampliar | 2.897 | 0,529 | 0,421 | — | — |
+| Ampliado, leyes enteras | 3.883 | 0,510 | 0,395 | 0,492 | 0,375 |
+| Ampliado, leyes recortadas | 3.126 | **0,549** | 0,411 | **0,542** | 0,409 |
+
+De las 8 preguntas nuevas, 4 tienen un fragmento relevante en el top 5 (antes 3): ccaa-02 (1),
+ccaa-05 (2), lec-01 (1) y lec-02 (2). ccaa-03 queda en la posición 6. ccaa-01, ccaa-04 y lis-01
+siguen fuera del top 10.
+
+**Qué concluimos.**
+
+- El recorte resuelve el empeoramiento. Con las 51 preguntas de la fase 3, el R@5 supera al de
+  antes de ampliar el corpus (0,549 frente a 0,529). El MRR queda 0,010 por debajo, con 51
+  preguntas.
+- Lo que diluía el ranking era el tamaño de las leyes, no su tema.
+- Las citas del playbook y del conjunto dorado se siguen localizando en el corpus recortado.
+- Para usarlo en una máquina ya montada: `uv run python -m rag.download_corpus --only boe --force`.
+  La primera carga reindexa (unos 5 min en GPU). La DGX que sirve la API para la evaluación del
+  24/11 se queda con el corpus probado.
