@@ -61,7 +61,8 @@ def test_acquisition_cost_uses_reference_value_and_regional_itp(registry):
         renovation=12000,
     )
     assert result["transfer_tax"] == 13650 and result["total"] == 208850
-    assert any("sin verificar" in w for w in result["warnings"])
+    # Every row was checked against an official source on 2026-11-23 (tool_use/itp_rates.py).
+    assert not any("sin verificar" in w for w in result["warnings"])
 
 
 def test_acquisition_cost_new_build_needs_ajd(registry):
@@ -362,3 +363,75 @@ def test_a_loan_error_names_only_what_is_missing(registry):
 def test_twelve_vacant_months_is_rejected(registry):
     args = {"total_investment": 210000, "monthly_rent": 950, "vacant_months": 12}
     assert "EMPTY" in registry.call("rental_returns", args).error
+
+
+def test_save_to_portfolio_without_area_saves_and_asks_for_it(registry):
+    # The user gave no area: the tool must not need one (the model filled 180 m2 from a
+    # 180,000 EUR price when it was required), and it says the m2 threshold is incomplete.
+    saved = run(
+        registry,
+        "save_to_portfolio",
+        label="Piso en Valencia",
+        municipality="Valencia",
+        stressed_zone=False,
+        purchase_price=180000,
+        monthly_rent=900,
+    )
+    assert saved["saved"] and saved["portfolio"]["residential_m2"] == 0
+    assert saved["portfolio"]["dwellings_without_area"] == 1
+    assert any("superficie" in w for w in saved["warnings"])
+    listed = run(registry, "get_portfolio")
+    assert listed["properties"][0]["area_m2"] is None and listed["dwellings_without_area"] == 1
+    assert "sin contar la superficie de 1" in listed["large_holder_reason"]
+
+
+def test_area_comes_after_price_and_rent(registry):
+    # Argument order decides which number the model fills first (EXPERIMENTS.md, 22/11).
+    schema = registry.tools["save_to_portfolio"].definition["function"]["parameters"]
+    params = list(schema["properties"])
+    assert params.index("area_m2") > params.index("monthly_rent")
+    assert "area_m2" not in schema["required"]
+
+
+def test_old_portfolio_database_with_required_area_is_migrated(tmp_path, monkeypatch):
+    import sqlite3
+
+    path = tmp_path / "old.sqlite"
+    with sqlite3.connect(path) as conn:
+        conn.execute(
+            "CREATE TABLE properties (id INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT NOT NULL,"
+            " municipality TEXT NOT NULL, area_m2 REAL NOT NULL, stressed_zone INTEGER NOT NULL,"
+            " purchase_price REAL, monthly_rent REAL, cadastral_ref TEXT UNIQUE,"
+            " added_at TEXT NOT NULL)"
+        )
+        conn.execute(
+            "INSERT INTO properties (label, municipality, area_m2, stressed_zone, added_at)"
+            " VALUES ('Piso', 'Zaragoza', 85, 0, '2026-11-20T10:00:00')"
+        )
+    monkeypatch.setenv("ARCA_PORTFOLIO_DB", str(path))
+    registry = default_registry()
+    run(registry, "save_to_portfolio", label="Otro", municipality="Zaragoza", stressed_zone=False)
+    listed = run(registry, "get_portfolio")
+    assert [p["area_m2"] for p in listed["properties"]] == [85, None]
+
+
+def test_save_to_portfolio_looks_up_the_stressed_zone_when_not_given(registry):
+    # The model passed stressed_zone=false without checking (Valencia, 23/11): if the user
+    # does not say, the tool reads the zone table itself.
+    barcelona = run(registry, "save_to_portfolio", label="A", municipality="Barcelona")
+    zaragoza = run(registry, "save_to_portfolio", label="B", municipality="Zaragoza")
+    gijon = run(registry, "save_to_portfolio", label="C", municipality="Gijón")
+    assert barcelona["stressed_zone"] is True and "BOE" in barcelona["stressed_zone_source"]
+    assert zaragoza["stressed_zone"] is False
+    # Only part of Gijón is declared: the tool cannot tell, so it stores no value and says so.
+    assert gijon["stressed_zone"] is None
+    assert any("parte" in w for w in gijon["warnings"])
+    zone = run(registry, "get_portfolio", municipality="Barcelona")
+    assert zone["dwellings_in_zone"] == 1
+
+
+def test_stressed_zone_given_by_the_user_wins(registry):
+    saved = run(
+        registry, "save_to_portfolio", label="A", municipality="Barcelona", stressed_zone=False
+    )
+    assert saved["stressed_zone"] is False and "stressed_zone_source" not in saved

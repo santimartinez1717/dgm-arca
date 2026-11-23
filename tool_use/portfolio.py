@@ -22,6 +22,7 @@ from typing import Annotated, Any
 from pydantic import Field
 
 from rlm import realestate_rules as rules
+from tool_use.public_data import declared_zones
 from tool_use.registry import tool
 
 DEFAULT_DB = Path("outputs/portfolio.sqlite")
@@ -31,8 +32,8 @@ CREATE TABLE IF NOT EXISTS properties (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     label TEXT NOT NULL,
     municipality TEXT NOT NULL,
-    area_m2 REAL NOT NULL,
-    stressed_zone INTEGER NOT NULL,
+    area_m2 REAL,
+    stressed_zone INTEGER,
     purchase_price REAL,
     monthly_rent REAL,
     cadastral_ref TEXT UNIQUE,
@@ -51,7 +52,21 @@ def _connect() -> sqlite3.Connection:
     conn = sqlite3.connect(path)
     conn.row_factory = sqlite3.Row
     conn.execute(SCHEMA)
+    _allow_missing_area(conn)
     return conn
+
+
+def _allow_missing_area(conn: sqlite3.Connection) -> None:
+    """Databases created before 2026-11-23 required area_m2 and stressed_zone: copy them to
+    the current schema, where both may be unknown."""
+    columns = {row["name"]: row["notnull"] for row in conn.execute("PRAGMA table_info(properties)")}
+    if not (columns.get("area_m2") or columns.get("stressed_zone")):
+        return
+    with conn:
+        conn.execute("ALTER TABLE properties RENAME TO properties_old")
+        conn.execute(SCHEMA)
+        conn.execute("INSERT INTO properties SELECT * FROM properties_old")
+        conn.execute("DROP TABLE properties_old")
 
 
 def _normalise(text: str) -> str:
@@ -62,10 +77,10 @@ def _normalise(text: str) -> str:
 def save_to_portfolio(
     label: Annotated[str, Field(min_length=1, max_length=200)],
     municipality: Annotated[str, Field(min_length=1, max_length=100)],
-    area_m2: Annotated[float, Field(gt=0)],
-    stressed_zone: bool,
+    stressed_zone: bool | None = None,
     purchase_price: Annotated[float, Field(ge=0)] | None = None,
     monthly_rent: Annotated[float, Field(ge=0)] | None = None,
+    area_m2: Annotated[float, Field(gt=0)] | None = None,
     cadastral_ref: Annotated[str, Field(min_length=14, max_length=20)] | None = None,
 ) -> dict[str, Any]:
     """Save a dwelling the user owns or has bought to their portfolio (writes to a database).
@@ -76,12 +91,28 @@ def save_to_portfolio(
     Args:
         label: Short name for the dwelling, usually its address.
         municipality: Municipality where it is, e.g. "Barcelona".
-        area_m2: Built residential area in square metres.
-        stressed_zone: True if it is in a declared stressed residential market zone.
+        stressed_zone: Only if the user says whether it is in a stressed zone; otherwise
+            leave it out and the tool looks the municipality up.
         purchase_price: Purchase price in euros, if known.
         monthly_rent: Current monthly rent in euros, if rented.
-        cadastral_ref: Cadastral reference (20 characters), if known.
+        area_m2: Built residential area in square metres, only if the user gives it.
+        cadastral_ref: Cadastral reference exactly as the user writes it (14 or 20
+            characters); leave it out if the user gives none, never make one up.
     """
+    warnings: list[str] = []
+    zone_source = None
+    if stressed_zone is None:
+        zones = declared_zones(municipality)
+        if not zones:
+            stressed_zone, zone_source = False, "tabla de zonas tensionadas declaradas"
+        elif any(z["partial"] for z in zones):
+            warnings.append(
+                f"solo parte de {municipality} es zona tensionada: el piso se guarda sin saber "
+                "si está dentro; pregunta al usuario"
+            )
+        else:
+            stressed_zone = True
+            zone_source = max(zones, key=lambda z: z["valid_from"])["source"]
     with closing(_connect()) as conn, conn:
         if cadastral_ref:
             row = conn.execute(
@@ -96,7 +127,7 @@ def save_to_portfolio(
                 label.strip(),
                 municipality.strip(),
                 area_m2,
-                int(stressed_zone),
+                None if stressed_zone is None else int(stressed_zone),
                 purchase_price,
                 monthly_rent,
                 cadastral_ref.upper() if cadastral_ref else None,
@@ -104,14 +135,26 @@ def save_to_portfolio(
             ),
         )
         new_id = cursor.lastrowid
-    return {"saved": True, "id": new_id, "portfolio": _summary(_rows(), None, False)}
+    out: dict[str, Any] = {"saved": True, "id": new_id, "stressed_zone": stressed_zone}
+    if zone_source:
+        out["stressed_zone_source"] = zone_source
+    if area_m2 is None:
+        warnings.append(
+            "superficie no dada: el piso se guarda sin m² y el umbral de 1.500 m² de gran "
+            "tenedor no la cuenta; pide la superficie al usuario"
+        )
+    if warnings:
+        out["warnings"] = warnings
+    out["portfolio"] = _summary(_rows(), None, False)
+    return out
 
 
 def _rows() -> list[dict[str, Any]]:
     with closing(_connect()) as conn:
         rows = [dict(r) for r in conn.execute("SELECT * FROM properties ORDER BY id")]
     for row in rows:
-        row["stressed_zone"] = bool(row["stressed_zone"])
+        if row["stressed_zone"] is not None:
+            row["stressed_zone"] = bool(row["stressed_zone"])
         row.pop("added_at", None)
     return rows
 
@@ -119,7 +162,8 @@ def _rows() -> list[dict[str, Any]]:
 def _summary(
     rows: list[dict[str, Any]], municipality: str | None, zone_lowers_threshold: bool
 ) -> dict[str, Any]:
-    total_m2 = sum(r["area_m2"] for r in rows)
+    total_m2 = sum(r["area_m2"] for r in rows if r["area_m2"] is not None)
+    without_area = sum(r["area_m2"] is None for r in rows)
     in_zone = [
         r
         for r in rows
@@ -141,9 +185,12 @@ def _summary(
         reason = f"5 o más viviendas en la zona tensionada de {municipality}"
     else:
         reason = "no supera ningún umbral del art. 3.k de la Ley 12/2023"
+        if without_area:
+            reason += f" (sin contar la superficie de {without_area} piso(s) sin m²)"
     return {
         "dwellings": len(rows),
         "residential_m2": rules.round2(total_m2),
+        "dwellings_without_area": without_area,
         "dwellings_in_zone": len(in_zone) if municipality else None,
         "large_holder": large,
         "large_holder_reason": reason,

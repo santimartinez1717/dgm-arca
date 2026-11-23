@@ -1930,3 +1930,297 @@ Auditoría del motor de reglas (versión del 15/09/2026 frente a la del 22/11/20
   1/12/2026 sigue valiendo, por la transitoria 38.ª; eso lo decide una persona. Cuando se
   fusione la fase 2, que añade `rental_reduction_pct_2026` al motor, hay que darle reglas en
   `RULES`.
+### 2026-11-23 · API · Servir la fase 1 fuera de la DGX y una sola copia del modelo para todas las fases
+
+**Qué queríamos saber.** Si la API con el modelo final (GRPO 2) se puede servir desde un
+portátil para la corrección: el MacBook Air M2 de 8 GB del equipo o un portátil Windows con una
+RTX 3060 de 6 GB. Y, en ese caso, si caben la fase 1 y la fase 2 a la vez.
+
+**Qué hicimos.**
+- **Mac.** `uv run --env-file .env arca-api` con el adaptador en la GPU de Apple (MPS,
+  bfloat16), y la misma pregunta de coste de adquisición dos veces por `curl`.
+- **MLX.** Fusionamos el GRPO 2 con la base y lo convertimos con
+  `mlx_lm.convert -q --q-bits 8` (1,8 GB, en Hugging Face privado,
+  `umbral-qwen3-1.7b-grpo2-mlx-8bit`). Añadimos `ARCA_RLM_MLX` y `rlm/eval_mlx.py` para
+  medirlo.
+- **Modelo compartido.** `api/shared_model.py` carga Qwen3-1.7B una vez. La fase 1 genera con
+  el adaptador GRPO 2 y la fase 2 con `disable_adapter()`, todo en un solo hilo. Lo comparamos
+  en la GPU de la DGX con cada fase cargada por separado (como antes): la misma pregunta, 300 y
+  200 tokens greedy, alternando fase 2, fase 1, fase 2, fase 1.
+
+**Qué pasó.**
+- **Mac.**
+  - La primera petición respondió bien (355.552,50 €): 477 tokens en 132 s con la carga, unos
+    2,5 tokens/s.
+  - La segunda se quedaba colgada para siempre. FastAPI atiende cada petición en un hilo
+    distinto y, en MPS, el modelo cargado en un hilo se bloqueaba al generar desde otro. Desde
+    entonces, cargar y generar van siempre en el mismo hilo.
+  - Con 8 GB de memoria compartida, a ese ritmo una respuesta de 1.900 tokens tardaría más de
+    10 minutos. Descartado.
+- **MLX.** No lo pudimos medir en el Mac. En la DGX, `mlx[cuda12]` compila sus kernels contra
+  las cabeceras de CUDA 12.6 del sistema y falla. Queda como plan B sin probar.
+- **Fusionar el adaptador cambia el texto.** En el Mac, con el adaptador fusionado, la misma
+  pregunta dio 506 tokens en vez de 477, con la misma respuesta final. Es el redondeo en
+  bfloat16 de W + BA. El modelo compartido vuelve a usarlo sin fusionar, como
+  `rlm/evaluate.py`.
+- **Modelo compartido**, en la GPU de la DGX (`max_memory_reserved`):
+
+| Configuración | Memoria de GPU |
+|---|---|
+| Fase 1 sola (base + GRPO 2) | 4,22 GB |
+| Fase 2 sola (base) | 4,13 GB |
+| Las dos por separado | 8,35 GB |
+| **Las dos con el modelo compartido** | **4,31 GB** |
+
+  - Las cuatro generaciones alternadas son idénticas carácter a carácter a las de cada fase
+    sola.
+  - Velocidad en la DGX: 29 tokens/s. La primera generación tras cargar tardó 128 s y la
+    segunda 10 s, así que hay que calentar la API antes de abrirla.
+
+**Qué concluimos.**
+- **El Mac no sirve** para la corrección. Lo que sirve es la DGX (entrada anterior) o un
+  portátil con NVIDIA y Docker, siguiendo `docs/servir_api.md`; esa guía está sin ensayar.
+- **Sin el modelo compartido, la API no cabe en 6 GB.** `/health` carga todas las fases al
+  primer aviso. Con él caben las dos con margen.
+- **Norma para las fases 3 y 4:** reutilizar `api/shared_model.get_model()` con su adaptador
+  en vez de cargar otra copia del modelo.
+
+---
+
+### 2026-11-23 · Fase 2 · Tipos de ITP verificados con fuentes oficiales
+
+**Qué queríamos saber.** La tabla de `tool_use/itp_rates.py` (17 comunidades) venía de una
+fuente secundaria (Gibobs, consultada el 17/11) y la herramienta avisaba "tipo de ITP sin
+verificar". Queríamos saber si los tipos eran correctos.
+
+**Qué hicimos.** Cotejamos cada fila con la hacienda autonómica o foral, su boletín oficial o
+el BOE, y dejamos el enlace junto a la fila. En el País Vasco cotejamos las tres haciendas
+forales.
+
+**Qué pasó.** Las 17 filas quedan con `verified=True`. Cuatro tipos generales estaban mal en
+la fuente secundaria:
+
+| Comunidad | Gibobs | Oficial |
+|---|---|---|
+| Cantabria | 10 % | 9 % (desde el 1/1/2024) |
+| Comunitat Valenciana | 10 % | 9 % (10 % para devengos anteriores al 1/6/2026) |
+| Galicia | 10 % | 8 % |
+| Murcia | 8 % | 7,75 % |
+
+Siete notas cambian:
+- **Aragón, Baleares, Cataluña y Extremadura:** ahora llevan los tramos con sus importes.
+- **Asturias:** no es una escala por tramos. El tipo se elige por el valor total y se aplica
+  a toda la base.
+- **Castilla y León:** la nota faltaba. Lo que pasa de 250.000 € tributa al 10 %.
+- **País Vasco:** la vivienda pierde el 4 % si el comprador tiene más de cinco.
+
+**Qué concluimos.**
+- Una de cada cuatro filas tenía mal el tipo general. Con datos que cambian cada año por ley
+  de presupuestos, la fuente secundaria no basta.
+- El banco de la fase 2 comprueba argumentos, no cifras, así que sus resultados no cambian.
+  La fase 1 no usa la tabla: cada problema da su tipo.
+- Hay que revisar la tabla con cada ley de presupuestos autonómica.
+
+---
+
+### 2026-11-23 · API · La primera petición de cada longitud iba a 2,8 tokens/s: atención de cuDNN
+
+**Qué queríamos saber.** Servida en la DGX, la primera `/reasoning` tardaba 145 s (2,8
+tokens/s). Queríamos saber si era Docker, el modelo compartido (3131fb3) o la partición MIG,
+y si una sesión con más GPU lo arreglaría.
+
+**Qué hicimos.** Medimos la misma pregunta de `/reasoning` (piso de 100.000 €, unos 400
+tokens) y una de `/tools` con `uv run arca-api`, sin Docker, en la MIG 1g.18gb, lanzando
+varias peticiones seguidas tras cada arranque. Después probamos
+`torch.backends.cuda.enable_cudnn_sdp(False)` en `api/shared_model.py`, como ya se hizo en el
+GRPO.
+
+**Qué pasó.**
+
+| Situación | 1.ª petición | Siguientes |
+|---|---|---|
+| Antes del modelo compartido (9e0ad62), `/reasoning` | 137 s (2,9 tok/s) | 6,3 s (64 tok/s) |
+| Modelo compartido (3131fb3), `/reasoning` | 142 s (2,8 tok/s) | 11-12 s (34-37 tok/s) |
+| Ídem, `/tools` | 70 s | 4 s |
+| `/reasoning` con 16 tokens y después la pregunta completa | 12,7 s y luego **145 s** | — |
+| **Sin atención de cuDNN**, `/reasoning` | **18,9 s** (37 tok/s, incluye la carga) | 12,6 s (38 tok/s) |
+| **Sin atención de cuDNN**, `/tools` | **4,0 s** | 3,9 s |
+
+- No era ni Docker ni la GPU. Era el arranque en frío de la atención de cuDNN, que construye
+  un plan por cada longitud de secuencia nueva.
+- Por eso calentar con una pregunta corta no servía, y calentar `/tools` no calentaba
+  `/reasoning`.
+- Sin cuDNN, la misma pregunta genera 479 tokens en vez de 401: otro kernel de atención,
+  otra aritmética, otro texto greedy. La respuesta sigue siendo correcta (111.000,00).
+
+**Qué concluimos.**
+- `api/shared_model.py` desactiva la atención de cuDNN en GPU (fdef57f). No hace falta pedir
+  una sesión más grande para la corrección.
+- La diferencia 64 frente a 37 tok/s entre antes y después del modelo compartido sale de una
+  sola medida: no está confirmada.
+- Pendiente: comprobar que el pass@1 de la fase 1 servido sin cuDNN no baja. El 47,3 % se
+  midió con el backend por defecto.
+
+---
+
+### 2026-11-23 · Fase 2 · Banco v9: modelo base frente al adaptador GRPO 2 en /tools
+
+**Qué queríamos saber.**
+- Si `/tools` mejora con el adaptador de la fase 1 (`grpo2_lora`, 47,3 % en test).
+- Con el modelo compartido (3131fb3) no cuesta memoria: basta con cambiar
+  `ARCA_TOOLS_ADAPTER` en el `.env`.
+- Hasta ahora solo se había probado el adaptador del primer GRPO (`final_rlm_lora`), con un
+  banco antiguo (`reports/fase2/phase2_bench_grpo.json`).
+
+**Qué hicimos.** `bash scripts/fase2/fase2_bench_v9.sh` (d7cb17a):
+- Las dos pasadas usan el mismo código y los mismos 40 casos de la v8: greedy, sin thinking,
+  plantilla nativa, 4 turnos.
+- La base se repitió porque, desde la v8, el código usa el modelo compartido y atención sin
+  cuDNN.
+- Tardó 3 min la base y 11 min el adaptador.
+- Informes: `reports/fase2/phase2_bench_base_v9.json` y `phase2_bench_grpo2_v9.json`.
+
+**Qué pasó.**
+
+| Métrica | Base v8 | Base v9 | + grpo2_lora v9 |
+|---|---|---|---|
+| Selección | 40/40 | 39/40 | **27/40** |
+| Argumentos | 33/40 | 32/40 | **21/40** |
+| Secuencia | 24/40 | 24/40 | 16/40 |
+| Llamadas falsas | 0 | 0 | 0 |
+
+| Categoría (n) | Selección base | Selección grpo2 | Argumentos base | Argumentos grpo2 |
+|---|---|---|---|---|
+| single (20) | 19 | 11 | 13 | 6 |
+| chain (6) | 6 | 4 | 5 | 3 |
+| parallel (4) | 4 | 2 | 4 | 2 |
+| mapping (2) | 2 | 2 | 2 | 2 |
+| no_tool (8) | 8 | 8 | 8 | 8 |
+
+- **Selección por pares:** la base acierta 12 casos que el adaptador falla, y el adaptador no
+  gana ninguno. McNemar exacto bilateral, p = 0,0005.
+- **Por qué falla el adaptador.** De los 12 casos que pierde:
+  - en 9 no llega a hacer una llamada válida. Escribe la llamada entre `<tools>…</tools>`
+    en vez de `<tool_call>…</tool_call>`, la deja sin cerrar, o se pone a razonar y calcular
+    a mano (`yield-02` acaba en LaTeX con un "5.24 %");
+  - en 3 elige otra herramienta. En `irpf-01` y `irpf-03` llama a `rental_returns` con todos
+    los argumentos opcionales a 0.
+- **El GRPO 2 se entrenó para razonar y cerrar con su formato de respuesta, y ha perdido el
+  formato de llamada de Qwen3.**
+- **Base v9 frente a v8:** cambia un solo caso, `rates-02` (subida máxima según el IRAV). En
+  la v9 llama a `get_rent_reference` con «Barcelona» inventada en vez de a
+  `get_market_rates`. Es el cambio de atención (fdef57f): otra aritmética, otro texto greedy
+  en un caso al límite. Una diferencia de 1 sobre 40 no distingue nada.
+
+**Qué concluimos.**
+- `/tools` sigue con el modelo base: `ARCA_TOOLS_ADAPTER` vacío. Es lo que defendemos en la
+  memoria, con estos números.
+- Un adaptador de razonamiento entrenado sin llamadas a herramientas estropea el formato de
+  llamada. Si en la fase 4 el agente usa el GRPO 2, tendrá que generar con el adaptador
+  activado para razonar y desactivado para llamar a herramientas. El modelo compartido ya lo
+  permite por petición.
+- `rates-02` merece una frase más en la descripción de `get_market_rates` ("también el IRAV
+  para actualizar el alquiler") si vuelve a fallar.
+
+---
+
+### 2026-11-23 · Fase 2 · save_to_portfolio sin superficie obligatoria (banco v10)
+
+**Qué queríamos saber.** Probando la API (entrada de `docker compose up api` en la DGX), a
+"Guarda en mi cartera un piso en Valencia de 180.000 € alquilado por 900 € al mes" el modelo
+respondió con `area_m2=180`. Copió la cifra del precio porque `area_m2` era obligatoria y el
+usuario no la había dado. Queríamos que la herramienta no obligue a inventarla.
+
+**Qué hicimos.**
+- **`area_m2` pasa a ser opcional.** Va después de `purchase_price` y `monthly_rent` (el
+  orden de los argumentos decide qué cifra rellena primero el modelo, 22/11), con la
+  descripción "only if the user gives it".
+- **Sin superficie, el piso se guarda igual.** La herramienta devuelve el aviso "superficie no
+  dada… pide la superficie al usuario".
+- **El resumen de la cartera** cuenta `dwellings_without_area`. Si no hay gran tenedor, la
+  razón aclara que no se cuenta la superficie de esos pisos.
+- **Las bases antiguas,** con `area_m2 NOT NULL`, se copian solas al esquema nuevo.
+- Tres tests nuevos.
+- Banco completo con `bash scripts/fase2/fase2_bench_v10.sh`: modelo base, 40 casos, 3 min.
+
+**Qué pasó.**
+
+| Métrica | Base v9 | Base v10 |
+|---|---|---|
+| Selección | 39/40 | 40/40 |
+| Argumentos | 32/40 | 34/40 |
+| Secuencia | 24/40 | 24/40 |
+| Llamadas falsas | 0 | 0 |
+
+- **Cambian dos casos, los dos a mejor.**
+  - `port-01` (guardar con 85 m²): en la v9 se inventaba `cadastral_ref="12121212121212"`;
+    ahora no.
+  - `rates-02` vuelve a llamar a `get_market_rates`. Es ruido de un caso al límite que se mueve
+    con cualquier cambio del prompt.
+- **La pregunta de Valencia, por la API:** `area_m2=null`, con el aviso, en 4,3 s.
+- **Con "95 m²" en la pregunta (Sevilla):** `area_m2=95`.
+- **La respuesta final sale en inglés** en las dos preguntas, como ya pasó con la de Barcelona.
+
+**Qué concluimos.**
+- `save_to_portfolio` ya no obliga a inventar la superficie.
+- Pendiente: el modelo responde en inglés tras algunas herramientas. Probablemente porque los
+  resultados y las descripciones están en inglés; habría que pedir en el prompt de sistema
+  que responda en el idioma del usuario.
+- `stressed_zone` sigue siendo obligatorio y el modelo lo rellena con `false` sin
+  comprobarlo. Se podría consultar solo con la tabla de zonas.
+
+---
+
+### 2026-11-23 · Fase 2 · Respuestas en español y zona tensionada consultada por la herramienta (bancos v11 a v13)
+
+**Qué queríamos saber.** Dos fallos que vimos probando la API (entrada de v10):
+- **Idioma.** Tras algunas herramientas, el modelo responde en inglés a preguntas en español.
+- **Zona tensionada.** `save_to_portfolio` exigía `stressed_zone` y el modelo pasaba `false`
+  sin comprobarlo.
+
+**Qué hicimos.**
+- **`stressed_zone` pasa a ser opcional.** Si el usuario no lo dice, la herramienta mira la
+  tabla de zonas declaradas (`declared_zones`, la misma de `get_rent_reference`) y devuelve
+  la fuente.
+- **Si solo parte del municipio está declarada** (Gijón, Vitoria…), guarda el valor como
+  desconocido y avisa de que hay que preguntar.
+- **Las bases antiguas** se migran como con `area_m2`. Dos tests nuevos.
+- **Idioma, v11.** El prompt de sistema ya pedía "Answer in the user's language", pero lo
+  último que lee el modelo es el resultado en inglés más `CHAIN_HINT`. Añadimos el idioma al
+  final de `CHAIN_HINT`: "otherwise answer in the language of the user's question".
+- **Idioma, v12:** "…answer the user in the language they wrote in (Spanish if they wrote in
+  Spanish)".
+- **Referencia catastral, v13.** En `port-01` el modelo se inventaba una
+  (`12345678901234`). La descripción de `cadastral_ref` pasa de "if known" a "exactly as the
+  user writes it…; never make one up".
+- **Medida del idioma.** Nueva: `scripts/fase2/answer_language.py`, que cuenta, entre las
+  respuestas que usaron herramientas, las escritas en español. Usa palabras frecuentes de
+  cada idioma; todas las preguntas del banco están en español.
+- `bash scripts/fase2/fase2_bench_v1{1,2,3}.sh`: modelo base, 40 casos, 3 min cada uno.
+
+**Qué pasó.**
+
+| Banco | Selección | Argumentos | Secuencia (10) | Llamadas falsas | En español |
+|---|---|---|---|---|---|
+| v10 | 40/40 | 34/40 | 6/10 | 0 | 20/32 |
+| v11 (idioma de la pregunta) | 40/40 | 33/40 | 5/10 | 0 | 24/32 |
+| v12 (idioma, explícito) | 40/40 | 33/40 | 6/10 | 0 | **29/32** |
+| v13 (+ cadastral_ref) | 40/40 | 33/40 | 5/10 | 0 | **29/32** |
+
+- **`port-01`** (el usuario dice "no está en zona tensionada"). Desde la v11 el modelo ya no
+  pasa `stressed_zone`; la herramienta consulta Zaragoza y guarda `false`, que es correcto.
+  El banco lo cuenta como fallo porque espera el argumento explícito. En la v13 ya no se
+  inventa la referencia catastral.
+- **`chain-06`** (zona tensionada y luego cartera) pierde la secuencia en v11 y v13 y la
+  recupera en v12. En v10 encadenaba, pero añadía una llamada inventada a
+  `max_offer_price`. Es el encadenado de siempre, que se mueve con cualquier cambio del
+  prompt; `chain-04` hace lo mismo al revés.
+- **Siguen en inglés 3 de 32:** `yield-03`, `cad-01` y `chain-03`.
+
+**Qué concluimos.**
+- **Nos quedamos con la v13.** El idioma pasa de 20/32 a 29/32 en español, y la zona
+  tensionada y la referencia catastral ya no se inventan.
+- **El argumento de menos en `port-01` es la herramienta haciendo su trabajo,** no un error.
+  No cambiamos el caso del banco, para no mover la portería; lo explicamos.
+- **La instrucción de idioma funciona cuando va pegada al punto donde el modelo empieza a
+  responder,** no en el prompt de sistema. Es lo mismo que pasó con el encadenado.

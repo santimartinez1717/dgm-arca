@@ -78,9 +78,12 @@ MAX_CALLS_PER_TURN = 4
 
 # Appended to the last result of each turn. Without it the model answers after the first
 # result even when the question asks for a second step that needs it (bench, chain-02, 04, 06).
+# The language goes here too: the results are in English, and after reading them the model
+# answered Spanish questions in English although the system prompt asks for the user's language.
 CHAIN_HINT = (
     "\n\nIf the user's question still needs another tool that uses these results, call it "
-    "now; otherwise answer."
+    "now; otherwise answer the user in the language they wrote in (Spanish if they wrote in "
+    "Spanish)."
 )
 
 PromptStyle = Literal["native", "course"]

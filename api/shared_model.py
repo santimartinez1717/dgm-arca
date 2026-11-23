@@ -102,6 +102,10 @@ def _get_model(model_id: str) -> SharedModel:
 
     if torch.cuda.is_available():
         device = "cuda"
+        # cuDNN attention builds a new plan for every sequence length it has not seen yet: the
+        # first request of a given length ran at 2.8 tokens/s instead of ~35 (EXPERIMENTS.md,
+        # 23/11/2026). The other SDPA backends do not, and give the same results.
+        torch.backends.cuda.enable_cudnn_sdp(False)
     elif torch.backends.mps.is_available():
         device = "mps"
     else:
