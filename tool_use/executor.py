@@ -34,6 +34,8 @@ from __future__ import annotations
 
 import json
 import os
+import sys
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from typing import Any, Literal, Protocol
 
@@ -83,6 +85,11 @@ CHAIN_HINT = (
     "now; otherwise answer."
 )
 
+# Loading and generating run on this one thread, as in rlm/inference.py: FastAPI serves each
+# request from a different worker thread, and on Apple GPUs (MPS) a model loaded in one thread
+# can hang when another generates with it. One worker also queues concurrent requests.
+_MODEL_THREAD = ThreadPoolExecutor(max_workers=1, thread_name_prefix="tools-model")
+
 PromptStyle = Literal["native", "course"]
 ConfirmPolicy = Literal["auto", "deny"]
 
@@ -117,11 +124,24 @@ class HFChatModel:
         return f"{self.model_id}{suffix}{thinking}"
 
     def load(self) -> HFChatModel:
+        _MODEL_THREAD.submit(self._load).result()
+        return self
+
+    def _load(self) -> None:
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-        dtype = torch.bfloat16 if device == "cuda" else torch.float32
+        # CUDA on the DGX; on a Mac, the Apple GPU (MPS) in bfloat16, like phase 1.
+        if torch.cuda.is_available():
+            device = "cuda"
+        elif torch.backends.mps.is_available():
+            device = "mps"
+        else:
+            device = "cpu"
+        dtype = torch.float32 if device == "cpu" else torch.bfloat16
+        if os.environ.get("ARCA_RLM_DTYPE"):  # float16 where bfloat16 on MPS is slow
+            dtype = getattr(torch, os.environ["ARCA_RLM_DTYPE"])
+        print(f"phase 2 model on {device} in {dtype}", file=sys.stderr, flush=True)
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_id)
         model = AutoModelForCausalLM.from_pretrained(self.model_id, dtype=dtype, device_map=device)
         if self.adapter_path:
@@ -129,10 +149,12 @@ class HFChatModel:
 
             model = PeftModel.from_pretrained(model, self.adapter_path)
         self.model = model.eval()
-        return self
 
     def generate(self, messages: list[dict[str, Any]], tools: list[dict] | None) -> str:
         """Step 2: one greedy generation from the conversation so far."""
+        return _MODEL_THREAD.submit(self._generate, messages, tools).result()
+
+    def _generate(self, messages: list[dict[str, Any]], tools: list[dict] | None) -> str:
         import torch
 
         prompt = self.tokenizer.apply_chat_template(
