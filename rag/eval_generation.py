@@ -110,7 +110,7 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--limit", type=int, default=None, help="first N questions (smoke test)")
     parser.add_argument("--gold", default="rag/gold/gold.jsonl")
-    parser.add_argument("--unanswerable", default="rag/gold/unanswerable.jsonl")
+    parser.add_argument("--unanswerable", default="rag/gold/unanswerable.jsonl", help="'' = none")
     args = parser.parse_args()
 
     from rag.evaluate import load_gold
@@ -124,8 +124,16 @@ def main() -> None:
         raise SystemExit(f"{out} already exists: choose another --name")
     pipeline = RagPipeline()
     pipeline.load()
-    gold = resolve(load_gold(args.gold), load_corpus(), pipeline.chunks)
-    none = [g | {"relevant_chunk_ids": []} for g in load_gold(args.unanswerable)]
+    gold = load_gold(args.gold)
+    if all("source" in e for g in gold for e in g["evidence"]):
+        gold = resolve(gold, load_corpus(), pipeline.chunks)
+    else:  # dated questions (rag/gold/temporal.jsonl): judged on the answer, not on chunk ids
+        gold = [g | {"relevant_chunk_ids": []} for g in gold]
+    none = (
+        [g | {"relevant_chunk_ids": []} for g in load_gold(args.unanswerable)]
+        if args.unanswerable
+        else []
+    )
     questions = (gold + none)[: args.limit] if args.limit else gold + none
     print(f"{len(questions)} questions, generator {pipeline.model_name}, {pipeline.config}")
 
@@ -151,6 +159,8 @@ def main() -> None:
                     "figures_match": reference <= numbers(r.answer) if reference else None,
                     "abstains": abstains(r.answer),
                     "chunks": [(c.id, c.source, round(c.score, 4)) for c in r.chunks],
+                    "law_date": r.law_date,
+                    "control": q.get("control"),
                 }
             )
         print(f"{len(items)}/{len(questions)} answered ({time.time() - t0:.0f} s)", flush=True)
