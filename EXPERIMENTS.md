@@ -2227,3 +2227,70 @@ Auditoría del motor de reglas (versión del 15/09/2026 frente a la del 22/11/20
   1/12/2026 sigue valiendo, por la transitoria 38.ª; eso lo decide una persona. Cuando se
   fusione la fase 2, que añade `rental_reduction_pct_2026` al motor, hay que darle reglas en
   `RULES`.
+
+---
+
+### 2026-11-23 · Fase 4 · Primeras pruebas del bucle ReAct con Qwen3-1.7B (cerebro base)
+
+**Qué queríamos saber.** Si el bucle de la issue #20 (`agent/react_agent.py`) funciona con el
+modelo de verdad: que cierre con `final_answer`, que la traza tenga pensamiento, acción y
+observación reales, y que los guardarraíles (auditor, bucle, pasos) actúen. No es la
+evaluación del banco (issue 06, de Kike): son 5–6 tareas elegidas para cubrir categorías.
+
+**Qué hicimos.** `uv run python -m agent.evaluate --brains base --ids lever-01 lever-04
+inconsistent-02 impossible-01 broken_tool-01 [kb_plus_tool-01] --out
+reports/fase4/smoke_react_base{,_v2,_v4}.json`, `max_steps=10`, greedy, 1024 tokens por paso,
+en la MIG de la DGX. Tres versiones del bucle, cambiando una cosa cada vez:
+
+- v1: el bucle tal como lo pide la spec (commit 2990766).
+- v2: una pista al final de la última observación de cada turno (pasos que quedan, "Thought:",
+  no repetir, `final_answer` en español), como el `CHAIN_HINT` de la fase 2 (cc4dbcd).
+- v3 (parada a mitad, sin informe): un "Thought:" sin tool call deja de tomarse como respuesta
+  y cuenta como paso (310a0e1).
+- v4: ese pensamiento suelto ya no gasta paso; pasa a ser el `thought` de la siguiente llamada.
+  La cuarta llamada idéntica corta el bucle (e3c27ff).
+
+**Qué pasó.**
+
+| Versión | Tareas | Check ok | Cierra con `final_answer` | Texto suelto como respuesta | Reserva | Pasos con pensamiento |
+|---|---|---|---|---|---|---|
+| v1 | 5 | 0 | 1 | 3 | 1 | 3/30 |
+| v2 | 6 | 0 | 0 | 6 | 0 | 12/21 |
+| v4 | 6 | 1 | 5 | 0 | 1 | 36/46 |
+
+- **v1.** Qwen3 sin thinking emite el `<tool_call>` sin texto: 27 de 30 pasos sin pensamiento.
+  Tras leer resultados en inglés responde en inglés y sin la tool. En inconsistent-02 hizo bien
+  la bifurcación (`what_if` con valor de referencia 150.000 y 210.000) pero la repitió dos veces
+  más, pese al aviso, y agotó los pasos.
+- **v2.** La pista da pensamientos, pero el modelo escribe "Thought: necesito llamar a what_if"
+  **sin** la llamada, y la spec trata el texto sin tool call como respuesta: las 6 tareas
+  terminaron así, con una intención por respuesta.
+- **v3.** Contar ese pensamiento como paso gastaba la mitad de los 10 pasos: el modelo alterna
+  un mensaje de pensamiento y otro de llamada (lever-04: 5 pensamientos y 5 búsquedas
+  idénticas).
+- **v4.** Las 6 tareas llegan a `final_answer`, en español salvo una (lever-04). El auditor
+  rechaza cifras inventadas que antes pasaban: "6,8 %" cuando el motor dio 0,68 %
+  (impossible-01), "1.140 €" cuando era 11.400 € (broken_tool-01). A la tercera, la respuesta
+  sale con `succeeded=false`. inconsistent-02 pasa el check con los dos escenarios.
+
+Lo que falla en v4 es del cerebro, no del bucle:
+
+- lever-04 no guarda los dos pisos con `record_property` y busca en el RAG.
+- `search_knowledge_base` recibe un `on_date` inventado (2023-01-01, 2023-10-05) y devuelve la
+  ley antigua.
+- En impossible-01 se inventa un piso (500.000 €, 300 €/mes) para tener algo que analizar.
+- `record_investor` rellena con ceros lo que no se dijo (`loan_years: 0`).
+
+Una incidencia: en v1 el corpus apareció a mitad de la corrida (lo descargaba otro proceso) y la
+primera búsqueda construyó el índice dentro del timeout de 30 s. Cada reintento lanzaba otra
+construcción en paralelo, así que `_pipeline()` lleva ahora un candado.
+
+**Qué concluimos.**
+
+- El bucle cumple la spec y los guardarraíles actúan sobre el modelo real. Con 6 tareas no se
+  puede comparar nada (1/6 frente a 0/5): la tasa la da el banco completo (issue 06).
+- Desviación de la spec (punto 9): un texto que empieza por "Thought:" no es una respuesta, sino
+  el pensamiento del paso siguiente. Hay que confirmarlo en la issue.
+- Pendiente para el núcleo, fuera del bucle: que `search_knowledge_base` no acepte un `on_date`
+  que la tarea no menciona, y probar `brain=thinking` y `brain=rlm` (aquí no está el adaptador
+  del GRPO 2).
