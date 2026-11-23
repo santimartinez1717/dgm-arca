@@ -1886,3 +1886,59 @@ usuario no la había dado. Queríamos que la herramienta no obligue a inventarla
   que responda en el idioma del usuario.
 - `stressed_zone` sigue siendo obligatorio y el modelo lo rellena con `false` sin
   comprobarlo. Se podría consultar solo con la tabla de zonas.
+
+---
+
+### 2026-11-23 · Fase 2 · Respuestas en español y zona tensionada consultada por la herramienta (bancos v11 a v13)
+
+**Qué queríamos saber.** Dos fallos que vimos probando la API (entrada de v10):
+- **Idioma.** Tras algunas herramientas, el modelo responde en inglés a preguntas en español.
+- **Zona tensionada.** `save_to_portfolio` exigía `stressed_zone` y el modelo pasaba `false`
+  sin comprobarlo.
+
+**Qué hicimos.**
+- **`stressed_zone` pasa a ser opcional.** Si el usuario no lo dice, la herramienta mira la
+  tabla de zonas declaradas (`declared_zones`, la misma de `get_rent_reference`) y devuelve
+  la fuente.
+- **Si solo parte del municipio está declarada** (Gijón, Vitoria…), guarda el valor como
+  desconocido y avisa de que hay que preguntar.
+- **Las bases antiguas** se migran como con `area_m2`. Dos tests nuevos.
+- **Idioma, v11.** El prompt de sistema ya pedía "Answer in the user's language", pero lo
+  último que lee el modelo es el resultado en inglés más `CHAIN_HINT`. Añadimos el idioma al
+  final de `CHAIN_HINT`: "otherwise answer in the language of the user's question".
+- **Idioma, v12:** "…answer the user in the language they wrote in (Spanish if they wrote in
+  Spanish)".
+- **Referencia catastral, v13.** En `port-01` el modelo se inventaba una
+  (`12345678901234`). La descripción de `cadastral_ref` pasa de "if known" a "exactly as the
+  user writes it…; never make one up".
+- **Medida del idioma.** Nueva: `scripts/fase2/answer_language.py`, que cuenta, entre las
+  respuestas que usaron herramientas, las escritas en español. Usa palabras frecuentes de
+  cada idioma; todas las preguntas del banco están en español.
+- `bash scripts/fase2/fase2_bench_v1{1,2,3}.sh`: modelo base, 40 casos, 3 min cada uno.
+
+**Qué pasó.**
+
+| Banco | Selección | Argumentos | Secuencia (10) | Llamadas falsas | En español |
+|---|---|---|---|---|---|
+| v10 | 40/40 | 34/40 | 6/10 | 0 | 20/32 |
+| v11 (idioma de la pregunta) | 40/40 | 33/40 | 5/10 | 0 | 24/32 |
+| v12 (idioma, explícito) | 40/40 | 33/40 | 6/10 | 0 | **29/32** |
+| v13 (+ cadastral_ref) | 40/40 | 33/40 | 5/10 | 0 | **29/32** |
+
+- **`port-01`** (el usuario dice "no está en zona tensionada"). Desde la v11 el modelo ya no
+  pasa `stressed_zone`; la herramienta consulta Zaragoza y guarda `false`, que es correcto.
+  El banco lo cuenta como fallo porque espera el argumento explícito. En la v13 ya no se
+  inventa la referencia catastral.
+- **`chain-06`** (zona tensionada y luego cartera) pierde la secuencia en v11 y v13 y la
+  recupera en v12. En v10 encadenaba, pero añadía una llamada inventada a
+  `max_offer_price`. Es el encadenado de siempre, que se mueve con cualquier cambio del
+  prompt; `chain-04` hace lo mismo al revés.
+- **Siguen en inglés 3 de 32:** `yield-03`, `cad-01` y `chain-03`.
+
+**Qué concluimos.**
+- **Nos quedamos con la v13.** El idioma pasa de 20/32 a 29/32 en español, y la zona
+  tensionada y la referencia catastral ya no se inventan.
+- **El argumento de menos en `port-01` es la herramienta haciendo su trabajo,** no un error.
+  No cambiamos el caso del banco, para no mover la portería; lo explicamos.
+- **La instrucción de idioma funciona cuando va pegada al punto donde el modelo empieza a
+  responder,** no en el prompt de sistema. Es lo mismo que pasó con el encadenado.

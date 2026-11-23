@@ -230,6 +230,16 @@ def _matches(query: str, name: str) -> bool:
     return bool(_names(query) & _names(name))
 
 
+def declared_zones(municipality: str) -> list[dict[str, Any]]:
+    """The stressed-zone declarations of a municipality in force today (empty if none)."""
+    today = date.today().isoformat()
+    return [
+        z
+        for z in _zones()
+        if _names(municipality) & set(z["aliases"]) and z["valid_from"] <= today <= z["valid_until"]
+    ]
+
+
 @tool
 def get_rent_reference(
     municipality: Annotated[str, Field(min_length=2, max_length=100)],
@@ -248,7 +258,6 @@ def get_rent_reference(
         municipality: Municipality name, e.g. "Barcelona", or its 5-digit INE code.
         province: Province, only needed if several municipalities share the name.
     """
-    today = date.today().isoformat()
     by_code = municipality.isdigit()
     rows = [
         r
@@ -267,11 +276,7 @@ def get_rent_reference(
         )
     name = rows[0]["name"] if rows else municipality
 
-    zones = [
-        z
-        for z in _zones()
-        if _names(name) & set(z["aliases"]) and z["valid_from"] <= today <= z["valid_until"]
-    ]
+    zones = declared_zones(name)
     out: dict[str, Any] = {"municipality": name}
     if zones:
         zone = max(zones, key=lambda z: z["valid_from"])  # the latest declaration wins

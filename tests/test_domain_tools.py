@@ -413,3 +413,25 @@ def test_old_portfolio_database_with_required_area_is_migrated(tmp_path, monkeyp
     run(registry, "save_to_portfolio", label="Otro", municipality="Zaragoza", stressed_zone=False)
     listed = run(registry, "get_portfolio")
     assert [p["area_m2"] for p in listed["properties"]] == [85, None]
+
+
+def test_save_to_portfolio_looks_up_the_stressed_zone_when_not_given(registry):
+    # The model passed stressed_zone=false without checking (Valencia, 23/11): if the user
+    # does not say, the tool reads the zone table itself.
+    barcelona = run(registry, "save_to_portfolio", label="A", municipality="Barcelona")
+    zaragoza = run(registry, "save_to_portfolio", label="B", municipality="Zaragoza")
+    gijon = run(registry, "save_to_portfolio", label="C", municipality="Gijón")
+    assert barcelona["stressed_zone"] is True and "BOE" in barcelona["stressed_zone_source"]
+    assert zaragoza["stressed_zone"] is False
+    # Only part of Gijón is declared: the tool cannot tell, so it stores no value and says so.
+    assert gijon["stressed_zone"] is None
+    assert any("parte" in w for w in gijon["warnings"])
+    zone = run(registry, "get_portfolio", municipality="Barcelona")
+    assert zone["dwellings_in_zone"] == 1
+
+
+def test_stressed_zone_given_by_the_user_wins(registry):
+    saved = run(
+        registry, "save_to_portfolio", label="A", municipality="Barcelona", stressed_zone=False
+    )
+    assert saved["stressed_zone"] is False and "stressed_zone_source" not in saved
