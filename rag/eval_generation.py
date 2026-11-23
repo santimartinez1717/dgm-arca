@@ -151,7 +151,7 @@ def main() -> None:
     from rag.ingest import load_corpus
 
     t0 = time.time()
-    out = Path(f"reports/phase3_generation_{args.name}.json")
+    out = Path(f"reports/fase3/phase3_generation_{args.name}.json")
     if out.exists():
         raise SystemExit(f"{out} already exists: choose another --name")
     pipeline = RagPipeline()

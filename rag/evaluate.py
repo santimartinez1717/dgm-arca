@@ -206,7 +206,7 @@ def main() -> None:
     )
     parser.add_argument("--gold", default="rag/gold/gold.jsonl")
     parser.add_argument("--unanswerable", default="rag/gold/unanswerable.jsonl")
-    parser.add_argument("--out", default="reports/phase3_eval.json")
+    parser.add_argument("--out", default="reports/fase3/phase3_eval.json")
     parser.add_argument("--index-dir", default="rag/index")
     parser.add_argument("--max-chunk-chars", type=int, default=1500)
     parser.add_argument("--embedding-model", default=None, help="default: rag.embed")

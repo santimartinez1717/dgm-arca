@@ -189,10 +189,8 @@ class RagPipeline:
     def load_generator(self):
         """The language model; the API loads it on the first question, not in /health."""
         if self.generator is None:
-            from rlm.generation import Generator
-
             c = self.config
-            self.generator = Generator(
+            self.generator = SharedGenerator(
                 c.generator_model,
                 adapter_path=c.generator_adapter,
                 enable_thinking=c.thinking,
@@ -236,6 +234,68 @@ class RagPipeline:
             response.law_date = on
             responses.append(response)
         return responses
+
+
+@dataclass
+class SharedGenerator:
+    """Batched greedy chat generation on the base model shared by every phase of the API.
+
+    Same interface as ``rlm.generation.Generator``, but the weights come from
+    ``api.shared_model``: phases 1 and 2 already hold Qwen3-1.7B on a 6 GB GPU, and a second
+    copy for ``/rag`` would not fit. The phase-1 adapter, if any, is added to that copy.
+    """
+
+    model_name: str
+    adapter_path: str | None = None
+    enable_thinking: bool | None = None
+    system_prompt: str = RAG_SYSTEM_PROMPT
+
+    def load(self) -> SharedGenerator:
+        from api.shared_model import get_model
+
+        self.shared = get_model(self.model_name)
+        self.tokenizer = self.shared.tokenizer
+        self.adapter = self.shared.add_adapter(self.adapter_path) if self.adapter_path else None
+        return self
+
+    def _chat_text(self, question: str) -> str:
+        from rlm.data import build_prompt as chat_messages
+
+        kwargs = {}
+        if self.enable_thinking is not None:
+            kwargs["enable_thinking"] = self.enable_thinking
+        return self.tokenizer.apply_chat_template(
+            chat_messages(question, self.system_prompt),
+            tokenize=False,
+            add_generation_prompt=True,
+            **kwargs,
+        )
+
+    def generate(
+        self, questions: list[str], max_new_tokens: int = 512
+    ) -> list[list[tuple[str, int, bool]]]:
+        """For each question, one ``(text, n_tokens, truncated)`` sample, decoded greedily."""
+        texts = [self._chat_text(q) for q in questions]
+        # left padding, as decoder-only models need in a batch; passed per call so the shared
+        # tokenizer keeps its default for the other phases
+        inputs = self.tokenizer(texts, return_tensors="pt", padding=True, padding_side="left")
+        inputs = inputs.to(self.shared.device)
+        pad = self.tokenizer.pad_token_id
+        eos = self.tokenizer.eos_token_id
+        out = self.shared.generate(
+            self.adapter,
+            **inputs,
+            max_new_tokens=max_new_tokens,
+            do_sample=False,
+            pad_token_id=pad if pad is not None else eos,
+        )
+        results = []
+        for tokens in out[:, inputs["input_ids"].shape[1] :]:
+            n = int(((tokens != pad) & (tokens != eos)).sum())
+            truncated = bool(tokens[-1] not in (pad, eos))
+            text = self.tokenizer.decode(tokens, skip_special_tokens=True)
+            results.append([(text, n, truncated)])
+        return results
 
 
 def strip_thinking(text: str) -> str:

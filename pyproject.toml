@@ -26,6 +26,10 @@ train = [
     "accelerate>=1.5",
     "matplotlib>=3.9",
 ]
+# Serving phase 1 on a Mac: the merged GRPO 2 model in 8 bits (rlm/weights/grpo2_mlx_8bit).
+mac = [
+    "mlx-lm>=0.30; sys_platform == 'darwin'",
+]
 rag = [
     "sentence-transformers>=5.0",
     "chromadb>=1.0",

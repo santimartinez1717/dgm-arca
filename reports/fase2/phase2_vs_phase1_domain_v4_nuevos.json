@@ -1,0 +1,4631 @@
+{
+  "config": {
+    "data": "rlm/data/test.jsonl",
+    "variants": [
+      "domain"
+    ],
+    "model": "Qwen/Qwen3-1.7B",
+    "adapter": null,
+    "thinking": false,
+    "max_turns": 5,
+    "max_new_tokens": 2048,
+    "limit": null,
+    "per_family": 10,
+    "skip_per_family": 10,
+    "resume": true,
+    "out": "reports/phase2_vs_phase1_domain_v4_nuevos.json"
+  },
+  "model": "Qwen/Qwen3-1.7B",
+  "summary": {
+    "domain": {
+      "n": 60,
+      "pass_at_1": 0.45,
+      "used_a_tool": 0.983,
+      "failed_calls": 105,
+      "by_family": {
+        "acquisition_cost": 0.9,
+        "cash_on_cash": 0.1,
+        "irpf_rental": 0.6,
+        "legal_rent": 0.1,
+        "max_price": 0.4,
+        "net_yield": 0.6
+      }
+    }
+  },
+  "rows": [
+    {
+      "variant": "domain",
+      "family": "max_price",
+      "question": "Busco una rentabilidad neta del 4 % sobre la inversión total. El piso generaría 15.050 € netos al año. El ITP es del 10 % y el valor de referencia es inferior al precio. Notaría, registro y reforma suman 24.300 €. La vivienda tiene orientación sur y dos baños. ¿Cuál es el precio máximo que debería pagar? Responde en euros con dos decimales.",
+      "expected": "319954.55",
+      "predicted": "319954.55",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 4,
+            "monthly_rent": 15050,
+            "itp_rate_pct": 10,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "rate_shock_pct": 0,
+            "fixed_costs": 24300
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: monthly_rent is per MONTH and 15050 looks like a yearly figure: pass a net yearly income as annual_net_income, or divide a yearly rent by 12",
+          "latency_ms": 0.6582539936061949
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 4,
+            "annual_net_income": 15050,
+            "itp_rate_pct": 10,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "rate_shock_pct": 0,
+            "fixed_costs": 24300
+          },
+          "result": {
+            "max_price": 319954.55,
+            "annual_net_income": 15050.0,
+            "region": "andalucia",
+            "itp_rate_pct": 10.0,
+            "warnings": [
+              "supone que el valor de referencia no supera el precio"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.22475601872429252
+        }
+      ],
+      "turns": 3,
+      "answer": "<answer>319954.55</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "max_price",
+      "question": "El piso generaría 5.430 € netos al año. Quiero un 7 % neto. Impuesto de transmisiones: 10 % sobre el precio. Otros gastos de compra: 14.600 €. ¿Hasta qué precio de compra me sale la operación? Da el resultado en euros, con dos decimales.",
+      "expected": "57246.75",
+      "predicted": null,
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 7,
+            "monthly_rent": 5430,
+            "annual_net_income": 54300,
+            "itp_rate_pct": 10,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year",
+          "latency_ms": 0.19213400082662702
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 7,
+            "monthly_rent": 5430,
+            "annual_net_income": 54300,
+            "itp_rate_pct": 10,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.16528100240975618
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 7,
+            "monthly_rent": 5430,
+            "annual_net_income": 54300,
+            "itp_rate_pct": 10,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.16411999240517616
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 7,
+            "monthly_rent": 5430,
+            "annual_net_income": 54300,
+            "itp_rate_pct": 10,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.21826697047799826
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 7,
+            "monthly_rent": 5430,
+            "annual_net_income": 54300,
+            "itp_rate_pct": 10,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.16940804198384285
+        }
+      ],
+      "turns": 5,
+      "answer": "No he llegado a una respuesta en 5 turnos; estos son los resultados de las herramientas que he usado."
+    },
+    {
+      "variant": "domain",
+      "family": "max_price",
+      "question": "El piso generaría 6.460 € netos al año. Quiero un 6 % neto. Impuesto de transmisiones: 9 % sobre el precio. Otros gastos de compra: 13.700 €. ¿Hasta qué precio de compra me sale la operación? Da el resultado en euros, con dos decimales.",
+      "expected": "86207.95",
+      "predicted": "1172752.29",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 6,
+            "monthly_rent": 6460,
+            "itp_rate_pct": 9,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "rate_shock_pct": 0,
+            "fixed_costs": 13700
+          },
+          "result": {
+            "max_price": 1172752.29,
+            "annual_net_income": 77520.0,
+            "region": "andalucia",
+            "itp_rate_pct": 9.0,
+            "warnings": [
+              "supone que el valor de referencia no supera el precio"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.14279503375291824
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>1172752.29</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "legal_rent",
+      "question": "La cocina se reformó hace unos años. El propietario tiene 2 viviendas en total, con 141 m² de uso residencial; 1 está en esta zona. La resolución extiende el índice de referencia a las viviendas sin contrato en los últimos cinco años. La vivienda está en una zona declarada de mercado residencial tensionado. Hace dos años tuvo un contrato de vivienda habitual cuya última renta, ya actualizada, es de 1.005 € al mes. La declaración de la zona rebaja el umbral de gran tenedor a cinco viviendas en la zona. Tiene 73 m², el valor superior del índice de referencia (SERPAVI) es 14,8 €/m² al mes y el mercado pagaría 1.060 € al mes. Calcula la renta máxima del primer año del nuevo contrato (doce mensualidades). Responde en euros con dos decimales.",
+      "expected": "12060.00",
+      "predicted": "1060.00",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "legal_rent_cap",
+          "arguments": {
+            "market_rent": 1060,
+            "stressed_zone": true,
+            "large_holder": false,
+            "area_m2": 73,
+            "previous_rent": 1005,
+            "ten_percent_exception": true,
+            "index_upper_eur_m2": 14.8,
+            "declaration_caps_unrented": true
+          },
+          "result": {
+            "max_monthly_rent": 1060.0,
+            "max_annual_rent": 12720.0,
+            "binding_rule": "market_below_cap",
+            "caps": {
+              "previous_rent": 1105.5
+            }
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.1087179989553988
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 5,
+            "monthly_rent": 1060,
+            "annual_net_income": null,
+            "itp_rate_pct": null,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "max_price": 237757.01,
+            "annual_net_income": 12720.0,
+            "region": "andalucia",
+            "itp_rate_pct": 7.0,
+            "warnings": [
+              "supone que el valor de referencia no supera el precio",
+              "tipo de ITP sin verificar con la comunidad (Gibobs, ITP 2026 (fuente secundaria), consultada el 17/11/2026)"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.16183796105906367
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 100000,
+            "monthly_rent": 1060,
+            "annual_net_income": 53000,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year",
+          "latency_ms": 0.06821600254625082
+        },
+        {
+          "name": "rental_income_tax",
+          "arguments": {
+            "annual_rent": 12720,
+            "acquisition_cost_total": 100000,
+            "cadastral_value": 100000,
+            "contract_date": "2023-01-01",
+            "land_value": null,
+            "land_share_pct": null,
+            "ibi": 0,
+            "community_annual": 0,
+            "insurance": 0,
+            "interest": 0,
+            "repairs": 0,
+            "stressed_zone": true,
+            "previously_rented": true,
+            "monthly_rent": 1060,
+            "previous_rent": 1005,
+            "index_max_rent": 14.8,
+            "large_holder": false,
+            "same_tenant_after_term": false,
+            "tenant_age": null,
+            "social_tenant": false,
+            "rehabilitation_last_2y": false
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass land_value (in euros) or land_share_pct",
+          "latency_ms": 0.05717098247259855
+        },
+        {
+          "name": "get_portfolio",
+          "arguments": {
+            "municipality": "Málaga",
+            "zone_lowers_threshold": true
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "legal_rent_cap",
+          "arguments": {
+            "market_rent": 1060,
+            "stressed_zone": true,
+            "large_holder": false,
+            "area_m2": 73,
+            "previous_rent": 1005,
+            "ten_percent_exception": true,
+            "index_upper_eur_m2": 14.8,
+            "declaration_caps_unrented": true
+          },
+          "result": {
+            "max_monthly_rent": 1060.0,
+            "max_annual_rent": 12720.0,
+            "binding_rule": "market_below_cap",
+            "caps": {
+              "previous_rent": 1105.5
+            }
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.09867595508694649
+        }
+      ],
+      "turns": 3,
+      "answer": "<answer>1060.00</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "net_yield",
+      "question": "Renta mensual: 1.280 €. Inversión total: 210.000 €. No reservo nada para mantenimiento. Espero tenerlo alquilado todo el año. La comunidad cuesta 94 € al mes. El seguro de hogar e impago cuesta 215 € al año. El IBI es de 962 € al año. Lo gestiono yo mismo, sin gestora. Calcula la rentabilidad neta sobre la inversión total. Responde en porcentaje con dos decimales.",
+      "expected": "6.22",
+      "predicted": "6.22",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 210000,
+            "monthly_rent": 1280,
+            "vacant_months": 0,
+            "ibi": 962,
+            "community_monthly": 94,
+            "insurance": 215,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "collected_rent": 15360.0,
+            "operating_costs": 2305.0,
+            "net_income": 13055.0,
+            "net_yield_pct": 6.22,
+            "gross_yield_pct": 7.31
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.08062802953645587
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>6.22</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "legal_rent",
+      "question": "Tiene plaza de garaje incluida en el precio. La declaración de la zona no modifica el umbral general de gran tenedor. La vivienda está en una zona declarada de mercado residencial tensionado. Hace dos años tuvo un contrato de vivienda habitual cuya última renta, ya actualizada, es de 555 € al mes. La resolución extiende el índice de referencia a las viviendas sin contrato en los últimos cinco años. El propietario tiene 5 viviendas en total, con 527 m² de uso residencial; 0 están en esta zona. Tiene 41 m², el valor superior del índice de referencia (SERPAVI) es 16,7 €/m² al mes y el mercado pagaría 740 € al mes. Calcula la renta máxima del primer año del nuevo contrato (doce mensualidades). Da el resultado en euros, con dos decimales.",
+      "expected": "6660.00",
+      "predicted": "610.5",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "legal_rent_cap",
+          "arguments": {
+            "market_rent": 740,
+            "stressed_zone": true,
+            "large_holder": false,
+            "area_m2": 527,
+            "previous_rent": 555,
+            "ten_percent_exception": true,
+            "index_upper_eur_m2": 16.7,
+            "declaration_caps_unrented": true
+          },
+          "result": {
+            "max_monthly_rent": 610.5,
+            "max_annual_rent": 7326.0,
+            "binding_rule": "previous_rent",
+            "caps": {
+              "previous_rent": 610.5
+            }
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.05999399581924081
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>610.5</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "net_yield",
+      "question": "Renta mensual: 1.270 €. Inversión total: 205.000 €. Espero 2 meses al año sin inquilino. La comunidad cuesta 129 € al mes. La gestora cobra un 8 % de lo cobrado. No reservo nada para mantenimiento. El seguro de hogar e impago cuesta 417 € al año. El IBI es de 847 € al año. Calcula la rentabilidad neta sobre la inversión total. Expresa la respuesta como porcentaje con dos decimales.",
+      "expected": "4.33",
+      "predicted": "4.33",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 205000,
+            "monthly_rent": 1270,
+            "vacant_months": 2,
+            "ibi": 847,
+            "community_monthly": 129,
+            "insurance": 417,
+            "maintenance_pct": 0,
+            "management_pct": 8,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "collected_rent": 12700.0,
+            "operating_costs": 3828.0,
+            "net_income": 8872.0,
+            "net_yield_pct": 4.33,
+            "gross_yield_pct": 7.43
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.1072229933924973
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>4.33</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "irpf_rental",
+      "question": "Ingresos por alquiler del año: 13.200 €. Inquilino: una persona de 35 años, contrato de 2025. No he hecho obras de rehabilitación. No hubo reparaciones. No está en zona tensionada. El valor catastral es 93.000 €, del que 20.400 € corresponde al suelo. Es la primera vez que la alquilo. El IBI es de 577 €, la comunidad de 790 € al año y el seguro de 428 €. No tengo hipoteca. Compré por un coste total, gastos e impuestos incluidos, de 237.000 €. Calcula el rendimiento neto reducido a efectos del IRPF. Da el resultado en euros, con dos decimales.",
+      "expected": "2927.31",
+      "predicted": "2927.31",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "rental_income_tax",
+          "arguments": {
+            "annual_rent": 13200,
+            "acquisition_cost_total": 237000,
+            "cadastral_value": 93000,
+            "contract_date": "2025-01-01",
+            "land_value": 20400,
+            "land_share_pct": null,
+            "ibi": 577,
+            "community_annual": 790,
+            "insurance": 428,
+            "interest": 0,
+            "repairs": 0,
+            "stressed_zone": false,
+            "previously_rented": true,
+            "monthly_rent": 13200,
+            "previous_rent": null,
+            "index_max_rent": null,
+            "large_holder": false,
+            "same_tenant_after_term": false,
+            "tenant_age": null,
+            "social_tenant": false,
+            "rehabilitation_last_2y": false
+          },
+          "result": {
+            "depreciation": 5550.39,
+            "deductible_financing_repairs": 0.0,
+            "net_income": 5854.61,
+            "reduction_pct": 50,
+            "reduced_net_income": 2927.31,
+            "reduction_rule": "contrato del 26/05/2023 al 30/11/2026, escala de la Ley 12/2023: 50 %",
+            "warnings": []
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.11837796773761511
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>2927.31</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "cash_on_cash",
+      "question": "Invierto 394.000 € en total en un piso y financio 267.000 € con una hipoteca a 30 años al 3,55 % fijo. El piso genera 25.570 € netos al año antes de la hipoteca. ¿Qué rentabilidad obtengo sobre el dinero que pongo yo (cash-on-cash)? Responde en porcentaje con dos decimales.",
+      "expected": "8.73",
+      "predicted": "45.00",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 394000,
+            "monthly_rent": 2557,
+            "annual_net_income": 25570,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 267000,
+            "interest_rate_pct": 3.55,
+            "loan_years": 30,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year",
+          "latency_ms": 0.07008202373981476
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 394000,
+            "monthly_rent": 2557,
+            "annual_net_income": 25570,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 267000,
+            "interest_rate_pct": 3.55,
+            "loan_years": 30,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.055656011682003736
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 394000,
+            "monthly_rent": 2557,
+            "annual_net_income": 25570,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 267000,
+            "interest_rate_pct": 3.55,
+            "loan_years": 30,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.0560469925403595
+        }
+      ],
+      "turns": 4,
+      "answer": "<answer>45.00</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "net_yield",
+      "question": "Renta mensual: 1.570 €. Inversión total: 243.000 €. La comunidad cuesta 67 € al mes. Calculo un 5 % de los ingresos cobrados para mantenimiento. El seguro de hogar e impago cuesta 369 € al año. El IBI es de 1.016 € al año. Lo gestiono yo mismo, sin gestora. Espero 1 mes al año sin inquilino. Calcula la rentabilidad neta sobre la inversión total. Da el resultado en %, con dos decimales.",
+      "expected": "5.85",
+      "predicted": "5.85",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 243000,
+            "monthly_rent": 1570,
+            "vacant_months": 1,
+            "ibi": 1016,
+            "community_monthly": 67,
+            "insurance": 369,
+            "maintenance_pct": 5,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "collected_rent": 17270.0,
+            "operating_costs": 3052.5,
+            "net_income": 14217.5,
+            "net_yield_pct": 5.85,
+            "gross_yield_pct": 7.75
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.07070600986480713
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>5.85</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "cash_on_cash",
+      "question": "Es un tercero exterior con ascensor. Con una hipoteca de 177.000 € (15 años, 3,85 %) compro un piso que en total me cuesta 226.000 € y que da 8.150 € netos al año. ¿Cuál es mi rentabilidad sobre fondos propios? Expresa la respuesta como porcentaje con dos decimales.",
+      "expected": "-15.11",
+      "predicted": "43.27",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 226000,
+            "monthly_rent": 8150,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "collected_rent": 97800.0,
+            "operating_costs": 0.0,
+            "net_income": 97800.0,
+            "net_yield_pct": 43.27,
+            "gross_yield_pct": 43.27
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.07199699757620692
+        }
+      ],
+      "turns": 4,
+      "answer": "<answer>43.27</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "cash_on_cash",
+      "question": "La cocina se reformó hace unos años. Con una hipoteca de 236.000 € (15 años, 3,6 %) compro un piso que en total me cuesta 327.000 € y que da 20.890 € netos al año. ¿Cuál es mi rentabilidad sobre fondos propios? Da el resultado en %, con dos decimales.",
+      "expected": "0.56",
+      "predicted": null,
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 327000,
+            "monthly_rent": 20890,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: monthly_rent is per MONTH and 20890 looks like a yearly figure: pass a net yearly income as annual_net_income, or divide a yearly rent by 12",
+          "latency_ms": 0.06254605250433087
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 5,
+            "monthly_rent": 20890,
+            "itp_rate_pct": 0,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "fixed_costs": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: monthly_rent is per MONTH and 20890 looks like a yearly figure: pass a net yearly income as annual_net_income, or divide a yearly rent by 12",
+          "latency_ms": 0.14518998796120286
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 327000,
+            "monthly_rent": 20890,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: monthly_rent is per MONTH and 20890 looks like a yearly figure: pass a net yearly income as annual_net_income, or divide a yearly rent by 12. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.062252976931631565
+        }
+      ],
+      "turns": 5,
+      "answer": "No he llegado a una respuesta en 5 turnos; estos son los resultados de las herramientas que he usado."
+    },
+    {
+      "variant": "domain",
+      "family": "acquisition_cost",
+      "question": "Precio de compra: 194.500 € (vivienda de segunda mano). El tipo de ITP de la comunidad es del 10 %. Notaría, registro y gestoría suman 4.030 €. No necesita reforma. El valor de referencia del Catastro es 230.600 €. La agencia cobra 3.890 € al comprador. El edificio es de 1978 y tiene la ITE favorable. Calcula la inversión total, impuestos incluidos. Responde en euros con dos decimales.",
+      "expected": "225480.00",
+      "predicted": "225480.00",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 194500,
+            "region": "Andalucía",
+            "new_build": false,
+            "reference_value": 230600,
+            "notary_registry": 4030,
+            "agency_fee": 3890,
+            "renovation": 0,
+            "itp_rate_pct": 10,
+            "ajd_rate_pct": null
+          },
+          "result": {
+            "tax_base": 230600.0,
+            "transfer_tax": 23060.0,
+            "vat": 0.0,
+            "stamp_duty": 0.0,
+            "total": 225480.0,
+            "region": "andalucia",
+            "rule": "ITP 10 % sobre max(precio, valor de referencia) (Ley 11/2021)",
+            "warnings": []
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.163770979270339
+        },
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 194500,
+            "region": "Andalucía",
+            "new_build": false,
+            "reference_value": 230600,
+            "notary_registry": 4030,
+            "agency_fee": 3890,
+            "renovation": 0,
+            "itp_rate_pct": 10,
+            "ajd_rate_pct": null
+          },
+          "result": {
+            "tax_base": 230600.0,
+            "transfer_tax": 23060.0,
+            "vat": 0.0,
+            "stamp_duty": 0.0,
+            "total": 225480.0,
+            "region": "andalucia",
+            "rule": "ITP 10 % sobre max(precio, valor de referencia) (Ley 11/2021)",
+            "warnings": []
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.1330709783360362
+        }
+      ],
+      "turns": 3,
+      "answer": "La inversión total, incluyendo los impuestos, es de <answer>225480.00</answer>."
+    },
+    {
+      "variant": "domain",
+      "family": "legal_rent",
+      "question": "La declaración de la zona rebaja el umbral de gran tenedor a cinco viviendas en la zona. El propietario tiene 5 viviendas en total, con 281 m² de uso residencial; 4 están en esta zona. Hace dos años tuvo un contrato de vivienda habitual cuya última renta, ya actualizada, es de 1.735 € al mes. La vivienda está en una zona declarada de mercado residencial tensionado. La resolución extiende el índice de referencia a las viviendas sin contrato en los últimos cinco años. Tiene 100 m², el valor superior del índice de referencia (SERPAVI) es 21 €/m² al mes y el mercado pagaría 2.020 € al mes. La cocina se reformó hace unos años. ¿Cuál es la renta anual máxima que puede cobrar en el primer año del nuevo contrato? Indica la cifra en euros con dos decimales.",
+      "expected": "20820.00",
+      "predicted": "22902.0",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "legal_rent_cap",
+          "arguments": {
+            "market_rent": 2020.0,
+            "stressed_zone": true,
+            "large_holder": false,
+            "area_m2": 100,
+            "previous_rent": 1735.0,
+            "ten_percent_exception": true,
+            "index_upper_eur_m2": 21,
+            "declaration_caps_unrented": true
+          },
+          "result": {
+            "max_monthly_rent": 1908.5,
+            "max_annual_rent": 22902.0,
+            "binding_rule": "previous_rent",
+            "caps": {
+              "previous_rent": 1908.5
+            }
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.11568603804334998
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 5,
+            "monthly_rent": 2020.0,
+            "annual_net_income": null,
+            "itp_rate_pct": 8,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "max_price": 448888.89,
+            "annual_net_income": 24240.0,
+            "region": "andalucia",
+            "itp_rate_pct": 8.0,
+            "warnings": [
+              "supone que el valor de referencia no supera el precio"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.16494101146236062
+        },
+        {
+          "name": "get_rent_reference",
+          "arguments": {
+            "municipality": "Málaga",
+            "province": null
+          },
+          "result": {
+            "municipality": "Málaga",
+            "stressed_zone": false,
+            "rents_paid": {
+              "year": 2024,
+              "contracts": 25741,
+              "eur_m2_month": {
+                "p25": 7.36,
+                "median": 9.55,
+                "p75": 12.36
+              },
+              "median_monthly_rent": 718.33,
+              "median_area_m2": 80.0,
+              "source": "SERPAVI (MIVAU), flats, rents declared in income tax returns"
+            },
+            "legal_index_note": "the legal SERPAVI index for a specific dwelling (needed by legal_rent_cap) comes from serpavi.mivau.gob.es with its cadastral reference; these figures are market rents"
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 25.10150399757549
+        },
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 100000.0,
+            "region": "Andalucía",
+            "new_build": false,
+            "reference_value": null,
+            "notary_registry": 100.0,
+            "agency_fee": 200.0,
+            "renovation": 500.0,
+            "itp_rate_pct": 8,
+            "ajd_rate_pct": 1.5
+          },
+          "result": {
+            "tax_base": 100000.0,
+            "transfer_tax": 8000.0,
+            "vat": 0.0,
+            "stamp_duty": 0.0,
+            "total": 108800.0,
+            "region": "andalucia",
+            "rule": "ITP 8 % sobre max(precio, valor de referencia) (Ley 11/2021)",
+            "warnings": [
+              "valor de referencia no indicado: si supera el precio, el ITP se paga sobre él"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.12771697947755456
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 100000.0,
+            "monthly_rent": 2020.0,
+            "annual_net_income": null,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "rental_income_tax",
+          "arguments": {
+            "annual_rent": 2020.0,
+            "acquisition_cost_total": 100000.0,
+            "cadastral_value": 100000.0,
+            "contract_date": "2023-01-01",
+            "land_value": null,
+            "land_share_pct": null,
+            "ibi": 0,
+            "community_annual": 0,
+            "insurance": 0,
+            "interest": 0,
+            "repairs": 0,
+            "stressed_zone": true,
+            "previously_rented": true,
+            "monthly_rent": 2020.0,
+            "previous_rent": 1735.0,
+            "index_max_rent": 21,
+            "large_holder": false,
+            "same_tenant_after_term": false,
+            "tenant_age": null,
+            "social_tenant": false,
+            "rehabilitation_last_2y": false
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "save_to_portfolio",
+          "arguments": {
+            "label": "Vivienda en Málaga",
+            "municipality": "Málaga",
+            "area_m2": 100,
+            "stressed_zone": true,
+            "purchase_price": 100000.0,
+            "monthly_rent": 2020.0,
+            "cadastral_ref": "12345678901234"
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "get_portfolio",
+          "arguments": {
+            "municipality": "Málaga",
+            "zone_lowers_threshold": true
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "lookup_property",
+          "arguments": {
+            "address": "Calle de la Reforma, 12, Málaga"
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>22902.0</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "legal_rent",
+      "question": "El edificio es de 1978 y tiene la ITE favorable. La declaración de la zona rebaja el umbral de gran tenedor a cinco viviendas en la zona. El propietario tiene 3 viviendas en total, con 226 m² de uso residencial; 2 están en esta zona. La vivienda está en una zona declarada de mercado residencial tensionado. Hace dos años tuvo un contrato de vivienda habitual cuya última renta, ya actualizada, es de 1.075 € al mes. La resolución no extiende el índice a las viviendas sin contrato previo. Tiene 88 m², el valor superior del índice de referencia (SERPAVI) es 14,1 €/m² al mes y el mercado pagaría 1.420 € al mes. Calcula la renta máxima del primer año del nuevo contrato (doce mensualidades). Indica la cifra en euros con dos decimales.",
+      "expected": "12900.00",
+      "predicted": "1075.00",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "legal_rent_cap",
+          "arguments": {
+            "market_rent": 1420,
+            "stressed_zone": true,
+            "large_holder": false,
+            "area_m2": 88,
+            "previous_rent": 1075,
+            "ten_percent_exception": false,
+            "index_upper_eur_m2": 14.1,
+            "declaration_caps_unrented": false
+          },
+          "result": {
+            "max_monthly_rent": 1075.0,
+            "max_annual_rent": 12900.0,
+            "binding_rule": "previous_rent",
+            "caps": {
+              "previous_rent": 1075.0
+            }
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.08066598093137145
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 5,
+            "monthly_rent": 1420,
+            "annual_net_income": null,
+            "itp_rate_pct": null,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "max_price": 318504.67,
+            "annual_net_income": 17040.0,
+            "region": "andalucia",
+            "itp_rate_pct": 7.0,
+            "warnings": [
+              "supone que el valor de referencia no supera el precio",
+              "tipo de ITP sin verificar con la comunidad (Gibobs, ITP 2026 (fuente secundaria), consultada el 17/11/2026)"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.14112499775364995
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 100000,
+            "monthly_rent": 1420,
+            "annual_net_income": 51000,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year",
+          "latency_ms": 0.07040001219138503
+        },
+        {
+          "name": "rental_income_tax",
+          "arguments": {
+            "annual_rent": 17040,
+            "acquisition_cost_total": 100000,
+            "cadastral_value": 100000,
+            "contract_date": "2023-01-01",
+            "land_value": null,
+            "land_share_pct": null,
+            "ibi": 0,
+            "community_annual": 0,
+            "insurance": 0,
+            "interest": 0,
+            "repairs": 0,
+            "stressed_zone": true,
+            "previously_rented": true,
+            "monthly_rent": 1420,
+            "previous_rent": 1075,
+            "index_max_rent": 14.1,
+            "large_holder": false,
+            "same_tenant_after_term": false,
+            "tenant_age": null,
+            "social_tenant": false,
+            "rehabilitation_last_2y": false
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass land_value (in euros) or land_share_pct",
+          "latency_ms": 0.0538029707968235
+        },
+        {
+          "name": "save_to_portfolio",
+          "arguments": {
+            "label": "Edificio de 1978",
+            "municipality": "Málaga",
+            "area_m2": 226,
+            "stressed_zone": true,
+            "purchase_price": 100000,
+            "monthly_rent": 1420,
+            "cadastral_ref": "12345678901234"
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "get_portfolio",
+          "arguments": {
+            "municipality": "Málaga",
+            "zone_lowers_threshold": false
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "lookup_property",
+          "arguments": {
+            "address": "Calle de la Plaza, 12, Málaga"
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "get_market_rates",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "get_rent_reference",
+          "arguments": {
+            "municipality": "Málaga",
+            "province": "Andalucía"
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 100000,
+            "region": "Andalucía",
+            "new_build": false,
+            "reference_value": 100000,
+            "notary_registry": 1000,
+            "agency_fee": 500,
+            "renovation": 0,
+            "itp_rate_pct": 0,
+            "ajd_rate_pct": 1.5
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>1075.00</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "max_price",
+      "question": "El piso generaría 16.820 € netos al año. Quiero un 4 % neto. Impuesto de transmisiones: 3,5 % sobre el precio. Otros gastos de compra: 23.900 €. ¿Hasta qué precio de compra me sale la operación? Da el resultado en euros, con dos decimales.",
+      "expected": "383188.41",
+      "predicted": "383188.41",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 4,
+            "monthly_rent": 16820,
+            "itp_rate_pct": 3.5,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "rate_shock_pct": 0,
+            "fixed_costs": 23900
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: monthly_rent is per MONTH and 16820 looks like a yearly figure: pass a net yearly income as annual_net_income, or divide a yearly rent by 12",
+          "latency_ms": 0.17211504746228456
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 4,
+            "annual_net_income": 16820,
+            "itp_rate_pct": 3.5,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "rate_shock_pct": 0,
+            "fixed_costs": 23900
+          },
+          "result": {
+            "max_price": 383188.41,
+            "annual_net_income": 16820.0,
+            "region": "andalucia",
+            "itp_rate_pct": 3.5,
+            "warnings": [
+              "supone que el valor de referencia no supera el precio"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.12524198973551393
+        }
+      ],
+      "turns": 3,
+      "answer": "<answer>383188.41</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "legal_rent",
+      "question": "Voy a firmar un nuevo contrato de alquiler de vivienda habitual. La vivienda está en una zona declarada de mercado residencial tensionado. El propietario tiene 5 viviendas en total, con 435 m² de uso residencial; 0 están en esta zona. La declaración de la zona rebaja el umbral de gran tenedor a cinco viviendas en la zona. La resolución extiende el índice de referencia a las viviendas sin contrato en los últimos cinco años. La vivienda no ha estado alquilada en los últimos cinco años. Tiene 64 m², el valor superior del índice de referencia (SERPAVI) es 12,1 €/m² al mes y el mercado pagaría 1.040 € al mes. ¿Cuánto puedo ingresar como máximo en el primer año? Responde en euros con dos decimales.",
+      "expected": "9292.80",
+      "predicted": "774.40",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "legal_rent_cap",
+          "arguments": {
+            "market_rent": 1040,
+            "stressed_zone": true,
+            "large_holder": false,
+            "area_m2": 64,
+            "previous_rent": null,
+            "ten_percent_exception": false,
+            "index_upper_eur_m2": 12.1,
+            "declaration_caps_unrented": true
+          },
+          "result": {
+            "max_monthly_rent": 774.4,
+            "max_annual_rent": 9292.8,
+            "binding_rule": "index",
+            "caps": {
+              "index": 774.4
+            }
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.06386503810063004
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 0.0,
+            "monthly_rent": 1040,
+            "annual_net_income": null,
+            "itp_rate_pct": null,
+            "region": null,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "invalid arguments: [{'type': 'greater_than', 'loc': ('target_net_yield_pct',), 'msg': 'Input should be greater than 0', 'input': 0.0, 'ctx': {'gt': 0.0}}]",
+          "latency_ms": 0.04557101055979729
+        },
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "get_portfolio",
+          "arguments": {
+            "municipality": null,
+            "zone_lowers_threshold": false
+          },
+          "result": {
+            "properties": [],
+            "dwellings": 0,
+            "residential_m2": 0.0,
+            "dwellings_in_zone": null,
+            "large_holder": false,
+            "large_holder_reason": "no supera ningún umbral del art. 3.k de la Ley 12/2023"
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 5.585099977906793
+        },
+        {
+          "name": "legal_rent_cap",
+          "arguments": {
+            "market_rent": 1040,
+            "stressed_zone": true,
+            "large_holder": false,
+            "area_m2": 64,
+            "previous_rent": null,
+            "ten_percent_exception": false,
+            "index_upper_eur_m2": 12.1,
+            "declaration_caps_unrented": true
+          },
+          "result": {
+            "max_monthly_rent": 774.4,
+            "max_annual_rent": 9292.8,
+            "binding_rule": "index",
+            "caps": {
+              "index": 774.4
+            }
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.055882963351905346
+        }
+      ],
+      "turns": 3,
+      "answer": "<answer>774.40</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "legal_rent",
+      "question": "La vivienda no ha estado alquilada en los últimos cinco años. El propietario tiene 5 viviendas en total, con 287 m² de uso residencial; 0 están en esta zona. La vivienda no está en ninguna zona de mercado residencial tensionado. Tiene 85 m², el valor superior del índice de referencia (SERPAVI) es 9,4 €/m² al mes y el mercado pagaría 960 € al mes. El barrio tiene metro a cinco minutos. ¿Cuál es la renta anual máxima que puede cobrar en el primer año del nuevo contrato? Indica la cifra en euros con dos decimales.",
+      "expected": "11520.00",
+      "predicted": "960.00",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "legal_rent_cap",
+          "arguments": {
+            "market_rent": 960,
+            "stressed_zone": false,
+            "large_holder": false,
+            "area_m2": 85,
+            "previous_rent": null,
+            "ten_percent_exception": false,
+            "index_upper_eur_m2": 9.4,
+            "declaration_caps_unrented": false
+          },
+          "result": {
+            "max_monthly_rent": 960.0,
+            "max_annual_rent": 11520.0,
+            "binding_rule": "no_zone",
+            "caps": {}
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.11031801113858819
+        },
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 5,
+            "monthly_rent": 960,
+            "annual_net_income": null,
+            "itp_rate_pct": null,
+            "region": "España",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: unknown place 'España': pass the autonomous community (andalucia, aragon, asturias, baleares, canarias, cantabria, castilla_la_mancha, castilla_y_leon, cataluna, comunidad_valenciana, extremadura, galicia, la_rioja, madrid, murcia, navarra, pais_vasco) or a Spanish province or municipality",
+          "latency_ms": 25.61284601688385
+        },
+        {
+          "name": "get_portfolio",
+          "arguments": {
+            "municipality": null,
+            "zone_lowers_threshold": false
+          },
+          "result": {
+            "properties": [],
+            "dwellings": 0,
+            "residential_m2": 0.0,
+            "dwellings_in_zone": null,
+            "large_holder": false,
+            "large_holder_reason": "no supera ningún umbral del art. 3.k de la Ley 12/2023"
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.410759006626904
+        },
+        {
+          "name": "lookup_property",
+          "arguments": {
+            "address": "Barrio de cinco minutos",
+            "cadastral_ref": null,
+            "floor": null,
+            "door": null
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "get_rent_reference",
+          "arguments": {
+            "municipality": "Barrio de cinco minutos",
+            "province": null
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 0,
+            "region": "España",
+            "new_build": false,
+            "reference_value": 0,
+            "notary_registry": 0.0,
+            "agency_fee": 0.0,
+            "renovation": 0.0,
+            "itp_rate_pct": null,
+            "ajd_rate_pct": null
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 0,
+            "monthly_rent": 960,
+            "annual_net_income": null,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "save_to_portfolio",
+          "arguments": {
+            "label": "Barrio de cinco minutos",
+            "municipality": "Barrio de cinco minutos",
+            "area_m2": 85,
+            "stressed_zone": false,
+            "purchase_price": 0,
+            "monthly_rent": 960,
+            "cadastral_ref": null
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "get_market_rates",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "legal_rent_cap",
+          "arguments": {
+            "market_rent": 960,
+            "stressed_zone": false,
+            "large_holder": false,
+            "area_m2": 85,
+            "previous_rent": null,
+            "ten_percent_exception": false,
+            "index_upper_eur_m2": 9.4,
+            "declaration_caps_unrented": false
+          },
+          "result": {
+            "max_monthly_rent": 960.0,
+            "max_annual_rent": 11520.0,
+            "binding_rule": "no_zone",
+            "caps": {}
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.051200040616095066
+        }
+      ],
+      "turns": 3,
+      "answer": "<answer>960.00</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "irpf_rental",
+      "question": "Alquilo una vivienda como residencia habitual a una persona de 35 años por 20.700 € al año (contrato firmado en 2025). No tengo hipoteca. El IBI es de 674 €, la comunidad de 1.180 € al año y el seguro de 401 €. No hubo reparaciones. El valor catastral es 218.000 €, del que 121.500 € corresponde al suelo. No está en zona tensionada. Ya había estado alquilada antes y en el nuevo contrato bajé la renta más de un 5 % respecto al anterior. Compré por un coste total, gastos e impuestos incluidos, de 274.000 €. No he hecho obras de rehabilitación. El edificio es de 1978 y tiene la ITE favorable. ¿Cuál es el rendimiento neto reducido del capital inmobiliario que declaro en el IRPF? Da el resultado en euros, con dos decimales.",
+      "expected": "7403.17",
+      "predicted": "7403.17",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "rental_income_tax",
+          "arguments": {
+            "annual_rent": 20700,
+            "acquisition_cost_total": 274000,
+            "cadastral_value": 218000,
+            "contract_date": "2025-01-01",
+            "land_value": 121500,
+            "land_share_pct": 40,
+            "ibi": 674,
+            "community_annual": 1180,
+            "insurance": 401,
+            "interest": 0,
+            "repairs": 0,
+            "stressed_zone": false,
+            "previously_rented": true,
+            "monthly_rent": 20700,
+            "previous_rent": 23100,
+            "index_max_rent": null,
+            "large_holder": false,
+            "same_tenant_after_term": false,
+            "tenant_age": null,
+            "social_tenant": false,
+            "rehabilitation_last_2y": false
+          },
+          "result": {
+            "depreciation": 3638.67,
+            "deductible_financing_repairs": 0.0,
+            "net_income": 14806.33,
+            "reduction_pct": 50,
+            "reduced_net_income": 7403.17,
+            "reduction_rule": "contrato del 26/05/2023 al 30/11/2026, escala de la Ley 12/2023: 50 %",
+            "warnings": [
+              "variación de la renta frente al contrato anterior: -10.39 %"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.16142899403348565
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>7403.17</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "acquisition_cost",
+      "question": "Estoy analizando un piso de segunda mano que se vende por 107.500 €. La cocina se reformó hace unos años. El valor de referencia del Catastro es 112.100 €. Notaría, registro y gestoría suman 2.750 €. No hay comisión de agencia. No necesita reforma. El tipo de ITP de la comunidad es del 7 %. ¿Cuál es el desembolso total de la operación? Responde en euros con dos decimales.",
+      "expected": "118097.00",
+      "predicted": "118097.00",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 107500,
+            "region": "Sevilla",
+            "new_build": false,
+            "reference_value": 112100,
+            "notary_registry": 2750,
+            "agency_fee": 0,
+            "renovation": 0,
+            "itp_rate_pct": 7,
+            "ajd_rate_pct": null
+          },
+          "result": {
+            "tax_base": 112100.0,
+            "transfer_tax": 7847.0,
+            "vat": 0.0,
+            "stamp_duty": 0.0,
+            "total": 118097.0,
+            "region": "andalucia",
+            "rule": "ITP 7 % sobre max(precio, valor de referencia) (Ley 11/2021)",
+            "warnings": []
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.17253798432648182
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>118097.00</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "max_price",
+      "question": "Busco una rentabilidad neta del 5 % sobre la inversión total. El piso generaría 6.560 € netos al año. El ITP es del 10 % y el valor de referencia es inferior al precio. Notaría, registro y reforma suman 17.200 €. La cocina se reformó hace unos años. ¿Cuál es el precio máximo que debería pagar? Indica la cifra en euros con dos decimales.",
+      "expected": "103636.36",
+      "predicted": "1415636.36",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 5,
+            "monthly_rent": 6560,
+            "itp_rate_pct": 10,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "rate_shock_pct": 0,
+            "fixed_costs": 17200
+          },
+          "result": {
+            "max_price": 1415636.36,
+            "annual_net_income": 78720.0,
+            "region": "andalucia",
+            "itp_rate_pct": 10.0,
+            "warnings": [
+              "supone que el valor de referencia no supera el precio"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.14634703984484076
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>1415636.36</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "cash_on_cash",
+      "question": "Tiene plaza de garaje incluida en el precio. Con una hipoteca de 267.000 € (30 años, 3,8 %) compro un piso que en total me cuesta 431.000 € y que da 20.590 € netos al año. ¿Cuál es mi rentabilidad sobre fondos propios? Responde en porcentaje con dos decimales.",
+      "expected": "3.45",
+      "predicted": "4.75",
+      "correct": false,
+      "tool_calls": [],
+      "turns": 1,
+      "answer": "To calculate the return on own funds (ROOF), we need to determine the net income and the total investment. The net income is given as 20,590 € per year. The total investment is 431,000 €.\n\nFirst, we calculate the annual return on own funds by dividing the net income by the total investment:\n\n$$\n\\text{Return on Own Funds} = \\frac{20,590}{431,000} \\times 100\n$$\n\n$$\n\\text{Return on Own Funds} = 0.0475 \\times 100\n$$\n\n$$\n\\text{Return on Own Funds} = 4.75\\%\n$$\n\n<answer>4.75</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "irpf_rental",
+      "question": "Ingresos por alquiler del año: 7.200 €. Inquilino: una persona de 36 años, contrato de 2025. El valor catastral es 172.000 €, del que 57.800 € corresponde al suelo. El IBI es de 1.015 €, la comunidad de 670 € al año y el seguro de 423 €. Este año gasté 1.690 € en reparaciones. Es la primera vez que la alquilo. Compré por un coste total, gastos e impuestos incluidos, de 321.000 €. No está en zona tensionada. No tengo hipoteca. No he hecho obras de rehabilitación. Calcula el rendimiento neto reducido a efectos del IRPF. Da el resultado en euros, con dos decimales.",
+      "expected": "-2991.87",
+      "predicted": "2991.87",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "rental_income_tax",
+          "arguments": {
+            "annual_rent": 7200,
+            "acquisition_cost_total": 321000,
+            "cadastral_value": 172000,
+            "contract_date": "2025-01-01",
+            "land_value": 57800,
+            "land_share_pct": null,
+            "ibi": 1015,
+            "community_annual": 670,
+            "insurance": 423,
+            "interest": 0,
+            "repairs": 1690,
+            "stressed_zone": false,
+            "previously_rented": true,
+            "monthly_rent": null,
+            "previous_rent": null,
+            "index_max_rent": null,
+            "large_holder": false,
+            "same_tenant_after_term": false,
+            "tenant_age": null,
+            "social_tenant": false,
+            "rehabilitation_last_2y": false
+          },
+          "result": {
+            "depreciation": 6393.87,
+            "deductible_financing_repairs": 1690.0,
+            "net_income": -2991.87,
+            "reduction_pct": 0,
+            "reduced_net_income": -2991.87,
+            "reduction_rule": "contrato del 26/05/2023 al 30/11/2026, escala de la Ley 12/2023: 50 %",
+            "warnings": []
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.08394499309360981
+        },
+        {
+          "name": "rental_income_tax",
+          "arguments": {
+            "annual_rent": 7200,
+            "acquisition_cost_total": 321000,
+            "cadastral_value": 172000,
+            "contract_date": "2025-01-01",
+            "land_value": 57800,
+            "land_share_pct": null,
+            "ibi": 1015,
+            "community_annual": 670,
+            "insurance": 423,
+            "interest": 0,
+            "repairs": 1690,
+            "stressed_zone": false,
+            "previously_rented": true,
+            "monthly_rent": null,
+            "previous_rent": null,
+            "index_max_rent": null,
+            "large_holder": false,
+            "same_tenant_after_term": false,
+            "tenant_age": null,
+            "social_tenant": false,
+            "rehabilitation_last_2y": false
+          },
+          "result": {
+            "depreciation": 6393.87,
+            "deductible_financing_repairs": 1690.0,
+            "net_income": -2991.87,
+            "reduction_pct": 0,
+            "reduced_net_income": -2991.87,
+            "reduction_rule": "contrato del 26/05/2023 al 30/11/2026, escala de la Ley 12/2023: 50 %",
+            "warnings": []
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.08441501995548606
+        }
+      ],
+      "turns": 3,
+      "answer": "<answer>2991.87</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "legal_rent",
+      "question": "Voy a firmar un nuevo contrato de alquiler de vivienda habitual. La resolución extiende el índice de referencia a las viviendas sin contrato en los últimos cinco años. Hace dos años tuvo un contrato de vivienda habitual cuya última renta, ya actualizada, es de 520 € al mes. La vivienda está en una zona declarada de mercado residencial tensionado. El propietario tiene 3 viviendas en total, con 168 m² de uso residencial; 0 están en esta zona. La declaración de la zona no modifica el umbral general de gran tenedor. Tiene 45 m², el valor superior del índice de referencia (SERPAVI) es 10,8 €/m² al mes y el mercado pagaría 590 € al mes. ¿Cuánto puedo ingresar como máximo en el primer año? Indica la cifra en euros con dos decimales.",
+      "expected": "6240.00",
+      "predicted": null,
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "legal_rent_cap",
+          "arguments": {
+            "market_rent": 590,
+            "stressed_zone": true,
+            "large_holder": false,
+            "area_m2": 45,
+            "previous_rent": 520,
+            "ten_percent_exception": false,
+            "index_upper_eur_m2": 10.8,
+            "declaration_caps_unrented": false
+          },
+          "result": {
+            "max_monthly_rent": 520.0,
+            "max_annual_rent": 6240.0,
+            "binding_rule": "previous_rent",
+            "caps": {
+              "previous_rent": 520.0
+            }
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.09317003423348069
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 0.0,
+            "monthly_rent": 590,
+            "annual_net_income": null,
+            "itp_rate_pct": null,
+            "region": null,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "invalid arguments: [{'type': 'greater_than', 'loc': ('target_net_yield_pct',), 'msg': 'Input should be greater than 0', 'input': 0.0, 'ctx': {'gt': 0.0}}]",
+          "latency_ms": 0.04114699549973011
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 4500,
+            "monthly_rent": 590,
+            "annual_net_income": 24600,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year",
+          "latency_ms": 0.05916395457461476
+        },
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "get_portfolio",
+          "arguments": {
+            "municipality": null,
+            "zone_lowers_threshold": false
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "lookup_property",
+          "arguments": {
+            "address": "Barcelona",
+            "cadastral_ref": "45000000000000"
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 4500,
+            "region": "Barcelona",
+            "new_build": false,
+            "reference_value": 4500,
+            "notary_registry": 0,
+            "agency_fee": 0,
+            "renovation": 0,
+            "itp_rate_pct": null,
+            "ajd_rate_pct": null
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 0.0,
+            "monthly_rent": 590,
+            "annual_net_income": 24600,
+            "itp_rate_pct": 0.0,
+            "region": "Barcelona",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0.0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 4500,
+            "monthly_rent": 590,
+            "annual_net_income": 24600,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0.0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        }
+      ],
+      "turns": 2,
+      "answer": "{\"name\": \"legal_rent_cap\", \"arguments\": {\"market_rent\": 590, \"stressed_zone\": true, \"large_holder\": false, \"area_m2\": 45, \"previous_rent\": 520, \"ten_percent_exception\": false, \"index_upper_eur_m2\": 10.8, \"declaration_caps_unrented\": false}}"
+    },
+    {
+      "variant": "domain",
+      "family": "legal_rent",
+      "question": "La vivienda tiene orientación sur y dos baños. La vivienda no está en ninguna zona de mercado residencial tensionado. El propietario tiene 1 vivienda en total, con 111 m² de uso residencial; 0 están en esta zona. La vivienda no ha estado alquilada en los últimos cinco años. Tiene 76 m², el valor superior del índice de referencia (SERPAVI) es 21,8 €/m² al mes y el mercado pagaría 1.730 € al mes. Calcula la renta máxima del primer año del nuevo contrato (doce mensualidades). Responde en euros con dos decimales.",
+      "expected": "20760.00",
+      "predicted": "1730.00",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "legal_rent_cap",
+          "arguments": {
+            "market_rent": 1730,
+            "stressed_zone": false,
+            "large_holder": false,
+            "area_m2": 76,
+            "previous_rent": null,
+            "ten_percent_exception": false,
+            "index_upper_eur_m2": 21.8,
+            "declaration_caps_unrented": false
+          },
+          "result": {
+            "max_monthly_rent": 1730.0,
+            "max_annual_rent": 20760.0,
+            "binding_rule": "no_zone",
+            "caps": {}
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.07799098966643214
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 111000,
+            "monthly_rent": 1730,
+            "annual_net_income": null,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "collected_rent": 20760.0,
+            "operating_costs": 0.0,
+            "net_income": 20760.0,
+            "net_yield_pct": 18.7,
+            "gross_yield_pct": 18.7
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.07501099025830626
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 5,
+            "monthly_rent": 1730,
+            "annual_net_income": null,
+            "itp_rate_pct": null,
+            "region": null,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "fixed_costs": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass region (to look up the ITP rate) or itp_rate_pct",
+          "latency_ms": 0.054770964197814465
+        },
+        {
+          "name": "rental_income_tax",
+          "arguments": {
+            "annual_rent": 20760,
+            "acquisition_cost_total": 111000,
+            "cadastral_value": 111000,
+            "contract_date": "2023-01-01",
+            "land_value": null,
+            "land_share_pct": null,
+            "ibi": 0,
+            "community_annual": 0,
+            "insurance": 0,
+            "interest": 0,
+            "repairs": 0,
+            "stressed_zone": false,
+            "previously_rented": true,
+            "monthly_rent": 1730,
+            "previous_rent": null,
+            "index_max_rent": 21.8,
+            "large_holder": false,
+            "same_tenant_after_term": false,
+            "tenant_age": null,
+            "social_tenant": false,
+            "rehabilitation_last_2y": false
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass land_value (in euros) or land_share_pct",
+          "latency_ms": 0.05260301986709237
+        },
+        {
+          "name": "save_to_portfolio",
+          "arguments": {
+            "label": "Vivienda",
+            "municipality": "Barcelona",
+            "area_m2": 111,
+            "stressed_zone": false,
+            "purchase_price": 111000,
+            "monthly_rent": 1730,
+            "cadastral_ref": "76000000000000"
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "get_portfolio",
+          "arguments": {
+            "municipality": "Barcelona",
+            "zone_lowers_threshold": false
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>1730.00</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "net_yield",
+      "question": "La cocina se reformó hace unos años. Un piso me costó 284.000 € con todos los gastos y lo alquilo a 1.800 € mensuales. Espero 0,5 meses al año sin inquilino. Lo gestiono yo mismo, sin gestora. La comunidad cuesta 64 € al mes. No reservo nada para mantenimiento. El IBI es de 428 € al año. El seguro de hogar e impago cuesta 421 € al año. ¿Cuál es su rentabilidad neta? Expresa la respuesta como porcentaje con dos decimales.",
+      "expected": "6.72",
+      "predicted": "6.72",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 284000,
+            "monthly_rent": 1800,
+            "vacant_months": 0.5,
+            "ibi": 428,
+            "community_monthly": 64,
+            "insurance": 421,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "collected_rent": 20700.0,
+            "operating_costs": 1617.0,
+            "net_income": 19083.0,
+            "net_yield_pct": 6.72,
+            "gross_yield_pct": 7.61
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.06669003050774336
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>6.72</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "max_price",
+      "question": "El piso generaría 13.070 € netos al año. Quiero un 7 % neto. Impuesto de transmisiones: 10 % sobre el precio. Otros gastos de compra: 22.100 €. ¿Hasta qué precio de compra me sale la operación? Indica la cifra en euros con dos decimales.",
+      "expected": "149649.35",
+      "predicted": null,
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 7,
+            "monthly_rent": 13070,
+            "annual_net_income": 137700,
+            "itp_rate_pct": 10,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year",
+          "latency_ms": 0.14746200758963823
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 7,
+            "monthly_rent": 13070,
+            "annual_net_income": 137700,
+            "itp_rate_pct": 10,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.14901900431141257
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 7,
+            "monthly_rent": 13070,
+            "annual_net_income": 137700,
+            "itp_rate_pct": 10,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.120315991807729
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 7,
+            "monthly_rent": 13070,
+            "annual_net_income": 137700,
+            "itp_rate_pct": 10,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.11592695955187082
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 7,
+            "monthly_rent": 13070,
+            "annual_net_income": 137700,
+            "itp_rate_pct": 10,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.1131779863499105
+        }
+      ],
+      "turns": 5,
+      "answer": "No he llegado a una respuesta en 5 turnos; estos son los resultados de las herramientas que he usado."
+    },
+    {
+      "variant": "domain",
+      "family": "max_price",
+      "question": "Busco una rentabilidad neta del 4 % sobre la inversión total. El piso generaría 16.970 € netos al año. El ITP es del 10 % y el valor de referencia es inferior al precio. Notaría, registro y reforma suman 2.400 €. ¿Cuál es el precio máximo que debería pagar? Responde en euros con dos decimales.",
+      "expected": "383500.00",
+      "predicted": "42500.00",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 4,
+            "monthly_rent": 1697,
+            "annual_net_income": 19770,
+            "itp_rate_pct": 10,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year",
+          "latency_ms": 0.11291197733953595
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 4,
+            "monthly_rent": 1697,
+            "annual_net_income": 19770,
+            "itp_rate_pct": 10,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.11137704132124782
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 4,
+            "monthly_rent": 1697,
+            "annual_net_income": 19770,
+            "itp_rate_pct": 10,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.11669000377878547
+        }
+      ],
+      "turns": 4,
+      "answer": "<answer>42500.00</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "cash_on_cash",
+      "question": "Invierto 215.000 € en total en un piso y financio 149.000 € con una hipoteca a 20 años al 2,25 % fijo. El piso genera 9.970 € netos al año antes de la hipoteca. Es un tercero exterior con ascensor. ¿Qué rentabilidad obtengo sobre el dinero que pongo yo (cash-on-cash)? Da el resultado en %, con dos decimales.",
+      "expected": "1.08",
+      "predicted": "167.24",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 215000,
+            "monthly_rent": 9970,
+            "annual_net_income": null,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 149000,
+            "interest_rate_pct": 2.25,
+            "loan_years": 20,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "cash_on_cash_pct": 167.24,
+            "annual_cash_flow": 110381.64,
+            "collected_rent": 119640.0,
+            "operating_costs": 0.0,
+            "net_income": 119640.0,
+            "net_yield_pct": 55.65,
+            "gross_yield_pct": 55.65,
+            "financing": {
+              "monthly_payment": 771.53,
+              "annual_cash_flow": 110381.64,
+              "equity": 66000.0,
+              "cash_on_cash_pct": 167.24
+            }
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.11678796727210283
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>167.24</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "acquisition_cost",
+      "question": "Estoy analizando un piso de segunda mano que se vende por 221.000 €. Es un tercero exterior con ascensor. No necesita reforma. El valor de referencia del Catastro es 242.500 €. No hay comisión de agencia. El tipo de ITP de la comunidad es del 8 %. Notaría, registro y gestoría suman 2.310 €. ¿Cuál es el desembolso total de la operación? Indica la cifra en euros con dos decimales.",
+      "expected": "242710.00",
+      "predicted": "242710.00",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 221000,
+            "region": "Sevilla",
+            "new_build": false,
+            "reference_value": 242500,
+            "notary_registry": 2310,
+            "agency_fee": 0,
+            "renovation": 0,
+            "itp_rate_pct": 8,
+            "ajd_rate_pct": null
+          },
+          "result": {
+            "tax_base": 242500.0,
+            "transfer_tax": 19400.0,
+            "vat": 0.0,
+            "stamp_duty": 0.0,
+            "total": 242710.0,
+            "region": "andalucia",
+            "rule": "ITP 8 % sobre max(precio, valor de referencia) (Ley 11/2021)",
+            "warnings": []
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.16885000513866544
+        },
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 221000,
+            "region": "Sevilla",
+            "new_build": false,
+            "reference_value": 242500,
+            "notary_registry": 2310,
+            "agency_fee": 0,
+            "renovation": 0,
+            "itp_rate_pct": 8,
+            "ajd_rate_pct": null
+          },
+          "result": {
+            "tax_base": 242500.0,
+            "transfer_tax": 19400.0,
+            "vat": 0.0,
+            "stamp_duty": 0.0,
+            "total": 242710.0,
+            "region": "andalucia",
+            "rule": "ITP 8 % sobre max(precio, valor de referencia) (Ley 11/2021)",
+            "warnings": []
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.1367339864373207
+        }
+      ],
+      "turns": 3,
+      "answer": "<answer>242710.00</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "irpf_rental",
+      "question": "Ingresos por alquiler del año: 11.000 €. Inquilino: una persona de 34 años, contrato de 2025. Compré por un coste total, gastos e impuestos incluidos, de 260.000 €. No tengo hipoteca. El IBI es de 884 €, la comunidad de 1.120 € al año y el seguro de 312 €. Está en zona de mercado residencial tensionado. El valor catastral es 148.000 €, del que 49.700 € corresponde al suelo. Ya había estado alquilada antes, con una renta igual o superior a la actual. Este año gasté 2.560 € en reparaciones. Terminé una rehabilitación de la vivienda un año antes de firmar el contrato. Calcula el rendimiento neto reducido a efectos del IRPF. Responde en euros con dos decimales.",
+      "expected": "377.33",
+      "predicted": "377.33",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "rental_income_tax",
+          "arguments": {
+            "annual_rent": 11000,
+            "acquisition_cost_total": 260000,
+            "cadastral_value": 148000,
+            "contract_date": "2025-01-01",
+            "land_value": 49700,
+            "land_share_pct": null,
+            "ibi": 884,
+            "community_annual": 1120,
+            "insurance": 312,
+            "interest": 0,
+            "repairs": 2560,
+            "stressed_zone": true,
+            "previously_rented": true,
+            "monthly_rent": null,
+            "previous_rent": null,
+            "index_max_rent": null,
+            "large_holder": false,
+            "same_tenant_after_term": false,
+            "tenant_age": null,
+            "social_tenant": false,
+            "rehabilitation_last_2y": true
+          },
+          "result": {
+            "depreciation": 5180.68,
+            "deductible_financing_repairs": 2560.0,
+            "net_income": 943.32,
+            "reduction_pct": 60,
+            "reduced_net_income": 377.33,
+            "reduction_rule": "contrato del 26/05/2023 al 30/11/2026, escala de la Ley 12/2023: 60 %",
+            "warnings": [
+              "sin la renta anterior y la nueva no se puede aplicar el 90 %"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.1349610392935574
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>377.33</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "net_yield",
+      "question": "Renta mensual: 1.660 €. Inversión total: 279.000 €. El IBI es de 288 € al año. La gestora cobra un 8 % de lo cobrado. La comunidad cuesta 85 € al mes. Calculo un 5 % de los ingresos cobrados para mantenimiento. El seguro de hogar e impago cuesta 400 € al año. Espero tenerlo alquilado todo el año. Calcula la rentabilidad neta sobre la inversión total. Expresa la respuesta como porcentaje con dos decimales.",
+      "expected": "5.60",
+      "predicted": "6.17",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 279000,
+            "monthly_rent": 1660,
+            "annual_net_income": null,
+            "vacant_months": 0,
+            "ibi": 288,
+            "community_monthly": 85,
+            "insurance": 400,
+            "maintenance_pct": 5,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "collected_rent": 19920.0,
+            "operating_costs": 2704.0,
+            "net_income": 17216.0,
+            "net_yield_pct": 6.17,
+            "gross_yield_pct": 7.14
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.08475303184241056
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>6.17</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "legal_rent",
+      "question": "El propietario tiene 5 viviendas en total, con 423 m² de uso residencial; 0 están en esta zona. La vivienda no ha estado alquilada en los últimos cinco años. La vivienda no está en ninguna zona de mercado residencial tensionado. Tiene 117 m², el valor superior del índice de referencia (SERPAVI) es 18,2 €/m² al mes y el mercado pagaría 1.940 € al mes. El barrio tiene metro a cinco minutos. ¿Cuál es la renta anual máxima que puede cobrar en el primer año del nuevo contrato? Da el resultado en euros, con dos decimales.",
+      "expected": "23280.00",
+      "predicted": "23280.0",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "legal_rent_cap",
+          "arguments": {
+            "market_rent": 1940,
+            "stressed_zone": false,
+            "large_holder": false,
+            "area_m2": 117,
+            "previous_rent": null,
+            "ten_percent_exception": false,
+            "index_upper_eur_m2": 18.2,
+            "declaration_caps_unrented": false
+          },
+          "result": {
+            "max_monthly_rent": 1940.0,
+            "max_annual_rent": 23280.0,
+            "binding_rule": "no_zone",
+            "caps": {}
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.06492901593446732
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>23280.0</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "net_yield",
+      "question": "El barrio tiene metro a cinco minutos. Un piso me costó 286.000 € con todos los gastos y lo alquilo a 1.320 € mensuales. No reservo nada para mantenimiento. Espero 2 meses al año sin inquilino. El seguro de hogar e impago cuesta 300 € al año. El IBI es de 807 € al año. La comunidad cuesta 103 € al mes. Lo gestiono yo mismo, sin gestora. ¿Cuál es su rentabilidad neta? Responde en porcentaje con dos decimales.",
+      "expected": "3.80",
+      "predicted": "3.80",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 286000,
+            "monthly_rent": 1320,
+            "vacant_months": 2,
+            "ibi": 807,
+            "community_monthly": 103,
+            "insurance": 300,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "collected_rent": 13200.0,
+            "operating_costs": 2343.0,
+            "net_income": 10857.0,
+            "net_yield_pct": 3.8,
+            "gross_yield_pct": 5.54
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.07278099656105042
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>3.80</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "legal_rent",
+      "question": "Voy a firmar un nuevo contrato de alquiler de vivienda habitual. La vivienda no ha estado alquilada en los últimos cinco años. La resolución no extiende el índice a las viviendas sin contrato previo. El propietario tiene 9 viviendas en total, con 651 m² de uso residencial; 4 están en esta zona. La declaración de la zona rebaja el umbral de gran tenedor a cinco viviendas en la zona. La vivienda está en una zona declarada de mercado residencial tensionado. Tiene 123 m², el valor superior del índice de referencia (SERPAVI) es 13,9 €/m² al mes y el mercado pagaría 2.300 € al mes. ¿Cuánto puedo ingresar como máximo en el primer año? Responde en euros con dos decimales.",
+      "expected": "27600.00",
+      "predicted": null,
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "legal_rent_cap",
+          "arguments": {
+            "market_rent": 2300,
+            "stressed_zone": true,
+            "large_holder": false,
+            "area_m2": 123,
+            "previous_rent": null,
+            "ten_percent_exception": false,
+            "index_upper_eur_m2": 13.9,
+            "declaration_caps_unrented": true
+          },
+          "result": {
+            "max_monthly_rent": 1709.7,
+            "max_annual_rent": 20516.4,
+            "binding_rule": "index",
+            "caps": {
+              "index": 1709.7
+            }
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.05640694871544838
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 0.0,
+            "monthly_rent": 2300,
+            "annual_net_income": null,
+            "itp_rate_pct": null,
+            "region": null,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "invalid arguments: [{'type': 'greater_than', 'loc': ('target_net_yield_pct',), 'msg': 'Input should be greater than 0', 'input': 0.0, 'ctx': {'gt': 0.0}}]",
+          "latency_ms": 0.03590894630178809
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 123000,
+            "monthly_rent": 2300,
+            "annual_net_income": 279600,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year",
+          "latency_ms": 0.0315540237352252
+        },
+        {
+          "name": "rental_income_tax",
+          "arguments": {
+            "annual_rent": 279600,
+            "acquisition_cost_total": 123000,
+            "cadastral_value": 123000,
+            "contract_date": "2023-01-01",
+            "land_value": null,
+            "land_share_pct": null,
+            "ibi": 0,
+            "community_annual": 0,
+            "insurance": 0,
+            "interest": 0,
+            "repairs": 0,
+            "stressed_zone": true,
+            "previously_rented": true,
+            "monthly_rent": 2300,
+            "previous_rent": null,
+            "index_max_rent": 13.9,
+            "large_holder": false,
+            "same_tenant_after_term": false,
+            "tenant_age": null,
+            "social_tenant": false,
+            "rehabilitation_last_2y": false
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass land_value (in euros) or land_share_pct",
+          "latency_ms": 0.025545014068484306
+        },
+        {
+          "name": "get_portfolio",
+          "arguments": {
+            "municipality": "Barcelona",
+            "zone_lowers_threshold": false
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "lookup_property",
+          "arguments": {
+            "address": "Barcelona, 123, 45678"
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 123000,
+            "region": "Barcelona",
+            "new_build": false,
+            "reference_value": 123000,
+            "notary_registry": 0,
+            "agency_fee": 0,
+            "renovation": 0,
+            "itp_rate_pct": null,
+            "ajd_rate_pct": null
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 0.0,
+            "monthly_rent": 2300,
+            "annual_net_income": 279600,
+            "itp_rate_pct": 8,
+            "region": "Barcelona",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "rental_income_tax",
+          "arguments": {
+            "annual_rent": 279600,
+            "acquisition_cost_total": 123000,
+            "cadastral_value": 123000,
+            "contract_date": "2023-01-01",
+            "land_value": 0,
+            "land_share_pct": 0,
+            "ibi": 0,
+            "community_annual": 0,
+            "insurance": 0,
+            "interest": 0,
+            "repairs": 0,
+            "stressed_zone": true,
+            "previously_rented": true,
+            "monthly_rent": 2300,
+            "previous_rent": null,
+            "index_max_rent": 13.9,
+            "large_holder": false,
+            "same_tenant_after_term": false,
+            "tenant_age": null,
+            "social_tenant": false,
+            "rehabilitation_last_2y": false
+          },
+          "result": null,
+          "ok": false,
+          "error": "not run: at most 4 calls per turn. Call only the tools this question needs and wait for their results",
+          "latency_ms": 0.0
+        }
+      ],
+      "turns": 2,
+      "answer": "{\"name\": \"legal_rent_cap\", \"arguments\": {\"market_rent\": 2300, \"stressed_zone\": true, \"large_holder\": false, \"area_m2\": 123, \"previous_rent\": null, \"ten_percent_exception\": false, \"index_upper_eur_m2\": 13.9, \"declaration_caps_unrented\": true}}"
+    },
+    {
+      "variant": "domain",
+      "family": "max_price",
+      "question": "Busco una rentabilidad neta del 7 % sobre la inversión total. El piso generaría 15.940 € netos al año. El ITP es del 3,5 % y el valor de referencia es inferior al precio. Notaría, registro y reforma suman 23.200 €. La cocina se reformó hace unos años. ¿Cuál es el precio máximo que debería pagar? Indica la cifra en euros con dos decimales.",
+      "expected": "197598.34",
+      "predicted": "197598.34",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 7,
+            "monthly_rent": 15940,
+            "itp_rate_pct": 3.5,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "rate_shock_pct": 0,
+            "fixed_costs": 23200
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: monthly_rent is per MONTH and 15940 looks like a yearly figure: pass a net yearly income as annual_net_income, or divide a yearly rent by 12",
+          "latency_ms": 0.13507500989362597
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 7,
+            "annual_net_income": 15940,
+            "itp_rate_pct": 3.5,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "rate_shock_pct": 0,
+            "fixed_costs": 23200
+          },
+          "result": {
+            "max_price": 197598.34,
+            "annual_net_income": 15940.0,
+            "region": "andalucia",
+            "itp_rate_pct": 3.5,
+            "warnings": [
+              "supone que el valor de referencia no supera el precio"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.21432200446724892
+        }
+      ],
+      "turns": 3,
+      "answer": "<answer>197598.34</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "max_price",
+      "question": "El piso generaría 12.630 € netos al año. Quiero un 4,5 % neto. Impuesto de transmisiones: 8 % sobre el precio. Otros gastos de compra: 11.500 €. ¿Hasta qué precio de compra me sale la operación? Responde en euros con dos decimales.",
+      "expected": "249228.40",
+      "predicted": "249228.40",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 4.5,
+            "monthly_rent": 12630,
+            "itp_rate_pct": 8,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "rate_shock_pct": 0,
+            "fixed_costs": 11500
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: monthly_rent is per MONTH and 12630 looks like a yearly figure: pass a net yearly income as annual_net_income, or divide a yearly rent by 12",
+          "latency_ms": 0.11918495874851942
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 4.5,
+            "annual_net_income": 12630,
+            "itp_rate_pct": 8,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "rate_shock_pct": 0,
+            "fixed_costs": 11500
+          },
+          "result": {
+            "max_price": 249228.4,
+            "annual_net_income": 12630.0,
+            "region": "andalucia",
+            "itp_rate_pct": 8.0,
+            "warnings": [
+              "supone que el valor de referencia no supera el precio"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.17287902301177382
+        }
+      ],
+      "turns": 3,
+      "answer": "<answer>249228.40</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "irpf_rental",
+      "question": "Ingresos por alquiler del año: 15.800 €. Inquilino: una persona de 35 años, contrato de 2025. El valor catastral es 166.000 €, del que 95.000 € corresponde al suelo. Este año gasté 2.950 € en reparaciones. Está en zona de mercado residencial tensionado. El IBI es de 610 €, la comunidad de 1.070 € al año y el seguro de 424 €. Compré por un coste total, gastos e impuestos incluidos, de 329.000 €. Pago 17.090 € de intereses de la hipoteca al año. Ya había estado alquilada antes y en el nuevo contrato bajé la renta más de un 5 % respecto al anterior. No he hecho obras de rehabilitación. Calcula el rendimiento neto reducido a efectos del IRPF. Indica la cifra en euros con dos decimales.",
+      "expected": "-6325.51",
+      "predicted": "6325.51",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "rental_income_tax",
+          "arguments": {
+            "annual_rent": 15800,
+            "acquisition_cost_total": 329000,
+            "cadastral_value": 166000,
+            "contract_date": "2025-01-01",
+            "land_value": 95000,
+            "land_share_pct": null,
+            "ibi": 610,
+            "community_annual": 1070,
+            "insurance": 424,
+            "interest": 17090,
+            "repairs": 2950,
+            "stressed_zone": true,
+            "previously_rented": true,
+            "monthly_rent": 15800,
+            "previous_rent": 16300,
+            "index_max_rent": null,
+            "large_holder": false,
+            "same_tenant_after_term": false,
+            "tenant_age": null,
+            "social_tenant": false,
+            "rehabilitation_last_2y": false
+          },
+          "result": {
+            "depreciation": 4221.51,
+            "deductible_financing_repairs": 15800.0,
+            "net_income": -6325.51,
+            "reduction_pct": 0,
+            "reduced_net_income": -6325.51,
+            "reduction_rule": "contrato del 26/05/2023 al 30/11/2026, escala de la Ley 12/2023: 50 %",
+            "warnings": [
+              "variación de la renta frente al contrato anterior: -3.07 %",
+              "intereses + reparaciones superan los ingresos: el exceso se arrastra 4 años"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.1043349620886147
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>6325.51</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "net_yield",
+      "question": "La cocina se reformó hace unos años. Un piso me costó 131.000 € con todos los gastos y lo alquilo a 950 € mensuales. El seguro de hogar e impago cuesta 145 € al año. Espero tenerlo alquilado todo el año. El IBI es de 637 € al año. La comunidad cuesta 128 € al mes. Calculo un 5 % de los ingresos cobrados para mantenimiento. Lo gestiono yo mismo, sin gestora. ¿Cuál es su rentabilidad neta? Da el resultado en %, con dos decimales.",
+      "expected": "6.50",
+      "predicted": "6.61",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 131000,
+            "monthly_rent": 950,
+            "vacant_months": 0,
+            "ibi": 637,
+            "community_monthly": 128,
+            "maintenance_pct": 5,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "collected_rent": 11400.0,
+            "operating_costs": 2743.0,
+            "net_income": 8657.0,
+            "net_yield_pct": 6.61,
+            "gross_yield_pct": 8.7
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.07592799374833703
+        }
+      ],
+      "turns": 4,
+      "answer": "<answer>6.61</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "cash_on_cash",
+      "question": "Con una hipoteca de 75.000 € (15 años, 3,8 %) compro un piso que en total me cuesta 112.000 € y que da 4.230 € netos al año. ¿Cuál es mi rentabilidad sobre fondos propios? Da el resultado en %, con dos decimales.",
+      "expected": "-6.32",
+      "predicted": null,
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 112000,
+            "monthly_rent": 4230,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "collected_rent": 50760.0,
+            "operating_costs": 0.0,
+            "net_income": 50760.0,
+            "net_yield_pct": 45.32,
+            "gross_yield_pct": 45.32
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.07300602737814188
+        }
+      ],
+      "turns": 5,
+      "answer": "No he llegado a una respuesta en 5 turnos; estos son los resultados de las herramientas que he usado."
+    },
+    {
+      "variant": "domain",
+      "family": "irpf_rental",
+      "question": "Ingresos por alquiler del año: 5.000 €. Inquilino: una entidad sin ánimo de lucro que la destina a alquiler social, contrato de 2025. El IBI es de 1.167 €, la comunidad de 270 € al año y el seguro de 159 €. Pago 3.600 € de intereses de la hipoteca al año. No está en zona tensionada. El valor catastral es 120.000 €, del que 37.200 € corresponde al suelo. Compré por un coste total, gastos e impuestos incluidos, de 171.000 €. No he hecho obras de rehabilitación. Este año gasté 2.190 € en reparaciones. Es la primera vez que la alquilo. Calcula el rendimiento neto reducido a efectos del IRPF. Da el resultado en euros, con dos decimales.",
+      "expected": "-5135.70",
+      "predicted": "-5135.7",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "rental_income_tax",
+          "arguments": {
+            "annual_rent": 5000,
+            "acquisition_cost_total": 171000,
+            "cadastral_value": 120000,
+            "contract_date": "2025-01-01",
+            "land_value": 37200,
+            "land_share_pct": null,
+            "ibi": 1167,
+            "community_annual": 270,
+            "insurance": 159,
+            "interest": 3600,
+            "repairs": 2190,
+            "stressed_zone": false,
+            "previously_rented": true,
+            "monthly_rent": null,
+            "previous_rent": null,
+            "index_max_rent": null,
+            "large_holder": false,
+            "same_tenant_after_term": false,
+            "tenant_age": null,
+            "social_tenant": true,
+            "rehabilitation_last_2y": false
+          },
+          "result": {
+            "depreciation": 3539.7,
+            "deductible_financing_repairs": 5000.0,
+            "net_income": -5135.7,
+            "reduction_pct": 0,
+            "reduced_net_income": -5135.7,
+            "reduction_rule": "contrato del 26/05/2023 al 30/11/2026, escala de la Ley 12/2023: 70 %",
+            "warnings": [
+              "intereses + reparaciones superan los ingresos: el exceso se arrastra 4 años"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.10545499389991164
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>-5135.7</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "irpf_rental",
+      "question": "Ingresos por alquiler del año: 8.700 €. Inquilino: una persona de 22 años, contrato de 2025. El IBI es de 873 €, la comunidad de 1.230 € al año y el seguro de 372 €. No está en zona tensionada. Compré por un coste total, gastos e impuestos incluidos, de 203.000 €. Pago 2.450 € de intereses de la hipoteca al año. El valor catastral es 153.000 €, del que 68.900 € corresponde al suelo. Es la primera vez que la alquilo. No he hecho obras de rehabilitación. No hubo reparaciones. Calcula el rendimiento neto reducido a efectos del IRPF. Responde en euros con dos decimales.",
+      "expected": "213.75",
+      "predicted": "213.75",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "rental_income_tax",
+          "arguments": {
+            "annual_rent": 8700,
+            "acquisition_cost_total": 203000,
+            "cadastral_value": 153000,
+            "contract_date": "2025-01-01",
+            "land_value": 68900,
+            "land_share_pct": null,
+            "ibi": 873,
+            "community_annual": 1230,
+            "insurance": 372,
+            "interest": 2450,
+            "repairs": 0,
+            "stressed_zone": false,
+            "previously_rented": true,
+            "monthly_rent": null,
+            "previous_rent": null,
+            "index_max_rent": null,
+            "large_holder": false,
+            "same_tenant_after_term": false,
+            "tenant_age": null,
+            "social_tenant": false,
+            "rehabilitation_last_2y": false
+          },
+          "result": {
+            "depreciation": 3347.51,
+            "deductible_financing_repairs": 2450.0,
+            "net_income": 427.49,
+            "reduction_pct": 50,
+            "reduced_net_income": 213.75,
+            "reduction_rule": "contrato del 26/05/2023 al 30/11/2026, escala de la Ley 12/2023: 50 %",
+            "warnings": []
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.08817599155008793
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>213.75</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "acquisition_cost",
+      "question": "Quiero comprar para alquilar una vivienda de segunda mano por 225.500 €. Hay que invertir 25.100 € en reforma. El tipo de ITP de la comunidad es del 6 %. La agencia cobra 6.760 € al comprador. El valor de referencia del Catastro es 230.100 €. Notaría, registro y gestoría suman 3.760 €. ¿Cuánto capital necesito en total? Responde en euros con dos decimales.",
+      "expected": "274926.00",
+      "predicted": "259826.00",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 225500,
+            "region": "Sevilla",
+            "new_build": false,
+            "reference_value": 230100,
+            "notary_registry": 3760,
+            "agency_fee": 6760,
+            "renovation": 10000,
+            "itp_rate_pct": 6,
+            "ajd_rate_pct": null
+          },
+          "result": {
+            "tax_base": 230100.0,
+            "transfer_tax": 13806.0,
+            "vat": 0.0,
+            "stamp_duty": 0.0,
+            "total": 259826.0,
+            "region": "andalucia",
+            "rule": "ITP 6 % sobre max(precio, valor de referencia) (Ley 11/2021)",
+            "warnings": []
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.2331499708816409
+        },
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 225500,
+            "region": "Sevilla",
+            "new_build": false,
+            "reference_value": 230100,
+            "notary_registry": 3760,
+            "agency_fee": 6760,
+            "renovation": 10000,
+            "itp_rate_pct": 6,
+            "ajd_rate_pct": null
+          },
+          "result": {
+            "tax_base": 230100.0,
+            "transfer_tax": 13806.0,
+            "vat": 0.0,
+            "stamp_duty": 0.0,
+            "total": 259826.0,
+            "region": "andalucia",
+            "rule": "ITP 6 % sobre max(precio, valor de referencia) (Ley 11/2021)",
+            "warnings": []
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.14025700511410832
+        }
+      ],
+      "turns": 4,
+      "answer": "<answer>259826.00</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "cash_on_cash",
+      "question": "Operación: inversión total 370.000 €, préstamo 279.000 € a 25 años, interés fijo del 3,4 %, ingreso neto operativo de 21.100 € anuales. Calcula el flujo de caja sobre capital propio. Responde en porcentaje con dos decimales.",
+      "expected": "4.97",
+      "predicted": null,
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 370000,
+            "monthly_rent": 21100,
+            "annual_net_income": 21100,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 279000,
+            "interest_rate_pct": 3.4,
+            "loan_years": 25,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year",
+          "latency_ms": 0.10118301725015044
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 370000,
+            "monthly_rent": 21100,
+            "annual_net_income": 21100,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 279000,
+            "interest_rate_pct": 3.4,
+            "loan_years": 25,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.05588302155956626
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 370000,
+            "monthly_rent": 21100,
+            "annual_net_income": 21100,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 279000,
+            "interest_rate_pct": 3.4,
+            "loan_years": 25,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.05764799425378442
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 370000,
+            "monthly_rent": 21100,
+            "annual_net_income": 21100,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 279000,
+            "interest_rate_pct": 3.4,
+            "loan_years": 25,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.05527603207156062
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 370000,
+            "monthly_rent": 21100,
+            "annual_net_income": 21100,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 279000,
+            "interest_rate_pct": 3.4,
+            "loan_years": 25,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.06254500476643443
+        }
+      ],
+      "turns": 5,
+      "answer": "No he llegado a una respuesta en 5 turnos; estos son los resultados de las herramientas que he usado."
+    },
+    {
+      "variant": "domain",
+      "family": "irpf_rental",
+      "question": "Alquilo una vivienda como residencia habitual a una persona de 58 años por 19.600 € al año (contrato firmado en 2025). Compré por un coste total, gastos e impuestos incluidos, de 265.000 €. Está en zona de mercado residencial tensionado. Ya había estado alquilada antes y en el nuevo contrato bajé la renta más de un 5 % respecto al anterior. Pago 2.160 € de intereses de la hipoteca al año. El IBI es de 795 €, la comunidad de 430 € al año y el seguro de 197 €. Este año gasté 1.770 € en reparaciones. No he hecho obras de rehabilitación. El valor catastral es 138.000 €, del que 82.300 € corresponde al suelo. Es un tercero exterior con ascensor. ¿Cuál es el rendimiento neto reducido del capital inmobiliario que declaro en el IRPF? Indica la cifra en euros con dos decimales.",
+      "expected": "1103.92",
+      "predicted": null,
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "<unparsed>",
+          "arguments": {},
+          "result": null,
+          "ok": false,
+          "error": "tool_call is not valid JSON: Expecting ',' delimiter. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.0
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 265000,
+            "monthly_rent": 1960,
+            "annual_net_income": 19770,
+            "vacant_months": 0,
+            "ibi": 795,
+            "community_monthly": 430,
+            "insurance": 197,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 2160,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year",
+          "latency_ms": 0.06528297672048211
+        }
+      ],
+      "turns": 5,
+      "answer": "No he llegado a una respuesta en 5 turnos; estos son los resultados de las herramientas que he usado."
+    },
+    {
+      "variant": "domain",
+      "family": "cash_on_cash",
+      "question": "Operación: inversión total 253.000 €, préstamo 135.000 € a 25 años, interés fijo del 4,1 %, ingreso neto operativo de 11.240 € anuales. Calcula el flujo de caja sobre capital propio. Da el resultado en %, con dos decimales.",
+      "expected": "2.20",
+      "predicted": "2.20",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 253000,
+            "monthly_rent": null,
+            "annual_net_income": 11240,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 135000,
+            "interest_rate_pct": 4.1,
+            "loan_years": 25,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "cash_on_cash_pct": 2.2,
+            "annual_cash_flow": 2599.4,
+            "net_income": 11240.0,
+            "net_yield_pct": 4.44,
+            "financing": {
+              "monthly_payment": 720.05,
+              "annual_cash_flow": 2599.4,
+              "equity": 118000.0,
+              "cash_on_cash_pct": 2.2
+            }
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.09807897731661797
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>2.20</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "net_yield",
+      "question": "He invertido 159.000 € en total en un piso que alquilo por 640 € al mes. El seguro de hogar e impago cuesta 347 € al año. El IBI es de 889 € al año. Lo gestiono yo mismo, sin gestora. Calculo un 5 % de los ingresos cobrados para mantenimiento. La comunidad cuesta 83 € al mes. Espero tenerlo alquilado todo el año. Es un tercero exterior con ascensor. ¿Qué rentabilidad neta anual obtengo, antes de impuestos? Expresa la respuesta como porcentaje con dos decimales.",
+      "expected": "3.18",
+      "predicted": "3.40",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 159000,
+            "monthly_rent": 640,
+            "annual_net_income": null,
+            "vacant_months": 0,
+            "ibi": 889,
+            "community_monthly": 83,
+            "maintenance_pct": 5,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "collected_rent": 7680.0,
+            "operating_costs": 2269.0,
+            "net_income": 5411.0,
+            "net_yield_pct": 3.4,
+            "gross_yield_pct": 4.83
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.07861800258979201
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>3.40</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "cash_on_cash",
+      "question": "Invierto 364.000 € en total en un piso y financio 205.000 € con una hipoteca a 15 años al 3,05 % fijo. El piso genera 15.540 € netos al año antes de la hipoteca. El edificio es de 1978 y tiene la ITE favorable. ¿Qué rentabilidad obtengo sobre el dinero que pongo yo (cash-on-cash)? Expresa la respuesta como porcentaje con dos decimales.",
+      "expected": "-0.95",
+      "predicted": null,
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 364000,
+            "monthly_rent": 15540,
+            "annual_net_income": 155400,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 205000,
+            "interest_rate_pct": 3.05,
+            "loan_years": 15,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year",
+          "latency_ms": 0.05903496639803052
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 364000,
+            "monthly_rent": 15540,
+            "annual_net_income": 155400,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 205000,
+            "interest_rate_pct": 3.05,
+            "loan_years": 15,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.05653401603922248
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 364000,
+            "monthly_rent": 15540,
+            "annual_net_income": 155400,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 205000,
+            "interest_rate_pct": 3.05,
+            "loan_years": 15,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.057962024584412575
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 364000,
+            "monthly_rent": 15540,
+            "annual_net_income": 155400,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 205000,
+            "interest_rate_pct": 3.05,
+            "loan_years": 15,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.08486799197271466
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 364000,
+            "monthly_rent": 15540,
+            "annual_net_income": 155400,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 205000,
+            "interest_rate_pct": 3.05,
+            "loan_years": 15,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.062090985011309385
+        }
+      ],
+      "turns": 5,
+      "answer": "No he llegado a una respuesta en 5 turnos; estos son los resultados de las herramientas que he usado."
+    },
+    {
+      "variant": "domain",
+      "family": "irpf_rental",
+      "question": "Ingresos por alquiler del año: 15.100 €. Inquilino: una persona de 36 años, contrato de 2025. Terminé una rehabilitación de la vivienda un año antes de firmar el contrato. Ya había estado alquilada antes y en el nuevo contrato bajé la renta más de un 5 % respecto al anterior. El IBI es de 436 €, la comunidad de 1.020 € al año y el seguro de 243 €. Está en zona de mercado residencial tensionado. No hubo reparaciones. El valor catastral es 82.000 €, del que 38.300 € corresponde al suelo. Compré por un coste total, gastos e impuestos incluidos, de 151.000 €. Pago 5.960 € de intereses de la hipoteca al año. Calcula el rendimiento neto reducido a efectos del IRPF. Indica la cifra en euros con dos decimales.",
+      "expected": "502.68",
+      "predicted": "2010.74",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "rental_income_tax",
+          "arguments": {
+            "annual_rent": 15100,
+            "acquisition_cost_total": 151000,
+            "cadastral_value": 82000,
+            "contract_date": "2025-01-01",
+            "land_value": 38300,
+            "land_share_pct": 40,
+            "ibi": 436,
+            "community_annual": 1020,
+            "insurance": 243,
+            "interest": 5960,
+            "repairs": 0,
+            "stressed_zone": true,
+            "previously_rented": true,
+            "monthly_rent": 15100,
+            "previous_rent": 15100,
+            "index_max_rent": null,
+            "large_holder": false,
+            "same_tenant_after_term": false,
+            "tenant_age": 36,
+            "social_tenant": false,
+            "rehabilitation_last_2y": true
+          },
+          "result": {
+            "depreciation": 2414.16,
+            "deductible_financing_repairs": 5960.0,
+            "net_income": 5026.84,
+            "reduction_pct": 60,
+            "reduced_net_income": 2010.74,
+            "reduction_rule": "contrato del 26/05/2023 al 30/11/2026, escala de la Ley 12/2023: 60 %",
+            "warnings": [
+              "variación de la renta frente al contrato anterior: +0.00 %"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.1580030075274408
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>2010.74</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "max_price",
+      "question": "El piso generaría 12.190 € netos al año. Quiero un 4,5 % neto. Impuesto de transmisiones: 9 % sobre el precio. Otros gastos de compra: 22.500 €. ¿Hasta qué precio de compra me sale la operación? Indica la cifra en euros con dos decimales.",
+      "expected": "227879.71",
+      "predicted": null,
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 4.5,
+            "monthly_rent": 12190,
+            "annual_net_income": 19770,
+            "itp_rate_pct": 9,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year",
+          "latency_ms": 0.1630629994906485
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 4.5,
+            "monthly_rent": 12190,
+            "annual_net_income": 19770,
+            "itp_rate_pct": 9,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.11428195284679532
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 4.5,
+            "monthly_rent": 12190,
+            "annual_net_income": 19770,
+            "itp_rate_pct": 9,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.11529499897733331
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 4.5,
+            "monthly_rent": 12190,
+            "annual_net_income": 19770,
+            "itp_rate_pct": 9,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.12234802125021815
+        },
+        {
+          "name": "max_offer_price",
+          "arguments": {
+            "target_net_yield_pct": 4.5,
+            "monthly_rent": 12190,
+            "annual_net_income": 19770,
+            "itp_rate_pct": 9,
+            "region": "Andalucía",
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": 0,
+            "loan_years": 0,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.11546100722625852
+        }
+      ],
+      "turns": 5,
+      "answer": "No he llegado a una respuesta en 5 turnos; estos son los resultados de las herramientas que he usado."
+    },
+    {
+      "variant": "domain",
+      "family": "cash_on_cash",
+      "question": "Operación: inversión total 249.000 €, préstamo 145.000 € a 25 años, interés fijo del 3,85 %, ingreso neto operativo de 12.170 € anuales. Calcula el flujo de caja sobre capital propio. Expresa la respuesta como porcentaje con dos decimales.",
+      "expected": "3.01",
+      "predicted": null,
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 249000,
+            "monthly_rent": 12170,
+            "annual_net_income": 12170,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 145000,
+            "interest_rate_pct": 3.85,
+            "loan_years": 25,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year",
+          "latency_ms": 0.07522403029724956
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 249000,
+            "monthly_rent": 12170,
+            "annual_net_income": 12170,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 145000,
+            "interest_rate_pct": 3.85,
+            "loan_years": 25,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.05823897663503885
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 249000,
+            "monthly_rent": 12170,
+            "annual_net_income": 12170,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 145000,
+            "interest_rate_pct": 3.85,
+            "loan_years": 25,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.05627697100862861
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 249000,
+            "monthly_rent": 12170,
+            "annual_net_income": 12170,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 145000,
+            "interest_rate_pct": 3.85,
+            "loan_years": 25,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.05482899723574519
+        },
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 249000,
+            "monthly_rent": 12170,
+            "annual_net_income": 12170,
+            "vacant_months": 0,
+            "ibi": 0,
+            "community_monthly": 0,
+            "insurance": 0,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 145000,
+            "interest_rate_pct": 3.85,
+            "loan_years": 25,
+            "rate_shock_pct": 0
+          },
+          "result": null,
+          "ok": false,
+          "error": "ValueError: pass exactly one: monthly_rent (with the costs) if the user gave a rent per month, or annual_net_income if the user gave a net income per year. You already made this exact call and it failed: change the arguments or answer without this tool",
+          "latency_ms": 0.05714897997677326
+        }
+      ],
+      "turns": 5,
+      "answer": "No he llegado a una respuesta en 5 turnos; estos son los resultados de las herramientas que he usado."
+    },
+    {
+      "variant": "domain",
+      "family": "net_yield",
+      "question": "La vivienda tiene orientación sur y dos baños. Un piso me costó 532.000 € con todos los gastos y lo alquilo a 2.020 € mensuales. No reservo nada para mantenimiento. Lo gestiono yo mismo, sin gestora. El seguro de hogar e impago cuesta 225 € al año. La comunidad cuesta 97 € al mes. Espero 1 mes al año sin inquilino. El IBI es de 1.158 € al año. ¿Cuál es su rentabilidad neta? Da el resultado en %, con dos decimales.",
+      "expected": "3.70",
+      "predicted": "3.74",
+      "correct": false,
+      "tool_calls": [
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 532000,
+            "monthly_rent": 2020,
+            "vacant_months": 1,
+            "ibi": 1158,
+            "community_monthly": 97,
+            "maintenance_pct": 0,
+            "management_pct": 0,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "collected_rent": 22220.0,
+            "operating_costs": 2322.0,
+            "net_income": 19898.0,
+            "net_yield_pct": 3.74,
+            "gross_yield_pct": 4.56
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.07431302219629288
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>3.74</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "acquisition_cost",
+      "question": "Estoy analizando un piso de obra nueva que se vende por 195.000 €. El edificio es de 1978 y tiene la ITE favorable. Notaría, registro y gestoría suman 4.100 €. El tipo de AJD de la comunidad es del 1,5 %. El valor de referencia del Catastro es 183.500 €. No necesita reforma. No hay comisión de agencia. ¿Cuál es el desembolso total de la operación? Da el resultado en euros, con dos decimales.",
+      "expected": "221525.00",
+      "predicted": "221525.00",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 195000,
+            "region": "Sevilla",
+            "new_build": true,
+            "reference_value": 183500,
+            "notary_registry": 4100,
+            "agency_fee": 0,
+            "renovation": 0,
+            "itp_rate_pct": null,
+            "ajd_rate_pct": 1.5
+          },
+          "result": {
+            "tax_base": 195000.0,
+            "transfer_tax": 0.0,
+            "vat": 19500.0,
+            "stamp_duty": 2925.0,
+            "total": 221525.0,
+            "region": "andalucia",
+            "rule": "obra nueva: IVA 10 % sobre el precio + AJD sobre max(precio, valor de referencia)",
+            "warnings": [
+              "tipo de ITP sin verificar con la comunidad (Gibobs, ITP 2026 (fuente secundaria), consultada el 17/11/2026)"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.15392497880384326
+        },
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 195000,
+            "region": "Sevilla",
+            "new_build": true,
+            "reference_value": 183500,
+            "notary_registry": 4100,
+            "agency_fee": 0,
+            "renovation": 0,
+            "itp_rate_pct": null,
+            "ajd_rate_pct": 1.5
+          },
+          "result": {
+            "tax_base": 195000.0,
+            "transfer_tax": 0.0,
+            "vat": 19500.0,
+            "stamp_duty": 2925.0,
+            "total": 221525.0,
+            "region": "andalucia",
+            "rule": "obra nueva: IVA 10 % sobre el precio + AJD sobre max(precio, valor de referencia)",
+            "warnings": [
+              "tipo de ITP sin verificar con la comunidad (Gibobs, ITP 2026 (fuente secundaria), consultada el 17/11/2026)"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.1329369843006134
+        }
+      ],
+      "turns": 3,
+      "answer": "<answer>221525.00</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "acquisition_cost",
+      "question": "Quiero comprar para alquilar una vivienda de segunda mano por 240.000 €. No hay comisión de agencia. El tipo de ITP de la comunidad es del 7 %. El valor de referencia del Catastro es 282.700 €. No necesita reforma. Notaría, registro y gestoría suman 2.560 €. ¿Cuánto capital necesito en total? Indica la cifra en euros con dos decimales.",
+      "expected": "262349.00",
+      "predicted": "262349.00",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 240000,
+            "region": "Sevilla",
+            "new_build": false,
+            "reference_value": 282700,
+            "notary_registry": 2560,
+            "agency_fee": 0,
+            "renovation": 0,
+            "itp_rate_pct": 7,
+            "ajd_rate_pct": 0
+          },
+          "result": {
+            "tax_base": 282700.0,
+            "transfer_tax": 19789.0,
+            "vat": 0.0,
+            "stamp_duty": 0.0,
+            "total": 262349.0,
+            "region": "andalucia",
+            "rule": "ITP 7 % sobre max(precio, valor de referencia) (Ley 11/2021)",
+            "warnings": []
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.1395709696225822
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>262349.00</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "acquisition_cost",
+      "question": "Quiero comprar para alquilar una vivienda de obra nueva por 87.000 €. El valor de referencia del Catastro es 67.600 €. No hay comisión de agencia. No necesita reforma. Notaría, registro y gestoría suman 3.920 €. El tipo de AJD de la comunidad es del 1 %. Tiene plaza de garaje incluida en el precio. ¿Cuánto capital necesito en total? Responde en euros con dos decimales.",
+      "expected": "100490.00",
+      "predicted": "100490.00",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 87000,
+            "region": "Sevilla",
+            "new_build": true,
+            "reference_value": 67600,
+            "notary_registry": 3920,
+            "agency_fee": 0,
+            "renovation": 0,
+            "itp_rate_pct": null,
+            "ajd_rate_pct": 1
+          },
+          "result": {
+            "tax_base": 87000.0,
+            "transfer_tax": 0.0,
+            "vat": 8700.0,
+            "stamp_duty": 870.0,
+            "total": 100490.0,
+            "region": "andalucia",
+            "rule": "obra nueva: IVA 10 % sobre el precio + AJD sobre max(precio, valor de referencia)",
+            "warnings": [
+              "tipo de ITP sin verificar con la comunidad (Gibobs, ITP 2026 (fuente secundaria), consultada el 17/11/2026)"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.13139902148395777
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>100490.00</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "acquisition_cost",
+      "question": "Estoy analizando un piso de obra nueva que se vende por 210.000 €. Es un tercero exterior con ascensor. El tipo de AJD de la comunidad es del 0,5 %. El valor de referencia del Catastro es 167.300 €. No hay comisión de agencia. Notaría, registro y gestoría suman 4.150 €. Hay que invertir 39.700 € en reforma. ¿Cuál es el desembolso total de la operación? Responde en euros con dos decimales.",
+      "expected": "275900.00",
+      "predicted": "275900.00",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 210000,
+            "region": "Sevilla",
+            "new_build": true,
+            "reference_value": 167300,
+            "notary_registry": 4150,
+            "agency_fee": 0,
+            "renovation": 39700,
+            "itp_rate_pct": null,
+            "ajd_rate_pct": 0.5
+          },
+          "result": {
+            "tax_base": 210000.0,
+            "transfer_tax": 0.0,
+            "vat": 21000.0,
+            "stamp_duty": 1050.0,
+            "total": 275900.0,
+            "region": "andalucia",
+            "rule": "obra nueva: IVA 10 % sobre el precio + AJD sobre max(precio, valor de referencia)",
+            "warnings": [
+              "tipo de ITP sin verificar con la comunidad (Gibobs, ITP 2026 (fuente secundaria), consultada el 17/11/2026)"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.12793700443580747
+        },
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 210000,
+            "region": "Sevilla",
+            "new_build": true,
+            "reference_value": 167300,
+            "notary_registry": 4150,
+            "agency_fee": 0,
+            "renovation": 39700,
+            "itp_rate_pct": null,
+            "ajd_rate_pct": 0.5
+          },
+          "result": {
+            "tax_base": 210000.0,
+            "transfer_tax": 0.0,
+            "vat": 21000.0,
+            "stamp_duty": 1050.0,
+            "total": 275900.0,
+            "region": "andalucia",
+            "rule": "obra nueva: IVA 10 % sobre el precio + AJD sobre max(precio, valor de referencia)",
+            "warnings": [
+              "tipo de ITP sin verificar con la comunidad (Gibobs, ITP 2026 (fuente secundaria), consultada el 17/11/2026)"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.1289360225200653
+        }
+      ],
+      "turns": 3,
+      "answer": "<answer>275900.00</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "acquisition_cost",
+      "question": "Quiero comprar para alquilar una vivienda de segunda mano por 209.000 €. Hay que invertir 17.200 € en reforma. El tipo de ITP de la comunidad es del 7 %. El valor de referencia del Catastro es 260.200 €. Notaría, registro y gestoría suman 4.030 €. No hay comisión de agencia. ¿Cuánto capital necesito en total? Indica la cifra en euros con dos decimales.",
+      "expected": "248444.00",
+      "predicted": "248444.00",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 209000,
+            "region": "Sevilla",
+            "new_build": false,
+            "reference_value": 260200,
+            "notary_registry": 4030,
+            "agency_fee": 0,
+            "renovation": 17200,
+            "itp_rate_pct": 7,
+            "ajd_rate_pct": null
+          },
+          "result": {
+            "tax_base": 260200.0,
+            "transfer_tax": 18214.0,
+            "vat": 0.0,
+            "stamp_duty": 0.0,
+            "total": 248444.0,
+            "region": "andalucia",
+            "rule": "ITP 7 % sobre max(precio, valor de referencia) (Ley 11/2021)",
+            "warnings": []
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.14281499898061156
+        },
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 209000,
+            "region": "Sevilla",
+            "new_build": false,
+            "reference_value": 260200,
+            "notary_registry": 4030,
+            "agency_fee": 0,
+            "renovation": 17200,
+            "itp_rate_pct": 7,
+            "ajd_rate_pct": null
+          },
+          "result": {
+            "tax_base": 260200.0,
+            "transfer_tax": 18214.0,
+            "vat": 0.0,
+            "stamp_duty": 0.0,
+            "total": 248444.0,
+            "region": "andalucia",
+            "rule": "ITP 7 % sobre max(precio, valor de referencia) (Ley 11/2021)",
+            "warnings": []
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.18885900499299169
+        }
+      ],
+      "turns": 3,
+      "answer": "<answer>248444.00</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "acquisition_cost",
+      "question": "Precio de compra: 188.000 € (vivienda de segunda mano). Notaría, registro y gestoría suman 4.180 €. El tipo de ITP de la comunidad es del 3,5 %. No hay comisión de agencia. Hay que invertir 25.100 € en reforma. El valor de referencia del Catastro es 219.200 €. La cocina se reformó hace unos años. Calcula la inversión total, impuestos incluidos. Responde en euros con dos decimales.",
+      "expected": "224952.00",
+      "predicted": "224952.00",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "acquisition_cost",
+          "arguments": {
+            "price": 188000,
+            "region": "Sevilla",
+            "new_build": false,
+            "reference_value": 219200,
+            "notary_registry": 4180,
+            "agency_fee": 0,
+            "renovation": 25100,
+            "itp_rate_pct": 3.5,
+            "ajd_rate_pct": null
+          },
+          "result": {
+            "tax_base": 219200.0,
+            "transfer_tax": 7672.0,
+            "vat": 0.0,
+            "stamp_duty": 0.0,
+            "total": 224952.0,
+            "region": "andalucia",
+            "rule": "ITP 3.5 % sobre max(precio, valor de referencia) (Ley 11/2021)",
+            "warnings": []
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.12713298201560974
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>224952.00</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "irpf_rental",
+      "question": "Ingresos por alquiler del año: 22.500 €. Inquilino: una persona de 29 años, contrato de 2025. Compré por un coste total, gastos e impuestos incluidos, de 120.000 €. El valor catastral es 40.000 €, del que 9.600 € corresponde al suelo. No he hecho obras de rehabilitación. No hubo reparaciones. Pago 2.250 € de intereses de la hipoteca al año. Ya había estado alquilada antes, con una renta igual o superior a la actual. Está en zona de mercado residencial tensionado. El IBI es de 987 €, la comunidad de 1.580 € al año y el seguro de 366 €. Calcula el rendimiento neto reducido a efectos del IRPF. Indica la cifra en euros con dos decimales.",
+      "expected": "7290.50",
+      "predicted": "7290.5",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "rental_income_tax",
+          "arguments": {
+            "annual_rent": 22500,
+            "acquisition_cost_total": 120000,
+            "cadastral_value": 40000,
+            "contract_date": "2025-01-01",
+            "land_value": 9600,
+            "land_share_pct": null,
+            "ibi": 987,
+            "community_annual": 1580,
+            "insurance": 366,
+            "interest": 2250,
+            "repairs": 0,
+            "stressed_zone": true,
+            "previously_rented": true,
+            "monthly_rent": 2250,
+            "previous_rent": 2250,
+            "index_max_rent": null,
+            "large_holder": false,
+            "same_tenant_after_term": false,
+            "tenant_age": null,
+            "social_tenant": false,
+            "rehabilitation_last_2y": false
+          },
+          "result": {
+            "depreciation": 2736.0,
+            "deductible_financing_repairs": 2250.0,
+            "net_income": 14581.0,
+            "reduction_pct": 50,
+            "reduced_net_income": 7290.5,
+            "reduction_rule": "contrato del 26/05/2023 al 30/11/2026, escala de la Ley 12/2023: 50 %",
+            "warnings": [
+              "variación de la renta frente al contrato anterior: +0.00 %"
+            ]
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.10457297321408987
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>7290.5</answer>"
+    },
+    {
+      "variant": "domain",
+      "family": "net_yield",
+      "question": "Es un tercero exterior con ascensor. Un piso me costó 121.000 € con todos los gastos y lo alquilo a 520 € mensuales. Calculo un 3 % de los ingresos cobrados para mantenimiento. La gestora cobra un 6 % de lo cobrado. El IBI es de 391 € al año. La comunidad cuesta 36 € al mes. Espero 2 meses al año sin inquilino. El seguro de hogar e impago cuesta 290 € al año. ¿Cuál es su rentabilidad neta? Expresa la respuesta como porcentaje con dos decimales.",
+      "expected": "2.99",
+      "predicted": "2.99",
+      "correct": true,
+      "tool_calls": [
+        {
+          "name": "rental_returns",
+          "arguments": {
+            "total_investment": 121000,
+            "monthly_rent": 520,
+            "vacant_months": 2,
+            "ibi": 391,
+            "community_monthly": 36,
+            "insurance": 290,
+            "maintenance_pct": 3,
+            "management_pct": 6,
+            "loan": 0,
+            "interest_rate_pct": null,
+            "loan_years": null,
+            "rate_shock_pct": 0
+          },
+          "result": {
+            "collected_rent": 5200.0,
+            "operating_costs": 1581.0,
+            "net_income": 3619.0,
+            "net_yield_pct": 2.99,
+            "gross_yield_pct": 5.16
+          },
+          "ok": true,
+          "error": null,
+          "latency_ms": 0.10421202750876546
+        }
+      ],
+      "turns": 2,
+      "answer": "<answer>2.99</answer>"
+    }
+  ]
+}

@@ -5,11 +5,12 @@ Run::
     uv run python -m rlm.evaluate --data rlm/data/test.jsonl \
         --adapters base=none sft=rlm/weights/sft_lora grpo=rlm/weights/final_rlm_lora
 
-    uv run python -m rlm.evaluate --data rlm/data/test_ood.jsonl --out reports/phase1_ood.json \
+    uv run python -m rlm.evaluate --data rlm/data/test_ood.jsonl \
+        --out reports/fase1/phase1_ood.json \
         --adapters base=none sft=rlm/weights/sft_lora grpo=rlm/weights/final_rlm_lora
 
-It writes ``reports/phase1_eval.json`` with per-example verdicts (so you can do the failure
-analysis), pass@1 overall and per family, and ``reports/phase1_pass1.png`` with the bar chart.
+It writes ``reports/fase1/phase1_eval.json`` with per-example verdicts (so you can do the failure
+analysis), pass@1 overall and per family, and ``reports/fase1/phase1_pass1.png`` with the bar chart.
 ``--history`` plots the reward and length curves from the ``trainer_state.json`` that TRL
 saves in every output and checkpoint folder.
 """
@@ -212,7 +213,7 @@ def main() -> None:
     parser.add_argument("--n-examples", type=int, default=None)
     parser.add_argument("--max-new-tokens", type=int, default=2048)
     parser.add_argument("--batch-size", type=int, default=16)
-    parser.add_argument("--out", default="reports/phase1_eval.json")
+    parser.add_argument("--out", default="reports/fase1/phase1_eval.json")
     parser.add_argument("--history", default=None, help="trainer_state.json to plot")
     parser.add_argument("--name", default="GRPO con recompensa del dominio", help="--history run")
     parser.add_argument("--mark", type=int, default=None, help="--history: vertical line at step")

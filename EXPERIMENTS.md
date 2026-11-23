@@ -74,7 +74,7 @@ destilación con Qwen3-4B.
 **Qué queríamos saber.** Si el bucle de GRPO con TRL funciona en la partición MIG de la DGX
 (H200 1g.18gb, 17,2 GB), cuánto tarda y cuánta memoria usa, antes de lanzar nada del dominio.
 
-**Qué hicimos.** `nohup uv run arca-smoke > smoke.log 2>&1 &`: Qwen3-0.6B con LoRA de rango
+**Qué hicimos.** `nohup uv run arca-smoke > logs/fase1/smoke.log 2>&1 &`: Qwen3-0.6B con LoRA de rango
 16 (10,1 M parámetros entrenables, un 1,67 %), 40 pasos, grupo de 8 generaciones, 384 tokens
 como máximo, lr 1e-5, 256 problemas de GSM8K, semilla 0.
 
@@ -110,11 +110,11 @@ test, y una primera idea de dónde parte el modelo base antes de la línea base 
 
 **Qué hicimos.** `rlm.evaluate` con `Qwen/Qwen3-0.6B`, sin adaptador (`base=none`), sobre
 32 problemas de `rlm/data/test.jsonl`, con los valores por defecto (1024 tokens nuevos como
-máximo, lotes de 16). El comando exacto no quedó en `eval_probe.log`; fue el equivalente a
-`--n-examples 32 --out reports/eval_base_06b_probe.json`. Tardó 510 s.
+máximo, lotes de 16). El comando exacto no quedó en `logs/fase1/eval_probe.log`; fue el equivalente a
+`--n-examples 32 --out reports/fase1/eval_base_06b_probe.json`. Tardó 510 s.
 
-**Qué pasó.** Detalle en `reports/eval_base_06b_probe.json` y gráfico en
-`reports/eval_base_06b_probe.png`.
+**Qué pasó.** Detalle en `reports/fase1/eval_base_06b_probe.json` y gráfico en
+`reports/fase1/eval_base_06b_probe.png`.
 
 | Familia | n | pass@1 | Formato válido | Cortadas a 1024 |
 |---|---|---|---|---|
@@ -148,11 +148,11 @@ de los dos usamos (regla de `docs/fase1_plan.md`: si el de 1,7B pasa del 60 %, e
 demasiado fácil).
 
 **Qué hicimos.** Las dos órdenes del paso 1 de `docs/fase1_plan.md`, encadenadas con `nohup`
-(salida en `baseline.log`): `rlm.evaluate` sobre los 300 problemas de `rlm/data/test.jsonl`,
+(salida en `logs/fase1/baseline.log`): `rlm.evaluate` sobre los 300 problemas de `rlm/data/test.jsonl`,
 sin adaptador, con 1024 tokens nuevos como máximo. 0,6B: de 08:50 a 09:18 (~28 min).
 1,7B: de 09:18 a 09:49 (~31 min).
 
-**Qué pasó.** Detalle en `reports/eval_base_06b.json` y `reports/eval_base_17b.json`, con
+**Qué pasó.** Detalle en `reports/fase1/eval_base_06b.json` y `reports/fase1/eval_base_17b.json`, con
 sus gráficos `.png`.
 
 | | Qwen3-0.6B | Qwen3-1.7B |
@@ -303,7 +303,7 @@ familias fáciles, que ya tienen de sobra. En su lugar, una pasada solo con las 
 **Qué queríamos saber.** Si arreglos dirigidos a la causa de cada fallo suben la aceptación
 de `legal_rent`, `irpf_rental` y `cash_on_cash`.
 
-**Qué hicimos.** `distill_hard.sh` (commit `dde430d`), con problemas nuevos de train
+**Qué hicimos.** `scripts/fase1/distill_hard.sh` (commit `dde430d`), con problemas nuevos de train
 (`--families`, `--exclude rlm/data/sft_traces.jsonl`):
 1. `legal_rent` + `irpf_rental`, 100 problemas, 2048 tokens. La hoja explica el caso de
    `legal_rent` que fallaba siempre, presenta las reducciones del IRPF como art. 23.2 y pide
@@ -337,7 +337,7 @@ Total de trazas verificadas, sumando las tres tandas: **698**.
 - El error de reglas de `legal_rent` se arregla explicando el caso en la hoja. Lo de
   `cash_on_cash` es longitud: con 3072 tokens se cortan la mitad que antes.
 - `irpf_rental` es larga y numéricamente delicada para el 4B; las citas no eran la causa.
-  Queda una tanda con 3072 tokens y un orden fijo de cálculo (`distill_irpf.sh`, commit
+  Queda una tanda con 3072 tokens y un orden fijo de cálculo (`scripts/fase1/distill_irpf.sh`, commit
   `0ef55ae`), que no cupo en la sesión.
 - Las familias que más le cuestan al profesor son las de más pasos encadenados: es de esperar
   lo mismo en el alumno, y es donde una herramienta de cálculo (fase 2) aportaría más.
@@ -356,7 +356,7 @@ cuatro tandas de destilación, con `--max-per-problem 3 --max-per-family 150`: 5
 `net_yield` 91, `cash_on_cash` 56). `--max-length 3328`: con el valor por defecto (2048)
 se habrían recortado antes de `</answer>` cerca de la mitad de las trazas de
 `cash_on_cash` (mediana de 1.862 tokens). 76 pasos en 23,6 min, pico de 5,3 GB en la prueba.
-Evaluación con `eval_sft.sh` sobre los 300 problemas de test, en modo greedy.
+Evaluación con `scripts/fase1/eval_sft.sh` sobre los 300 problemas de test, en modo greedy.
 
 **Qué pasó.** La loss baja de 0,52 a 0,28 (acierto por token del 85 al 90 %) sin caer a
 cero.
@@ -373,8 +373,8 @@ cero.
 | `irpf_rental` | 0 % | 0 % | 0 % | 0 % |
 | `cash_on_cash` | 0 % | 0 % | 0 % | 0 % |
 
-Detalle en `reports/eval_sft_17b.json`, `reports/eval_sft_17b_2048.json` y
-`reports/eval_base_17b_2048.json`. Con 2.048 tokens, el 55 % de las respuestas que terminan
+Detalle en `reports/fase1/eval_sft_17b.json`, `reports/fase1/eval_sft_17b_2048.json` y
+`reports/fase1/eval_base_17b_2048.json`. Con 2.048 tokens, el 55 % de las respuestas que terminan
 son correctas.
 
 En `cash_on_cash` e `irpf_rental` más espacio no basta: terminan más respuestas (cortadas
@@ -407,11 +407,11 @@ pico, ~50 s por paso, 5 h 21 min en total.
 
 Hubo dos ejecuciones:
 1. **15/10, 215 pasos, recompensa del dominio rota** (`rlm/weights/grpo_sin_dominio_lora`,
-   `grpo_sin_dominio.log`). Se quedó en 0,01-0,05: exigía la unidad dentro de `<answer>`,
+   `logs/fase1/grpo_sin_dominio.log`). Se quedó en 0,01-0,05: exigía la unidad dentro de `<answer>`,
    y la hoja del profesor pedía el número sin unidades; y leía "240,700" como 240,7. La
    cortó el fin de la sesión.
 2. **18/10, 400 pasos, recompensa arreglada** (commit `310f048`; `rlm/weights/final_rlm_lora`,
-   `grpo.log`). Con las respuestas del SFT, 0,99 de media en aciertos y 0,25 en fallos.
+   `logs/fase1/grpo.log`). Con las respuestas del SFT, 0,99 de media en aciertos y 0,25 en fallos.
 
 **Qué pasó.** Curvas de la ejecución 2, medias de 100 pasos:
 
@@ -425,7 +425,7 @@ Hubo dos ejecuciones:
 Hasta el paso 215, las dos ejecuciones van igual en formato, exactitud, cortadas y longitud
 (los problemas salen en el mismo orden): lo único que cambia es la recompensa del dominio.
 
-Evaluación en test, 300 problemas, 1.024 tokens (`reports/eval_grpo_17b.json`):
+Evaluación en test, 300 problemas, 1.024 tokens (`reports/fase1/eval_grpo_17b.json`):
 
 | | Base | SFT | **GRPO** |
 |---|---|---|---|
@@ -452,7 +452,7 @@ aciertos; McNemar exacto, p = 0,085).
 - La mejora global es probable pero no concluyente con 300 problemas.
 - `cash_on_cash` e `irpf_rental` siguen en 0: terminan más respuestas, pero mal. Sin
   aciertos en el grupo, GRPO no tiene señal en esas familias.
-- Con 2.048 tokens (`reports/eval_grpo_17b_2048.json`), donde el espacio no limita:
+- Con 2.048 tokens (`reports/fase1/eval_grpo_17b_2048.json`), donde el espacio no limita:
 
   | | Base | SFT | **GRPO** |
   |---|---|---|---|
@@ -496,8 +496,8 @@ nula en la otra (`grpo_sin_dominio_lora`, 0,01-0,05 durante todo el entrenamient
 | `net_yield` | 66 % | 60 % |
 
 Cada versión acierta problemas que la otra falla (21 y 29); McNemar exacto, p = 0,32.
-Detalle en `reports/eval_grpo200_dominio.json` y `reports/eval_grpo200_sin_dominio.json`.
-Curvas de las dos ejecuciones en `reports/grpo_curvas.png`.
+Detalle en `reports/fase1/eval_grpo200_dominio.json` y `reports/fase1/eval_grpo200_sin_dominio.json`.
+Curvas de las dos ejecuciones en `reports/fase1/grpo_curvas.png`.
 
 **Qué concluimos.**
 - **No hay evidencia de que la recompensa del dominio ayude.** La versión sin ella sale
@@ -510,7 +510,7 @@ Curvas de las dos ejecuciones en `reports/grpo_curvas.png`.
   SFT): el alumno ya escribe las cifras intermedias, así que apenas distingue entre respuestas
   correctas. Para que aporte haría falta que discriminara más, por ejemplo puntuando solo las
   cifras que el enunciado no da.
-- Análisis de cinco fallos del modelo final en `docs/analisis_fallos_fase1.md`: obra nueva sin
+- Análisis de cinco fallos del modelo final en `docs/fase1/analisis_fallos_fase1.md`: obra nueva sin
   IVA (0 de 11), cash-on-cash sin cuota, IRPF sin amortización, divisiones mal hechas en
   `max_price` y bucles de repetición. Además, el alumno escribe "From the background knowledge"
   en 80 de 300 respuestas: la frase de la hoja del profesor se coló en 143 de las 703 trazas.
@@ -579,8 +579,8 @@ problemas distintos, con los números sustituidos):
 (`irpf_rental`, `legal_rent`) y de obra nueva, el alumno empieza a acertar esas familias, y si
 así GRPO tendrá señal en ellas.
 
-**Qué hicimos.** `distill_priv.sh` (Qwen3-4B, lotes de 2, `--privileged --only-unsolved`, cada
-tanda seguida de `rlm.rewrite_traces`) y después `sft2.sh`:
+**Qué hicimos.** `scripts/fase1/distill_priv.sh` (Qwen3-4B, lotes de 2, `--privileged --only-unsolved`, cada
+tanda seguida de `rlm.rewrite_traces`) y después `scripts/fase1/sft2.sh`:
 
 | Tanda | Trazas | Verificadas | Problemas cubiertos | Tras reescribir |
 |---|---|---|---|---|
@@ -588,7 +588,7 @@ tanda seguida de `rlm.rewrite_traces`) y después `sft2.sh`:
 | Obra nueva, sin clave | — | 141 | 40/40 | — |
 | `legal_rent` con clave (2048 tokens) | 80 | 29 (36,2 %) | 17/20 | **63 de 63** (20 problemas) |
 
-`cash_on_cash` con clave quedó para la próxima sesión (`relevo.sh` paró la cadena a las 14:46
+`cash_on_cash` con clave quedó para la próxima sesión (`scripts/fase1/relevo.sh` paró la cadena a las 14:46
 para que el SFT 2 cupiera). La reescritura de `legal_rent` acepta más trazas que las
 verificadas porque reescribe las que aciertan aunque se salten un cálculo intermedio, y al
 reescribirlas el profesor los escribe todos.
@@ -597,7 +597,7 @@ SFT 2: Qwen3-1.7B desde el modelo base, mismo LoRA y mismos hiperparámetros que
 (`--max-per-problem 3 --max-per-family 150 --max-length 3328`, 2 épocas, 86 pasos, 34 min,
 loss final 0,35). 974 trazas verificadas, 688 tras el tope: acquisition_cost 150, legal_rent
 150, irpf_rental 150, max_price 92, net_yield 91, cash_on_cash 55. Evaluación en test con
-1024 tokens (`reports/eval_sft2_17b.json`).
+1024 tokens (`reports/fase1/eval_sft2_17b.json`).
 
 **Qué pasó.**
 
@@ -633,7 +633,7 @@ cuentas están bien). Entraron así en el SFT 2.
   seguirá sin señal y harán falta pistas.
 - `legal_rent` y `cash_on_cash` necesitan más tokens que 1024 o razonamientos más cortos.
 - Para la próxima tanda, `rewrite_traces` debe rechazar las trazas en minúsculas.
-- Pendiente: `cash_on_cash` con clave (`bash distill_priv.sh` continúa), `sample_check` del
+- Pendiente: `cash_on_cash` con clave (`bash scripts/fase1/distill_priv.sh` continúa), `sample_check` del
   SFT 2 si no termina hoy, y GRPO 2.
 
 ---
@@ -685,11 +685,11 @@ El corte está solo en la evaluación (`rlm/evaluate.py`, 1024 por defecto, here
 **Qué queríamos saber.** Si el SFT 2 acierta alguna vez las familias difíciles con 8 intentos
 (si no, GRPO no tiene señal en ellas) y si la destilación con clave funciona en `cash_on_cash`.
 
-**Qué hicimos.** `sesion3.sh`: `rlm.sample_check` sobre el SFT 2 (8 problemas de train por
+**Qué hicimos.** `scripts/fase1/sesion3.sh`: `rlm.sample_check` sobre el SFT 2 (8 problemas de train por
 familia, 8 respuestas a temperatura 1,0, 1536 tokens; obra nueva con 6 problemas), y después
 `cash_on_cash` con clave (3072 tokens, `--only-unsolved`) y su reescritura.
 
-**Qué pasó.** Muestreo (`reports/sample_check_sft2*.json`):
+**Qué pasó.** Muestreo (`reports/fase1/sample_check_sft2*.json`):
 
 | Familia | pass@8 | Problemas útiles | Respuestas correctas | Cortadas |
 |---|---|---|---|---|
@@ -727,13 +727,13 @@ potencia (1+i)^-300 la dan como "aproximadamente 0,4666" sin desarrollarla.
 `cash_on_cash` con clave) mejora al SFT 1 y al GRPO 1 con el presupuesto justo de 2048 tokens,
 y si las pistas dan señal para el GRPO 2 en `irpf_rental` y `cash_on_cash`.
 
-**Qué hicimos.** `sft3.sh`: SFT desde el modelo base con las nueve tandas de trazas,
+**Qué hicimos.** `scripts/fase1/sft3.sh`: SFT desde el modelo base con las nueve tandas de trazas,
 `--max-per-problem 3 --max-per-family 200` (857 trazas: acquisition_cost 200, legal_rent 200,
 irpf_rental 169, cash_on_cash 105, max_price 92, net_yield 91), 108 pasos, 35 min
 (`rlm/weights/sft3_lora`). Evaluación en test con 2048 tokens (80 min) y `sample_check` en irpf
 y cash (8 problemas × 8 respuestas, 2048 tokens) sin pista y con pista de nivel 2.
 
-**Qué pasó.** Test, 2048 tokens (`reports/eval_sft3_17b_2048.json`), aciertos:
+**Qué pasó.** Test, 2048 tokens (`reports/fase1/eval_sft3_17b_2048.json`), aciertos:
 
 | Familia | SFT 1 | GRPO 1 | SFT 3 |
 |---|---|---|---|
@@ -751,7 +751,7 @@ Ninguna diferencia del total es significativa: frente al SFT 1, 29 problemas sol
 el SFT 3 y 21 solo el SFT 1 (McNemar exacto p = 0,32); frente al GRPO 1, 33 y 27 (p = 0,52).
 `legal_rent` sigue cortándose (termina 22 de 50; acierta 14 de esas 22).
 
-Muestreo (`reports/sample_check_sft3_pista{0,2}.json`):
+Muestreo (`reports/fase1/sample_check_sft3_pista{0,2}.json`):
 
 | | Sin pista: pass@8 | Sin pista: correctas | Pista 2: pass@8 | Pista 2: correctas |
 |---|---|---|---|---|
@@ -775,10 +775,10 @@ redondean resultados intermedios.
 
 **Añadido 23:10.** Con la pista nueva (orden de las reducciones y la que corresponde),
 `irpf_rental` pasa a pass@8 = 8/8, 8/8 problemas útiles y 23 % de respuestas correctas
-(`reports/sample_check_sft3_pista2_irpf_v2.json`). Prueba de 3 pasos del GRPO 2 a 2048 tokens
+(`reports/fase1/sample_check_sft3_pista2_irpf_v2.json`). Prueba de 3 pasos del GRPO 2 a 2048 tokens
 desde el SFT 3 con pistas: cabe en la MIG, ~80 s por paso. La prueba enseñó que el learning
 rate bajaba en línea recta hasta 0 al final de cada ejecución, lo que rompe una ejecución en
-dos etapas: `--lr-scheduler constant`. `grpo2.sh` queda listo para la próxima sesión.
+dos etapas: `--lr-scheduler constant`. `scripts/fase1/grpo2.sh` queda listo para la próxima sesión.
 
 ---
 
@@ -788,7 +788,7 @@ dos etapas: `--lr-scheduler constant`. `grpo2.sh` queda listo para la próxima s
 2048 tokens, recompensa por pasos, learning rate 4 veces mayor y pistas en las familias sin
 señal) mejora claramente al SFT 3 y al GRPO 1.
 
-**Qué hicimos.** `grpo2.sh` (de 23:55 a 07:14, en una sesión): 400 pasos, un problema y 8
+**Qué hicimos.** `scripts/fase1/grpo2.sh` (de 23:55 a 07:14, en una sesión): 400 pasos, un problema y 8
 respuestas por paso, `--max-completion-length 2048 --learning-rate 2e-5 --lr-scheduler constant
 --third-reward process`, pesos 0,5 / 2,0 / 0,5, 10 % de control GSM8K. Pasos 1–250 con copias
 con pista de nivel 2 de los 400 problemas de `irpf_rental` y los 400 de `cash_on_cash`
@@ -811,7 +811,7 @@ checkpoint 250. ~40 s por paso. Evaluación en test con 2048 tokens (69 min).
 La exactitud cae al quitar las pistas (los problemas pasan a ser más difíciles), no por
 olvido: la recompensa por pasos se recupera de 0,48 a 0,61.
 
-Test, 2048 tokens (`reports/eval_grpo2_17b_2048.json`), aciertos:
+Test, 2048 tokens (`reports/fase1/eval_grpo2_17b_2048.json`), aciertos:
 
 | Familia | SFT 1 | GRPO 1 | SFT 3 | **GRPO 2** |
 |---|---|---|---|---|
@@ -845,7 +845,7 @@ solo los acierta el GRPO 2 y 30 solo el SFT 3 (p = 0,026); frente al GRPO 1, 48 
 **Qué queríamos saber.** Por qué `irpf_rental` no mejora con el GRPO 2 pese a las pistas, y
 qué limita a `cash_on_cash` y max_price.
 
-**Qué hicimos.** Revisar las respuestas terminadas de test (`reports/eval_{sft3,grpo2}_17b_2048.json`):
+**Qué hicimos.** Revisar las respuestas terminadas de test (`reports/fase1/eval_{sft3,grpo2}_17b_2048.json`):
 la reducción que aplica el modelo en irpf frente a la correcta, si la amortización coincide con
 la del motor, y a qué distancia del valor correcto quedan las respuestas fallidas.
 
@@ -883,11 +883,11 @@ Ejemplo de max_price: plantea bien `1,09·P + 6.000 = 425.333,33` y calcula
 ### 2026-11-18 · Fase 1 · Curvas del GRPO 2, reward hacking y fallos actualizados
 
 **Qué hicimos.** Curvas de entrenamiento del GRPO 2 frente al GRPO 1
-(`reports/grpo2_vs_grpo1_curves.png`, media móvil de 25 pasos, línea en el paso 250 donde se
+(`reports/fase1/grpo2_vs_grpo1_curves.png`, media móvil de 25 pasos, línea en el paso 250 donde se
 quitan las pistas; la "tercera recompensa" es la de desglose en el GRPO 1 y la de pasos en el
 GRPO 2, no son comparables entre sí). Revisión de las 3.200 respuestas guardadas del GRPO 2
 buscando reward hacking, y recuento de los cinco patrones de fallo en el GRPO 2
-(`docs/analisis_fallos_fase1.md`, sección "Ronda 2").
+(`docs/fase1/analisis_fallos_fase1.md`, sección "Ronda 2").
 
 **Qué pasó.** Sin reward hacking: densidad de números estable (13-14 por cada 100 palabras) y
 las fallidas con recompensa por pasos completa usan menos cifras distintas que el resto (23,9
@@ -905,8 +905,8 @@ que queda es aritmética (fase 2) y la regla de la reducción del IRPF.
 reglas que no aparecen en entrenamiento (`rlm/data/test_ood.jsonl`: `becomes_large_holder` y
 `max_price_capped`, 75 cada una).
 
-**Qué hicimos.** `eval_ood.sh`: los cuatro modelos con 2048 tokens y greedy, de 10:11 a 14:00
-(`reports/eval_ood_{sft,grpo,sft3,grpo2}_2048.json`).
+**Qué hicimos.** `scripts/fase1/eval_ood.sh`: los cuatro modelos con 2048 tokens y greedy, de 10:11 a 14:00
+(`reports/fase1/eval_ood_{sft,grpo,sft3,grpo2}_2048.json`).
 
 **Qué pasó.**
 
@@ -937,6 +937,714 @@ SFT 3 23 % (14/62), GRPO 2 30 % (31/103).
   dos familias y la aritmética de max_price, que ya fallaba dentro de distribución.
 - Lo que la ronda 2 añadió (datos con la clave, pistas) mejora el test pero no la
   generalización: el GRPO 2 y el GRPO 1 están empatados fuera de distribución.
+
+---
+
+### 2026-11-17 · Fase 2 · Qué herramientas construir: investigación del dominio y decisión
+
+**Qué queríamos saber.** Qué herramientas tienen sentido para Umbral. No las que cumplen el
+mínimo, sino las que aportan algo que no haga ya otro producto, y que un modelo de 1,7B pueda
+usar.
+
+**Qué hicimos.** Investigamos cuatro frentes con búsquedas en la web y pruebas de cada API
+desde la DGX:
+- qué recomiendan los inversores con experiencia;
+- qué palancas legales y fiscales hay;
+- qué herramientas existen ya (portales, Invisor, TaxDown, Vivara, apps de ChatGPT);
+- qué datos públicos se pueden consultar de verdad.
+
+El informe está en [`docs/fase2/investigacion_fase2.md`](docs/fase2/investigacion_fase2.md).
+
+**Qué pasó.**
+- **Ninguna herramienta revisada aplica la norma por el usuario.** Le preguntan justo lo que no
+  sabe:
+  - el tipo de ITP de su comunidad;
+  - si la base es el precio o el valor de referencia;
+  - qué reducción del art. 23.2 le toca (TaxDown la pone en un desplegable de 0 a 100 %).
+- Ninguna dice si la renta de un piso concreto es legal.
+- Esos son también los fallos del alumno de la fase 1: la obra nueva sin IVA, el IRPF sin
+  amortización y la cuota del `cash_on_cash`.
+- **APIs que responden sin clave:** CartoCiudad, el servicio libre del Catastro, Euríbor del
+  BdE e IRAV del INE.
+- **Lo que no hay en abierto:** el valor catastral ni el de referencia, una fuente legible por
+  máquina de los tipos de ITP o de las zonas tensionadas, ni una API de subastas del BOE (su
+  `robots.txt` lo prohíbe todo).
+- La cuota de unas 100 llamadas al mes de Idealista no aparece en ninguna fuente primaria.
+
+**Qué concluimos.**
+- **10 herramientas:**
+  - Consulta: `lookup_property`, `get_market_rates` y `get_rent_reference`.
+  - Cálculo, sobre el motor de la fase 1: `acquisition_cost`, `rental_returns`,
+    `max_offer_price`, `legal_rent_cap` y `rental_income_tax`.
+  - Acción con estado: `save_to_portfolio` y `get_portfolio`.
+- Las calculadoras **deducen** lo que la gente suele equivocar en vez de pedirlo:
+  - el ITP, a partir de la comunidad;
+  - la reducción del IRPF, a partir de la fecha y los datos del contrato.
+- Idealista queda como opcional, porque con esa cuota no aguanta el desarrollo, el banco y la
+  corrección.
+- `calculator`, la calculadora genérica de la plantilla, sale del registro del endpoint. Se
+  queda solo para una ablación: con ella, el modelo aún tiene que aplicar las reglas por su
+  cuenta.
+
+---
+
+### 2026-11-17 · Fase 2 · El RDL 29/2026, leído en el BOE: la reducción del IRPF tiene tres regímenes
+
+**Qué queríamos saber.** Si lo que decían tres despachos sobre el RDL 29/2026 era cierto, y qué
+reglas del motor deja anticuadas.
+
+**Qué hicimos.** Leímos el texto del BOE
+([BOE-A-2026-20823](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20823)), sacado con la
+API de sumarios. Nos centramos en el art. 6, que reescribe el art. 23.2 de la LIRPF, y en la
+disposición transitoria 38.ª. Resumen en [`docs/investigacion/rdl_29_2026.md`](docs/investigacion/rdl_29_2026.md).
+
+**Qué pasó.**
+- **La reducción conserva tres regímenes según la fecha de firma del contrato:**
+  - antes del 26/05/2023: 60 %;
+  - del 26/05/2023 al 01/12/2026: la escala de la Ley 12/2023;
+  - desde el 01/12/2026: una escala nueva.
+- **La escala nueva**, solo si el arrendador no es gran tenedor:
+  - bajar la renta más de un 5 % da 100/95/90/85/70 %;
+  - no subirla da el 50 %;
+  - subirla da del 40 % al 15 % según el tramo;
+  - el primer alquiler tiene su propia escala, con el 100 % por debajo del índice SERPAVI.
+- Al gran tenedor solo le quedan el 70 % (alquiler social) y el 60 % (rehabilitación).
+- La fecha del 1 de diciembre que daban los despachos era correcta. El "2 % de subida máxima
+  hasta 2027" que también daban **no aparece en el texto**.
+
+**Qué concluimos.**
+- La escala nueva va al motor como **función nueva**, `rental_reduction_pct_2026`, con un test
+  por cada letra del artículo (23 casos). Las funciones de la fase 1 no cambian, porque su
+  dataset es anterior y la escala de 2023 sigue vigente para esos contratos.
+- `rental_income_tax` elige el régimen por la fecha y calcula la variación de la renta a
+  partir de la renta anterior y la nueva.
+- Es el mejor ejemplo de por qué la regla debe vivir en la herramienta y no en los pesos: el
+  alumno, entrenado con la escala de 2023, no puede saber la nueva.
+- **No están modelados:** el reparto entre varios inquilinos de edades distintas, el 80 % de la
+  prórroga tácita y las habitaciones.
+
+---
+
+### 2026-11-17 · Fase 2 · Zonas tensionadas del BOE y rentas del SERPAVI como datos de las herramientas
+
+**Qué queríamos saber.** Si se puede responder "¿es zona tensionada?" y "¿cuánto se paga de
+alquiler aquí?" sin que el usuario lo sepa.
+
+**Qué hicimos.** `tool_use/build_data.py` construye dos ficheros:
+- **Zonas tensionadas.** Lee las 10 resoluciones trimestrales del Ministerio en el BOE, de
+  marzo de 2024 a octubre de 2026.
+- **Rentas del SERPAVI.** Usa la hoja de municipios del Excel del SERPAVI (71 MB, no se
+  versiona): pisos, último año con datos y solo municipios con al menos 10 contratos.
+
+**Qué pasó.**
+- **322 zonas:**
+  - por comunidad: Cataluña 272, País Vasco 21, Navarra 21, Asturias 6 y Galicia 2;
+  - 8 cubren solo una parte del municipio (un distrito de Galdakao, barrios de Gijón y Avilés,
+    núcleos de Llanes…) y la herramienta lo avisa;
+  - en 312 la declaración baja el umbral de gran tenedor a 5 viviendas; Bilbao y Asturias no;
+  - las 322 aplican el tope del índice a las viviendas sin contrato previo.
+
+  Son justo dos argumentos de `legal_rent_cap` (`zone_lowers_threshold` y
+  `declaration_caps_unrented`) que el usuario no suele conocer.
+- **SERPAVI:** 2.616 municipios, 2.555 con datos de 2024. Son rentas declaradas a Hacienda de
+  contratos en vigor, no precios de anuncio. Madrid da una mediana de 13,97 €/m² y Barcelona
+  de 13,68 €/m², muy por debajo de lo que piden los portales.
+- **Un error encontrado al montar el banco.** `normalise_name` quitaba como si fuera un
+  artículo el principio de cualquier nombre que empezara por "a", "o" o "la": "Olot" quedaba
+  en "lot", "Alella" en "lella" y "Lasarte-Oria" en "sarte-oria". **34 de las 322 zonas** no
+  se habrían encontrado nunca. Además, el formato del INE "Coruña, A" no cruzaba con
+  "A Coruña". Corregido y con test.
+- **Detalles del BOE que el parser maneja a mano:**
+  - una coma que falta en la lista catalana ("Manresa el Masnou");
+  - "Vitoria-Gasteiz, excepto la zona rural…", que se partía por la coma.
+
+**Qué concluimos.**
+- `get_rent_reference` combina las dos fuentes. Funciona por nombre (también bilingüe:
+  "San Sebastián" encuentra "Donostia / San Sebastián") o por código INE, que es lo que
+  devuelve `lookup_property`, así que encadenan sin ambigüedad.
+- **Lo que no da** es el índice legal SERPAVI de una vivienda concreta: eso sale del visor
+  del Ministerio con su referencia catastral. La herramienta lo dice.
+- **Pendiente:**
+  - Cataluña amplió la lista a unos 302 municipios en julio de 2026, pero aún no aparece en
+    ninguna resolución del BOE;
+  - las declaraciones parciales están a nivel de municipio, sin el cruce por sección censal.
+
+---
+
+### 2026-11-17 · Fase 2 · Primera prueba del bucle con un modelo real (Qwen3-0.6B, CPU, un caso)
+
+**Qué queríamos saber.** Si el bucle funciona de principio a fin con un modelo de verdad: el
+formato nativo de Qwen3, el parser, la validación y la vuelta del error al modelo.
+
+**Qué hicimos.**
+`CUDA_VISIBLE_DEVICES="" uv run python -m tool_use.evaluate --model Qwen/Qwen3-0.6B --ids acq-01 --max-new-tokens 120 --max-turns 2`.
+
+Fue en CPU porque la GPU estaba ocupada con el SFT 2. Es un solo caso, así que no es una
+medida: solo comprueba que las piezas encajan.
+
+**Qué pasó.**
+- El modelo eligió `acquisition_cost` y copió bien el precio, el valor de referencia y la
+  notaría.
+- Pero puso `region: "sevilla"`, la ciudad en vez de la comunidad. La validación lo rechazó y
+  le devolvió el error, un mensaje largo con las 17 comunidades.
+- En el segundo turno no corrigió la llamada: **abandonó y se inventó la respuesta**
+  (187.500 €, sin ITP).
+- Selección 1/1 y argumentos 0/1.
+- Las 10 definiciones ocupan 4.767 tokens con el tokenizador de Qwen3. La más larga es
+  `rental_income_tax`, con 1.022.
+
+**Qué concluimos.**
+- El bucle funciona de principio a fin con un modelo real.
+- Con un 0,6B no sacamos conclusiones. Pero el fallo apunta a una decisión de diseño que
+  mediremos con el 1,7B: un esquema estricto, que obliga al modelo a traducir ciudad →
+  comunidad, o una herramienta tolerante, que acepta "Sevilla" y la traduce ella con la tabla
+  de provincias.
+- **Siguiente, en cuanto la GPU quede libre:**
+  1. el banco de 40 casos con Qwen3-1.7B base, con y sin thinking;
+  2. el banco con el adaptador de GRPO;
+  3. `phase1_compare` sobre el test de la fase 1.
+
+---
+
+### 2026-11-17 · Fase 2 · Primer banco: Qwen3-1.7B base frente al adaptador de GRPO de la fase 1
+
+**Qué queríamos saber.** Cómo usa las 10 herramientas el modelo de 1,7B sin entrenar para
+ello, y si el adaptador de la fase 1 (SFT + GRPO, `final_rlm_lora`) ayuda o estorba.
+
+**Qué hicimos.** El banco de 40 casos en la GPU, con `scripts/fase2/fase2_bench.sh`:
+`uv run python -m tool_use.evaluate --out reports/fase2/phase2_bench_base.json` y lo mismo con
+`--adapter …/final_rlm_lora`. Las condiciones:
+- formato nativo de Qwen3;
+- sin thinking;
+- 4 turnos como máximo;
+- 2.048 tokens por turno;
+- decodificación voraz.
+
+Unos 7 minutos por ejecución.
+
+Las cifras son tras `--rescore` con el evaluador corregido (entrada siguiente): `cap-02` se
+daba por fallado cuando el modelo acertaba, y unos argumentos rechazados por la validación ya
+no cuentan como correctos.
+
+**Qué pasó.** Casos acertados, de 40:
+
+| | Selección | Argumentos | Secuencia (10 encadenados y paralelos) | Llamadas innecesarias (8) |
+|---|---|---|---|---|
+| Base | 34 | 24 | 4 | 0 |
+| + GRPO fase 1 | 27 | 18 | 2 | 0 |
+
+Informes: [`reports/fase2/phase2_bench_base.json`](reports/fase2/phase2_bench_base.json) y
+[`reports/fase2/phase2_bench_grpo.json`](reports/fase2/phase2_bench_grpo.json).
+
+- **El modelo base elige bien y se equivoca en los argumentos.** Selección del 85 %, pero
+  en los casos `single` solo acierta los argumentos el 50 %. Cuatro causas:
+  - **Inventa la comunidad:** Sevilla → `extremadura`, Málaga → `extremadura`, Bilbao →
+    `baleares`, Barcelona → `"barcelona"` (que la validación rechaza). El esquema estricto
+    (`Literal` con 17 comunidades) le pide una traducción que no sabe hacer.
+  - **Rellena todos los opcionales con 0.** Sin hipoteca pone `loan_years: 0` y la
+    validación lo rechaza (≥ 1). En `par-01` hizo bien las dos llamadas en paralelo y falló
+    solo por esto.
+  - **No encadena:** 1 de 6 casos. Lanza las dos llamadas a la vez, con `price: 0` en la
+    segunda (`chain-02`), o se salta la consulta y se inventa el dato (euríbor al 2,5 % en
+    `chain-05`).
+  - **Confunde mensual y anual** en `rental_income_tax` (`monthly_rent: 15000`).
+- **Los 8 casos que no necesitan herramienta se responden sin llamar a ninguna** en los dos
+  modelos.
+- **El adaptador de GRPO ha perdido el formato de llamada.** 7 casos empeoran en selección y
+  ninguno mejora (McNemar exacto, p = 0,016). En 10 de los 32 casos que necesitan
+  herramienta no llama a ninguna (el base, en 1). Lo que hace en su lugar:
+  - en 3 escribe `<function name=… />` o `<function_call>`;
+  - en 1 escribe el JSON sin etiquetas;
+  - en 6 describe en prosa la llamada que haría ("necesitamos utilizar la función
+    `rental_returns`…") y hace las cuentas él mismo.
+
+**Qué concluimos.**
+- **`/tools` lo atiende el modelo base, sin adaptador.** El SFT y el GRPO con trazas de
+  razonamiento sin herramientas desplazan el formato `<tool_call>` que Qwen3 trae del
+  post-entrenamiento. Si en la fase 4 se quiere el "cerebro" de la fase 1 con herramientas,
+  hará falta mezclar trazas con llamadas en el SFT.
+- Los fallos del base son de definición más que de capacidad: tres de las cuatro causas se
+  pueden atacar en las herramientas y el prompt, sin entrenar. Siguiente entrada.
+
+---
+
+### 2026-11-17 · Fase 2 · Arreglos en herramientas, prompt y evaluador, y segundo banco
+
+**Qué queríamos saber.** Si los fallos del primer banco se arreglan cambiando las
+definiciones, sin tocar el modelo.
+
+**Qué hicimos.** Commit `9d147b8`:
+- **`region` acepta comunidad, provincia o municipio**
+  ([`tool_use/regions.py`](tool_use/regions.py)). Lo traduce con el código INE de los 2.616
+  municipios del SERPAVI, también en catalán o euskera; si el nombre es ambiguo, error con las
+  opciones.
+- **Un 0 en `loan_years` significa sin hipoteca.** El precio y la inversión tienen que ser
+  > 0, para que una llamada encadenada que todavía no tiene el valor falle en vez de calcular
+  con 0.
+- **Prompt de sistema:** dejar fuera los opcionales que no dé el usuario y, si un argumento
+  sale de otra herramienta, llamarla primero y esperar.
+- **`monthly_rent` y `previous_rent`** dicen que son mensuales.
+- **Evaluador:**
+  - la región se compara por comunidad;
+  - un argumento rechazado por la validación no cuenta como correcto;
+  - un 0 donde el valor por defecto es `None` se acepta;
+  - `--rescore` vuelve a puntuar un informe guardado sin generar.
+
+Después, el mismo banco con el mismo modelo y la misma configuración:
+[`reports/fase2/phase2_bench_base_v2.json`](reports/fase2/phase2_bench_base_v2.json).
+
+**Qué pasó.**
+
+| Qwen3-1.7B base | Selección | Argumentos | Secuencia (10) | `single` arg. (20) | `chain` sec. (6) | `parallel` sec. (4) |
+|---|---|---|---|---|---|---|
+| Antes | 34/40 | 24/40 | 4 | 10 | 1 | 3 |
+| Después | **37/40** | **32/40** | 5 | 13 | 1 | **4** |
+
+- **Argumentos:** 8 casos mejoran y ninguno empeora (McNemar exacto, p = 0,008). Son los de
+  la región (acq-01, acq-03, map-02), los ceros (par-01) y el mensual y anual (irpf-02).
+  Llamadas innecesarias: sigue en 0 de 8.
+- **Encadenar sigue en 1 de 6:**
+  - `chain-02` sigue lanzando las dos llamadas a la vez. Ahora la segunda falla con "price
+    must be > 0", pero el modelo no la repite con el precio.
+  - En `chain-03` se inventa una llamada a `lookup_property` con "Calle Embajadores 100,
+    Madrid", **la dirección de ejemplo de la descripción** de la herramienta.
+  - En `chain-01` olvida el IBI en la segunda llamada.
+- **Efecto secundario del prompt.** "Deja fuera los opcionales" hace que en `yield-02` y
+  `chain-05` omita `loan_years: 25`, que el usuario sí daba. En `chain-05` lo pone al
+  reintentar tras el error.
+- **Sin cambios:**
+  - `irpf-01` sigue eligiendo `rental_returns` para una pregunta de IRPF;
+  - `port-01` se inventa una referencia catastral;
+  - `yield-01` pone `vacant_months: 12` cuando el usuario dice uno.
+
+**Qué concluimos.**
+- **El esquema tolerante gana al estricto en este modelo.** Una tabla hace sin error la
+  traducción de ciudad a comunidad, y el modelo no.
+- 40 casos es poco. Las mejoras por categoría (`parallel` de 3 a 4, `mapping` de 1 a 2) son
+  de uno o dos casos y no son concluyentes por sí solas.
+- **Siguiente:**
+  1. Ejemplos de las descripciones que no sean valores plausibles (el de `lookup_property`
+     acaba en la llamada).
+  2. Afinar el prompt para que no quite lo que el usuario da.
+  3. Probar si con thinking el modelo encadena mejor. Con thinking, el banco tarda unos
+     4 minutos por caso (2 casos en 8 minutos; ejecución cortada en
+     `reports/fase2/phase2_bench_base_thinking_cortado.json`). Los 40 no caben en una sesión, así
+     que va una muestra de 10.
+
+---
+
+### 2026-11-17 · Fase 2 · Thinking en el bucle de herramientas: muestra de 10 casos
+
+**Qué queríamos saber.** Si dejar pensar a Qwen3 antes de cada turno (`enable_thinking`)
+mejora la elección de herramienta y, sobre todo, el encadenado, que es lo que más falla sin
+thinking.
+
+**Qué hicimos.** Primero, el banco completo con `--thinking`. Lo cortamos tras 2 casos
+porque iba a unos 4 minutos por caso (los 40 no caben en una sesión):
+[`reports/fase2/phase2_bench_base_thinking_cortado.json`](reports/fase2/phase2_bench_base_thinking_cortado.json).
+
+Después, una muestra de 10 casos elegidos por tipo de fallo, con el código de `9d147b8`, el
+mismo del segundo banco:
+`uv run python -m tool_use.evaluate --thinking --ids acq-01 map-02 yield-02 irpf-01 cap-01 chain-02 chain-05 par-01 none-01 rates-02 --out reports/fase2/phase2_bench_thinking_muestra.json`.
+Tardó 16 minutos, con 2.048 tokens por turno.
+
+**Qué pasó.** Acierta 4 de 10, **los mismos 4 que sin thinking** (acq-01, map-02, none-01 y
+par-01): [`reports/fase2/phase2_bench_thinking_muestra.json`](reports/fase2/phase2_bench_thinking_muestra.json).
+- **En `yield-02` e `irpf-01` se acaban los tokens pensando.** Calcula la cuota de la
+  hipoteca o el IRPF a mano dentro de `<think>` (más de 6.000 caracteres) y no llega a llamar
+  a la herramienta. Es el vicio de la fase 1, ahora dentro del razonamiento.
+- **Encadenar no mejora:**
+  - `chain-02` hace solo la primera llamada;
+  - `chain-05` llama a `rental_returns` antes de `get_market_rates`, igual que sin thinking.
+- `acq-01` acierta, pero repite la misma llamada tres veces.
+
+**Qué concluimos.**
+- **`/tools` va sin thinking.** En esta muestra no gana ningún caso, tarda unas 6 veces más
+  y tiene un modo de fallo propio: ponerse a calcular en vez de llamar.
+- 10 casos no bastan para descartar un efecto pequeño, pero no hay ninguna señal a favor que
+  justifique el coste del banco completo.
+- El encadenado no se arregla pensando más. Quedan el prompt (ya cambiado en `d795830`,
+  pendiente de medir) y, si no basta, un SFT con trazas de llamadas encadenadas.
+
+---
+
+### 2026-11-18 · Fase 2 · Con y sin herramientas sobre el test de la fase 1 (60 problemas)
+
+**Qué queríamos saber.** Si las herramientas del dominio sustituyen al entrenamiento de la
+fase 1: ¿el Qwen3-1.7B base, sin adaptador y sin thinking, resuelve con ellas los problemas
+del test que la fase 1 solo resolvía tras SFT y GRPO? Y si basta con una calculadora genérica.
+
+**Qué hicimos.** `tool_use.phase1_compare` sobre los 10 primeros problemas de cada familia de
+`rlm/data/test.jsonl` (60), con decodificación greedy, 2.048 tokens por turno y hasta 5 turnos.
+La respuesta se verifica con el `EuroVerifier` de la fase 1. Tres variantes:
+- `none`: el mismo modelo y un prompt sin herramientas;
+- `arithmetic`: solo una calculadora genérica;
+- `domain`: el registro completo.
+
+La variante `domain` se midió tres veces, cambiando las herramientas entre una pasada y otra
+según los fallos de la anterior:
+
+| Versión | Código | Informe |
+|---|---|---|
+| v1 | `240de15` | [`phase2_vs_phase1.json`](reports/fase2/phase2_vs_phase1.json) |
+| v2 | `542d499`: `annual_net_income` y tope de 4 llamadas por turno | [`…_domain_v2.json`](reports/fase2/phase2_vs_phase1_domain_v2.json) |
+| v3 | `12275a8`: `land_value` en euros, una renta mensual ≥ 10.000 € se rechaza, el ingreso neto manda sobre la renta | [`…_domain_v3.json`](reports/fase2/phase2_vs_phase1_domain_v3.json) |
+
+La v1 se cortó en 42/60 a las 11:05 por un OOM: otra sesión lanzó `scripts/fase1/eval_ood.sh` en la GPU, y
+su comprobación (`pgrep "python -m rlm"`) no ve `python -m tool_use`. Los 18 problemas que
+faltaban se completaron con `--resume` y el mismo código, desde un worktree en `240de15`
+(`scripts/fase2/fase2_compare2.sh` y `scripts/fase2/fase2_compare3.sh`). Cada variante tarda unos 35 minutos.
+
+Para comparar con la fase 1 usamos las filas de `eval_*_17b_2048.json` para los mismos 60
+problemas. Ojo: esos modelos van con el prompt R1-Zero, thinking y una sola generación.
+
+**Qué pasó.** Aciertos por familia, sobre 10 problemas cada una:
+
+| | acq. | cash-on-cash | IRPF | renta legal | precio máx. | rent. neta | **Total** |
+|---|---|---|---|---|---|---|---|
+| Base sin herramientas | 1 | 0 | 0 | 0 | 0 | 0 | **1** |
+| Base + calculadora | 1 | 0 | 0 | 0 | 0 | 0 | **1** |
+| Base + dominio v1 | 9 | 0 | 0 | 1 | 0 | 7 | **17** |
+| Base + dominio v2 | 8 | 1 | 0 | 3 | 0 | 5 | **17** |
+| Base + dominio v3 | 9 | 3 | 5 | 1 | 0 | 2 | **20** |
+| *Fase 1:* base con thinking | 1 | 0 | 0 | 2 | 0 | 2 | 5 |
+| *Fase 1:* SFT | 5 | 0 | 0 | 5 | 4 | 6 | 20 |
+| *Fase 1:* GRPO | 5 | 0 | 0 | 2 | 3 | 7 | 17 |
+| *Fase 1:* SFT 3 | 8 | 0 | 1 | 2 | 2 | 7 | 20 |
+| *Fase 1:* GRPO 2 | 8 | 2 | 0 | 5 | 1 | 8 | 24 |
+
+McNemar exacto, v3 frente a cada referencia (problemas que gana · que pierde · p):
+
+| Referencia | Gana | Pierde | p |
+|---|---|---|---|
+| Sin herramientas | 19 | 0 | < 0,001 |
+| Fase 1: base con thinking | 18 | 3 | 0,002 |
+| Fase 1: GRPO | 14 | 11 | 0,69 |
+| Fase 1: GRPO 2 | 10 | 14 | 0,54 |
+| Dominio v1 | 9 | 6 | 0,61 |
+
+Llamadas por problema: 10,0 en la v1, 4,1 en la v2 y 3,75 en la v3.
+
+- **La calculadora genérica no sirve.** El modelo la usa en 16 de 60 problemas, y cuando la
+  usa sigue aplicando mal las reglas: el problema era el dominio, no la aritmética.
+- **Por qué fallaban v1 y v2.** Casi todo era de interfaz, no de elección de herramienta (el
+  modelo llama a una herramienta en 60 de 60):
+  - **cash-on-cash:** el enunciado da el ingreso neto anual. En la v1 no había argumento para
+    él; en la v2, el modelo lo pasaba junto a una `monthly_rent: 900` inventada, la herramienta
+    rechazaba las dos cifras y el modelo repetía la llamada idéntica cinco turnos.
+  - **precio máximo:** el modelo metía los "19.770 € netos al año" en `monthly_rent`, y el
+    precio salía unas 12 veces mayor.
+  - **IRPF:** el modelo calculaba a mano la parte del suelo y la redondeaba (46 % en vez de
+    114.300 / 232.000 = 49,27 %). Con la parte exacta salen las cifras esperadas.
+  - **renta legal:** el modelo llama a casi todo el registro en un turno y responde con la
+    renta mensual cuando se pide la anual.
+- **v3: IRPF de 0 a 5 y cash-on-cash de 1 a 3, pero rentabilidad neta de 5 a 2.** Al poner
+  `annual_net_income` antes que `monthly_rent` en la firma, el modelo se inventa un ingreso
+  neto (1.740 €, la renta mensual; 10.680 €) junto a la renta del usuario, y como el ingreso
+  neto mandaba, la herramienta ignoraba la renta buena.
+- **Quedan errores del modelo al leer el resultado.** En cash-on-cash, `rental_returns`
+  devuelve −3,03 % y el modelo contesta 3,03, o contesta con la rentabilidad neta (5,86) en
+  vez del cash-on-cash (5,36). En precio máximo, ignora el "8 %" de ITP del enunciado y se
+  inventa Andalucía como región.
+
+**Qué concluimos.**
+- **Con las herramientas del dominio, el modelo base sin entrenar llega al nivel de la
+  fase 1:** 20/60 frente a 17 (GRPO) y 24 (GRPO 2), sin diferencia significativa con
+  ninguno, y muy por encima del mismo modelo sin herramientas (1/60). La diferencia está en
+  las herramientas del dominio, no en tener una calculadora.
+- **El diseño de la interfaz mueve tanto como el modelo:** cambiar el orden de dos
+  argumentos movió la rentabilidad neta de 5 a 2 de 10. Nunca dejar que una cifra mande en
+  silencio sobre otra: si llegan las dos, error, diciendo cuál pasar.
+- **Hemos ajustado las herramientas mirando estos 60 problemas**, así que la v3 es optimista.
+  La v4 (`4e028dd`, ya lanzada) se mide sobre los 10 problemas siguientes de cada familia
+  (`--skip-per-family 10`), que no se han mirado, y se compara con la fase 1 en esos mismos.
+- Para la sesión que comparta la GPU: comprobar `pgrep -af "python -m (rlm|tool_use)"`, no
+  solo `rlm`.
+
+---
+
+### 2026-11-18 · Fase 2 · Herramientas v4 sobre 60 problemas que no habíamos mirado
+
+**Qué queríamos saber.** Si el 20/60 de la v3 se sostiene en problemas que no habíamos usado
+para ajustar las herramientas, y si los arreglos de la v4 recuperan la rentabilidad neta que
+perdió la v3.
+
+**Qué hicimos.** Código `4e028dd`, con tres cambios respecto a la v3:
+- **renta o ingreso neto, nunca las dos:** si el modelo pasa ambas, error diciendo cuál
+  corresponde;
+- **`monthly_rent` vuelve antes que `annual_net_income`** en la firma;
+- **`cash_on_cash_pct` va lo primero del resultado**, e `itp_rate_pct` antes que `region`,
+  con "nunca te inventes un lugar".
+
+`scripts/fase2/fase2_compare4.sh` lanzó dos pasadas de la variante `domain`, mismo modelo y ajustes:
+1. sobre los problemas 11.º a 20.º de cada familia (`--skip-per-family 10`):
+   [`reports/fase2/phase2_vs_phase1_domain_v4_nuevos.json`](reports/fase2/phase2_vs_phase1_domain_v4_nuevos.json);
+2. sobre los 60 de la entrada anterior:
+   [`reports/fase2/phase2_vs_phase1_domain_v4.json`](reports/fase2/phase2_vs_phase1_domain_v4.json).
+
+Tardó 24 y 30 minutos.
+
+**Qué pasó.** Aciertos por familia (de 10):
+
+| | acq. | cash-on-cash | IRPF | renta legal | precio máx. | rent. neta | **Total** |
+|---|---|---|---|---|---|---|---|
+| v4, problemas nuevos | 9 | 1 | 6 | 1 | 4 | 6 | **27** |
+| *Fase 1:* GRPO 2, los mismos | 10 | 1 | 1 | 5 | 7 | 6 | 30 |
+| *Fase 1:* SFT 3, los mismos | 9 | 1 | 0 | 3 | 6 | 7 | 26 |
+| *Fase 1:* base con thinking, los mismos | 2 | 0 | 0 | 2 | 0 | 5 | 9 |
+| v4, los 60 de antes | 8 | 1 | 6 | 3 | 2 | 4 | **24** |
+| v3, los 60 de antes | 9 | 3 | 5 | 1 | 0 | 2 | 20 |
+
+Juntando los 120 problemas, McNemar exacto de la v4 (51 aciertos) frente a la fase 1:
+
+| Referencia | Aciertos | v4 gana | v4 pierde | p |
+|---|---|---|---|---|
+| Base con thinking | 14 | 42 | 5 | < 0,001 |
+| SFT | 44 | 27 | 20 | 0,38 |
+| GRPO | 41 | 30 | 20 | 0,20 |
+| SFT 3 | 46 | 23 | 18 | 0,53 |
+| GRPO 2 | 54 | 23 | 26 | 0,78 |
+
+Frente a la v3, sobre los mismos 60: gana 8 y pierde 4 (p = 0,39). Hace 4,1 llamadas por
+problema en los 60 de antes y 2,9 en los nuevos.
+
+- **El resultado se sostiene fuera de lo que miramos.** En los problemas nuevos, 27/60: entre
+  SFT 3 y GRPO 2.
+- **Los dos enfoques fallan en sitios distintos.** El IRPF sale con herramientas (12 de 20) y
+  no con entrenamiento (1 de 20 con GRPO 2), porque la regla vive en el código. La renta legal
+  y el precio máximo salen mejor con GRPO 2: el modelo con herramientas llama a casi todo el
+  registro en `legal_rent` (el tope de 4 deja fuera la llamada que importa) y responde con la
+  renta mensual cuando se pide la anual.
+- **Fallos que quedan en la v4:**
+  - el error "pass exactly one" se repite en bucle en 8 problemas: el modelo no corrige los
+    argumentos aunque el error diga cuáles;
+  - en 3 problemas el modelo se come el signo negativo: escribe 2.991,87 cuando es −2.991,87;
+  - en 9 problemas alguna llamada sale como JSON inválido (una coma de menos).
+
+**Qué concluimos.**
+- **Con las herramientas del dominio, Qwen3-1.7B base, sin entrenar y sin thinking, rinde lo
+  mismo que el mejor modelo entrenado de la fase 1:** 51 frente a 54 de 120, p = 0,78. Las
+  herramientas sustituyen al entrenamiento en las familias con regla fija (IRPF,
+  adquisición), no en las que exigen elegir bien entre varias herramientas.
+- **Lo siguiente sería combinar ambos:** un SFT corto con trazas de llamadas, para que el
+  adaptador no pierda el formato `<tool_call>` como le pasó al de la fase 1. También quitar
+  `legal_rent_cap` del "todo a la vez": que el prompt pida una herramienta por pregunta, salvo
+  si son independientes.
+- `/tools` se queda con el modelo base y el código de `4e028dd`.
+
+---
+
+### 2026-11-22 · Fase 2 · Banco con el código actual, y una prueba de orden en el IRPF que no funcionó
+
+**Qué queríamos saber.**
+- Si los arreglos que salieron de la comparación con la fase 1 (`8b35ffe` a `4e028dd`)
+  mejoran o empeoran el banco de 40 casos.
+- Si poner `land_share_pct` antes que `land_value` recupera `irpf-02` sin perder el IRPF del
+  test de la fase 1.
+
+**Qué hicimos.**
+- **Banco:** `scripts/fase2/fase2_bench_v4.sh`, es decir,
+  `uv run python -m tool_use.evaluate --out reports/fase2/phase2_bench_base_v4.json`. Qwen3-1.7B
+  base, sin thinking, código `a2a59c4` (el de `4e028dd` con `main` unida). Tardó 9 minutos.
+- **Prueba del IRPF:** sin commitear y ya deshecha. Pusimos `land_share_pct` antes que
+  `land_value`, y un ejemplo con cifras en cada descripción ("un 35 % de suelo", "114.300 €
+  corresponde al suelo"). La medimos sobre los 3 casos de IRPF del banco y los 20 problemas de
+  IRPF de las dos pasadas de la v4.
+
+**Qué pasó.** El banco frente al anterior
+([`phase2_bench_base_v2.json`](reports/fase2/phase2_bench_base_v2.json), código `9d147b8`):
+
+| | Selección | Argumentos | Secuencia | Llamadas innecesarias |
+|---|---|---|---|---|
+| v2 | 37/40 | 32/40 | 20/40 | 0 |
+| v4 | 37/40 | 32/40 | 16/40 | 0 |
+
+En argumentos, la v4 gana `yield-01`, `yield-02` y `rates-02`, y pierde `irpf-02`, `cad-01` y
+`chain-02` (McNemar, p = 1). En secuencia, el cambio de `chain-02` a `chain-05` deja el
+encadenado en 0 de 6:
+- **`irpf-02`:** el usuario da "un 35 % de suelo". El modelo deja vacíos `land_value` y
+  `land_share_pct`, y al reintentar se inventa `land_value: 100000`.
+- **`cad-01`:** vuelve a meter "escalera A, 2.º B" en la dirección, el fallo que se arregló
+  en `d795830`. No es estable.
+- **`chain-05`:** calcula la cuota con el Euríbor que se inventa, sin llamar a
+  `get_market_rates`.
+
+La prueba del IRPF empeora las dos medidas: 0/3 en argumentos en el banco (antes 1/3) y 10/20
+en el test de la fase 1 (antes 12/20). El motivo está en las trazas: **el modelo copia en
+`land_value` el "114.300" del ejemplo de la descripción**, también en `irpf-03`, cuyo
+enunciado da un 45 %.
+
+**Qué concluimos.**
+- **Los arreglos para el test de la fase 1 no han costado nada en el banco:** mismas cifras
+  de selección y argumentos, y siguen sin llamadas innecesarias. Se queda `4e028dd`.
+- **Las descripciones no llevan cifras de ejemplo.** Es la segunda vez que el modelo las
+  copia; la primera fue la dirección de ejemplo de `lookup_property`. Los ejemplos van en
+  palabras ("el valor del suelo en euros"), nunca con un número que pueda pasar como argumento.
+- **El orden de los argumentos de la misma magnitud decide cuál rellena el modelo.** Con
+  `land_value` primero, gana el IRPF del test de la fase 1 (que da euros) y pierde `irpf-02`
+  (que da un porcentaje). Como el banco tiene 3 casos de IRPF y la fase 1 tiene 20, nos
+  quedamos con `land_value` primero.
+- **El encadenado sigue sin resolverse** (0-1 de 6 según la pasada). Es lo siguiente que
+  habría que atacar, con trazas de SFT y no con más prompt.
+
+---
+
+### 2026-11-22 · Fase 2 · Encadenado: recordatorio tras cada resultado, ceros como "no dado" y Euríbor
+
+**Qué queríamos saber.** Si se puede mejorar el encadenado (0 de 6 en el banco de esta tarde)
+sin entrenar, solo con el bucle y las definiciones.
+
+**Qué hicimos.** Partimos de los fallos de `chain-*` en
+[`phase2_bench_base_v4.json`](reports/fase2/phase2_bench_base_v4.json):
+- **`chain-01`:** encadena bien, pero mete `annual_net_income: 0` junto a la renta y la
+  llamada falla tres veces;
+- **`chain-02`, `chain-04` y `chain-06`:** paran tras el primer resultado (en `chain-04` se
+  inventa el precio por m²);
+- **`chain-05`:** se inventa el Euríbor.
+
+Con tres cambios (`ccc536b`):
+- **un 0 en `monthly_rent` o `annual_net_income` cuenta como no dado**, igual que ya hacía
+  el evaluador;
+- **el bucle añade al último resultado de cada turno** "If the user's question still needs
+  another tool that uses these results, call it now; otherwise answer" (`CHAIN_HINT`);
+- **`interest_rate_pct` pide llamar a `get_market_rates`** si el usuario habla del Euríbor
+  actual.
+
+Banco completo, mismo modelo y ajustes que la entrada anterior: `scripts/fase2/fase2_bench_v5.sh`. Tardó
+9 minutos: [`reports/fase2/phase2_bench_base_v5.json`](reports/fase2/phase2_bench_base_v5.json).
+
+**Qué pasó.**
+
+| | Selección | Argumentos | Secuencia (10) | Encadenado (6) | Llamadas innecesarias (8) | Turnos |
+|---|---|---|---|---|---|---|
+| v4 (`a2a59c4`) | 37 | 32 | 4 | 0 | 0 | 1,98 |
+| v5 (`ccc536b`) | 38 | 31 | 6 | 2 | 0 | 2,15 |
+
+- **Gana `chain-05` y `chain-06`.** Ahora el modelo pide primero `get_market_rates` y
+  después calcula con ese tipo, y mira la cartera después de la zona tensionada.
+- **Pierde `yield-01` y `yield-03`:**
+  - en `yield-01` pone `vacant_months: 12` en vez de 1, un error de copia;
+  - en `yield-03` omite `loan_years`, y tras el error va a por el Euríbor aunque el usuario
+    da el tipo (3,2 %). Es un efecto secundario de la nueva descripción.
+- **Siguen sin encadenar:**
+  - `chain-02` y `chain-04` responden tras el primer resultado, pese al recordatorio;
+  - en `chain-01` y `chain-03` el modelo lanza en paralelo la segunda llamada sin esperar
+    al resultado de la primera.
+- McNemar exacto, p = 1 en las tres medidas: con 6 casos de encadenado, la mejora no es
+  significativa.
+
+**Qué concluimos.**
+- **Nos quedamos con `ccc536b`.** Sin llamadas innecesarias y con +2 en encadenado, a
+  cambio de −1 en argumentos. Pero el cambio es pequeño y no está demostrado.
+- **Falta separar los tres cambios.** La descripción del Euríbor es la que probablemente
+  estropea `yield-03`. Lo siguiente es medir el recordatorio solo, en la próxima sesión.
+- **El fallo que queda es lanzar en paralelo llamadas que dependen una de otra.** Con prompt y
+  bucle no se arregla del todo, así que el paso siguiente sería un SFT con trazas que esperan
+  al resultado.
+
+---
+
+### 2026-11-22 · Fase 2 · Encadenado por partes: qué aporta cada cambio (bancos v6 a v8)
+
+**Qué queríamos saber.** El banco v5 subió el encadenado de 0 a 2 de 6, pero perdió
+`yield-03`. Queríamos saber cuál de los cambios lo estropeaba, y si se podía quedar lo bueno
+sin lo malo.
+
+**Qué hicimos.** Tres bancos completos, mismo modelo y ajustes (Qwen3-1.7B base, sin
+thinking, 2.048 tokens), cambiando una cosa cada vez sobre `ccc536b`:
+
+| Banco | Código | Cambio |
+|---|---|---|
+| v6 | `91965a2` | quitar de `interest_rate_pct` la instrucción de pedir el Euríbor (queda el recordatorio) |
+| v7 | `b42e71b` | volver a ponerla, pero solo "si el usuario no da tipo y habla de euríbor más diferencial" |
+| v8 | `eca9bc9` | el error del préstamo nombra solo lo que falta; `vacant_months` de 12 se rechaza y su descripción dice "meses VACÍOS" |
+
+Informes: `reports/fase2/phase2_bench_base_v6.json`, `_v7.json` y `_v8.json`. Unos 9 minutos cada uno.
+
+**Qué pasó.**
+
+| | Selección | Argumentos | Secuencia (10) | Encadenado (6) | Llamadas innecesarias (8) |
+|---|---|---|---|---|---|
+| v4 (`a2a59c4`) | 37 | 32 | 4 | 0 | 0 |
+| v5 (`ccc536b`) | 38 | 31 | 6 | 2 | 0 |
+| v6 | 37 | 32 | 5 | 1 | 0 |
+| v7 | 39 | 31 | 6 | 2 | 0 |
+| **v8** | **40** | **33** | **6** | **2** | **0** |
+
+- **El recordatorio solo (v6) ya gana `chain-06`.** El modelo mira la cartera después de la
+  zona tensionada.
+- **La instrucción del Euríbor gana `chain-05` y, si es incondicional, estropea `yield-03`.**
+  Con la versión condicionada (v7), `yield-03` siguió fallando, pero por otra razón: el modelo
+  daba el tipo y olvidaba el plazo, y el error "a loan needs interest_rate_pct and loan_years"
+  le hacía creer que le faltaba el tipo, así que iba a por el Euríbor. Con el error que nombra
+  solo `loan_years` (v8), acierta a la primera.
+- **`yield-01`** pasaba "un mes vacío al año" como `vacant_months: 12` en v5 y v7. Con la
+  descripción "meses VACÍOS", en v8 pasa 1.
+- **v8 frente a v4:** gana `irpf-01`, `irpf-03` y `chain-05` en selección, y `chain-05` y
+  `chain-06` en secuencia, sin perder ningún caso en ninguna medida (McNemar: p = 0,25 y
+  0,5). Es el mejor banco hasta ahora, pero con 40 casos ninguna diferencia es significativa
+  por sí sola.
+
+**Qué concluimos.**
+- **Nos quedamos con `eca9bc9`:** 40/40 en selección, 33/40 en argumentos y sin llamadas
+  innecesarias.
+- **Los mensajes de error son parte de la interfaz, igual que las descripciones:** un error
+  que pide algo que el modelo ya dio lo manda en la dirección equivocada. Cada error debe
+  nombrar solo lo que falta.
+- **Una instrucción en una descripción tiene que llevar su condición.** "Pide el Euríbor"
+  sin más se aplica también cuando el usuario ya da el tipo.
+- **Siguen sin encadenar:** `chain-01` y `chain-03` lanzan a la vez llamadas que dependen una
+  de otra, y `chain-02` y `chain-04` responden tras el primer resultado. Esto ya no parece
+  arreglable con texto. El siguiente paso sería un SFT con trazas que esperan al resultado.
+
+---
+
+### 2026-11-23 · API · `docker compose up api` en la DGX, con /tools
+
+**Qué queríamos saber.** El MacBook no puede servir la API ahora que la fase 1 y la fase 2
+cargan cada una su Qwen3-1.7B. El enunciado pide que la API levante con `docker compose up
+api` y se exponga con ngrok. Queríamos saber si la DGX puede hacer las dos cosas, porque
+`docs/dgx.md` dice que allí no hay Docker.
+
+**Qué hicimos.**
+- Las sesiones ya tienen Docker 29.6 *rootless* y Compose v5.2, con las GPUs del nodo
+  expuestas por CDI.
+- `docker compose build api` funcionó a la primera: imagen de 26 GB, en `/tmp`, que se borra
+  al acabar la sesión.
+- La reserva de GPU del compose monta las 8 GPUs, pero Slurm solo deja abrir la nuestra, así
+  que no hay riesgo de usar las de otros.
+- Faltaban los ficheros `/dev/nvidia-caps/nvidia-capN` de nuestra partición MIG. Sin ellos,
+  torch dice "No CUDA GPUs are available".
+- Esos números cambian en cada sesión. En esta, la partición está en la GPU física 5, gi8
+  (cap750 y cap751), aunque la sesión la llama GPU 0.
+- `smoke/docker_dgx.sh` busca los que la sesión puede abrir, escribe un override con ellos y
+  llama a `docker compose`. El `docker-compose.yml` no cambia para otras máquinas.
+- `.env` con `ARCA_RLM_ADAPTER=rlm/weights/grpo2_lora`. `/tools` usa el modelo base, como en
+  el banco v8.
+- Lanzamos `smoke/docker_dgx.sh run --rm check-gpu`, después `smoke/docker_dgx.sh up api`, y
+  luego `/health` y cuatro preguntas a `/tools`.
+
+**Qué pasó.**
+- `check-gpu`: H200 MIG 1g.18gb, 17,2 GB, 101 TFLOP/s en bf16.
+- `/health`: `reasoning` y `tools` en `ready` en 9,5 s; las dos cargan con los modelos ya en
+  la caché del clúster.
+
+| Pregunta | Herramientas | Tiempo | Resultado |
+|---|---|---|---|
+| Piso en Madrid de 250.000 €, coste total | `acquisition_cost` | 69 s | ✅ 265.000 € (ITP 6 %) |
+| Diferencia entre rentabilidad bruta y neta | ninguna | 9 s | ✅ responde sin herramientas |
+| ¿Barcelona es zona tensionada? Si lo es, ¿soy gran tenedor? | `get_portfolio` | 37 s | ❌ no llama a `get_rent_reference`, afirma que Barcelona no está tensionada (lo está, BOE-A-2024-5214) y responde en inglés |
+| Guarda un piso en Valencia de 180.000 € y 900 €/mes | `save_to_portfolio` | 10 s | ⚠️ guarda, pero se inventa `area_m2=180` (copia el precio) porque el usuario no da la superficie |
+
+**Qué concluimos.**
+- La DGX sirve para la corrección: `docker compose up api` (vía `smoke/docker_dgx.sh`) más
+  ngrok, en una sesión abierta cuando corrijan. Falta instalar ngrok y probar la URL pública;
+  la conexión de salida al servidor de ngrok funciona.
+- La pregunta encadenada falla igual que `chain-02`/`chain-04` del banco: responde tras el
+  primer resultado. Además, inventa la conclusión.
+- `save_to_portfolio` pide `area_m2` obligatorio, y si el usuario no lo da, el modelo lo
+  rellena con otra cifra. Es la misma lección que con los ejemplos numéricos: no dejar que
+  una cifra ocupe en silencio el lugar de otra.
 
 ---
 
@@ -1018,8 +1726,8 @@ preguntas del conjunto dorado, qué λ usar en el híbrido y qué efecto tiene l
 la consulta en Qwen3-Embedding.
 
 **Qué hicimos.** `uv run python -m rag.evaluate` en la MIG (9 min la primera vez; las 11.761
-frases y los índices quedan en `rag/index/`). Resultado en `reports/phase3_eval.json`,
-`reports/phase3_semantic_distances.png` y `reports/phase3_lambda.png`.
+frases y los índices quedan en `rag/index/`). Resultado en `reports/fase3/phase3_eval.json`,
+`reports/fase3/phase3_semantic_distances.png` y `reports/fase3/phase3_lambda.png`.
 - Troceado recursivo 800/100 frente a semántico con el umbral en los percentiles 70, 80, 90
   y 95 de la distancia entre frases consecutivas: 0,762, 0,789, 0,821 y 0,845. La media es
   0,63, así que el 0,25 de la docstring cortaría en casi cada frase.
@@ -1098,17 +1806,17 @@ fase 1 lee y cita mejor que el base.
 - Pipeline de `rag/generate.py`: semántico p90, híbrido λ = 0,2, cinco primeros fragmentos.
 - La plantilla de clase en español, con citas numeradas [1]…[5] que se traducen a ids después
   de generar.
-- Antes, tres pruebas cortas de 8 preguntas (`reports/phase3_generation_smoke*.json`). Con la
+- Antes, tres pruebas cortas de 8 preguntas (`reports/fase3/phase3_generation_smoke*.json`). Con la
   plantilla inglesa, Qwen3-1.7B contestaba en inglés la mitad de las preguntas, citaba
   «artículo 36» en vez del id, y abría respuestas correctas con «no se especifica».
-- Las 57 preguntas (51 + 6 sin respuesta) con `rag_gen_compare.sh` y `rag_round2.sh`:
+- Las 57 preguntas (51 + 6 sin respuesta) con `scripts/fase3/rag_gen_compare.sh` y `scripts/fase3/rag_round2.sh`:
   `rag.eval_generation --name {base, base_think, rlm_think}`. El modelo de la fase 1 es
   `rlm/weights/grpo2_lora`. Pensamiento con 1.536 tokens, sin él con 512.
 - Las métricas se recalcularon con `--rescore` después de mejorar el detector de abstención:
   no reconocía «No se encuentra información en los pasajes».
 - **Corpus.** `base` se repitió (13:04) sobre el corpus definitivo, tras dejar de tomar por
   vigente la versión sin fecha del art. 6 bis RIRPF. La primera ejecución, de las 11:27, está
-  en `reports/phase3_generation_base_corpus_previo.json` y da las mismas cifras salvo en las
+  en `reports/fase3/phase3_generation_base_corpus_previo.json` y da las mismas cifras salvo en las
   citas: cita algo en el 74,5 % frente al 76,5 %, y el relevante en 14 de 30 frente a 15. Es la
   variación de una o dos respuestas. La evaluación de recuperación también se repitió (12:44) y
   reproduce la entrada anterior con diferencias de milésimas.
@@ -1140,3 +1848,85 @@ fase 1 lee y cita mejor que el base.
   y solo 1-2 abstenciones de 30 cuando tiene el fragmento delante.
 - La «coincidencia de cifras» es una aproximación: no ve paráfrasis ni penaliza cifras de más.
   Las respuestas están guardadas en los JSON.
+
+---
+
+### 2026-11-23 · Fase 3 · Opción 1: el derecho aplicable en una fecha y auditoría del motor
+
+**Qué queríamos saber.** Si un RAG que solo ve los artículos vigentes en la fecha de la pregunta
+responde bien donde el RAG normal (la ley de hoy) se equivoca, sin perder lo que la ley de hoy
+ya responde bien. Y si esas mismas versiones sirven para detectar reglas desfasadas en el motor
+de las fases 1 y 2.
+
+**Qué hicimos.**
+- `rag/temporal.py`: 2.049 versiones de artículos de las 11 leyes, con sus intervalos de
+  vigencia, partidas en 8.208 fragmentos. En una fecha rige la última versión, en el orden del
+  documento, con fecha anterior o igual. Las versiones sin fecha no cuentan.
+- `rag/gold/temporal.jsonl`: 17 preguntas con fecha, casi todas en pares que solo se
+  distinguen por la fecha. 7 son de control: su respuesta coincide con la de hoy.
+- Relevancia por contenido: vale cualquier versión del artículo que contenga la cita entera y
+  ninguna de las frases de `absent`. La primera evaluación (13:00,
+  `reports/fase3/phase3_temporal_relevancia_por_version.json`) exigía la versión exacta en vigor ese
+  día, y por eso los controles nunca se acertaban con la ley de hoy. Lo corregimos (89899d6)
+  y la repetimos.
+- Recuperación: `uv run python -m rag.eval_temporal` → `reports/fase3/phase3_temporal.json`.
+- Generación: `rag.eval_generation --gold rag/gold/temporal.jsonl --unanswerable ""` con el RAG
+  normal y con `ARCA_RAG_TEMPORAL=1`, sin pensamiento y con él (1.536 tokens), en
+  `reports/fase3/phase3_generation_temporal_{hoy,fecha}{,_think}.json`. Las 68 respuestas se juzgaron
+  a mano: correcta, regla equivocada o abstención.
+- Auditoría: `uv run python -m rag.audit_rules`.
+
+**Qué pasó.** Recuperación (acierto@5 / MRR; híbrido λ = 0,2):
+
+| Versiones visibles | Respuesta cambiada (10) | Controles (7) | Primero el artículo correcto pero en una versión que no aplicaba (cambiadas) |
+|---|---|---|---|
+| Solo las de hoy | 0 % / 0,000 | 57 % / 0,397 | 30 % |
+| Todas, sin filtro | 30 % / 0,225 | 29 % / 0,213 | 20 % |
+| **Las vigentes en la fecha** | **60 %** / **0,389** | **71 %** / **0,440** | 20 % |
+
+El extractor de fechas acierta las 17.
+
+Generación, juzgada a mano:
+
+| | Cambiadas: correctas | Cambiadas: regla equivocada | Controles: correctas |
+|---|---|---|---|
+| RAG normal, sin pensamiento | 0 | 5 | 2 |
+| RAG por fecha, sin pensamiento | 3 | 4 | 2 |
+| RAG normal, con pensamiento | 1 | 5 | 3 |
+| **RAG por fecha, con pensamiento** | **5** | **2** | 3 |
+
+- **El RAG normal se equivoca con aplomo.** Con la ley de hoy contesta «cinco años» a un
+  contrato de febrero de 2019 y «hasta tres años más» a una prórroga de 2016. Al de 2017 le
+  aplica el límite de garantía de 2019.
+- **El RAG por fecha con pensamiento acierta:** el plazo de 2017 (tres años), el de febrero de
+  2019 (tres años, tras la derogación del RDL 21/2018), la prórroga tácita de 2016 (un año) y
+  la reducción de 2019 (60 %) y de 2024 (90 %).
+- **Fallos que quedan, todos del generador con la versión buena delante:**
+  - el ITP de 2020: responde con el ISD de un caso práctico de la AEAT;
+  - la imputación de 2027: dice el 2 % estando la escala en el contexto;
+  - los honorarios de 2021: el razonamiento se corta sin cerrar;
+  - la garantía de 2017: se abstiene en vez de concluir que no había límite.
+
+Auditoría del motor de reglas (versión del 15/09/2026 frente a la del 22/11/2026):
+- 4 reglas rotas: la escala 90/70/60/50 % de `rental_reduction_pct`, reescrita por el
+  RDL 29/2026.
+- 5 por revisar: artículos cambiados que aún contienen el texto en que se apoya la regla.
+- 2 sin cambios.
+
+**Qué concluimos.**
+- **Filtrar por fecha es lo que convierte la historia del BOE en respuestas correctas.**
+  - Con solo la ley de hoy, ninguna de las 10 preguntas cambiadas tiene la versión buena entre
+    los 5 primeros.
+  - Con todas las versiones sin filtro sube al 30 %, pero se mezclan textos contradictorios.
+  - Filtrando por fecha llega al 60 %, y la respuesta pasa de 1 a 5 aciertos de 10.
+  - Los controles no empeoran, y en recuperación mejoran, porque en una fecha pasada desaparecen
+    distractores que hoy existen (los artículos nuevos del RDL 29/2026).
+- **Con 10 + 7 preguntas son indicios, no pruebas estadísticas.** Pero el patrón es el que
+  predice el diseño: ganan las preguntas cuya respuesta cambió, y no pierden las que no.
+- **Ahora el límite es el generador.** En 3 de los 5 fallos que quedan tiene delante la
+  versión correcta. Un generador mayor o con más tokens de pensamiento es la palanca siguiente.
+- **La auditoría convierte la lección de la fase 2 en una prueba repetible.** El motor de la
+  fase 1 aplica una escala que ya no está en el texto vigente. Para contratos anteriores al
+  1/12/2026 sigue valiendo, por la transitoria 38.ª; eso lo decide una persona. Cuando se
+  fusione la fase 2, que añade `rental_reduction_pct_2026` al motor, hay que darle reglas en
+  `RULES`.

@@ -1,0 +1,2617 @@
+code,name,province,year,n_contracts,eur_m2_p25,eur_m2_median,eur_m2_p75,monthly_rent_median,area_m2_median
+01001,Alegría-Dulantzi,Araba/Álava,2024,95,5.47,6.75,8.37,551.51,80.96
+01002,Amurrio,Araba/Álava,2024,330,5.66,6.34,7.04,562.9,89.71
+01003,Aramaio,Araba/Álava,2024,17,4.8,5.2,6.2,501.37,91.18
+01004,Artziniega,Araba/Álava,2024,41,5.83,6.53,7.46,515,80.46
+01009,Asparrena,Araba/Álava,2024,38,4.5,5.26,6.13,426.16,85.08
+01010,Ayala/Aiara,Araba/Álava,2024,20,4.18,4.92,6.13,482.44,99.03
+01017,Campezo/Kanpezu,Araba/Álava,2024,10,3.94,4.54,5.75,401.1,91.16
+01028,Labastida/Bastida,Araba/Álava,2024,15,5.47,5.79,6.68,401.1,68.72
+01031,Laguardia,Araba/Álava,2024,24,5.42,6.13,7.09,473.61,73.65
+01033,Lapuebla de Labarca,Araba/Álava,2024,10,3.92,4.64,6.78,400.55,71.49
+01036,Laudio/Llodio,Araba/Álava,2024,534,6.64,7.42,8.34,586.63,78.07
+01042,Okondo,Araba/Álava,2024,12,5.02,5.53,5.63,478.17,90.34
+01043,Oyón-Oion,Araba/Álava,2024,85,4.36,5.22,6.06,420,81
+01047,Ribera Baja/Erriberabeitia,Araba/Álava,2024,13,6.2,6.87,8.57,476.3,76.74
+01051,Agurain/Salvatierra,Araba/Álava,2024,164,5.38,5.97,6.62,501.37,85.33
+01054,Urkabustaiz,Araba/Álava,2024,41,4.67,5.32,6.26,500,90.28
+01058,Legutio,Araba/Álava,2024,48,5.18,6.3,7.84,551.54,82.3
+01059,Vitoria-Gasteiz,Araba/Álava,2024,9321,7.93,9.21,10.72,721,78.57
+01063,Zuia,Araba/Álava,2024,34,5.27,6.21,7.6,618.85,100
+01901,Iruña Oka/Iruña de Oca,Araba/Álava,2024,40,5.05,5.61,6.84,495.48,91.83
+02003,Albacete,Albacete,2024,9655,4.79,5.98,7.47,532.91,92
+02007,Alcalá del Júcar,Albacete,2024,20,3.68,4.68,6.0,370.42,93
+02008,Alcaraz,Albacete,2024,14,2.22,3.54,3.86,311.24,97
+02009,Almansa,Albacete,2024,702,3.36,4.21,5.39,400,100
+02010,Alpera,Albacete,2024,10,2.24,2.6,3.36,300,103
+02012,Balazote,Albacete,2024,23,2.55,3.49,4.01,360,127
+02024,Casas-Ibáñez,Albacete,2024,120,2.8,3.5,4.15,322.5,96
+02025,Caudete,Albacete,2024,216,2.49,3.02,3.68,320,108
+02026,Cenizate,Albacete,2020,11,2.6,4.5,5.29,297.46,66
+02029,Chinchilla de Monte-Aragón,Albacete,2024,173,4.35,5.22,6.45,400,79
+02030,Elche de la Sierra,Albacete,2024,44,2.14,2.64,3.58,265.35,105
+02033,Fuente-Álamo,Albacete,2023,10,1.8,2.45,3.98,262.89,104.5
+02034,Fuentealbilla,Albacete,2024,13,2.63,2.82,3.05,324,114
+02035,"Gineta, La",Albacete,2024,20,2.42,3.56,5.0,340,110
+02037,Hellín,Albacete,2024,780,2.8,3.54,4.6,350,104
+02045,Madrigueras,Albacete,2024,35,2.61,3.07,4.22,333.33,97
+02051,Montealegre del Castillo,Albacete,2024,10,2.4,2.91,3.7,350,112
+02053,Munera,Albacete,2024,10,1.29,2.51,2.99,262.5,94
+02056,Ontur,Albacete,2024,10,2.07,3.08,4.2,300,115
+02067,Riópar,Albacete,2024,18,2.43,3.29,3.82,264.43,78.5
+02069,"Roda, La",Albacete,2024,442,2.8,3.44,4.31,350,110
+02073,Tarazona de la Mancha,Albacete,2024,85,2.14,2.68,3.39,300,109
+02074,Tobarra,Albacete,2024,101,2.17,2.72,3.37,300,115
+02075,Valdeganga,Albacete,2024,16,2.0,3.4,6.08,312.72,86.5
+02079,Villamalea,Albacete,2024,44,2.67,3.29,4.09,316.67,108
+02081,Villarrobledo,Albacete,2024,520,2.72,3.4,4.32,350,112
+02086,Yeste,Albacete,2024,12,2.23,2.55,2.77,245.84,99
+02901,Pozo Cañada,Albacete,2024,22,2.36,3.53,4.14,300,112
+03002,Agost,Alicante,2024,80,2.73,3.38,4.31,350,106
+03005,Albatera,Alicante,2024,286,2.81,3.54,4.71,354.51,103
+03009,Alcoy/Alcoi,Alicante,2024,3022,3.52,4.49,5.72,397.04,88
+03011,"Alfàs del Pi, l'",Alicante,2024,956,6,7.88,10.32,600,81
+03012,Algorfa,Alicante,2024,37,4.97,6.67,8.28,415.83,75
+03014,Alicante/Alacant,Alicante,2024,19641,5.44,7.11,9.48,607.5,89
+03015,Almoradí,Alicante,2024,644,3.51,4.34,5.68,390,92.5
+03018,Altea,Alicante,2024,1653,5.44,7.06,9.29,616.42,93
+03019,Aspe,Alicante,2024,332,3.41,4.16,4.92,434.88,109
+03021,Banyeres de Mariola,Alicante,2024,135,2.6,3.23,4.01,332.5,105
+03023,Beneixama,Alicante,2024,10,1.36,3.18,4.56,243.33,100.5
+03024,Benejúzar,Alicante,2024,41,3.21,4.02,4.79,350,104
+03025,Benferri,Alicante,2024,17,4.8,5.16,6.73,358.7,72
+03026,Beniarbeig,Alicante,2024,68,5.21,6.22,8.17,426.48,74.5
+03030,Benidoleig,Alicante,2024,18,3.57,4.97,6.3,402.83,85.5
+03031,Benidorm,Alicante,2024,6187,6.63,8.45,10.62,550,67
+03034,Benijófar,Alicante,2024,39,4.33,5.23,6.27,450,90
+03037,Benimantell,Alicante,2024,21,5.57,6.34,7.2,375,59
+03041,Benissa,Alicante,2024,313,3.43,4.47,5.95,450,102
+03042,"Benitachell/Poble Nou de Benitatxell, el",Alicante,2024,91,3.82,5.26,7.44,500,98
+03043,Biar,Alicante,2024,97,3.22,3.75,4.61,350,95
+03044,Bigastro,Alicante,2024,98,2.92,3.54,4.61,359,98.5
+03047,Calp,Alicante,2024,1455,5.37,7.24,9.34,550,77
+03048,Callosa d'En Sarrià,Alicante,2024,205,3.06,3.89,4.84,400,103
+03049,Callosa de Segura,Alicante,2024,347,2.75,3.22,3.98,350,103
+03050,"Campello, el",Alicante,2024,1619,6.57,8.57,11.29,653.57,83
+03053,Castalla,Alicante,2024,299,3.0,3.94,4.93,369.9,103
+03055,Catral,Alicante,2024,100,3.54,4.25,5.46,400,100
+03056,Cocentaina,Alicante,2024,302,2.65,3.39,4.26,340,101
+03058,Cox,Alicante,2024,67,2.99,3.5,3.95,350,110
+03059,Crevillent,Alicante,2024,540,3.12,3.9,5.09,382.92,101
+03063,Dénia,Alicante,2024,2673,5,6.65,8.83,561.02,90
+03064,Dolores,Alicante,2024,100,3.3,4.03,5.61,359.92,88
+03065,Elche/Elx,Alicante,2024,9481,4.21,5.45,7.1,482.5,93
+03066,Elda,Alicante,2024,1421,3.54,4.5,5.64,400.6,92
+03069,Finestrat,Alicante,2024,617,5.78,8.01,10.5,500,70
+03070,Formentera del Segura,Alicante,2024,187,4.94,6.51,8.2,420,67
+03071,Gata de Gorgos,Alicante,2024,126,3.14,3.88,5.53,421.01,108
+03074,Granja de Rocamora,Alicante,2024,17,3.37,4.76,5.54,320,91
+03075,"Castell de Guadalest, el",Alicante,2024,14,3.73,4.79,7.28,397.5,74
+03076,Guardamar del Segura,Alicante,2024,766,5.33,6.85,8.37,467.07,74
+03077,"Fondó de les Neus, el/Hondón de las Nieves",Alicante,2024,13,2.94,4.08,5.03,397.83,100
+03079,Ibi,Alicante,2024,776,3.31,4.02,4.93,392.06,98
+03080,Jacarilla,Alicante,2024,50,3.73,4.79,6.16,387.0,76
+03081,Xaló,Alicante,2024,69,3.47,4.59,5.94,440.96,96
+03082,Jávea/Xàbia,Alicante,2024,1390,5.01,7.14,9.44,646.98,98
+03083,Jijona/Xixona,Alicante,2024,142,2.92,3.62,4.71,350,94
+03088,Monforte del Cid,Alicante,2024,157,2.9,4.01,5.74,400,110
+03089,Monóvar/Monòver,Alicante,2024,207,2.65,3.33,4.17,349.39,100
+03090,Mutxamel,Alicante,2024,747,4.73,6.35,8.65,515,90
+03092,Muro de Alcoy,Alicante,2024,214,2.7,3.4,3.97,350,112
+03093,Novelda,Alicante,2024,600,3.08,3.92,4.7,400,109
+03094,"Nucia, la",Alicante,2024,282,4.5,5.53,7.19,491,88
+03095,Ondara,Alicante,2024,284,3.83,4.85,6.42,454.66,93
+03096,Onil,Alicante,2024,252,3.19,3.78,4.64,350,93
+03097,Orba,Alicante,2024,30,3.72,4.16,6.15,476.67,112
+03098,Orxeta,Alicante,2024,18,3.53,4.69,6.08,377.51,79.5
+03099,Orihuela,Alicante,2024,1339,3.7,4.89,6.93,450,95
+03101,Pedreguer,Alicante,2024,196,3.66,4.73,6.35,450,97
+03102,Pego,Alicante,2024,209,3.24,4.25,5.56,405,102
+03104,Petrer,Alicante,2024,586,3.61,4.43,5.54,405.62,96
+03105,"Pinós, el/Pinoso",Alicante,2024,115,2.83,3.76,4.74,350,94
+03107,Polop,Alicante,2024,142,4.13,5.03,6.54,416.67,82.5
+03109,Rafal,Alicante,2024,74,3.05,3.72,4.77,361.25,103
+03111,Redován,Alicante,2024,92,2.83,3.47,4.23,365.71,108.5
+03113,Rojales,Alicante,2024,107,4.0,5.89,7.85,408.76,73
+03118,San Fulgencio,Alicante,2024,20,2.55,4.01,4.73,371.67,97
+03119,Sant Joan d'Alacant,Alicante,2024,1271,5.11,6.36,7.86,595.33,100
+03120,San Miguel de Salinas,Alicante,2024,110,3.44,4.49,7.18,416.03,88.5
+03121,Santa Pola,Alicante,2024,1184,5.06,6.82,8.67,500,78
+03122,San Vicente del Raspeig/Sant Vicent del Raspeig,Alicante,2024,2755,5.19,6.44,8,575,92
+03123,Sax,Alicante,2024,166,2.98,3.92,4.83,376.83,98
+03128,Teulada,Alicante,2024,335,4.69,6.41,8.15,553.83,95
+03129,Tibi,Alicante,2024,11,3.24,4.83,5.5,400,105
+03133,Torrevieja,Alicante,2024,3813,5.22,6.6,8.47,430,64
+03138,"Verger, el",Alicante,2024,159,3.84,5.44,8.07,460,92
+03139,"Villajoyosa/Vila Joiosa, la",Alicante,2024,2775,4.65,6.68,8.75,500,80
+03140,Villena,Alicante,2024,1024,3.09,3.87,4.67,392.78,104
+03902,Pilar de la Horadada,Alicante,2024,638,3.92,5.34,6.67,400.66,86
+03903,"Montesinos, Los",Alicante,2024,139,3.77,4.67,5.95,380,87
+03904,San Isidro,Alicante,2024,77,3.74,5.0,6.02,395.83,77
+04003,Adra,Almería,2024,259,3.18,4.15,5.36,378.67,92
+04006,Albox,Almería,2024,278,2.91,3.59,4.79,350,101
+04011,Alhama de Almería,Almería,2024,63,3.07,3.77,4.81,300,88
+04013,Almería,Almería,2024,8031,5.3,6.77,8.48,548.56,83
+04016,Antas,Almería,2024,34,3.12,3.51,5.09,350.58,90.5
+04024,Benahadux,Almería,2024,78,3.66,4.82,5.9,406.67,92
+04029,Berja,Almería,2024,87,3.4,4.07,5.15,350,93
+04032,Carboneras,Almería,2024,155,3.67,5.25,7.08,368.75,74
+04035,Cuevas del Almanzora,Almería,2024,277,3.49,4.55,5.82,375,86
+04038,Dalías,Almería,2024,25,3.75,4.23,5.03,350,79
+04041,Enix,Almería,2021,10,3.99,5.53,7.41,355.6,71
+04044,Fines,Almería,2024,25,2.99,3.68,4.59,380,108
+04046,Fondón,Almería,2024,11,3.4,4.02,5.49,390.05,82
+04047,Gádor,Almería,2024,30,2.87,3.76,5.3,315.84,85
+04048,"Gallardos, Los",Almería,2024,17,2.84,3.69,4.97,300,103
+04049,Garrucha,Almería,2024,543,4.22,5.29,6.72,407.97,82
+04052,Huércal de Almería,Almería,2024,190,5.26,6.33,7.62,475.43,81
+04053,Huércal-Overa,Almería,2024,554,3.14,4.17,5.3,370,95.5
+04062,Macael,Almería,2024,27,2.81,3.43,4.23,340,103
+04064,Mojácar,Almería,2024,226,5.79,7.33,9.05,507.29,78.5
+04066,Níjar,Almería,2024,163,3.03,4.14,6.67,398.85,102
+04069,Olula del Río,Almería,2024,147,2.94,3.78,4.9,350,92
+04074,Pechina,Almería,2024,22,4.21,5.03,5.85,393.59,83
+04075,Pulpí,Almería,2024,106,3.17,4.25,6.14,400,89.5
+04079,Roquetas de Mar,Almería,2024,5062,4.81,6.06,7.54,450,77
+04086,Sorbas,Almería,2024,18,2.39,3.03,3.97,281.71,93.5
+04088,Tabernas,Almería,2024,14,2.83,3.6,6.24,310,98
+04092,Tíjola,Almería,2024,20,2.95,3.21,4.97,279.17,85
+04093,Turre,Almería,2024,106,4.04,5.08,6.41,350,76.5
+04099,Vélez-Rubio,Almería,2024,87,1.96,2.59,3.11,270,111
+04100,Vera,Almería,2024,872,4.61,6.06,7.7,430,81
+04101,Viator,Almería,2024,194,4.55,5.49,6.76,450,85.5
+04102,Vícar,Almería,2024,715,4.18,5.29,6.77,380,76
+04103,Zurgena,Almería,2024,11,2.26,4.61,5.45,400,79
+04902,"Ejido, El",Almería,2024,2083,3.94,5.26,6.75,400,78
+04903,"Mojonera, La",Almería,2024,14,3.49,4.06,6.82,321.17,76
+04904,Balanegra,Almería,2024,25,3.39,4.21,5.47,350,89
+05002,"Adrada, La",Ávila,2024,101,3.16,4.05,5.55,300.38,83
+05014,Arenas de San Pedro,Ávila,2024,258,3.48,4.38,5.5,330.75,78
+05016,Arévalo,Ávila,2024,313,3.23,4.17,5.47,350,94
+05019,Ávila,Ávila,2024,4330,4.7,5.92,7.37,475,86
+05021,"Barco de Ávila, El",Ávila,2024,95,3.45,3.99,4.89,300,80
+05022,"Barraco, El",Ávila,2024,45,2.69,3.2,4.03,327.09,100
+05041,Burgohondo,Ávila,2024,11,2.68,3.06,4.62,280,82
+05047,Candeleda,Ávila,2024,123,3.17,3.79,5.01,300,81
+05054,Casavieja,Ávila,2024,19,1.79,3.16,3.75,240,83
+05055,Casillas,Ávila,2024,16,2.34,2.78,3.31,215,87
+05057,Cebreros,Ávila,2024,70,3.2,3.96,5.01,310.07,75.5
+05089,Guisando,Ávila,2024,17,2.55,3.45,3.8,247,72
+05093,Herradón de Pinares,Ávila,2024,13,1.44,2.94,4.21,150,73
+05102,"Hoyo de Pinares, El",Ávila,2024,27,2.41,3.6,4.65,250,80
+05127,Mijares,Ávila,2024,10,2.35,2.88,3.42,210,86.5
+05132,Mombeltrán,Ávila,2024,13,3.14,3.52,4.29,270,75
+05161,Navalperal de Pinares,Ávila,2024,25,2.5,3.31,4.21,220,76
+05163,Navaluenga,Ávila,2024,37,2.61,3.26,5.03,300,90
+05165,Navarredonda de Gredos,Ávila,2022,10,2.43,4.22,5.19,250.69,63
+05168,"Navas del Marqués, Las",Ávila,2024,334,3.68,4.67,6.08,350,71
+05182,Pedro Bernardo,Ávila,2024,16,2.43,2.65,3.64,225,79
+05184,Peguerinos,Ávila,2024,21,3.44,4.28,4.69,258.32,65
+05186,Piedrahíta,Ávila,2024,48,2.76,3.62,4.28,302.91,89.5
+05187,Piedralaves,Ávila,2024,51,3.3,4.27,5.47,284.62,87
+05227,Santa María del Tiétar,Ávila,2024,33,2.19,3.46,4.43,280,87
+05240,Sotillo de la Adrada,Ávila,2024,199,3.13,3.93,5.29,340.97,90
+05241,"Tiemblo, El",Ávila,2024,159,3.07,3.95,5.22,320,88
+06002,Aceuchal,Badajoz,2024,14,2.53,3.04,3.42,297.5,111
+06006,Alburquerque,Badajoz,2024,25,2.14,3.13,4.15,275,98
+06011,Almendralejo,Badajoz,2024,828,2.99,3.71,4.83,350,103
+06012,Arroyo de San Serván,Badajoz,2024,15,2.34,3.4,5.7,300,98
+06014,Azuaga,Badajoz,2024,87,2.34,2.83,3.61,300,111
+06015,Badajoz,Badajoz,2024,8184,4.77,5.89,7.18,499.09,88
+06022,Burguillos del Cerro,Badajoz,2024,32,2.02,2.36,2.87,250,112
+06023,Cabeza del Buey,Badajoz,2024,26,1.91,2.44,3.09,280,118.5
+06025,Calamonte,Badajoz,2024,27,2.77,3.39,4.24,350,104
+06028,Campanario,Badajoz,2024,20,1.32,1.87,2.19,200,115
+06036,Castuera,Badajoz,2024,38,2.08,2.64,3.27,267.38,108
+06044,Don Benito,Badajoz,2024,1189,3.41,4.32,5.49,370,91
+06050,Fregenal de la Sierra,Badajoz,2024,47,3.15,3.54,4.43,309,88
+06052,Fuente de Cantos,Badajoz,2024,13,2.16,3.09,4.64,357.59,113
+06054,Fuente del Maestre,Badajoz,2024,21,2.17,2.69,3.34,275.41,110
+06060,Guareña,Badajoz,2024,24,2.35,3.43,4.14,324,102.5
+06063,Herrera del Duque,Badajoz,2024,10,2.69,3.28,4.31,255.88,73.5
+06067,Higuera la Real,Badajoz,2024,13,2.74,2.87,2.98,300,108
+06070,Jerez de los Caballeros,Badajoz,2024,80,2.6,3.39,4.39,302.77,102
+06074,Llerena,Badajoz,2024,119,3.21,3.79,4.49,310,91
+06083,Mérida,Badajoz,2024,2738,4.16,5.11,6.32,430,87
+06085,Monesterio,Badajoz,2024,39,2.66,3.17,4.03,300,100
+06088,Montijo,Badajoz,2024,276,2.97,3.57,4.28,350,96
+06091,Navalvillar de Pela,Badajoz,2024,16,1.58,2.21,3.12,274.33,99
+06093,Oliva de la Frontera,Badajoz,2023,10,1.91,2.36,3.58,248.98,113
+06095,Olivenza,Badajoz,2024,171,2.88,3.61,4.67,330,91
+06097,Orellana la Vieja,Badajoz,2024,16,3.29,3.92,4.37,280,100
+06103,Puebla de la Calzada,Badajoz,2024,50,2.83,3.38,4.35,321.81,97.5
+06108,Puebla de Sancho Pérez,Badajoz,2020,11,2.83,3.12,6.32,240.6,80
+06121,Santa Marta,Badajoz,2024,26,2.43,2.92,3.64,300,100
+06122,"Santos de Maimona, Los",Badajoz,2024,48,2.34,3.24,3.92,301.52,105.5
+06123,San Vicente de Alcántara,Badajoz,2024,45,1.76,2.43,2.96,250,112
+06128,Talavera la Real,Badajoz,2024,32,3.01,3.67,5.4,356.74,98.5
+06143,Valverde de Leganés,Badajoz,2024,10,1.95,3.02,3.43,349.43,134
+06149,Villafranca de los Barros,Badajoz,2024,133,2.82,3.49,4.48,330,102
+06153,Villanueva de la Serena,Badajoz,2024,548,3.02,3.78,4.87,345.37,95.5
+06158,Zafra,Badajoz,2024,781,3.7,4.71,5.8,389.58,85
+07001,Alaró,"Balears, Illes",2024,191,5.98,7.8,10.01,750,99
+07002,Alaior,"Balears, Illes",2024,432,5.06,6.97,9.68,500,76
+07003,Alcúdia,"Balears, Illes",2024,1184,6.21,8.11,10.57,650,88
+07004,Algaida,"Balears, Illes",2024,68,4.38,6.16,7.99,650,112.5
+07005,Andratx,"Balears, Illes",2024,568,7.5,9.27,12.35,750,88
+07006,Artà,"Balears, Illes",2024,149,4.63,6.12,7.66,575.02,105
+07007,Banyalbufar,"Balears, Illes",2024,17,9.12,10.19,12.49,750,61
+07008,Binissalem,"Balears, Illes",2024,210,5.66,7.06,8.47,700,110.5
+07010,Bunyola,"Balears, Illes",2024,151,5.9,7.55,9.3,719.58,105
+07011,Calvià,"Balears, Illes",2024,3236,9.82,12.72,16.43,762.5,65
+07012,Campanet,"Balears, Illes",2024,24,4.4,5.88,7.89,606.5,113
+07013,Campos,"Balears, Illes",2024,464,5.57,7.43,9.42,660.3,96
+07014,Capdepera,"Balears, Illes",2024,472,6.48,8.31,11.18,600,80
+07015,Ciutadella de Menorca,"Balears, Illes",2024,1140,5.87,7.79,9.85,570.43,77.5
+07016,Consell,"Balears, Illes",2024,190,4.57,6.47,8.55,690.09,111
+07020,Esporles,"Balears, Illes",2024,76,6.61,8.62,12.2,820.09,98
+07022,Felanitx,"Balears, Illes",2024,658,4.31,6.25,8.54,540.62,98
+07023,Ferreries,"Balears, Illes",2024,205,4.5,5.52,7.07,485,93
+07024,Formentera,"Balears, Illes",2024,281,10.85,13.57,16.97,850,65
+07026,Eivissa,"Balears, Illes",2024,5503,9.72,12.67,16.15,914.58,80
+07027,Inca,"Balears, Illes",2024,1723,5.38,7,9.09,648.23,95
+07028,Lloret de Vistalegre,"Balears, Illes",2024,14,3.93,5.65,7.6,520.83,100
+07029,Lloseta,"Balears, Illes",2024,186,4.27,5.82,7.67,629.29,110
+07030,Llubí,"Balears, Illes",2024,12,4.89,5.3,7.14,599.17,140
+07031,Llucmajor,"Balears, Illes",2024,1808,7.73,10.09,12.94,744.06,84
+07032,Maó,"Balears, Illes",2024,2261,5.12,6.89,9.11,583.17,87
+07033,Manacor,"Balears, Illes",2024,1653,4.48,6.25,8.17,550,93
+07034,Mancor de la Vall,"Balears, Illes",2023,10,6.08,7.7,11.35,760.67,107
+07035,Maria de la Salut,"Balears, Illes",2024,17,4.56,6.78,8.2,700,125
+07036,Marratxí,"Balears, Illes",2024,534,7.24,9.09,11.23,800,94
+07037,"Mercadal, Es","Balears, Illes",2024,322,5.41,7.13,9.53,536.09,80.5
+07038,Montuïri,"Balears, Illes",2024,28,5.66,7.28,9.44,700,104
+07039,Muro,"Balears, Illes",2024,149,4.54,6.9,10.9,625,103
+07040,Palma,"Balears, Illes",2024,31529,7.49,9.84,12.84,800,85
+07042,Pollença,"Balears, Illes",2024,818,5.93,7.87,10.59,678.04,93.5
+07043,Porreres,"Balears, Illes",2024,114,5.39,6.46,7.73,593.75,99
+07044,"Pobla, Sa","Balears, Illes",2024,354,3.99,5.88,7.69,596.75,105
+07045,Puigpunyent,"Balears, Illes",2024,20,5.6,6.65,9.49,795,134.5
+07046,Sant Antoni de Portmany,"Balears, Illes",2024,1976,8.79,11.98,16.19,800,70
+07048,Sant Josep de sa Talaia,"Balears, Illes",2024,1363,11.53,14.63,18.89,904.95,68
+07049,Sant Joan,"Balears, Illes",2024,30,4.67,6.67,9.96,650,104
+07050,Sant Joan de Labritja,"Balears, Illes",2024,192,9.12,12.13,15.24,743.29,60.5
+07051,Sant Llorenç des Cardassar,"Balears, Illes",2024,293,6.17,8.24,11.03,612,83
+07052,Sant Lluís,"Balears, Illes",2024,251,5.21,7.34,10.34,550,81
+07053,Santa Eugènia,"Balears, Illes",2024,20,5.18,6.29,7.51,677.08,126
+07054,Santa Eulalia del Río,"Balears, Illes",2024,2635,9.9,12.9,16.89,893.33,77
+07055,Santa Margalida,"Balears, Illes",2024,618,6.13,8.18,10.21,617.75,85
+07056,Santa María del Camí,"Balears, Illes",2024,256,6.2,7.74,9.5,797,102
+07057,Santanyí,"Balears, Illes",2024,538,5.58,7.39,10.53,569.63,85
+07058,Selva,"Balears, Illes",2024,52,4.62,5.7,7.69,609,108.5
+07059,"Salines, Ses","Balears, Illes",2024,343,6.18,7.99,10.45,650,89
+07060,Sineu,"Balears, Illes",2024,104,5.75,7.14,9.26,700,110
+07061,Sóller,"Balears, Illes",2024,556,6.67,8.46,10.48,706.49,90
+07062,Son Servera,"Balears, Illes",2024,892,5.11,6.82,8.87,505,82
+07063,Valldemossa,"Balears, Illes",2024,89,6.36,7.59,10.15,706.67,97
+07064,"Castell, Es","Balears, Illes",2024,617,6.34,8.05,10.51,550,71
+07065,Vilafranca de Bonany,"Balears, Illes",2024,52,4.71,6.9,8.45,660.72,98
+07902,"Migjorn Gran, Es","Balears, Illes",2024,70,4.33,6.25,8.09,475,75
+08001,Abrera,Barcelona,2024,396,6.6,7.86,9.32,665.83,86
+08003,Alella,Barcelona,2024,266,9.78,12.71,15.07,952.09,84.5
+08005,"Ametlla del Vallès, L'",Barcelona,2024,75,7.43,9.53,12.65,680,78
+08006,Arenys de Mar,Barcelona,2024,1290,6.64,8.52,10.67,676.65,79
+08007,Arenys de Munt,Barcelona,2024,535,6.4,8.04,10.1,600,80
+08009,Argentona,Barcelona,2024,483,7.17,8.91,11.1,687.4,81
+08010,Artés,Barcelona,2024,226,4.62,5.9,7.49,467.66,80
+08011,Avià,Barcelona,2024,92,3.7,4.77,6.43,400,86.5
+08012,Avinyó,Barcelona,2024,53,3.85,4.93,6.46,400,84
+08013,Avinyonet del Penedès,Barcelona,2024,23,4.46,5.16,7.47,450,91
+08014,Aiguafreda,Barcelona,2024,180,4.56,6.21,8.25,520,82
+08015,Badalona,Barcelona,2024,11538,8.36,10.17,12.27,727.65,72
+08016,Bagà,Barcelona,2024,135,4.11,5.28,6.88,412,80
+08017,Balenyà,Barcelona,2024,191,5.19,6.61,8.6,500,73
+08018,Balsareny,Barcelona,2024,120,4.31,5.69,7.89,425.32,78
+08019,Barcelona,Barcelona,2024,140872,11.11,13.68,16.77,900,68
+08020,Begues,Barcelona,2024,195,8.47,10.16,11.83,850,88
+08022,Berga,Barcelona,2024,1464,3.72,4.84,6.2,425.47,91
+08023,Bigues i Riells,Barcelona,2024,123,6.91,7.97,9.59,650,90
+08024,Borredà,Barcelona,2024,21,2.41,3.25,4.45,300,94
+08025,"Bruc, El",Barcelona,2024,48,7.63,9.95,11.2,566.64,63
+08029,Cabrera de Mar,Barcelona,2024,214,9.48,11.33,14.38,850,79
+08030,Cabrils,Barcelona,2024,149,8.08,9.85,11.07,854.53,90
+08031,Calaf,Barcelona,2024,192,3.38,4.38,5.91,370,89.5
+08032,Caldes d'Estrac,Barcelona,2024,290,7.71,9.9,12.26,724.44,80
+08033,Caldes de Montbui,Barcelona,2024,824,6.78,8.36,10.16,689.05,81
+08034,Calders,Barcelona,2024,13,3.06,3.62,5.06,328.38,83
+08035,Calella,Barcelona,2024,1591,6.58,8.09,9.96,591.67,72
+08037,Calldetenes,Barcelona,2024,122,5,6.76,8.55,500,81
+08038,Callús,Barcelona,2024,78,4.45,5.97,7.08,500,95
+08040,Canet de Mar,Barcelona,2024,1021,6.82,8.47,10.19,650,79
+08041,Canovelles,Barcelona,2024,687,6.23,7.64,9.32,567.38,74
+08043,Canyelles,Barcelona,2024,17,7.12,9.72,12.53,666.37,70
+08044,Capellades,Barcelona,2024,257,4.45,5.5,7.12,495.49,88
+08046,Cardedeu,Barcelona,2024,1105,6.96,8.68,10.47,714,86
+08047,Cardona,Barcelona,2024,145,3.02,4.02,5.28,366.75,93
+08048,Carme,Barcelona,2024,16,2.58,3.6,4.8,362.35,93.5
+08049,Casserres,Barcelona,2024,44,3.71,4.62,6.07,402.1,85
+08051,Castellar del Vallès,Barcelona,2024,747,6.44,7.86,9.62,700,90.5
+08053,Castellbell i el Vilar,Barcelona,2024,99,4.86,6.3,7.73,480,75
+08054,Castellbisbal,Barcelona,2024,483,6.88,8.32,9.74,729.4,88
+08055,Castellcir,Barcelona,2024,17,4.37,5.97,7.25,498.17,82
+08056,Castelldefels,Barcelona,2024,4895,10.58,12.8,15.46,907.44,74
+08061,Castellgalí,Barcelona,2024,55,6.06,7.64,8.76,500,68
+08063,Castellolí,Barcelona,2022,11,5.05,5.7,8.17,700,113
+08064,Castellterçol,Barcelona,2024,165,4.84,5.87,7.26,480,82
+08065,Castellví de la Marca,Barcelona,2024,32,3.81,5.25,7.17,479.34,83.5
+08066,Castellví de Rosanes,Barcelona,2024,19,5.83,7.91,9.04,756.51,110
+08067,Centelles,Barcelona,2024,455,5.46,6.96,8.48,540.81,79
+08068,Cervelló,Barcelona,2024,238,7.14,8.97,10.96,720.83,81.5
+08069,Collbató,Barcelona,2024,14,6.65,7.55,8.43,651.79,82.5
+08072,Corbera de Llobregat,Barcelona,2024,588,6.51,8.21,9.88,663.76,81
+08073,Cornellà de Llobregat,Barcelona,2024,6161,9.54,11.34,13.27,712.25,62
+08074,Cubelles,Barcelona,2024,1023,7.65,9.11,10.79,700,82
+08075,Dosrius,Barcelona,2024,79,7.01,8.67,10,673.33,84
+08076,Esparreguera,Barcelona,2024,1019,6.45,7.99,9.56,610,79
+08077,Esplugues de Llobregat,Barcelona,2024,2842,10.74,12.93,15.22,800,62
+08079,"Estany, L'",Barcelona,2024,11,5.92,7.65,8.09,400.0,50
+08083,Folgueroles,Barcelona,2024,56,4.78,7.62,9.33,550,93.5
+08086,"Franqueses del Vallès, Les",Barcelona,2024,1170,7.14,9.22,11.67,670,74
+08088,"Garriga, La",Barcelona,2024,1184,7.22,8.9,10.51,700,83
+08089,Gavà,Barcelona,2024,2434,8.58,10.46,13.06,833.07,84
+08091,Gelida,Barcelona,2024,408,5.71,7.64,9.37,609.06,81
+08092,Gironella,Barcelona,2024,235,3.24,4.5,5.83,375,90
+08094,"Granada, La",Barcelona,2024,45,5.14,6.78,7.55,500,92
+08096,Granollers,Barcelona,2024,4409,7.12,8.73,10.58,695,79
+08097,Gualba,Barcelona,2024,35,4.02,6.16,7.6,500,87
+08099,Guardiola de Berguedà,Barcelona,2024,55,3.95,5.06,6.8,352.66,69
+08100,Gurb,Barcelona,2024,15,4.03,4.81,5.91,437.77,93
+08101,"Hospitalet de Llobregat, L'",Barcelona,2024,20675,10.69,13,15.49,725.84,56
+08102,Igualada,Barcelona,2024,2642,5.11,6.62,8.43,534.9,83
+08103,Jorba,Barcelona,2024,28,5.65,7.23,9.13,527.08,75.5
+08105,"Llagosta, La",Barcelona,2024,725,7.34,8.66,10.13,650,75
+08106,Llinars del Vallès,Barcelona,2024,543,6.2,8.31,10.66,600,77
+08107,Lliçà d'Amunt,Barcelona,2024,105,6.8,8.38,10.11,668.18,86
+08108,Lliçà de Vall,Barcelona,2024,66,6.63,8.29,9.14,664.78,85
+08110,Malgrat de Mar,Barcelona,2024,1071,6.04,7.59,9.21,573.12,78
+08112,Manlleu,Barcelona,2024,953,4.11,5.33,6.59,458.33,87
+08113,Manresa,Barcelona,2024,5770,4.92,6.32,7.99,505,84
+08114,Martorell,Barcelona,2024,1406,6.28,7.94,9.86,650,86
+08115,Martorelles,Barcelona,2024,179,6.17,7.69,9.04,650,83
+08117,"Masies de Voltregà, Les",Barcelona,2024,67,4.11,5.51,6.14,443.71,84
+08118,"Masnou, El",Barcelona,2024,1559,8.34,10.33,12.57,826.95,82
+08119,Masquefa,Barcelona,2024,292,6.38,7.69,8.93,625.02,87
+08120,Matadepera,Barcelona,2024,164,8.01,10.02,12.82,840.74,88
+08121,Mataró,Barcelona,2024,8383,7.2,8.93,11.11,668.75,75
+08122,Mediona,Barcelona,2024,23,3.56,4.26,4.89,400,128
+08123,Molins de Rei,Barcelona,2024,1347,8.15,9.75,11.48,782,81
+08124,Mollet del Vallès,Barcelona,2024,3028,7.02,8.44,9.95,676.83,79
+08125,Montcada i Reixac,Barcelona,2024,1599,7.38,8.91,10.66,672.92,74
+08126,Montgat,Barcelona,2024,596,9.14,10.95,12.75,866.83,80
+08127,Monistrol de Montserrat,Barcelona,2024,202,5.33,6.69,8,500,76.5
+08128,Monistrol de Calders,Barcelona,2024,12,2.72,5,5.49,350,79
+08131,Montesquiu,Barcelona,2024,48,4.3,5.57,6.91,419.86,72.5
+08132,Montmajor,Barcelona,2023,14,2.0,3.46,4.42,340.42,81
+08134,Figaró-Montmany,Barcelona,2024,40,5.31,6.34,8.56,547.98,78
+08135,Montmeló,Barcelona,2024,374,6.35,7.77,9.22,621,80
+08136,Montornès del Vallès,Barcelona,2024,870,6.42,7.96,9.54,600,77
+08137,Montseny,Barcelona,2024,14,6.11,7.79,8.75,387.5,49
+08138,Moià,Barcelona,2024,347,4.76,6.23,7.67,464,79
+08140,Navarcles,Barcelona,2024,212,4.71,6.27,7.76,440,74
+08141,Navàs,Barcelona,2024,341,3.96,5.17,6.21,450,87
+08143,Òdena,Barcelona,2024,106,5.76,7.18,9.12,497.02,70
+08144,Olvan,Barcelona,2024,16,3.08,5.18,5.98,373.98,65.5
+08145,Olèrdola,Barcelona,2024,28,6.31,8.26,9.7,662.71,77
+08146,Olesa de Bonesvalls,Barcelona,2024,10,4.94,6.49,7.92,425,72.5
+08147,Olesa de Montserrat,Barcelona,2024,1287,6.67,8.07,9.84,630,81
+08148,Olivella,Barcelona,2024,18,7.14,8.27,9.23,663.91,93
+08149,Olost,Barcelona,2024,23,4.21,5.26,6.55,442.17,82
+08153,Òrrius,Barcelona,2024,19,4.83,7.17,10.2,622.71,100
+08155,Palafolls,Barcelona,2024,424,7.02,8.42,10.08,550,67
+08156,Palau-solità i Plegamans,Barcelona,2024,420,6.96,8.45,9.93,700,81
+08157,Pallejà,Barcelona,2024,490,8.06,9.46,10.72,700,76
+08158,"Papiol, El",Barcelona,2024,193,6.93,8.41,10.29,699.55,82
+08159,Parets del Vallès,Barcelona,2024,802,7.07,8.77,10.29,680,80
+08161,Piera,Barcelona,2024,410,5.67,6.86,8.33,600,86
+08162,"Hostalets de Pierola, Els",Barcelona,2024,130,5.42,6.98,8.79,535,81.5
+08163,Pineda de Mar,Barcelona,2024,2153,6.43,7.97,9.81,570.83,74
+08164,"Pla del Penedès, El",Barcelona,2024,47,5.7,6.68,8.04,550,81
+08165,"Pobla de Claramunt, La",Barcelona,2024,48,4.35,5.34,6.09,417.5,82.5
+08166,"Pobla de Lillet, La",Barcelona,2024,40,2.68,5.69,7.63,422.5,75.5
+08167,Polinyà,Barcelona,2024,357,7.13,8.66,10.07,700,84
+08169,"Prat de Llobregat, El",Barcelona,2024,3102,9.0,10.94,13.02,768.14,68
+08171,Prats de Lluçanès,Barcelona,2024,133,3.23,4.44,5.47,400,90
+08172,Premià de Mar,Barcelona,2024,2014,7.89,9.68,11.29,737.62,76
+08175,Puig-reig,Barcelona,2024,260,3.55,4.65,6.21,402.77,89
+08180,Ripollet,Barcelona,2024,2018,7.89,9.38,10.98,666.79,71
+08181,"Roca del Vallès, La",Barcelona,2024,467,7.02,8.56,10.5,671.73,75
+08182,"Pont de Vilomara i Rocafort, El",Barcelona,2024,94,4.53,5.77,7.11,467.34,88
+08183,Roda de Ter,Barcelona,2024,320,4.82,6.54,8.22,481,76
+08184,Rubí,Barcelona,2024,4190,7.56,9.18,11.04,700,76
+08187,Sabadell,Barcelona,2024,11570,6.99,8.57,10.46,700,82
+08190,Saldes,Barcelona,2024,10,4.89,6.21,7.24,447.71,81
+08191,Sallent,Barcelona,2024,287,4.77,6.11,7.59,451.23,76
+08192,Santpedor,Barcelona,2024,316,5.5,6.76,7.97,529.58,80
+08193,Sant Iscle de Vallalta,Barcelona,2024,27,4.82,6.92,10.05,512.5,89
+08194,Sant Adrià de Besòs,Barcelona,2024,1577,8.75,11.0,13.21,736.84,68
+08196,Sant Andreu de la Barca,Barcelona,2024,1353,7.0,8.53,10.31,680.49,81
+08197,Sant Andreu de Llavaneres,Barcelona,2024,717,7.91,9.81,11.9,810.42,88
+08198,Sant Antoni de Vilamajor,Barcelona,2024,275,6.69,8.38,9.84,650,82
+08200,Sant Boi de Llobregat,Barcelona,2024,4271,9.02,10.87,12.74,712.5,65
+08201,Sant Boi de Lluçanès,Barcelona,2024,15,2.82,4.63,4.74,300,92
+08202,Sant Celoni,Barcelona,2024,1149,5.87,7.44,9.0,611.67,84
+08203,Sant Cebrià de Vallalta,Barcelona,2024,105,5.57,7.12,9.07,592,85
+08204,Sant Climent de Llobregat,Barcelona,2024,120,8.05,9.63,10.87,731.12,78
+08205,Sant Cugat del Vallès,Barcelona,2024,5109,11.27,13.55,15.86,1100,85
+08207,Sant Esteve de Palautordera,Barcelona,2024,132,6.26,7.75,9.43,662.14,89
+08208,Sant Esteve Sesrovires,Barcelona,2024,202,6.71,8.02,10.0,689.03,86
+08209,Sant Fost de Campsentelles,Barcelona,2024,71,7.25,9.04,11.22,708.33,88
+08210,Sant Feliu de Codines,Barcelona,2024,344,5.64,7.28,9.02,613.82,87
+08211,Sant Feliu de Llobregat,Barcelona,2024,2583,9.62,11.36,13.24,783.39,69
+08212,Sant Feliu Sasserra,Barcelona,2024,15,3,3.47,4.6,330,138
+08213,Sant Fruitós de Bages,Barcelona,2024,313,5.19,6.34,7.93,503,84
+08214,Vilassar de Dalt,Barcelona,2024,313,8.09,9.73,11.69,760,82
+08215,Sant Hipòlit de Voltregà,Barcelona,2024,215,4.19,5.62,6.89,450,85
+08217,Sant Joan Despí,Barcelona,2024,1993,9.79,11.58,13.64,803.71,72
+08218,Sant Joan de Vilatorrada,Barcelona,2024,382,5.18,6.34,7.76,500,84.5
+08219,Vilassar de Mar,Barcelona,2024,1551,8.58,10.4,12.6,900,92
+08220,Sant Julià de Vilatorta,Barcelona,2024,108,5.22,6.44,8.06,500,81
+08221,Sant Just Desvern,Barcelona,2024,919,10.74,12.82,14.94,970.17,81
+08222,Sant Llorenç d'Hortons,Barcelona,2024,80,5.53,7.32,8.86,547.78,79.5
+08223,Sant Llorenç Savall,Barcelona,2024,90,4.13,5.34,6.55,478.69,99
+08224,Sant Martí de Centelles,Barcelona,2024,90,5.44,6.46,8.61,509.38,74
+08226,Sant Martí de Tous,Barcelona,2024,10,3.14,5.27,6.78,412.5,79
+08227,Sant Martí Sarroca,Barcelona,2024,152,5.46,6.95,8.41,550,82.5
+08229,Sant Mateu de Bages,Barcelona,2024,11,3.42,4.87,6.33,400,78
+08230,Premià de Dalt,Barcelona,2024,285,8.81,10.36,12.43,708.33,69
+08231,Sant Pere de Ribes,Barcelona,2024,1677,7.62,9.47,11.63,693.09,78
+08232,Sant Pere de Riudebitlles,Barcelona,2024,112,4.72,6.29,7.78,504.16,87
+08233,Sant Pere de Torelló,Barcelona,2024,65,4.12,6.16,8.08,450,73
+08234,Sant Pere de Vilamajor,Barcelona,2024,48,5.99,7.26,8.6,664,92.5
+08235,Sant Pol de Mar,Barcelona,2024,442,7.03,8.7,11.01,700,82.5
+08236,Sant Quintí de Mediona,Barcelona,2024,85,4.76,5.78,7.73,450,80
+08237,Sant Quirze de Besora,Barcelona,2024,63,3.9,5.08,6.09,445,94
+08238,Sant Quirze del Vallès,Barcelona,2024,639,8.33,10.01,11.59,800,89
+08240,Sant Sadurní d'Anoia,Barcelona,2024,764,5.71,7.29,9.32,609.54,86
+08244,Santa Coloma de Cervelló,Barcelona,2024,242,8.23,9.39,10.85,850,99.5
+08245,Santa Coloma de Gramenet,Barcelona,2024,7126,8.27,9.92,11.64,650,65
+08246,Santa Eugènia de Berga,Barcelona,2024,60,5.24,6.66,7.89,520.71,76
+08247,Santa Eulàlia de Riuprimer,Barcelona,2024,77,6.48,8.09,10.12,574.9,71
+08248,Santa Eulàlia de Ronçana,Barcelona,2024,97,6.47,8,9.37,667.5,85
+08250,Santa Margarida de Montbui,Barcelona,2024,354,4.53,5.67,7.0,443.86,82
+08251,Santa Margarida i els Monjos,Barcelona,2024,378,5.24,6.67,8.28,550,88
+08252,Barberà del Vallès,Barcelona,2024,1371,7.81,9.18,10.76,722.5,79
+08254,Santa Maria de Corcó,Barcelona,2024,67,3.64,4.85,5.74,400,84
+08258,Santa Maria d'Oló,Barcelona,2024,13,3.54,4.36,5.99,380,97
+08259,Santa Maria de Palautordera,Barcelona,2024,355,6.41,7.71,8.94,600,78
+08260,Santa Perpètua de Mogoda,Barcelona,2024,991,7.62,9,10.42,685,76
+08261,Santa Susanna,Barcelona,2024,95,6.39,8.59,10.87,650,72
+08262,Sant Vicenç de Castellet,Barcelona,2024,579,4.72,6.48,8.09,475,78
+08263,Sant Vicenç dels Horts,Barcelona,2024,882,7.59,9.04,10.42,700,74
+08264,Sant Vicenç de Montalt,Barcelona,2024,198,8.85,10.91,13.62,950,96
+08265,Sant Vicenç de Torelló,Barcelona,2024,36,4.67,5.65,7.54,524.25,89.5
+08266,Cerdanyola del Vallès,Barcelona,2024,3176,8.6,10.04,11.62,752.49,77
+08267,Sentmenat,Barcelona,2024,312,6.13,7.82,9.43,650,88
+08268,Cercs,Barcelona,2024,52,2.78,3.69,5.02,310.82,87
+08269,Seva,Barcelona,2024,63,4.55,5.56,6.98,450,83
+08270,Sitges,Barcelona,2024,2837,10.71,13.37,16.46,918,74
+08273,Subirats,Barcelona,2024,28,5.23,6.41,8.51,561.84,90.5
+08274,Súria,Barcelona,2024,225,4.48,5.51,6.81,446.53,82
+08277,Talamanca,Barcelona,2023,10,3.26,4.39,5.52,381.95,92
+08278,Taradell,Barcelona,2024,283,4.68,6.17,7.48,513.75,96
+08279,Terrassa,Barcelona,2024,13107,6.94,8.9,11.3,650.25,77
+08281,Teià,Barcelona,2024,152,8.43,10.18,12.21,819.06,85
+08282,Tiana,Barcelona,2024,280,9.56,11.45,12.92,1085.86,101
+08283,Tona,Barcelona,2024,408,5.37,6.68,8.21,543.24,85.5
+08284,Tordera,Barcelona,2024,658,5.88,7.45,9.09,550,78
+08285,Torelló,Barcelona,2024,769,4.24,5.44,6.79,459.72,87
+08286,"Torre de Claramunt, La",Barcelona,2024,19,4,6.25,9.66,403.15,72
+08287,Torrelavit,Barcelona,2024,30,4.47,6.33,9.07,587.5,100
+08288,Torrelles de Foix,Barcelona,2024,74,4.58,6.04,7.46,450,88
+08289,Torrelles de Llobregat,Barcelona,2024,188,7.64,9.23,10.84,709.16,78
+08290,Ullastrell,Barcelona,2024,42,6.57,7.54,9.6,612.5,81
+08291,Vacarisses,Barcelona,2024,32,4.07,6.1,8,600,99
+08292,Vallbona d'Anoia,Barcelona,2024,26,4.33,5.63,7.08,454,82.5
+08294,Vallgorguina,Barcelona,2024,79,5.88,7.13,9.18,616.25,86
+08295,Vallirana,Barcelona,2024,400,6.97,8.53,10.13,668.33,83
+08296,Vallromanes,Barcelona,2024,43,6.97,8.73,10.29,816,95
+08298,Vic,Barcelona,2024,4361,5.58,7.07,8.59,580.5,85
+08299,Vilada,Barcelona,2024,12,1.83,2.3,3.83,235,93
+08300,Viladecavalls,Barcelona,2024,86,8.25,10.42,12.61,750,79.5
+08301,Viladecans,Barcelona,2024,2907,8.57,10.27,11.94,752,76
+08302,Vilanova del Camí,Barcelona,2024,577,5.03,6.16,7.66,470,80
+08303,Vilanova de Sau,Barcelona,2019,10,2.86,3.01,3.61,272.31,91
+08305,Vilafranca del Penedès,Barcelona,2024,3097,5.87,7.44,8.97,614.1,87
+08306,Vilalba Sasserra,Barcelona,2024,34,6.84,7.92,10.04,537,71
+08307,Vilanova i la Geltrú,Barcelona,2024,4392,7.15,8.84,10.96,701.02,82
+08902,Vilanova del Vallès,Barcelona,2024,111,7.58,9.06,10.76,775,91
+08904,Badia del Vallès,Barcelona,2024,61,6.2,6.68,8.31,500,75
+08905,"Palma de Cervelló, La",Barcelona,2024,211,7.48,9.29,11.34,697.39,79
+09018,Aranda de Duero,Burgos,2024,2048,5.09,6.2,7.5,480,84.5
+09048,Belorado,Burgos,2024,47,3.19,3.93,5.3,326.67,88
+09056,Briviesca,Burgos,2024,212,3.38,4.08,4.82,349.59,90
+09058,Buniel,Burgos,2023,10,4.78,5.2,6.43,410.67,81
+09059,Burgos,Burgos,2024,10969,5.81,7.09,8.7,525.02,76
+09073,Cardeñadijo,Burgos,2024,23,5.35,6.06,8.46,400,71
+09124,Espinosa de los Monteros,Burgos,2024,21,3.19,3.63,3.93,295.16,80
+09131,Fresnillo de las Dueñas,Burgos,2023,10,5.83,7.08,8.09,400,58.5
+09194,Lerma,Burgos,2024,115,3.49,4.27,5.12,350,89
+09209,Medina de Pomar,Burgos,2024,165,3.37,4.17,5.34,340,84
+09211,Melgar de Fernamental,Burgos,2024,19,3.51,3.99,5.77,326,80
+09219,Miranda de Ebro,Burgos,2024,1640,5.05,6.26,7.45,485.5,81
+09289,Quintanar de la Sierra,Burgos,2024,25,3.21,3.74,5.63,321.05,88
+09321,Roa,Burgos,2024,69,3.53,4.75,5.37,338.89,76
+09330,Salas de los Infantes,Burgos,2024,67,3.23,3.95,4.86,331.67,91
+09394,Trespaderne,Burgos,2024,16,3.03,3.25,3.87,277.5,82.5
+09410,Valle de Mena,Burgos,2024,53,4.08,4.99,6.15,450,90
+09412,Valle de Tobalina,Burgos,2024,11,2.49,2.81,4.21,250,84
+09427,Villadiego,Burgos,2024,20,3.04,3.92,4.81,344.43,83.5
+09439,Villalbilla de Burgos,Burgos,2024,51,5.24,7.43,8.43,472.48,63
+09903,Villarcayo de Merindad de Castilla la Vieja,Burgos,2024,115,3.03,3.91,4.88,344.67,88
+09907,Alfoz de Quintanadueñas,Burgos,2024,39,4.44,6.55,8.33,497.72,82
+10010,Alcuéscar,Cáceres,2024,16,1.57,2.27,3.16,240,91.5
+10014,Aldeanueva de la Vera,Cáceres,2024,20,2.02,2.8,3.97,300,93
+10019,Almaraz,Cáceres,2024,17,2.38,3.43,3.71,240,70
+10021,Arroyo de la Luz,Cáceres,2024,25,2.59,2.99,3.47,300,106
+10035,Cabezuela del Valle,Cáceres,2024,27,2.74,3.31,3.67,300,93
+10037,Cáceres,Cáceres,2024,5908,4.35,5.4,6.66,475,92
+10049,Casar de Cáceres,Cáceres,2024,63,2.78,3.38,4.3,300,90
+10067,Coria,Cáceres,2024,370,2.95,3.54,4.29,320,97.5
+10087,Guadalupe,Cáceres,2024,31,2.43,3.14,3.7,300.99,105
+10096,Hervás,Cáceres,2024,138,3.23,3.94,4.79,300,84
+10104,Jaraíz de la Vera,Cáceres,2024,175,2.42,3,4.07,300,94
+10105,Jarandilla de la Vera,Cáceres,2024,95,2.53,3.36,4.24,300.58,92
+10110,Losar de la Vera,Cáceres,2024,42,2.06,2.5,3.34,233.18,92
+10111,Madrigal de la Vera,Cáceres,2024,41,3.34,3.9,4.72,310,89
+10115,Malpartida de Cáceres,Cáceres,2024,59,2.34,3.0,4,300,107
+10116,Malpartida de Plasencia,Cáceres,2024,48,3.31,4.08,4.67,383.12,104
+10121,Miajadas,Cáceres,2024,159,2.53,3.21,4.41,300,97
+10126,Montánchez,Cáceres,2024,14,1.18,2.05,3.52,249.59,136
+10127,Montehermoso,Cáceres,2024,44,1.69,2.08,2.86,225,117
+10128,Moraleja,Cáceres,2024,96,2.54,2.99,3.63,299.39,100
+10130,Navaconcejo,Cáceres,2024,17,2.55,2.95,3.92,300,91
+10131,Navalmoral de la Mata,Cáceres,2024,932,3.55,4.41,5.51,395.64,91
+10146,Pinofranqueado,Cáceres,2024,16,1.85,2.5,3.42,212.5,82.5
+10148,Plasencia,Cáceres,2024,2005,3.61,4.45,5.52,400,95
+10177,Sierra de Fuentes,Cáceres,2024,10,1.71,2.38,2.95,205,94
+10180,Talayuela,Cáceres,2024,41,2.29,3.09,3.68,299.3,101
+10195,Trujillo,Cáceres,2024,196,3.23,4.09,5.04,356.12,90
+10203,Valencia de Alcántara,Cáceres,2024,51,2.11,2.75,3.46,275,108
+10212,Villanueva de la Vera,Cáceres,2024,53,3.09,3.68,4.46,301.65,82
+11001,Alcalá de los Gazules,Cádiz,2024,64,3.42,4.06,5.08,299.65,76
+11004,Algeciras,Cádiz,2024,2856,5.36,6.77,8.5,500.11,81
+11006,Arcos de la Frontera,Cádiz,2024,262,3.33,4.19,5.14,320.88,83
+11007,Barbate,Cádiz,2024,123,4.9,6.4,8.56,450,68
+11008,"Barrios, Los",Cádiz,2024,233,5,6.16,7.14,475,82
+11010,Bornos,Cádiz,2024,24,3.06,3.43,4.43,291.08,79
+11011,"Bosque, El",Cádiz,2024,25,4.08,4.67,5.68,300,64
+11012,Cádiz,Cádiz,2024,5066,7.13,9.07,11.31,650,72
+11014,Conil de la Frontera,Cádiz,2024,294,5.49,7.11,8.98,500,71.5
+11015,Chiclana de la Frontera,Cádiz,2024,1079,5.36,6.71,8.21,463.5,73
+11016,Chipiona,Cádiz,2024,228,5.56,6.85,8.54,427.71,69
+11019,Grazalema,Cádiz,2024,18,3.3,4.23,5.04,333.94,80.5
+11020,Jerez de la Frontera,Cádiz,2024,5229,5.19,6.51,8.11,520,83
+11021,Jimena de la Frontera,Cádiz,2024,26,4.12,4.97,5.53,351.67,78.5
+11022,"Línea de la Concepción, La",Cádiz,2024,1121,6.2,7.79,9.62,596.09,79
+11023,Medina-Sidonia,Cádiz,2024,112,3.4,4.24,5.4,350,81
+11024,Olvera,Cádiz,2024,24,2.86,3.24,3.82,327.92,100
+11025,Paterna de Rivera,Cádiz,2024,18,2.46,3.24,3.84,269.95,100.5
+11026,Prado del Rey,Cádiz,2024,37,3.26,3.97,5.59,300,73
+11027,"Puerto de Santa María, El",Cádiz,2024,2930,5.87,7.53,9.63,550,77
+11028,Puerto Real,Cádiz,2024,873,5.48,6.68,8.2,500,82
+11030,Rota,Cádiz,2024,1623,5.75,8.1,13.76,550,78
+11031,San Fernando,Cádiz,2024,2965,5.48,6.72,8.27,500,77
+11032,Sanlúcar de Barrameda,Cádiz,2024,944,5.32,6.63,8.18,473.04,78
+11033,San Roque,Cádiz,2024,536,5.57,8.08,10.85,627.58,100
+11035,Tarifa,Cádiz,2024,347,6.75,8.7,11.85,600,74
+11037,Trebujena,Cádiz,2024,10,3.78,4.77,4.97,349.05,83.5
+11038,Ubrique,Cádiz,2024,192,3.4,4.47,5.56,350,78
+11039,Vejer de la Frontera,Cádiz,2024,157,3.74,4.81,6.24,375,76
+11041,Villamartín,Cádiz,2024,77,2.98,3.99,5.19,290,76
+11901,Benalup-Casas Viejas,Cádiz,2024,43,3.21,4.6,5.63,300,69
+11902,San José del Valle,Cádiz,2024,14,3.92,4.49,6.22,290.14,67.5
+11903,San Martín del Tesorillo,Cádiz,2022,11,3.02,4.49,7.0,350,78
+12003,Albocàsser,Castellón/Castelló,2024,28,2.86,5.14,5.99,300.67,68
+12004,Alcalà de Xivert,Castellón/Castelló,2024,358,3.02,4.82,6.34,350,83
+12005,"Alcora, l'",Castellón/Castelló,2024,327,2.73,3.49,4.59,350,101
+12008,Algimia de Almonacid,Castellón/Castelló,2023,10,2.3,3.63,6.16,244.95,64
+12009,Almazora/Almassora,Castellón/Castelló,2024,1145,3.62,4.65,6.21,420.83,97
+12011,Almenara,Castellón/Castelló,2024,310,4.67,6.45,8.15,467.08,76
+12012,Altura,Castellón/Castelló,2024,72,2.98,3.75,4.68,316.0,84
+12016,Artana,Castellón/Castelló,2024,14,2.58,3.09,3.67,300,104
+12021,Betxí,Castellón/Castelló,2024,116,2.98,3.71,5.21,350,97
+12026,Benasal,Castellón/Castelló,2024,16,2.28,2.92,4.0,250,93.5
+12027,Benicarló,Castellón/Castelló,2024,2101,3.86,5.21,6.76,375.0,74
+12028,Benicasim/Benicàssim,Castellón/Castelló,2024,1045,5.52,7.41,9.46,550,80
+12029,Benlloch,Castellón/Castelló,2024,17,3.21,3.62,4.18,300,91
+12031,Borriol,Castellón/Castelló,2024,228,3.52,4.72,6.06,400,92
+12032,Borriana/Burriana,Castellón/Castelló,2024,1323,3.53,4.48,5.88,450,101
+12033,Cabanes,Castellón/Castelló,2024,124,3.52,4.36,6.29,342.95,77
+12034,Càlig,Castellón/Castelló,2024,54,3.13,4.15,5.42,310.72,79
+12039,Castellnovo,Castellón/Castelló,2024,12,1.38,3.84,4.66,315.22,123
+12040,Castellón de la Plana/Castelló de la Plana,Castellón/Castelló,2024,11679,4.16,5.43,7.06,500,94
+12043,Caudiel,Castellón/Castelló,2024,21,2.12,3.38,4.14,276.51,93
+12050,"Coves de Vinromà, les",Castellón/Castelló,2024,47,2.13,2.89,4.05,250,87
+12053,Chilches/Xilxes,Castellón/Castelló,2024,161,4.49,6.15,7.62,440,76
+12057,Eslida,Castellón/Castelló,2024,15,2.99,4.09,5.29,300,86
+12067,Geldo,Castellón/Castelló,2024,13,2.61,4.03,6.15,265,76
+12071,Jérica,Castellón/Castelló,2024,72,2.94,3.85,5.03,288.06,78.5
+12072,Lucena del Cid,Castellón/Castelló,2024,28,2.43,3.24,4.28,295,89
+12074,"Llosa, la",Castellón/Castelló,2024,22,4.63,6.4,7.13,400.82,71
+12077,Moncofa,Castellón/Castelló,2024,636,5.13,6.67,8.39,443.75,74
+12079,Montanejos,Castellón/Castelló,2024,33,3.33,4.17,5.34,270,68
+12080,Morella,Castellón/Castelló,2024,84,3.02,4.34,5.56,313.75,88
+12081,Navajas,Castellón/Castelló,2024,52,3.82,4.86,5.73,300,60
+12082,Nules,Castellón/Castelló,2024,457,3.2,4.09,5.43,400,97
+12084,Onda,Castellón/Castelló,2024,992,3.46,4.55,6.14,399.11,92
+12085,Oropesa del Mar/Orpesa,Castellón/Castelló,2024,1087,5.42,6.93,8.78,400,76
+12089,Peníscola/Peñíscola,Castellón/Castelló,2024,434,3.9,5.19,7.08,400,81.5
+12094,"Pobla Tornesa, la",Castellón/Castelló,2024,11,4.23,5.42,6.28,320,65
+12095,Ribesalbes,Castellón/Castelló,2024,14,2.49,2.91,3.74,322.21,109
+12099,Sant Jordi/San Jorge,Castellón/Castelló,2024,107,4.51,5.72,7.05,458.98,90
+12100,Sant Mateu,Castellón/Castelló,2024,31,2.34,3.19,4.66,310.02,107
+12101,San Rafael del Río,Castellón/Castelló,2024,10,4.56,5.12,6.6,355,70
+12104,Segorbe,Castellón/Castelló,2024,443,2.91,3.78,4.95,350,96
+12106,Soneja,Castellón/Castelló,2024,50,2.68,3.86,4.71,300.49,82
+12108,Sueras/Suera,Castellón/Castelló,2022,11,3.03,3.67,4.1,260.71,71
+12109,Tales,Castellón/Castelló,2024,17,2.51,2.84,4.49,300,99
+12117,Torreblanca,Castellón/Castelló,2024,248,2.99,4.03,5.48,313.75,84.5
+12124,Vall d'Alba,Castellón/Castelló,2024,111,2.59,3.41,4.19,300,99
+12126,"Vall d'Uixó, la",Castellón/Castelló,2024,853,3.41,4.3,5.38,400,100
+12128,Vilafamés,Castellón/Castelló,2024,68,3.39,4.04,5.29,325,89.5
+12129,Villafranca del Cid/Vilafranca,Castellón/Castelló,2024,26,2.81,3.86,4.5,302.99,87
+12135,Vila-real,Castellón/Castelló,2024,1956,3.77,4.87,6.25,457.81,101
+12136,"Vilavella, la",Castellón/Castelló,2024,28,3.02,3.48,4.45,385.22,112
+12138,Vinaròs,Castellón/Castelló,2024,2068,4.14,5.24,6.62,414.7,82
+12139,Vistabella del Maestrazgo,Castellón/Castelló,2024,10,3.14,4.04,4.97,263.96,65
+12140,Viver,Castellón/Castelló,2024,41,2.56,2.96,3.88,276,90
+12901,Alquerías del Niño Perdido,Castellón/Castelló,2024,55,3.21,4.9,6.91,398.59,89
+12902,Sant Joan de Moró,Castellón/Castelló,2024,122,2.91,3.71,4.79,350,99
+13005,Alcázar de San Juan,Ciudad Real,2024,1207,4.46,5.44,6.55,425,90
+13011,Almadén,Ciudad Real,2024,55,1.83,2.52,3.8,250,95
+13013,Almagro,Ciudad Real,2024,77,2.79,3.72,5.46,347.22,98
+13015,Almodóvar del Campo,Ciudad Real,2024,20,3.02,3.86,5.21,360.78,104.5
+13019,Argamasilla de Alba,Ciudad Real,2024,54,2.99,3.95,5,300,83
+13020,Argamasilla de Calatrava,Ciudad Real,2024,38,3.24,3.73,4.37,350,98
+13023,Bolaños de Calatrava,Ciudad Real,2024,63,3.01,3.74,4.44,350,101
+13027,Calzada de Calatrava,Ciudad Real,2024,24,2.26,3.15,3.56,253.69,103
+13028,Campo de Criptana,Ciudad Real,2024,161,3.16,3.91,4.78,350,94
+13031,Carrión de Calatrava,Ciudad Real,2024,31,3,4.05,5.67,323.21,90
+13034,Ciudad Real,Ciudad Real,2024,5161,4.69,5.79,7.12,448.95,81
+13039,Daimiel,Ciudad Real,2024,303,3.07,3.87,4.82,350,90
+13047,Herencia,Ciudad Real,2024,97,2.79,3.59,4.84,300,88
+13052,Malagón,Ciudad Real,2024,78,2.76,3.53,4.65,290,94
+13053,Manzanares,Ciudad Real,2024,658,3.53,4.33,5.38,350,84
+13054,Membrilla,Ciudad Real,2024,30,3.06,3.82,4.08,364.58,103
+13056,Miguelturra,Ciudad Real,2024,451,3.68,4.5,5.78,350,84
+13058,Moral de Calatrava,Ciudad Real,2024,12,2.39,2.8,3.25,299,102
+13061,Pedro Muñoz,Ciudad Real,2024,100,3.28,4.46,5.32,286.12,66
+13063,Piedrabuena,Ciudad Real,2020,10,2.33,3.31,4.1,287.5,94
+13064,Poblete,Ciudad Real,2024,81,3.9,4.48,5.3,320,86
+13066,Pozuelo de Calatrava,Ciudad Real,2024,57,2.77,3.4,4.25,325,106
+13071,Puertollano,Ciudad Real,2024,926,3.64,4.49,5.47,400,91
+13077,Santa Cruz de Mudela,Ciudad Real,2024,23,2.23,2.78,3.27,270,100
+13078,Socuéllamos,Ciudad Real,2024,157,2.67,3.43,4.66,300,97
+13079,"Solana, La",Ciudad Real,2024,79,3.04,3.85,4.79,358,98
+13082,Tomelloso,Ciudad Real,2024,964,3.49,4.51,5.66,349.35,78
+13087,Valdepeñas,Ciudad Real,2024,1369,4.03,5,6.16,363.74,77
+13093,Villanueva de los Infantes,Ciudad Real,2024,15,2.5,2.73,3.77,326.79,123
+13096,Villarrubia de los Ojos,Ciudad Real,2024,89,2.46,3.13,4.1,280,96
+14002,Aguilar de la Frontera,Córdoba,2024,70,2.79,3.33,4.0,300,90
+14005,Almodóvar del Río,Córdoba,2024,31,3.54,4.43,6.15,399.27,86
+14007,Baena,Córdoba,2024,145,2.91,3.6,4.8,300,92
+14009,Belmez,Córdoba,2024,12,2.38,3.9,6.16,325.82,109
+14010,Benamejí,Córdoba,2024,14,2.18,3.25,4.79,325.3,104
+14012,Bujalance,Córdoba,2024,22,3.51,4.05,4.69,354.18,92
+14013,Cabra,Córdoba,2024,541,3.18,3.96,5.07,350,89
+14015,Carcabuey,Córdoba,2024,11,2.15,2.93,3.98,337.42,108
+14017,"Carlota, La",Córdoba,2024,131,3.04,3.72,4.48,380,115
+14018,"Carpio, El",Córdoba,2024,23,3.3,4.05,4.93,361.74,87
+14019,Castro del Río,Córdoba,2024,38,2.07,2.68,3.85,300,109.5
+14021,Córdoba,Córdoba,2024,12836,5.77,7.14,8.69,540,79
+14022,Doña Mencía,Córdoba,2024,36,2.49,3.13,3.56,283.29,100
+14027,Fernán-Núñez,Córdoba,2024,51,2.99,3.76,4.58,350,98
+14030,Fuente Palmera,Córdoba,2024,44,3.09,3.93,5.28,330,87.5
+14033,Guadalcázar,Córdoba,2024,20,2.84,3.51,4.6,349.59,109
+14035,Hinojosa del Duque,Córdoba,2024,18,1.6,2.03,2.88,250,144
+14036,Hornachuelos,Córdoba,2024,11,2.66,3.38,4.41,380,110
+14038,Lucena,Córdoba,2024,1096,3.66,4.59,5.73,375,86
+14040,Montalbán de Córdoba,Córdoba,2024,16,2.24,2.89,4.06,339.74,96
+14042,Montilla,Córdoba,2024,349,3.66,4.55,5.61,350,81
+14043,Montoro,Córdoba,2024,61,2.94,3.56,4.46,350,100
+14046,Nueva Carteya,Córdoba,2024,13,3.06,4.39,5.22,360,99
+14049,Palma del Río,Córdoba,2024,227,3.46,4.12,4.84,350.52,88
+14050,Pedro Abad,Córdoba,2024,11,2.17,3.17,5,343.4,109
+14052,Peñarroya-Pueblonuevo,Córdoba,2024,19,2.75,3.58,4.55,327.58,91
+14053,Posadas,Córdoba,2024,53,3.33,4.24,5.23,340.83,81
+14054,Pozoblanco,Córdoba,2024,563,2.75,3.63,4.61,340,98
+14055,Priego de Córdoba,Córdoba,2024,232,2.77,3.44,4.15,305.5,97
+14056,Puente Genil,Córdoba,2024,409,3.23,4.22,5.3,358.0,88
+14057,"Rambla, La",Córdoba,2024,40,2.78,3.58,4.2,317.59,98
+14058,Rute,Córdoba,2024,65,2.5,3.49,4.45,310,100
+14066,Villa del Río,Córdoba,2024,68,3.3,3.85,4.63,350,91
+14067,Villafranca de Córdoba,Córdoba,2024,34,3.75,4.15,5.04,400,101
+14069,Villanueva de Córdoba,Córdoba,2024,41,2.06,2.55,3.72,262.5,100
+15001,Abegondo,"Coruña, A",2023,10,3.92,4.17,4.69,350,78.5
+15002,Ames,"Coruña, A",2024,3256,4.63,5.6,6.79,412,86.5
+15004,Ares,"Coruña, A",2024,291,4.17,5.15,6.53,370.65,81
+15005,Arteixo,"Coruña, A",2024,2595,3.95,5.11,6.49,420,94
+15006,Arzúa,"Coruña, A",2024,173,3.02,3.81,4.7,348.1,100
+15008,Bergondo,"Coruña, A",2024,25,3.21,4.63,6.2,400,82
+15009,Betanzos,"Coruña, A",2024,941,3.81,5.17,6.48,400,82
+15011,Boiro,"Coruña, A",2024,665,3.25,4.17,5.44,350,97
+15012,Boqueixón,"Coruña, A",2024,50,4.0,4.74,5.33,370,88.5
+15013,Brión,"Coruña, A",2024,259,4.89,6.03,7.26,390,74
+15014,Cabana de Bergantiños,"Coruña, A",2024,21,2.92,4.27,5.63,300,90
+15015,Cabanas,"Coruña, A",2024,82,4.77,6.14,7.22,400,66.5
+15016,Camariñas,"Coruña, A",2024,51,1.88,2.48,3.49,225,90
+15017,Cambre,"Coruña, A",2024,1327,4.79,6.01,7.35,466,88
+15019,Carballo,"Coruña, A",2024,1437,2.74,3.64,4.64,340,97
+15020,Carnota,"Coruña, A",2024,24,2.93,4.36,5.3,300,78.5
+15021,Carral,"Coruña, A",2024,311,3.55,4.5,5.78,380,96
+15022,Cedeira,"Coruña, A",2024,206,2.76,3.66,4.75,320.83,85
+15023,Cee,"Coruña, A",2024,323,2.91,3.72,4.61,320,93
+15024,Cerceda,"Coruña, A",2024,76,2.69,3.45,4.41,367.5,116
+15028,Corcubión,"Coruña, A",2024,77,3.33,4.19,5.68,300,73
+15029,Coristanco,"Coruña, A",2024,14,1.94,2.81,4.54,330,103.5
+15030,"Coruña, A","Coruña, A",2024,24978,5.56,7.1,9.08,537.76,79
+15031,Culleredo,"Coruña, A",2024,2095,5,6.1,7.55,470,86
+15032,Curtis,"Coruña, A",2024,149,2.67,3.27,4.06,316.67,102
+15035,Fene,"Coruña, A",2024,371,3.14,4.03,5.41,350,93
+15036,Ferrol,"Coruña, A",2024,3794,3.7,4.76,6.11,400,86
+15037,Fisterra,"Coruña, A",2024,50,2.85,3.82,5.48,300,78
+15040,Laxe,"Coruña, A",2024,67,2.38,3.14,4.0,297.43,98
+15041,"Laracha, A","Coruña, A",2024,344,2.88,3.78,5.11,350,102
+15043,Malpica de Bergantiños,"Coruña, A",2024,59,2.99,4.57,6.23,300,72
+15045,Mazaricos,"Coruña, A",2024,18,2.07,2.85,4.07,282.48,100
+15046,Melide,"Coruña, A",2024,325,2.5,3.23,4.17,321.53,102
+15048,Miño,"Coruña, A",2024,473,3.7,4.76,6.06,360,82
+15051,Mugardos,"Coruña, A",2024,103,3.34,4.4,5.79,350,96
+15052,Muxía,"Coruña, A",2024,47,2.7,3.01,4.75,280,88
+15053,Muros,"Coruña, A",2024,79,2.69,3.42,4.22,300,92
+15054,Narón,"Coruña, A",2024,1969,3.18,4.25,5.47,380,101
+15055,Neda,"Coruña, A",2024,80,2.45,3.2,4.62,332,95
+15056,Negreira,"Coruña, A",2024,380,2.84,3.65,4.65,300,91
+15057,Noia,"Coruña, A",2024,461,3.06,3.81,4.68,350,95
+15058,Oleiros,"Coruña, A",2024,1882,5.21,6.69,8.51,508.33,91
+15059,Ordes,"Coruña, A",2024,652,2.93,3.85,4.95,341.08,94
+15060,Oroso,"Coruña, A",2024,466,3.76,4.66,5.81,360.52,91
+15061,Ortigueira,"Coruña, A",2024,113,2.61,3.49,4.33,320,96
+15062,Outes,"Coruña, A",2024,43,2.8,3.04,3.88,344.17,107
+15065,Padrón,"Coruña, A",2024,233,3.45,4.41,5.83,350,91
+15066,"Pino, O","Coruña, A",2024,75,3.57,4.44,5.4,400,97
+15067,"Pobra do Caramiñal, A","Coruña, A",2024,212,3.23,4.17,5.56,330,83
+15068,Ponteceso,"Coruña, A",2024,118,2.27,2.92,3.85,266.25,98.5
+15069,Pontedeume,"Coruña, A",2024,279,3.39,4.24,5.26,373.47,90
+15070,"Pontes de García Rodríguez, As","Coruña, A",2024,294,2.31,3.03,3.8,300,108.5
+15071,Porto do Son,"Coruña, A",2024,117,3.48,4.72,5.85,350,77
+15072,Rianxo,"Coruña, A",2024,144,3.25,4.01,5.25,350,89
+15073,Ribeira,"Coruña, A",2024,903,3.42,4.71,6.04,350,85
+15074,Rois,"Coruña, A",2024,46,3.47,4.71,6.13,300,65.5
+15075,Sada,"Coruña, A",2024,1196,4.69,5.77,7.15,425,79.5
+15077,Santa Comba,"Coruña, A",2024,241,2.44,3.16,4.11,281.67,99
+15078,Santiago de Compostela,"Coruña, A",2024,10213,5.48,7.21,9.21,500,79
+15082,Teo,"Coruña, A",2024,593,4.21,5.24,6.56,400,94
+15085,Touro,"Coruña, A",2024,20,2.37,2.94,3.46,265,101
+15087,Valdoviño,"Coruña, A",2024,57,2.87,4.32,5.52,312,81
+15088,Val do Dubra,"Coruña, A",2024,72,2.56,3.14,3.95,280,100
+15089,Vedra,"Coruña, A",2024,14,2.11,3.21,5.57,282.5,119
+15092,Vimianzo,"Coruña, A",2024,77,2.01,2.38,3.65,252.33,105
+15093,Zas,"Coruña, A",2024,64,1.96,2.61,3.41,275,113
+15901,Cariño,"Coruña, A",2024,70,2.13,3.18,4.36,300,98
+15902,Oza-Cesuras,"Coruña, A",2024,56,3.34,4.08,5.81,350,88
+16023,Chillarón de Cuenca,Cuenca,2024,19,4.58,5.42,6.07,320,70
+16033,Belmonte,Cuenca,2024,15,2.83,3.1,3.65,300.55,104
+16052,Cañete,Cuenca,2024,12,2.02,2.55,2.93,270,116
+16078,Cuenca,Cuenca,2024,2924,4.65,5.62,6.9,500,98
+16106,Horcajo de Santiago,Cuenca,2024,39,3.36,4.01,4.91,400,102
+16113,Iniesta,Cuenca,2024,43,2.79,3.14,3.64,350,114
+16133,Mota del Cuervo,Cuenca,2024,34,2.01,2.84,4.02,298.69,103
+16134,Motilla del Palancar,Cuenca,2024,152,3.59,4.57,5.94,410,109.5
+16154,"Pedroñeras, Las",Cuenca,2024,51,2.58,3.24,3.92,342.5,110
+16175,Quintanar del Rey,Cuenca,2024,114,2.5,2.94,3.48,329.33,122
+16190,San Clemente,Cuenca,2024,112,2.51,3.27,4.31,344.09,109
+16203,Tarancón,Cuenca,2024,884,4.17,5.26,6.69,470,100
+16251,Villanueva de la Jara,Cuenca,2024,11,2.33,3.51,3.74,391.49,109
+16263,Villar de Olalla,Cuenca,2024,37,3.41,4.79,6.53,383.6,87
+16905,Arcas del Villar,Cuenca,2024,50,3.95,4.92,6.65,400,89
+17004,Albons,Girona,2024,10,4.42,7.26,9.22,684.67,91
+17006,Alp,Girona,2024,108,5.63,8.21,11.69,541.13,67
+17007,Amer,Girona,2024,88,3.99,5.41,7.12,432.07,81.5
+17008,Anglès,Girona,2024,266,4.2,5.29,7.21,465.74,87
+17009,Arbúcies,Girona,2024,338,4.21,5.44,6.76,420,76
+17013,Begur,Girona,2024,60,5.89,7.84,9.96,590.47,80.5
+17015,Banyoles,Girona,2024,1353,5.37,6.45,7.84,551.67,86
+17016,Bàscara,Girona,2024,40,5.74,6.49,7.53,502.33,72.5
+17018,Bellcaire d'Empordà,Girona,2024,17,6.02,6.58,8.26,520.02,75
+17019,Besalú,Girona,2024,73,4.84,6.43,7.56,450,73
+17020,Bescanó,Girona,2024,138,6.08,6.93,8.09,636.66,87
+17022,"Bisbal d'Empordà, La",Girona,2024,604,4.42,5.71,7.08,473.17,86
+17023,Blanes,Girona,2024,3122,6.26,7.94,9.78,547.26,71
+17025,Bordils,Girona,2024,49,5.28,6.76,8.24,574.42,86
+17027,Breda,Girona,2024,180,4.66,5.95,7.22,501.54,89
+17030,Cabanes,Girona,2024,10,5.68,7.45,11.02,400,50.5
+17032,Cadaqués,Girona,2024,173,7.43,9.44,11.38,650,72
+17033,Caldes de Malavella,Girona,2024,116,5.97,7.29,8.92,550,83.5
+17034,Calonge,Girona,2024,645,6.59,8.49,11.05,572.22,70
+17036,Campdevànol,Girona,2024,138,4.02,5.43,6.45,400,76
+17039,Camprodon,Girona,2024,137,4.93,6.26,8.06,489.6,80
+17044,Cassà de la Selva,Girona,2024,511,5.63,6.77,8.33,550,81
+17046,Castellfollit de la Roca,Girona,2024,29,4.17,5.88,6.86,480,81
+17047,Castelló d'Empúries,Girona,2024,405,6.53,8.27,10.77,485,60
+17048,Castell-Platja d'Aro,Girona,2024,777,7.59,9.72,12.21,600,66
+17049,Celrà,Girona,2024,333,5.67,7.04,8.2,609,91
+17054,Colera,Girona,2024,35,4.41,6.36,7.77,410,70
+17056,Cornellà del Terri,Girona,2024,51,5.61,6.88,8.01,600,88
+17062,"Escala, L'",Girona,2024,380,6.48,7.84,9.78,550.41,72
+17063,Espinelves,Girona,2024,16,4.63,5.33,6.36,481.29,98.5
+17066,Figueres,Girona,2024,3747,4.82,6.14,7.66,500,86
+17067,Flaçà,Girona,2024,75,5.1,6.59,8.22,500,76
+17069,Fontanals de Cerdanya,Girona,2023,10,6.37,6.76,8.27,703.75,92
+17073,Fornells de la Selva,Girona,2024,70,7.55,9.24,10.98,736.82,82.5
+17079,Girona,Girona,2024,10384,7.33,9.13,11.23,684.98,77
+17083,Hostalric,Girona,2024,275,4.71,6.34,7.68,503.75,84
+17086,"Jonquera, La",Girona,2024,182,4.61,5.79,6.91,463.5,85
+17088,Lladó,Girona,2021,10,5.65,6.09,6.51,414.43,68
+17089,Llagostera,Girona,2024,347,4.89,6.49,8.33,495.92,75
+17091,Llanars,Girona,2024,26,5.55,6.44,9.25,512.5,80
+17092,Llançà,Girona,2024,335,5.75,7.65,9.23,518.75,71
+17094,Llívia,Girona,2024,112,5.96,8.11,9.58,584.19,81
+17095,Lloret de Mar,Girona,2024,2819,6.84,8.68,10.75,517.0,63
+17102,Maçanet de Cabrenys,Girona,2024,16,4.54,5.38,6.71,420,73.5
+17103,Maçanet de la Selva,Girona,2024,154,4.78,5.94,7.08,500,89
+17111,Navata,Girona,2024,30,6.15,6.98,7.97,566.93,89
+17114,Olot,Girona,2024,2277,4.76,6.18,7.82,507.5,83
+17117,Palafrugell,Girona,2024,1056,5.26,6.72,8.56,520.56,80
+17118,Palamós,Girona,2024,1162,6.11,7.77,10,600,79
+17120,Palau-saverdera,Girona,2024,17,3.12,6.1,7.66,575,92
+17124,Pals,Girona,2024,39,5.43,7.5,9.0,550,90
+17132,Peralada,Girona,2024,46,4.71,6.35,7.61,563.5,95
+17133,"Planes d'Hostoles, Les",Girona,2024,16,3.53,5.14,7.33,420.5,90.5
+17134,Planoles,Girona,2020,11,3.94,5.62,6.88,425,89
+17137,Porqueres,Girona,2024,86,4.88,6.38,8.11,548.88,83.5
+17138,Portbou,Girona,2024,58,4.28,5.35,6.81,403.67,81
+17139,"Preses, Les",Girona,2024,31,5.07,6.25,7.77,542.25,85
+17140,"Port de la Selva, El",Girona,2024,69,6.11,8.19,10.0,512,71
+17141,Puigcerdà,Girona,2024,684,5.41,6.96,8.57,553.14,85
+17142,Quart,Girona,2024,81,6.64,8.64,10.7,688.12,86
+17145,Ribes de Freser,Girona,2024,136,3.94,5.22,6.7,409.5,79
+17146,Riells i Viabrea,Girona,2024,81,7.11,8.51,9.71,500,59
+17147,Ripoll,Girona,2024,748,4.35,5.58,6.68,420,78
+17148,Riudarenes,Girona,2024,39,5.56,7.81,8.48,500,76
+17150,Riudellots de la Selva,Girona,2024,87,5.86,7.31,8.42,600,89
+17152,Roses,Girona,2024,1307,5.84,7.38,9.38,500,71
+17155,Salt,Girona,2024,1656,5.29,6.55,8.03,520,81
+17160,Sant Feliu de Guíxols,Girona,2024,1374,5.75,7.38,9.29,575,81
+17161,Sant Feliu de Pallerols,Girona,2024,41,4.41,5.8,7.11,400,82
+17163,Sant Gregori,Girona,2024,102,6.29,7.76,8.81,663.93,93
+17164,Sant Hilari Sacalm,Girona,2024,212,3.97,5.31,6.84,400,76.5
+17165,Sant Jaume de Llierca,Girona,2024,16,5.73,6.84,11.82,492.5,77
+17166,Sant Jordi Desvalls,Girona,2024,13,4.67,8.35,10.23,563.33,75
+17167,Sant Joan de les Abadesses,Girona,2024,221,3.55,4.64,5.66,400,87
+17169,Sant Julià de Ramis,Girona,2024,77,7.04,8.51,10.51,567.31,70
+17177,Sant Pau de Segúries,Girona,2024,24,4.4,5.38,7.42,446.71,78
+17178,Sant Pere Pescador,Girona,2024,68,4.03,5.61,7.12,400,75
+17180,Santa Coloma de Farners,Girona,2024,716,5.25,6.69,8.16,518.21,81
+17181,Santa Cristina d'Aro,Girona,2024,123,5.33,6.59,7.48,566.25,89
+17184,Santa Pau,Girona,2024,17,4.53,5.36,6.33,481.33,101
+17185,Sant Joan les Fonts,Girona,2024,80,4.94,5.96,7.08,465,76
+17186,Sarrià de Ter,Girona,2024,203,6.03,7.4,8.69,626.28,85
+17187,"Saus, Camallera i Llampaies",Girona,2024,14,4.25,4.93,5.43,410,93
+17189,"Cellera de Ter, La",Girona,2024,58,3.67,5.02,7.63,450,101
+17190,Serinyà,Girona,2024,28,5.33,6.5,7.49,525,79
+17192,Setcases,Girona,2024,14,4.77,5.37,5.62,364.41,71.5
+17193,Sils,Girona,2024,180,6.25,7.4,8.87,562.96,88
+17199,Torroella de Montgrí,Girona,2024,671,5.15,6.65,8.09,500,77
+17202,Tossa de Mar,Girona,2024,347,6.64,8.26,9.88,568.75,72
+17204,Ullà,Girona,2024,46,4.64,5.09,5.86,400,81
+17207,"Vall d'en Bas, La",Girona,2024,28,4.3,6.07,9.21,511.09,90.5
+17211,Verges,Girona,2024,19,4.2,5.29,6.26,520,112
+17213,Vidreres,Girona,2024,138,4.84,6.57,8.31,515,78.5
+17214,Vilabertran,Girona,2024,13,5.52,6.25,8.94,486.41,82
+17215,Vilablareix,Girona,2024,53,7.05,9.75,11.32,800,103
+17220,Viladrau,Girona,2024,38,4.63,6.53,7.14,512.5,93
+17221,Vilafant,Girona,2024,41,5.57,6.98,7.8,549.35,81
+17223,Vilajuïga,Girona,2024,13,4.94,6.43,7.15,487.19,78
+17224,Vilallonga de Ter,Girona,2024,25,3.58,5.2,6.28,380,77
+17226,Vilamalla,Girona,2024,14,5.67,7.38,8.52,457.5,63
+17230,Vila-sacra,Girona,2024,13,4.6,6.28,7.94,533.33,94
+17233,Vilobí d'Onyar,Girona,2024,80,5.22,6.13,7.05,516,88.5
+17902,Forallac,Girona,2024,14,4.54,7.96,11.48,486.51,62
+17903,Sant Julià del Llor i Bonmatí,Girona,2024,53,5.03,5.91,6.88,400,70
+18003,Albolote,Granada,2024,583,5.14,6.34,7.94,460,78
+18006,Albuñol,Granada,2024,161,3.73,4.44,5.75,326.79,76
+18011,Alfacar,Granada,2024,102,3.48,4.49,5.54,377.5,94.5
+18013,Alhama de Granada,Granada,2024,23,3.12,3.67,4.98,328.92,94
+18014,Alhendín,Granada,2024,377,5.07,6.04,7.09,459,79
+18017,Almuñécar,Granada,2024,1070,5.38,6.78,8.72,500,77
+18021,Armilla,Granada,2024,1716,5.29,6.76,8.59,470,72
+18022,Atarfe,Granada,2024,721,4.27,5.23,6.42,412,86
+18023,Baza,Granada,2024,379,2.86,3.66,4.46,350,102
+18036,Cájar,Granada,2024,145,4.98,6.46,7.96,430,71
+18039,Caniles,Granada,2024,11,2.55,2.81,2.89,370,128
+18047,Cenes de la Vega,Granada,2024,434,4.94,6.2,7.55,425,71
+18048,Cijuela,Granada,2024,72,4.21,5.47,6.17,360.14,84
+18050,Cogollos de la Vega,Granada,2024,17,3.79,4.21,7.52,325.59,85
+18056,Cúllar,Granada,2024,19,2.03,2.71,3.53,297.92,115
+18057,Cúllar Vega,Granada,2024,192,4.51,5.39,6.84,385.19,69
+18059,Chauchina,Granada,2024,34,2.99,3.82,5.36,350,103
+18062,Churriana de la Vega,Granada,2024,932,4.86,6.08,7.49,428.67,76
+18071,Dúrcal,Granada,2024,91,2.65,3.05,3.96,320,102
+18079,Fuente Vaqueros,Granada,2024,10,4.07,4.48,4.78,350.79,75.5
+18084,Gójar,Granada,2024,103,4.56,5.32,6.66,433.04,81
+18087,Granada,Granada,2024,17627,5.28,6.85,8.67,584.17,89
+18089,Guadix,Granada,2024,404,3.2,4.15,5.25,382.99,98
+18093,Gualchos,Granada,2024,166,4.37,5.21,6.25,369.81,71
+18094,Güejar Sierra,Granada,2024,37,4.19,5.36,6.73,350,69
+18095,Güevéjar,Granada,2024,14,4.07,5.43,8.66,360,70.5
+18098,Huéscar,Granada,2024,57,2.36,2.91,4.03,300,109
+18099,Huétor de Santillán,Granada,2024,19,2.68,3.68,5.82,353.33,93
+18100,Huétor Tájar,Granada,2024,156,3.03,3.57,4.27,349.68,100
+18101,Huétor Vega,Granada,2024,212,4.76,6.28,8.04,442.48,79.5
+18102,Illora,Granada,2024,12,2.23,3.4,5.08,295.75,94.5
+18105,Iznalloz,Granada,2024,16,2.42,3.32,4.6,306.25,102.5
+18111,Jun,Granada,2016,10,1.24,4.24,4.71,305.83,93.5
+18115,Láchar,Granada,2024,70,3.76,5,5.97,335,75
+18116,Lanjarón,Granada,2024,62,2.88,3.87,4.73,325.4,83
+18122,Loja,Granada,2024,262,2.8,3.53,4.44,310.23,96.5
+18126,"Malahá, La",Granada,2024,16,3.23,5.6,6.89,373.75,84.5
+18127,Maracena,Granada,2024,1103,4.7,5.88,7.33,450,79
+18134,Monachil,Granada,2024,451,5.22,6.45,8.08,438.65,70
+18135,Montefrío,Granada,2024,12,2.21,2.72,5,255,89
+18140,Motril,Granada,2024,1794,4.38,5.44,6.67,451.46,86
+18145,Ogíjares,Granada,2024,443,4.64,6.11,7.62,455.22,82
+18147,Órgiva,Granada,2024,92,2.63,3.42,4.47,316.85,92
+18149,Otura,Granada,2024,75,4.37,5.49,6.43,420,84
+18150,Padul,Granada,2024,122,3.61,4.41,5.45,358.5,85
+18153,Peligros,Granada,2024,161,4.36,5.28,6.83,440.14,85
+18157,Pinos Genil,Granada,2024,47,3.76,5.84,8.23,375,64
+18158,Pinos Puente,Granada,2024,36,2.73,3.51,4.59,327.93,103
+18162,Polopos,Granada,2024,47,3.9,4.65,5.77,348.86,75
+18165,Pulianas,Granada,2024,51,4.44,5.42,6.8,408.45,80
+18170,Rubite,Granada,2022,10,4.47,5.75,6.38,339.21,59.5
+18173,Salobreña,Granada,2024,270,4.28,5,6.24,448.04,89
+18175,Santa Fe,Granada,2024,400,4,5.06,6.45,390.83,81
+18177,Sorvilán,Granada,2024,10,2.77,4.06,5.47,320.83,82
+18182,Ugíjar,Granada,2024,17,2.24,3.16,4.49,265,83
+18184,Vélez de Benaudalla,Granada,2024,41,3.94,5.67,6.57,350,78
+18193,"Zubia, La",Granada,2024,1039,4.69,5.93,7.55,440,73
+18905,"Gabias, Las",Granada,2024,1208,4.97,6.08,7.29,400,70
+18907,Valle del Zalabí,Granada,2023,10,2.6,3.73,4.63,329.45,92
+18911,Vegas del Genil,Granada,2024,58,4.08,4.69,5.87,336.73,71
+18912,Cuevas del Campo,Granada,2023,10,1.86,2.58,3.33,259.16,112.5
+18916,Torrenueva Costa,Granada,2024,118,5.25,6.29,7.48,400,66
+19024,Alovera,Guadalajara,2024,490,6.43,7.54,8.84,557.65,83
+19046,Azuqueca de Henares,Guadalajara,2024,2837,6.18,7.58,9.18,550,78
+19053,Brihuega,Guadalajara,2024,117,3.82,4.84,6.34,400,93
+19058,Cabanillas del Campo,Guadalajara,2024,236,5.68,7.1,8.69,525,85.5
+19071,"Casar, El",Guadalajara,2024,245,6.38,7.56,9.03,550,80
+19086,Cifuentes,Guadalajara,2024,38,3.35,4.19,6.45,350,76.5
+19092,Cogolludo,Guadalajara,2024,11,2.73,3.54,4.12,349.36,99
+19105,Chiloeches,Guadalajara,2024,100,5.45,6.97,8.22,451.24,73
+19117,Fontanar,Guadalajara,2024,29,4.3,5.56,8.35,450,74
+19130,Guadalajara,Guadalajara,2024,6406,5.85,7.25,8.9,600,86
+19143,Horche,Guadalajara,2024,74,4.93,6.26,7.87,492.83,98
+19151,Humanes,Guadalajara,2024,27,4.41,6,6.92,400,76
+19156,Jadraque,Guadalajara,2024,53,2.72,3.31,4.24,300,93
+19171,Marchamalo,Guadalajara,2024,344,5.86,7.52,9.71,532.49,78
+19190,Molina de Aragón,Guadalajara,2024,181,3.24,4.04,5.07,352.5,90
+19192,Mondéjar,Guadalajara,2024,82,3.57,4.45,6.03,398.91,100.5
+19211,Pareja,Guadalajara,2024,10,2.81,4.39,8.28,293.75,79
+19212,Pastrana,Guadalajara,2024,25,3.45,3.96,5.38,400,142
+19220,Pioz,Guadalajara,2022,10,3.85,7.01,8.82,425,69.5
+19225,Pozo de Guadalajara,Guadalajara,2024,61,5.74,7.09,9.43,515,85
+19245,Sacedón,Guadalajara,2024,53,3.26,4.62,5.68,370,82
+19257,Sigüenza,Guadalajara,2024,203,3.9,4.78,5.97,400.19,86
+19266,Tendilla,Guadalajara,2024,10,3.43,4.43,6.34,327.5,70.5
+19280,Torrejón del Rey,Guadalajara,2024,57,5.17,7,8.61,500,84
+19290,Trijueque,Guadalajara,2024,35,5.61,7.4,8.44,437.89,61
+19293,Uceda,Guadalajara,2024,41,4.95,5.99,7.32,385.44,69
+19300,Valdeaveruelo,Guadalajara,2024,14,4.37,5.19,6.08,450,97.5
+19319,Villanueva de la Torre,Guadalajara,2024,56,7.13,8.57,9.8,542.5,74.5
+19326,Yebes,Guadalajara,2024,471,5.18,6.25,7.56,600,103
+19331,Yunquera de Henares,Guadalajara,2024,223,5.2,6.47,8.04,450,73
+20002,Aduna,Gipuzkoa,2024,14,6.34,7.56,8.47,708.18,95.13
+20003,Aizarnazabal,Gipuzkoa,2024,30,6.23,7.4,8.19,600.82,82
+20005,Alegia,Gipuzkoa,2024,106,6.35,7.2,8.54,569.03,81.31
+20008,Amezketa,Gipuzkoa,2024,36,5.56,7.39,8.67,535.63,74.25
+20009,Andoain,Gipuzkoa,2024,700,8.09,9.1,10.41,671.84,74.38
+20010,Anoeta,Gipuzkoa,2024,86,6.97,7.78,8.58,632.84,82.61
+20011,Antzuola,Gipuzkoa,2024,65,5.29,6.12,6.88,476.3,80
+20013,Aretxabaleta,Gipuzkoa,2024,217,7.34,8.36,9.56,593.45,67.81
+20014,Asteasu,Gipuzkoa,2024,58,6.23,7.46,8.58,547.85,72.8
+20015,Ataun,Gipuzkoa,2024,43,5.27,6.02,6.97,501.37,87.45
+20016,Aia,Gipuzkoa,2024,56,5.78,7.51,9.06,609.82,83.32
+20017,Azkoitia,Gipuzkoa,2024,531,6.18,7.02,8.09,576.58,82.03
+20018,Azpeitia,Gipuzkoa,2024,627,5.94,6.96,8.38,598.04,86.26
+20019,Beasain,Gipuzkoa,2024,757,7.55,8.77,10.43,651.78,74.59
+20022,Berastegi,Gipuzkoa,2024,16,5.36,7.14,9.1,551.51,83.13
+20023,Berrobi,Gipuzkoa,2024,18,6.14,7.26,8.07,504.85,70.68
+20025,Zegama,Gipuzkoa,2024,53,5.38,6.33,7.56,501.37,78.95
+20027,Zestoa,Gipuzkoa,2024,174,5.84,6.55,8.02,601.64,86.78
+20028,Zizurkil,Gipuzkoa,2024,119,6.55,7.73,8.95,615.18,77.82
+20029,Deba,Gipuzkoa,2024,258,7.35,9.05,10.97,636.78,72.75
+20030,Eibar,Gipuzkoa,2024,1566,7.43,8.64,10.06,598.98,66.13
+20032,Elgoibar,Gipuzkoa,2024,621,6.4,7.56,9.18,559.03,73.28
+20033,Elgeta,Gipuzkoa,2024,38,5.04,6.22,7.48,501.37,79.63
+20034,Eskoriatza,Gipuzkoa,2024,162,6.67,7.42,8.98,601.64,76.2
+20035,Ezkio-Itsaso,Gipuzkoa,2022,10,5.68,5.96,7.07,560.53,94.41
+20036,Hondarribia,Gipuzkoa,2024,1056,9.57,11.26,13.47,792.8,72.09
+20039,Getaria,Gipuzkoa,2024,180,7.95,9.5,11.62,733.92,76.7
+20040,Hernani,Gipuzkoa,2024,964,8.33,9.78,11.5,701.92,71.09
+20042,Ibarra,Gipuzkoa,2024,173,6.86,7.92,9.09,618.19,77.7
+20043,Idiazabal,Gipuzkoa,2024,68,7.3,8.13,9.28,598.91,70.28
+20044,Ikaztegieta,Gipuzkoa,2024,13,5.13,5.31,5.98,515,98.34
+20045,Irun,Gipuzkoa,2024,3902,8.59,9.88,11.51,721.26,73.54
+20046,Irura,Gipuzkoa,2024,117,6.96,8.8,10.5,676.85,79.55
+20047,Itsasondo,Gipuzkoa,2024,30,6.66,7.16,8.56,559.07,71.5
+20049,Lazkao,Gipuzkoa,2024,289,6.43,7.38,8.54,600.9,81.4
+20050,Leaburu,Gipuzkoa,2024,12,6.17,7.87,8.96,550.01,68.25
+20051,Legazpi,Gipuzkoa,2024,264,6.33,7.02,7.94,551.51,76.78
+20052,Legorreta,Gipuzkoa,2024,63,5.93,6.6,7.8,571.56,83.58
+20053,Lezo,Gipuzkoa,2024,295,8.68,10.16,11.61,701.92,68.91
+20054,Lizartza,Gipuzkoa,2024,23,5.41,6.67,8.22,501.37,76.56
+20055,Arrasate / Mondragón,Gipuzkoa,2024,971,7.64,9.01,10.39,626.71,71.09
+20056,Mutriku,Gipuzkoa,2024,179,6.44,8.06,9.42,510.39,67.38
+20058,Olaberria,Gipuzkoa,2024,36,5.23,6.61,7.72,550.76,82.58
+20059,Oñati,Gipuzkoa,2024,356,5.8,6.69,7.79,568.11,88.63
+20061,Orio,Gipuzkoa,2024,371,7.93,9.15,11.56,752.05,80.94
+20062,Ormaiztegi,Gipuzkoa,2024,38,6.02,6.98,8.63,519.21,77.6
+20063,Oiartzun,Gipuzkoa,2024,328,7.83,9.01,10.46,693.73,76.52
+20064,Pasaia,Gipuzkoa,2024,1127,9.52,10.92,12.46,743.87,68.6
+20065,Soraluze-Placencia de las Armas,Gipuzkoa,2024,208,6.31,7.71,9.39,497.24,64.41
+20067,Errenteria,Gipuzkoa,2024,2202,9.44,10.83,12.61,705.43,64.75
+20069,Donostia / San Sebastián,Gipuzkoa,2024,12727,11.71,13.99,16.73,966.81,71.09
+20070,Segura,Gipuzkoa,2024,33,6.03,7.18,7.96,551.51,76.83
+20071,Tolosa,Gipuzkoa,2024,1172,7.62,9.01,10.93,659.04,74.38
+20072,Urnieta,Gipuzkoa,2024,290,8.52,9.47,10.89,701.92,73.28
+20073,Usurbil,Gipuzkoa,2024,275,8.6,9.8,11.7,721,71.06
+20074,Bergara,Gipuzkoa,2024,500,6.55,7.74,9.11,594.77,75.25
+20075,Villabona,Gipuzkoa,2024,348,6.93,8.09,9.52,609.93,79.95
+20076,Ordizia,Gipuzkoa,2024,688,7.2,8.41,9.93,610.48,72.01
+20077,Urretxu,Gipuzkoa,2024,260,6.34,7.32,8.78,551.51,72.71
+20078,Zaldibia,Gipuzkoa,2024,73,5.51,6.15,7.39,501.37,82.08
+20079,Zarautz,Gipuzkoa,2024,1339,9.73,11.38,13.6,854.61,77.88
+20080,Zumarraga,Gipuzkoa,2024,493,6.72,7.85,9.1,551.51,70.78
+20081,Zumaia,Gipuzkoa,2024,494,8.14,9.25,10.69,752.05,82.22
+20901,Mendaro,Gipuzkoa,2024,85,6.35,7.32,8.65,551.51,72.19
+20902,Lasarte-Oria,Gipuzkoa,2024,947,9.17,10.63,12.3,766.4,72.19
+20903,Astigarraga,Gipuzkoa,2024,361,9.91,11.4,12.88,867.37,77.49
+21002,Aljaraque,Huelva,2024,109,5.5,7.07,8.43,550,75
+21005,Almonte,Huelva,2024,123,4.51,5.54,6.76,408,76
+21007,Aracena,Huelva,2024,104,3.75,4.54,5.84,444.66,103
+21010,Ayamonte,Huelva,2024,425,4.12,5.2,6.41,450,94
+21011,Beas,Huelva,2024,13,2.67,3.71,4.73,330,93
+21013,Bollullos Par del Condado,Huelva,2024,98,3.51,4.02,5.06,399.99,98
+21014,Bonares,Huelva,2024,19,3.01,3.35,4.07,320.83,95
+21018,"Campillo, El",Huelva,2024,10,3.02,4.06,4.69,324.27,86
+21021,Cartaya,Huelva,2024,312,3.68,4.65,6.05,400,97
+21025,Cortegana,Huelva,2024,28,3.01,3.93,4.99,350,92
+21035,Gibraleón,Huelva,2024,102,3.97,4.69,5.81,400,91
+21041,Huelva,Huelva,2024,5175,5.38,6.79,8.66,508,78
+21042,Isla Cristina,Huelva,2024,404,4.39,5.48,7.08,410,83.5
+21044,Lepe,Huelva,2024,362,3.9,5.09,6.96,400,86.5
+21050,Moguer,Huelva,2024,161,4.28,5.34,7.16,400,79
+21053,Niebla,Huelva,2024,10,3.63,4.12,4.64,379.6,96.5
+21054,"Palma del Condado, La",Huelva,2024,69,3.47,4.23,5.17,380,94
+21055,Palos de la Frontera,Huelva,2024,72,3.98,4.94,6.49,403.75,82
+21060,Punta Umbría,Huelva,2024,260,5.11,6.35,7.92,459.17,78
+21063,San Bartolomé de la Torre,Huelva,2022,10,2.86,3.08,3.93,300,107
+21064,San Juan del Puerto,Huelva,2024,119,3.85,4.66,6.09,390,85
+21070,Trigueros,Huelva,2024,39,2.96,3.57,4.5,350,95
+21072,Valverde del Camino,Huelva,2024,48,2.91,3.48,4.36,400,110.5
+22007,Albalate de Cinca,Huesca,2024,10,3.08,3.62,4.1,325.49,105
+22017,Alcolea de Cinca,Huesca,2024,29,2.93,3.56,4.2,300,83
+22021,Almudévar,Huesca,2024,39,3.57,4.71,7.97,409.02,101
+22025,Altorricón,Huesca,2024,36,2.92,3.93,4.88,350,85
+22039,Ayerbe,Huesca,2024,34,3.21,3.82,5.32,350,84.5
+22048,Barbastro,Huesca,2024,1162,4.13,5.34,6.78,432.55,84
+22052,Belver de Cinca,Huesca,2024,11,2.34,3.12,3.64,280.92,97
+22053,Benabarre,Huesca,2024,32,2.91,4.11,5.08,303,77.5
+22054,Benasque,Huesca,2024,196,5.92,7.36,8.74,462.44,67
+22057,Bielsa,Huesca,2024,18,3.76,5.2,7.19,338,84
+22059,Biescas,Huesca,2024,133,5.42,6.92,8.14,437.26,68
+22061,Binéfar,Huesca,2024,668,4.06,5.04,6.13,455.54,94
+22066,Boltaña,Huesca,2024,63,3.89,4.87,5.93,409.41,92
+22069,Broto,Huesca,2024,34,5.12,6.2,7.42,427.08,74
+22074,Campo,Huesca,2024,42,3.85,4.77,5.72,346.68,75.5
+22078,Canfranc,Huesca,2024,67,7.14,8.65,10.25,448.25,55
+22084,Castejón de Sos,Huesca,2024,83,5.57,6.35,8.01,425,70
+22086,Castiello de Jaca,Huesca,2024,12,4.95,7.78,9.29,428.78,60
+22099,Esplús,Huesca,2024,12,2.69,3.14,4.04,317.5,102
+22112,Fraga,Huesca,2024,894,4.2,5.42,7.02,437.92,78
+22116,Grañén,Huesca,2024,15,2.49,3.16,3.96,283.33,93
+22117,Graus,Huesca,2024,185,3.01,3.92,4.92,356.42,97
+22125,Huesca,Huesca,2024,4765,5.3,6.67,8.31,500,78
+22127,Igriés,Huesca,2024,10,5.59,7.31,7.63,500,67
+22130,Jaca,Huesca,2024,1058,5.34,6.67,8.18,500,81
+22158,Monzón,Huesca,2024,1105,3.99,4.96,6.18,425,89
+22170,Panticosa,Huesca,2024,64,5.92,7.26,8.88,496.14,69.5
+22199,Sabiñánigo,Huesca,2024,722,3.94,5.37,7.09,400,76
+22200,Sahún,Huesca,2024,20,3.89,5.03,7.45,375,79.5
+22204,Sallent de Gállego,Huesca,2024,111,5.68,7.63,10,482.5,63
+22213,Sariñena,Huesca,2024,113,3.29,4.35,5.74,400,95
+22221,Sesué,Huesca,2024,11,5.9,6.29,7.61,425,84
+22225,Tamarite de Litera,Huesca,2024,110,3.52,4.29,5.15,367.33,88
+22226,Tardienta,Huesca,2024,26,1.53,2.8,3.41,300,104
+22234,Torrente de Cinca,Huesca,2024,10,3.11,3.68,4.78,400,120
+22249,Villanova,Huesca,2024,13,4.76,7.09,8.76,430,73
+22250,Villanúa,Huesca,2024,37,5.27,7.14,9.23,476.28,69
+22254,Zaidín,Huesca,2024,22,3.02,4.16,5.48,392.5,105
+22901,Valle de Hecho,Huesca,2017,10,2.5,3.33,4.77,275,75
+22902,Puente la Reina de Jaca,Huesca,2022,12,3.31,4.06,5.36,305,79.5
+22907,Aínsa-Sobrarbe,Huesca,2024,173,4.33,5.3,6.67,425,82
+23002,Alcalá la Real,Jaén,2024,445,2.98,3.59,4.42,365,104
+23003,Alcaudete,Jaén,2024,69,2.38,3.11,4.14,300,92
+23005,Andújar,Jaén,2024,757,2.94,3.66,4.52,350,101
+23006,Arjona,Jaén,2024,28,2.48,2.98,3.98,307.5,116.5
+23007,Arjonilla,Jaén,2024,12,2.04,2.83,3.43,295,101
+23009,Baeza,Jaén,2024,307,2.84,3.67,4.76,325,91
+23010,Bailén,Jaén,2024,190,2.69,3.41,4.17,340,101
+23012,Beas de Segura,Jaén,2024,28,2.47,3.32,4.1,286.91,98.5
+23024,"Carolina, La",Jaén,2024,194,2.71,3.28,3.94,342.78,111
+23028,Cazorla,Jaén,2024,137,2.76,3.5,4.59,330,95
+23038,"Guardia de Jaén, La",Jaén,2024,31,3.61,4.56,5.47,450,110
+23039,Guarromán,Jaén,2021,10,2.65,3.0,3.14,255.22,97
+23044,Huelma,Jaén,2024,23,2.32,3.0,3.66,300,102
+23047,"Iruela, La",Jaén,2024,26,3.98,5.87,6.83,310,64
+23050,Jaén,Jaén,2024,4993,4.75,5.92,7.39,490,86
+23051,Jamilena,Jaén,2024,15,2.75,3.16,3.44,300,106
+23053,Jódar,Jaén,2024,32,2.94,3.48,4.29,348.71,95
+23055,Linares,Jaén,2024,1617,3.33,4.17,5.31,380,91
+23056,Lopera,Jaén,2024,10,2.58,3.54,4.69,350,111
+23058,Mancha Real,Jaén,2024,172,2.78,3.3,3.91,350,112
+23059,Marmolejo,Jaén,2024,28,2.62,3.05,3.66,308.67,109.5
+23060,Martos,Jaén,2024,450,3.47,4.04,4.81,400,107
+23061,Mengíbar,Jaén,2024,110,2.81,3.42,4.1,348.71,103
+23066,Peal de Becerro,Jaén,2024,35,2.56,3.13,3.91,303.98,109
+23069,Porcuna,Jaén,2024,18,2.33,2.92,3.97,298.5,107
+23070,Pozo Alcón,Jaén,2024,12,2.75,3.35,4.36,280,100
+23071,Puente de Génave,Jaén,2024,15,3.8,4.29,5.12,277.92,62
+23072,"Puerta de Segura, La",Jaén,2024,18,2.25,3.21,3.48,290,109.5
+23073,Quesada,Jaén,2024,24,2.41,2.84,3.69,272.74,106
+23074,Rus,Jaén,2024,22,1.92,2.97,4.0,273,107
+23079,Santisteban del Puerto,Jaén,2024,16,2.48,2.86,4.16,280.85,103
+23081,Segura de la Sierra,Jaén,2024,11,3.53,4.34,5.17,280,84
+23082,Siles,Jaén,2024,10,2.39,2.61,4.43,272.5,117.5
+23086,Torre del Campo,Jaén,2024,211,2.8,3.63,4.33,370.68,113
+23087,Torredonjimeno,Jaén,2024,153,2.85,3.32,4.06,330,100
+23088,Torreperogil,Jaén,2024,48,2.26,2.92,3.86,307.5,109
+23092,Úbeda,Jaén,2024,1264,3.03,3.85,4.87,398.84,104
+23094,Vilches,Jaén,2024,11,1.67,2.99,3.8,300,93
+23095,Villacarrillo,Jaén,2024,84,2.28,3.01,3.44,300.49,101.5
+23097,Villanueva del Arzobispo,Jaén,2024,48,2.42,3,3.85,308.34,102.5
+23099,"Villares, Los",Jaén,2024,20,3.9,4.26,5.22,417.5,96.5
+23903,Villatorres,Jaén,2024,16,2.3,3.07,3.77,300,110
+24008,Astorga,León,2024,535,2.95,3.64,4.55,350,100
+24010,"Bañeza, La",León,2024,456,3.01,3.85,4.94,360,98
+24014,Bembibre,León,2024,300,2.47,3.26,4.05,300,101
+24015,Benavides,León,2024,24,2.9,3.42,4.22,310,89.5
+24021,Boñar,León,2024,27,2.93,3.46,4.68,326.79,89
+24030,Cacabelos,León,2024,98,2.5,3.49,4.57,322.92,107.5
+24034,Camponaraya,León,2024,40,3.01,3.79,5.01,350,113
+24039,Carrizo,León,2024,70,2.51,3.26,3.84,300,92
+24056,Cistierna,León,2024,72,3.13,4.26,5.15,320,83.5
+24070,Fabero,León,2024,44,1.78,2.81,3.85,293.35,119.5
+24076,Garrafe de Torío,León,2024,11,3.58,3.79,4.07,581.35,235
+24082,Hospital de Órbigo,León,2024,10,2.14,3.24,4.41,250,77
+24089,León,León,2024,10183,4.37,5.63,7.23,491.34,89
+24094,Mansilla de las Mulas,León,2024,76,2.96,3.68,4.36,300.35,88.5
+24105,Onzonilla,León,2024,11,2.33,3.41,6.75,310,91
+24114,"Pola de Gordón, La",León,2024,23,2.89,3.48,4.24,275,79
+24115,Ponferrada,León,2024,3997,3.8,5.01,6.44,400,89
+24121,Puebla de Lillo,León,2024,10,4.45,6.33,10.19,320,59
+24122,Puente de Domingo Flórez,León,2024,29,2.02,2.47,3.88,265.4,103
+24130,Riaño,León,2024,21,3.43,4.55,5.06,306.25,77
+24134,"Robla, La",León,2024,71,2.75,3.33,4.05,300,92
+24139,Sahagún,León,2024,69,3.0,3.67,4.37,325,92
+24142,San Andrés del Rabanedo,León,2024,1618,4.36,5.44,6.8,415,84
+24157,Santa María del Páramo,León,2024,78,2.84,3.53,4.21,346.57,102
+24162,Santovenia de la Valdoncina,León,2024,16,2.91,4.02,5.05,343.13,97.5
+24163,Sariegos,León,2024,19,4.3,6.01,6.57,300.7,54
+24169,Toreno,León,2024,38,1.92,2.44,3.14,210,97.5
+24181,Valderas,León,2024,12,3.24,3.49,4.39,264.58,80
+24188,Valencia de Don Juan,León,2024,200,3.31,4.05,4.8,350,89
+24189,Valverde de la Virgen,León,2024,485,4.55,5.71,7.24,425,81
+24196,Vega de Espinareda,León,2024,24,2.13,2.46,3.23,274.4,114.5
+24202,Villablino,León,2024,198,2.48,3.28,4.59,300,101
+24205,Villadangos del Páramo,León,2024,20,5.38,6.19,7.73,369.25,64.5
+24206,Toral de los Vados,León,2024,24,2.18,3.63,3.89,300,99.5
+24209,Villafranca del Bierzo,León,2024,70,2.96,3.7,4.4,322.92,90.5
+24222,Villaquilambre,León,2024,1431,4.76,5.74,6.76,432.6,84
+24223,Villarejo de Órbigo,León,2024,58,3.18,3.65,4.6,350,88.5
+24227,Villaturiel,León,2024,18,2.64,3.53,4.45,300,97.5
+25002,Àger,Lleida,2024,10,3.93,5.05,5.73,350.26,69
+25003,Agramunt,Lleida,2024,258,3.2,4.06,5.08,366.27,96.5
+25004,"Alamús, Els",Lleida,2024,48,5.09,5.84,7.22,462.42,79.5
+25007,Albatàrrec,Lleida,2024,80,4.16,5.12,6.36,450,84
+25008,Albesa,Lleida,2024,18,3.88,4.86,5.8,437.5,89
+25011,Alcarràs,Lleida,2024,713,4.81,6.09,7.47,420.83,71
+25012,Alcoletge,Lleida,2024,159,4.72,5.81,6.73,450,84
+25013,Alfarràs,Lleida,2024,84,2.8,3.85,4.66,364,106.5
+25016,Alguaire,Lleida,2024,37,3.43,4.13,5.25,350,93
+25019,Almacelles,Lleida,2024,325,3.64,4.73,6.29,400,89
+25021,Almenar,Lleida,2024,103,3.16,4.05,5.29,400,107
+25023,Alpicat,Lleida,2024,104,4.6,5.86,7.28,500,94.5
+25024,Alt Àneu,Lleida,2024,26,4.65,6.33,8.05,476.97,75
+25025,Naut Aran,Lleida,2024,41,5.56,7.87,10.35,696.2,96
+25027,Anglesola,Lleida,2024,24,3.41,4.46,6.04,402.78,96
+25029,Arbeca,Lleida,2024,21,2.81,3.78,4.42,330,114
+25034,Artesa de Segre,Lleida,2024,163,2.85,3.57,4.88,330,96
+25038,Aitona,Lleida,2024,26,2.96,3.98,4.94,420.5,104
+25040,Balaguer,Lleida,2024,1046,3.47,4.41,6,392.07,89
+25043,"Vall de Boí, La",Lleida,2024,64,5.51,6.49,7.95,401.65,61.5
+25047,Bellcaire d'Urgell,Lleida,2024,17,4.06,5.41,6.07,381.28,72
+25048,Bell-lloc d'Urgell,Lleida,2024,70,3.85,4.51,5.46,400,92
+25050,Bellpuig,Lleida,2024,257,3.63,4.73,6.07,400,91
+25051,Bellver de Cerdanya,Lleida,2024,116,4.48,5.69,7.75,545.26,97
+25052,Bellvís,Lleida,2024,32,3.99,4.94,6.44,400,83
+25053,Benavent de Segrià,Lleida,2024,18,3.87,4.68,5.63,450,99
+25058,"Borges Blanques, Les",Lleida,2024,281,3.8,4.69,6.24,400,85
+25059,Bossòst,Lleida,2024,47,4.62,5.76,6.74,467.52,91
+25068,Castellnou de Seana,Lleida,2024,15,4.18,5,5.2,355.38,95
+25070,Castellserà,Lleida,2024,11,2.68,3.8,6.79,380,126
+25072,Cervera,Lleida,2024,521,3.36,4.24,5.43,370,88
+25077,Coll de Nargó,Lleida,2024,15,1.89,2.7,5.94,300,103
+25082,Espot,Lleida,2024,15,3.84,5.71,6.66,314.95,60
+25086,Esterri d'Àneu,Lleida,2024,107,4.69,5.79,7.38,450,82
+25096,"Fuliola, La",Lleida,2024,11,1.85,3.06,3.79,312.5,100
+25110,Guissona,Lleida,2024,308,3.74,4.52,5.74,420,106.5
+25113,Ivars d'Urgell,Lleida,2024,10,2.56,3.29,4.1,350,114
+25115,Isona i Conca Dellà,Lleida,2024,20,2.36,3.25,4.3,330,129
+25119,Juneda,Lleida,2024,65,3.49,4.24,5.29,379.17,89
+25120,Lleida,Lleida,2024,11047,5.21,6.61,8.17,516.25,82
+25121,Les,Lleida,2024,31,5,6.29,7.96,500,85
+25122,Linyola,Lleida,2024,82,3.64,4.8,6,392.08,79
+25126,Llavorsí,Lleida,2024,10,4.06,5.15,5.56,400,91.5
+25134,Menàrguens,Lleida,2024,18,4.08,4.79,6.6,380,84.5
+25135,Miralcamp,Lleida,2024,12,4.1,4.92,5.87,425,117
+25137,Mollerussa,Lleida,2024,1146,4.05,5.22,6.52,425,89
+25139,Montellà i Martinet,Lleida,2024,23,3.27,4.08,7.02,481.67,102
+25140,Montferrer i Castellbò,Lleida,2024,20,4.7,6.33,8.28,684.75,95
+25149,Oliana,Lleida,2024,61,2.62,3.01,4.47,316,95
+25155,Organyà,Lleida,2024,40,3.6,4.4,6.71,385,86
+25156,Os de Balaguer,Lleida,2024,13,4.22,4.82,5.81,400,85
+25158,"Palau d'Anglesola, El",Lleida,2024,37,4.54,5.15,6.34,450,80
+25163,"Coma i la Pedra, La",Lleida,2021,10,2.66,5.38,6.41,315.46,72.5
+25165,Peramola,Lleida,2024,12,2.86,4.35,5.48,377.21,80.5
+25171,"Pobla de Segur, La",Lleida,2024,236,2.93,3.62,4.76,350,98.5
+25172,Ponts,Lleida,2024,109,3.26,3.89,5.08,350,91
+25173,"Pont de Suert, El",Lleida,2024,183,4.05,5.23,6.16,380,75
+25183,Rialp,Lleida,2024,39,4.56,5.73,7.29,448.53,88
+25185,Ribera d'Urgellet,Lleida,2024,12,4.56,5.69,6.14,486.93,91.5
+25189,Rosselló,Lleida,2024,129,4.85,6.19,7.04,450,77
+25190,Salàs de Pallars,Lleida,2024,11,3.15,4.88,7.15,307.5,89
+25192,Sant Guim de Freixenet,Lleida,2024,65,3.04,3.62,4.71,325,91
+25193,Sant Llorenç de Morunys,Lleida,2024,62,3.57,4.64,5.61,385.21,84
+25202,Senterada,Lleida,2024,12,3.45,4.01,4.58,305,91
+25203,"Seu d'Urgell, La",Lleida,2024,1210,4.1,5.57,7.31,462.41,89
+25204,Seròs,Lleida,2024,28,3.55,4.95,5.62,355.48,78.5
+25207,Solsona,Lleida,2024,621,3.31,4.29,5.39,370.5,90
+25209,Sort,Lleida,2024,228,4.38,5.59,7.01,425.61,78.5
+25210,Soses,Lleida,2024,10,2.72,3.57,4.68,360,118.5
+25211,Sudanell,Lleida,2024,14,3.81,4.2,5.33,413.25,111
+25215,Talarn,Lleida,2024,14,4.16,4.57,6.94,396.23,88
+25217,Tàrrega,Lleida,2024,1322,4.18,5.37,6.78,410.8,81
+25220,Térmens,Lleida,2024,15,3.63,5.35,6.29,395,73
+25223,Torà,Lleida,2024,52,3.37,3.84,4.91,350,99
+25227,"Torre de Cabdella, La",Lleida,2024,22,4.26,5.23,6.13,362.25,73.5
+25228,Torrefarrera,Lleida,2024,217,4.88,6.02,7.34,500,85
+25230,Torregrossa,Lleida,2024,21,3.4,4.16,5.05,368.42,87
+25232,Torres de Segre,Lleida,2024,32,3.27,4.91,7.14,304.58,46.5
+25234,Tremp,Lleida,2024,482,3.28,4.04,5.12,380,96
+25239,"Valls de Valira, Les",Lleida,2024,17,3.84,6.42,8.01,478.17,77
+25240,Vallfogona de Balaguer,Lleida,2024,41,3.54,4.67,5.39,400,84
+25242,Verdú,Lleida,2024,14,4.76,5.69,6.29,406.25,69
+25243,Vielha e Mijaran,Lleida,2024,443,6.39,8.33,10.45,600,80
+25244,Vilagrassa,Lleida,2024,17,4.74,5.73,6.48,400,66
+25245,Vilaller,Lleida,2024,10,3.53,4.07,5.73,325.01,92.5
+25251,Vilanova de Segrià,Lleida,2024,12,3.34,5.01,6.74,450,94
+25254,Vilanova de la Barca,Lleida,2024,17,3.8,4.86,5.57,433.33,122
+25901,Vall de Cardós,Lleida,2024,21,2.65,4.97,7.95,400,68
+25903,"Guingueta d'Àneu, La",Lleida,2024,11,5.34,5.81,6.31,392.5,68
+26002,Agoncillo,"Rioja, La",2024,40,3.24,4.11,5.86,378.88,92
+26005,Albelda de Iregua,"Rioja, La",2024,128,3.59,4.39,5.42,414.42,100.5
+26006,Alberite,"Rioja, La",2024,135,3.48,4.21,5.49,366.62,94
+26007,Alcanadre,"Rioja, La",2023,10,2.65,3.1,5.74,290,101
+26008,Aldeanueva de Ebro,"Rioja, La",2024,20,2.8,3.3,3.94,386,134
+26011,Alfaro,"Rioja, La",2024,303,3.25,4.29,5.27,380,96
+26013,Anguciana,"Rioja, La",2024,10,4.48,4.96,5.67,423.7,94
+26017,Arnedillo,"Rioja, La",2024,12,4.07,4.96,5.82,337.5,72
+26018,Arnedo,"Rioja, La",2024,568,3.84,4.65,5.63,408.33,94
+26019,Arrúbal,"Rioja, La",2024,17,2.87,5.16,6.54,350,70
+26021,Autol,"Rioja, La",2024,164,3.04,3.88,4.77,354.58,101
+26026,Baños de Río Tobía,"Rioja, La",2024,17,3.03,3.57,4.3,275,77
+26036,Calahorra,"Rioja, La",2024,1117,4.47,5.4,6.58,493.33,96
+26042,Casalarreina,"Rioja, La",2024,17,3.79,4.98,7.22,400,81
+26046,Cenicero,"Rioja, La",2024,63,3.64,4.31,5.44,372.3,92
+26047,Cervera del Río Alhama,"Rioja, La",2024,19,3.12,4.12,5.89,300,86
+26050,Cirueña,"Rioja, La",2021,10,3.89,4.4,5.19,459.44,130.5
+26059,Entrena,"Rioja, La",2024,40,3.18,3.86,4.51,350,100.5
+26061,Ezcaray,"Rioja, La",2024,67,4.82,5.82,7.89,400,71
+26064,Fuenmayor,"Rioja, La",2024,126,3.72,4.3,5.41,381.47,97.5
+26071,Haro,"Rioja, La",2024,428,4.49,5.37,6.71,430,86.5
+26084,Lardero,"Rioja, La",2024,764,4.87,6.21,8.14,475,83
+26089,Logroño,"Rioja, La",2024,10342,5.11,6.44,7.92,513.33,84
+26099,Murillo de Río Leza,"Rioja, La",2024,42,2.79,3.58,4.86,350,106
+26102,Nájera,"Rioja, La",2024,328,3.65,4.33,5.21,358.75,91
+26105,Navarrete,"Rioja, La",2024,79,3.35,4.51,5.93,400,92
+26117,Pradejón,"Rioja, La",2024,72,3.16,3.94,4.95,400,105
+26120,Quel,"Rioja, La",2024,38,3.0,3.57,4.36,350,98
+26124,Ribafrecha,"Rioja, La",2024,10,2.75,3.39,4.18,331.04,114.5
+26125,Rincón de Soto,"Rioja, La",2024,72,2.86,3.72,4.46,350.32,104
+26129,San Asensio,"Rioja, La",2024,15,2.72,3.37,4.03,300,89
+26138,Santo Domingo de la Calzada,"Rioja, La",2024,254,3.3,4.28,5.43,368.61,88.5
+26142,San Vicente de la Sonsierra,"Rioja, La",2024,12,3.89,4.42,5.17,353.31,96.5
+26143,Sojuela,"Rioja, La",2024,54,3.7,4.08,5.58,499.17,154
+26168,Villamediana de Iregua,"Rioja, La",2024,535,4.88,5.8,6.97,460,84
+27005,Barreiros,Lugo,2024,59,4.31,5.33,7.1,336.9,73
+27006,Becerreá,Lugo,2024,64,1.95,2.52,3.35,280,108
+27010,Castro de Rei,Lugo,2024,77,2.5,3.31,4.43,340,110
+27013,Cervo,Lugo,2024,98,2.55,3.65,5.29,316.98,99.5
+27015,Cospeito,Lugo,2024,18,1.75,2.13,2.43,277.5,133.5
+27016,Chantada,Lugo,2024,230,2.35,3.21,4.07,326.74,110
+27018,"Fonsagrada, A",Lugo,2024,59,2.29,3.07,4.02,301.35,98
+27019,Foz,Lugo,2024,476,3.4,4.57,5.89,350,83
+27020,Friol,Lugo,2024,12,2.08,2.71,2.89,299.73,117.5
+27022,Guitiriz,Lugo,2024,84,2.5,3.5,4.27,300.51,101.5
+27025,Xove,Lugo,2024,52,2.85,3.66,4.71,300.55,98.5
+27026,Láncara,Lugo,2024,28,2.01,2.41,2.87,267.17,122.5
+27027,Lourenzá,Lugo,2024,26,1.82,2.51,3.99,267.5,109.5
+27028,Lugo,Lugo,2024,7365,3.57,4.88,6.4,404,95
+27029,Meira,Lugo,2024,53,2.68,3.61,4.53,300,99
+27030,Mondoñedo,Lugo,2024,49,2.08,3.21,3.85,300,102
+27031,Monforte de Lemos,Lugo,2024,891,2.56,3.49,4.78,338.33,106
+27032,Monterroso,Lugo,2024,89,2.57,3.07,3.92,296.67,98
+27040,Palas de Rei,Lugo,2024,21,2.59,2.65,3.7,300,116
+27044,"Pastoriza, A",Lugo,2024,13,1.2,2.27,2.64,250,140
+27048,"Pontenova, A",Lugo,2024,59,1.89,2.47,2.95,251.25,104
+27049,Portomarín,Lugo,2024,13,2.46,3.06,4.85,270,94
+27050,Quiroga,Lugo,2024,73,2.01,2.62,3.59,280,111
+27051,Ribadeo,Lugo,2024,609,3.5,4.55,5.68,375,84
+27052,Ribas de Sil,Lugo,2024,17,2.64,3.11,4.25,287,93
+27056,Rábade,Lugo,2024,63,1.76,2.53,2.9,280,121
+27057,Sarria,Lugo,2024,539,2.59,3.3,4.15,330,110
+27058,"Saviñao, O",Lugo,2024,19,1.79,2.66,3.53,300,108
+27060,Taboada,Lugo,2024,18,1.84,3.32,4.8,290,98
+27063,"Valadouro, O",Lugo,2024,48,2.26,2.82,3.47,270,104.5
+27064,"Vicedo, O",Lugo,2024,28,1.93,2.63,4.25,239.57,83
+27065,Vilalba,Lugo,2024,341,2.54,3.45,4.29,336.2,108
+27066,Viveiro,Lugo,2024,688,3.05,4.17,5.33,350,91
+27901,Baralla,Lugo,2024,20,2.12,2.7,3.26,300,114.5
+27902,Burela,Lugo,2024,557,2.73,3.64,4.78,323.75,98
+28002,Ajalvir,Madrid,2024,509,7.54,9.38,11.19,647.35,71
+28004,"Álamo, El",Madrid,2024,389,6.73,8.57,10.66,520,65
+28005,Alcalá de Henares,Madrid,2024,12836,7.9,9.42,11.21,697.76,74
+28006,Alcobendas,Madrid,2024,6933,9.68,11.84,14.42,834,79
+28007,Alcorcón,Madrid,2024,9323,8.77,10.19,11.85,740,74
+28008,Aldea del Fresno,Madrid,2024,69,5.31,6.88,7.73,492.26,71
+28009,Algete,Madrid,2024,694,6.69,8.11,9.82,659.79,83
+28010,Alpedrete,Madrid,2024,804,7.65,9.09,10.79,700,83
+28012,Anchuelo,Madrid,2024,36,5.76,7.46,8.43,500,71
+28013,Aranjuez,Madrid,2024,3995,6.2,7.9,10.2,550,74
+28014,Arganda del Rey,Madrid,2024,3132,6.68,8.12,10,640,82
+28015,Arroyomolinos,Madrid,2024,1015,7.98,9.31,10.82,820,108
+28018,Becerril de la Sierra,Madrid,2024,249,5.88,7.3,9.91,569.9,81
+28019,Belmonte de Tajo,Madrid,2024,38,4.65,5.42,7.07,425,84.5
+28021,"Berrueco, El",Madrid,2024,15,3.95,5.84,9.99,382,77
+28022,Boadilla del Monte,Madrid,2024,1822,10.87,12.64,14.64,1270.16,116.5
+28023,"Boalo, El",Madrid,2024,297,7.11,8.45,10.09,625,78
+28026,Brunete,Madrid,2024,760,7.32,9.09,11.26,747.5,87
+28027,Buitrago del Lozoya,Madrid,2024,119,4.8,5.78,7.75,456.25,81
+28028,Bustarviejo,Madrid,2024,110,5.03,6.76,8.5,482.83,79.5
+28030,"Cabrera, La",Madrid,2024,93,5.82,7.05,8.9,500,74
+28031,Cadalso de los Vidrios,Madrid,2024,53,3.47,4.05,4.69,291.74,66
+28032,Camarma de Esteruelas,Madrid,2024,316,6.86,8.62,10.45,600,69
+28033,Campo Real,Madrid,2024,421,6.25,7.58,9.21,520,77
+28035,Carabaña,Madrid,2024,59,5,5.95,7.15,450,73
+28036,Casarrubuelos,Madrid,2024,72,6.03,6.69,9.57,552.75,84
+28037,Cenicientos,Madrid,2024,21,3.76,4.32,5.31,318.69,78
+28038,Cercedilla,Madrid,2024,341,6.34,8.12,9.89,550,74
+28040,Ciempozuelos,Madrid,2024,1398,6.55,8.04,9.81,550,72
+28041,Cobeña,Madrid,2024,261,7.77,9.6,11.46,700,82
+28042,Colmenar del Arroyo,Madrid,2024,66,4.21,5.22,7.36,446.25,89
+28043,Colmenar de Oreja,Madrid,2024,47,3.68,4.8,6.55,400,78
+28044,Colmenarejo,Madrid,2024,456,7.14,8.33,9.86,650,81
+28045,Colmenar Viejo,Madrid,2024,3158,7.06,8.72,10.38,700,86
+28046,Collado Mediano,Madrid,2024,240,6.71,8.47,10.34,616.64,78
+28047,Collado Villalba,Madrid,2024,4829,7.8,9.49,11.76,683.02,76
+28048,Corpa,Madrid,2024,31,6,7.14,9.47,450,66
+28049,Coslada,Madrid,2024,4118,8.33,9.79,11.61,730,75
+28050,Cubas de la Sagra,Madrid,2024,18,6.27,7.81,8.41,598.37,79.5
+28051,Chapinería,Madrid,2024,40,4.88,6.03,7.35,522.04,79
+28052,Chinchón,Madrid,2024,143,5.21,6.63,8.44,452.25,77
+28053,Daganzo de Arriba,Madrid,2024,236,7.63,9.02,10.96,675,84.5
+28054,"Escorial, El",Madrid,2024,1001,7.08,8.63,10.55,678.3,84
+28055,Estremera,Madrid,2024,11,3.25,3.66,5.32,315.52,89
+28056,Fresnedillas de la Oliva,Madrid,2024,47,4.55,5.41,7.33,400,71
+28057,Fresno de Torote,Madrid,2024,16,6.01,7.25,9.34,601.08,96
+28058,Fuenlabrada,Madrid,2024,8651,7.67,9.04,10.65,682.75,75
+28059,Fuente el Saz de Jarama,Madrid,2024,401,7.13,8.96,10.7,600,70
+28060,Fuentidueña de Tajo,Madrid,2024,12,3.48,4.25,5.01,408.33,99
+28061,Galapagar,Madrid,2024,2165,7.14,8.56,10.31,636.67,78
+28062,Garganta de los Montes,Madrid,2024,10,4.59,6.12,10.16,538.68,97
+28065,Getafe,Madrid,2024,12120,8.63,10.2,12.12,700,66
+28066,Griñón,Madrid,2024,266,6.8,7.95,9.72,650,83
+28067,Guadalix de la Sierra,Madrid,2024,176,5.62,7.45,9.92,526.28,72.5
+28068,Guadarrama,Madrid,2024,904,6.93,8.45,10.27,650,79
+28072,Hoyo de Manzanares,Madrid,2024,391,7.52,9.1,10.93,756.67,90
+28073,Humanes de Madrid,Madrid,2024,1031,6.88,8.42,10.14,621.62,77
+28074,Leganés,Madrid,2024,10663,8.33,9.76,11.49,690,69
+28075,Loeches,Madrid,2024,196,5.53,7.02,8.97,600,92
+28076,Lozoya,Madrid,2024,36,3.47,4.81,5.92,399.76,90
+28079,Madrid,Madrid,2024,300447,11.03,13.97,17.92,868.75,66
+28080,Majadahonda,Madrid,2024,4231,11.07,13.21,15.8,1127.5,94
+28082,Manzanares el Real,Madrid,2024,575,7.27,8.85,10.72,600,74
+28083,Meco,Madrid,2024,406,6.24,8.05,9.68,608.42,91
+28084,Mejorada del Campo,Madrid,2024,878,7.46,8.78,10.63,634.17,75
+28085,Miraflores de la Sierra,Madrid,2024,338,6.01,7.56,9.26,529.25,73
+28086,"Molar, El",Madrid,2024,604,6.59,8.23,10,570,74
+28087,"Molinos, Los",Madrid,2024,129,6.13,7.38,9.23,600,88
+28088,Montejo de la Sierra,Madrid,2024,10,2.96,5.25,7.4,360,90
+28089,Moraleja de Enmedio,Madrid,2024,97,5.75,6.8,8.31,560,86
+28090,Moralzarzal,Madrid,2024,377,7.57,9.05,10.81,650,72
+28091,Morata de Tajuña,Madrid,2024,300,5.4,6.58,8.12,500,78
+28092,Móstoles,Madrid,2024,9733,7.84,9.22,10.82,700,77
+28093,Navacerrada,Madrid,2024,168,7.08,8.49,10.29,600,69.5
+28094,Navalafuente,Madrid,2024,87,4.94,6.52,8.31,450,75
+28095,Navalagamella,Madrid,2024,85,5.59,7.38,8.64,451.12,70
+28096,Navalcarnero,Madrid,2024,1296,6.45,7.99,9.73,650,89
+28099,Navas del Rey,Madrid,2024,45,4.39,5.11,7.58,358.75,76
+28102,Orusco de Tajuña,Madrid,2024,22,4.06,5.07,6.85,375,77
+28104,Paracuellos de Jarama,Madrid,2024,1115,8.51,9.98,11.37,847.67,102
+28106,Parla,Madrid,2024,5902,6.96,8.21,9.7,650,80
+28108,Pedrezuela,Madrid,2024,414,7.15,8.49,10.04,506.51,63
+28109,Pelayos de la Presa,Madrid,2024,79,4.46,5.35,6.55,400,79
+28110,Perales de Tajuña,Madrid,2024,112,5.29,6.54,8.38,421.1,67.5
+28113,Pinto,Madrid,2024,3064,7.97,9.43,11.13,700,83
+28115,Pozuelo de Alarcón,Madrid,2024,3954,11.5,13.67,15.95,1246.25,96
+28116,Pozuelo del Rey,Madrid,2024,28,5.86,7.3,9.24,550,87.5
+28119,Quijorna,Madrid,2024,153,6.22,7.92,9.72,621,81
+28120,Rascafría,Madrid,2024,50,4.14,5.37,6.52,400,81.5
+28122,Ribatejada,Madrid,2024,14,4.44,5.71,7.73,425.62,81
+28123,Rivas-Vaciamadrid,Madrid,2024,3160,7.97,9.16,10.53,867,108
+28125,Robledo de Chavela,Madrid,2024,87,5.12,6.79,8.4,450,65
+28127,"Rozas de Madrid, Las",Madrid,2024,5645,11.24,13.4,15.83,995.92,85
+28129,San Agustín del Guadalix,Madrid,2024,801,8.41,9.94,11.45,701.04,79
+28130,San Fernando de Henares,Madrid,2024,1896,8.33,9.7,11.21,700,75
+28131,San Lorenzo de El Escorial,Madrid,2024,1463,7.23,8.93,11.16,660,80
+28132,San Martín de la Vega,Madrid,2024,569,5.81,6.95,8.47,600,85
+28133,San Martín de Valdeiglesias,Madrid,2024,258,4.06,5.47,7.04,402.5,86
+28134,San Sebastián de los Reyes,Madrid,2024,5619,9.66,11.48,13.72,825,77
+28135,Santa María de la Alameda,Madrid,2024,11,3.16,4.72,6.03,300,68
+28136,Santorcaz,Madrid,2024,20,4.59,5.75,7.68,507.64,82
+28137,"Santos de la Humosa, Los",Madrid,2024,31,4.49,6.73,8.19,528.75,90
+28140,Serranillos del Valle,Madrid,2024,47,6.16,7.21,9.7,650,88
+28141,Sevilla la Nueva,Madrid,2024,564,7.33,8.83,10.47,652.06,79
+28144,Soto del Real,Madrid,2024,294,6.86,8.36,10.17,639.25,78
+28145,Talamanca de Jarama,Madrid,2024,244,6.51,7.8,9.42,567.83,81.5
+28146,Tielmes,Madrid,2024,106,5.58,6.87,8.36,463.5,71
+28147,Titulcia,Madrid,2023,10,4.98,6.19,7.38,468,73.5
+28148,Torrejón de Ardoz,Madrid,2024,7467,7.72,9.21,11.01,710,83
+28149,Torrejón de la Calzada,Madrid,2024,245,6.45,7.58,9.32,640,93
+28150,Torrejón de Velasco,Madrid,2024,78,5.65,7.11,8.48,581.96,98.5
+28151,Torrelaguna,Madrid,2024,255,5.04,6.63,8.33,450.05,74
+28152,Torrelodones,Madrid,2024,807,9.96,11.86,14.02,945,84
+28154,Torres de la Alameda,Madrid,2024,261,5.96,7.24,8.81,540,78
+28156,Valdeavero,Madrid,2024,45,6.86,8.06,8.96,525,78
+28157,Valdelaguna,Madrid,2024,27,4.49,5.65,7.59,410,81
+28159,Valdemaqueda,Madrid,2024,11,2.45,4.24,5.47,300,66
+28160,Valdemorillo,Madrid,2024,476,7.14,9.16,11.54,575,65
+28161,Valdemoro,Madrid,2024,3975,7.48,8.96,10.9,680,84
+28162,Valdeolmos-Alalpardo,Madrid,2024,246,7.03,8.09,9.71,608.73,84
+28164,Valdetorres de Jarama,Madrid,2024,185,6.0,7.38,9.02,550.22,80
+28165,Valdilecha,Madrid,2024,156,5.11,6.25,7.97,450,85
+28167,Velilla de San Antonio,Madrid,2024,524,7.26,8.76,10.3,650,81
+28168,"Vellón, El",Madrid,2024,148,6.3,7.94,9.61,478.2,75
+28170,Villaconejos,Madrid,2024,33,3.06,4,4.76,450,103
+28171,Villa del Prado,Madrid,2024,144,4.87,6.11,7.58,461.88,79
+28172,Villalbilla,Madrid,2024,215,6.94,8.58,9.96,700,97
+28173,Villamanrique de Tajo,Madrid,2024,20,5.02,7.06,8.76,444.84,61
+28174,Villamanta,Madrid,2024,44,4.48,6.21,7.52,465,90
+28175,Villamantilla,Madrid,2024,59,5.77,7.25,8.44,500,83
+28176,Villanueva de la Cañada,Madrid,2024,1180,9.62,11.78,14.71,804.7,78
+28177,Villanueva del Pardillo,Madrid,2024,835,9.04,10.58,12.32,879.17,94
+28178,Villanueva de Perales,Madrid,2024,23,4.75,6.2,7.8,526.49,102
+28180,Villarejo de Salvanés,Madrid,2024,289,4.66,5.62,6.84,450,85
+28181,Villaviciosa de Odón,Madrid,2024,1020,10.8,12.91,15.42,901.34,74
+28183,Zarzalejo,Madrid,2024,36,4.27,4.95,5.55,400,80
+28901,Lozoyuela-Navas-Sieteiglesias,Madrid,2024,13,3.69,5.56,8.09,400,90
+28903,Tres Cantos,Madrid,2024,2809,9.64,11.5,13.47,950,95
+29001,Alameda,Málaga,2024,13,2.3,3.68,5.06,300,99
+29002,Alcaucín,Málaga,2024,21,4.66,6.22,8.01,552.11,90
+29005,Algarrobo,Málaga,2024,232,6.31,8.11,10.02,550,78
+29007,Alhaurín de la Torre,Málaga,2024,616,6.93,8.69,11.07,629.58,85
+29008,Alhaurín el Grande,Málaga,2024,362,5.13,6.61,8.33,597.15,95
+29012,Álora,Málaga,2024,82,3.95,4.87,6.59,448.96,89.5
+29015,Antequera,Málaga,2024,982,4.48,5.5,6.85,500,95
+29017,Archidona,Málaga,2024,69,2.33,3.26,4.02,329.69,108
+29020,Arriate,Málaga,2024,19,2.75,3.3,5.1,300,104
+29023,Benahavís,Málaga,2024,193,8.02,10.77,13.36,1114.61,123
+29025,Benalmádena,Málaga,2024,3907,7.98,10.08,12.78,695.2,81
+29032,Campillos,Málaga,2024,67,3.33,4.07,4.96,380,97
+29038,Cártama,Málaga,2024,307,6.18,7.57,9.54,580,85
+29039,Casabermeja,Málaga,2024,22,4.19,5.95,7.74,450,77.5
+29040,Casarabonela,Málaga,2024,14,4.52,4.96,5.93,390,82
+29041,Casares,Málaga,2024,202,7.57,10.29,11.63,618.84,78.5
+29042,Coín,Málaga,2024,333,4.57,5.95,7.91,500,86
+29045,Cómpeta,Málaga,2024,19,4.33,4.82,6.56,400,88
+29046,Cortes de la Frontera,Málaga,2023,10,1.94,2.74,3.86,215,95
+29051,Estepona,Málaga,2024,2963,6.58,8.36,10.98,675,90
+29053,Frigiliana,Málaga,2024,63,6.08,7.53,8.92,505,77
+29054,Fuengirola,Málaga,2024,4682,7.18,9.29,11.93,675,80
+29055,Fuente de Piedra,Málaga,2024,15,4.23,4.57,5.32,395,103
+29058,Guaro,Málaga,2024,19,4.96,8.01,10.7,610,106
+29061,Istán,Málaga,2024,15,4.92,6.33,8.18,400,80
+29067,Málaga,Málaga,2024,25741,7.36,9.55,12.36,718.33,80
+29068,Manilva,Málaga,2024,827,6.6,8.13,10,622,87
+29069,Marbella,Málaga,2024,6374,7.53,9.63,12.7,800,89
+29070,Mijas,Málaga,2024,3391,6.93,8.68,11.05,615,81
+29072,Mollina,Málaga,2024,71,3.28,4.36,6.0,400,97
+29073,Monda,Málaga,2024,40,5.84,7.47,9.55,600,83
+29075,Nerja,Málaga,2024,595,6.13,7.92,10.05,575,74
+29076,Ojén,Málaga,2024,171,6.75,8.35,11.13,575.02,77
+29079,Periana,Málaga,2024,11,3.21,4.24,6.72,356.25,68
+29080,Pizarra,Málaga,2024,16,4.49,5.89,6.59,550,99.5
+29082,Rincón de la Victoria,Málaga,2024,2486,7.06,8.74,11.06,700,93
+29084,Ronda,Málaga,2024,1083,4.05,5.1,6.34,420,89
+29090,Tolox,Málaga,2024,13,3.85,4.17,7.72,400,87
+29091,Torrox,Málaga,2024,753,5.93,7.76,9.72,501.37,73
+29094,Vélez-Málaga,Málaga,2024,2394,5.31,6.84,8.77,538.01,88
+29095,Villanueva de Algaidas,Málaga,2024,10,3.04,4.11,6.44,330.83,85
+29901,Torremolinos,Málaga,2024,3969,7.78,10.17,13.24,660,73
+30001,Abanilla,Murcia,2024,32,2.32,3.27,4.6,345,108
+30002,Abarán,Murcia,2024,214,2.53,3.2,3.82,300,98
+30003,Águilas,Murcia,2024,1130,3.76,4.88,6.34,416.08,95
+30005,Alcantarilla,Murcia,2024,1354,3.18,4.31,5.77,409.65,100
+30007,Alguazas,Murcia,2024,64,3.22,3.84,5.17,387.69,101
+30008,Alhama de Murcia,Murcia,2024,761,3.69,4.69,6.73,400,89
+30009,Archena,Murcia,2024,453,3.36,4.32,5.29,390,99
+30010,Beniel,Murcia,2024,195,3.23,3.88,4.49,400,110
+30011,Blanca,Murcia,2024,104,2.31,2.77,4.0,279.86,89.5
+30012,Bullas,Murcia,2024,114,2.77,3.52,4,350,120
+30013,Calasparra,Murcia,2024,147,2.67,3.31,3.95,300,99
+30014,Campos del Río,Murcia,2024,13,2.11,3.12,3.51,300,115
+30015,Caravaca de la Cruz,Murcia,2024,532,2.97,3.66,4.63,365.75,113
+30016,Cartagena,Murcia,2024,6741,4.2,5.42,6.8,500,94
+30017,Cehegín,Murcia,2024,149,2.82,3.52,4.39,346.59,103
+30018,Ceutí,Murcia,2024,252,3.43,4.25,5.58,397.87,107
+30019,Cieza,Murcia,2024,936,3,3.88,4.8,350,90
+30020,Fortuna,Murcia,2024,84,2.95,3.48,4.09,349.05,110
+30021,Fuente Álamo de Murcia,Murcia,2024,274,3.03,3.77,4.41,350,105
+30022,Jumilla,Murcia,2024,659,2.94,3.57,4.41,360,106
+30023,Librilla,Murcia,2024,85,2.99,3.56,4.74,350,107
+30024,Lorca,Murcia,2024,3199,3.91,4.82,6.16,450,102
+30025,Lorquí,Murcia,2024,76,3.23,4.1,5.47,370.83,98.5
+30026,Mazarrón,Murcia,2024,853,3.72,4.93,6.25,357.7,79
+30027,Molina de Segura,Murcia,2024,1820,4.21,5.27,6.44,500,104
+30028,Moratalla,Murcia,2024,53,2.52,3.15,4.03,270,96
+30029,Mula,Murcia,2024,244,2.69,3.53,4.41,350,110
+30030,Murcia,Murcia,2024,19675,4.95,6.52,8.42,525.3,92
+30032,Pliego,Murcia,2024,23,2.7,2.94,3.81,300.45,111
+30033,Puerto Lumbreras,Murcia,2024,342,3.16,3.86,4.69,380,103
+30035,San Javier,Murcia,2024,1320,4.57,5.95,7.46,410,80
+30036,San Pedro del Pinatar,Murcia,2024,892,4.06,5.32,6.85,400,80
+30037,Torre-Pacheco,Murcia,2024,805,3.52,4.68,6.35,430,111
+30038,"Torres de Cotillas, Las",Murcia,2024,206,3.54,4.55,5.56,403.01,103.5
+30039,Totana,Murcia,2024,799,3.37,4.06,4.93,400,102
+30041,"Unión, La",Murcia,2024,524,3.77,4.95,6.31,400,87
+30042,Villanueva del Río Segura,Murcia,2024,103,5.29,6.48,8.37,391.67,81
+30043,Yecla,Murcia,2024,1130,2.79,3.54,4.37,350,105
+30901,Santomera,Murcia,2024,324,3.33,4.01,5.13,400,115
+30902,"Alcázares, Los",Murcia,2024,804,4.39,5.43,6.85,400,73
+31006,Ablitas,Navarra,2024,14,2.64,3.87,5.09,436.51,122.5
+31010,Altsasu/Alsasua,Navarra,2024,183,3.52,4.6,5.84,407.88,90
+31012,Allo,Navarra,2023,12,2.51,3.33,4.51,295.83,91.5
+31015,Andosilla,Navarra,2024,33,3.1,3.67,4.24,349.04,94
+31016,Ansoáin/Antsoain,Navarra,2024,484,6.19,7.54,9.19,628.67,81.6
+31019,Aoiz/Agoitz,Navarra,2024,105,4.03,4.66,5.8,420.69,93.37
+31023,Aranguren,Navarra,2024,313,5.94,6.82,8.04,658.19,98.3
+31027,Arbizu,Navarra,2024,16,3.45,3.99,6.03,386.44,105.73
+31029,"Arcos, Los",Navarra,2024,15,3.39,4.19,5.5,379.79,99
+31032,Arguedas,Navarra,2024,31,3.47,4.12,5.44,349.04,81.4
+31038,Artajona,Navarra,2024,29,3.63,4.54,5.46,418.85,96
+31041,Ayegui/Aiegi,Navarra,2024,49,4.32,4.87,5.37,452.2,99
+31042,Azagra,Navarra,2024,59,3.22,3.84,4.53,373.97,102
+31049,Basaburua,Navarra,2024,18,3.93,4.51,5.39,398.9,90.21
+31050,Baztan,Navarra,2024,225,3.87,4.93,6.71,430.32,94
+31057,Buñuel,Navarra,2024,20,3.03,3.63,4.16,321.62,90.9
+31060,Burlada/Burlata,Navarra,2024,791,5.65,6.85,8.29,598.36,85
+31064,Cadreita,Navarra,2024,24,2.64,3.33,3.88,349.04,106
+31065,Caparroso,Navarra,2024,34,2.85,4.26,5.19,398.9,103.8
+31067,Carcastillo,Navarra,2024,18,2.46,3.54,4.44,328.26,94.28
+31068,Cascante,Navarra,2024,95,3.33,4.07,5.48,359.01,85
+31070,Castejón,Navarra,2024,98,3.0,4.35,5.32,349.04,82.5
+31072,Cintruénigo,Navarra,2024,152,3.02,4.05,4.98,366.04,92
+31076,Cizur,Navarra,2024,18,3.68,5.74,6.26,633.34,136.66
+31077,Corella,Navarra,2024,273,3.46,4.2,5.42,387.6,94
+31078,Cortes,Navarra,2024,26,2.36,3.38,4.3,349.04,94
+31084,Etxarri Aranatz,Navarra,2024,34,3.99,4.72,5.49,422.34,90
+31086,Valle de Egüés/Eguesibar,Navarra,2024,525,5.69,6.36,7.04,630.68,100.5
+31088,Noáin (Valle de Elorz)/Noain (Elortzibar),Navarra,2024,295,5.76,6.79,8.02,648.22,96
+31097,Estella-Lizarra,Navarra,2024,673,4.4,5.42,6.46,459.99,86
+31098,Esteribar,Navarra,2024,39,4.92,5.56,6.72,528.55,89
+31101,Ezcabarte,Navarra,2024,38,5.4,6.77,7.91,544.34,82
+31104,Falces,Navarra,2024,52,2.5,3.39,4.27,299.18,91.5
+31105,Fitero,Navarra,2024,27,2.93,3.81,4.25,303.33,87
+31107,Funes,Navarra,2024,41,3.16,3.63,4.86,349.04,90
+31108,Fustiñana,Navarra,2024,16,3.19,4.05,4.36,383.95,94
+31109,Galar,Navarra,2024,31,4.31,6.0,6.95,597.77,101.73
+31122,Huarte/Uharte,Navarra,2024,298,5.87,7.15,8.8,619.31,85.3
+31123,Uharte Arakil,Navarra,2024,10,2.71,3.97,4.2,340.94,94
+31128,Isaba/Izaba,Navarra,2024,15,4.1,5.67,8.49,349.04,59.5
+31131,Iza/Itza,Navarra,2024,27,4.9,6.83,7.81,666.92,100.32
+31138,Lakuntza,Navarra,2024,23,2.88,4.6,4.78,416.6,94.18
+31142,Larraga,Navarra,2024,46,3.14,3.83,4.53,332.42,89
+31149,Leitza,Navarra,2024,61,4.07,4.72,5.96,498.63,93.2
+31152,Lerín,Navarra,2024,19,2.9,3.62,4.27,383.95,105
+31153,Lesaka,Navarra,2024,53,3.71,4.87,5.86,480.45,98.8
+31157,Lodosa,Navarra,2024,106,3.22,4.22,5.35,350.0,89.74
+31159,Lumbier,Navarra,2024,39,3.35,4.21,5.32,398.9,88
+31163,Marcilla,Navarra,2024,73,3.31,3.83,4.65,349.04,92
+31165,Mendavia,Navarra,2024,37,3.35,3.95,4.75,349.04,87
+31167,Mendigorria,Navarra,2024,19,3.49,4.84,6.18,448.77,100
+31169,Milagro,Navarra,2024,43,3.02,4.32,5.18,398.9,97
+31172,Monreal/Elo,Navarra,2021,10,4.56,5.37,6.34,423.91,86.7
+31176,Murchante,Navarra,2024,48,3.23,5.05,7.05,415.69,84.09
+31177,Murieta,Navarra,2024,17,3.18,3.67,4.2,349.04,94
+31183,Obanos,Navarra,2024,15,3.02,4.09,6.35,498.63,103.08
+31185,Ochagavía/Otsagabia,Navarra,2023,10,4.7,6.84,7.64,538.21,113.62
+31189,Olazti/Olazagutía,Navarra,2024,21,3.25,3.77,4.37,339.07,89.6
+31191,Olite/Erriberri,Navarra,2024,107,3.69,4.81,6.3,448.77,96
+31193,Cendea de Olza/Oltza Zendea,Navarra,2024,24,4.47,5.61,6.29,543.54,103
+31201,Pamplona/Iruña,Navarra,2024,11675,6.34,7.93,9.55,664.84,85
+31202,Peralta/Azkoien,Navarra,2024,136,3.61,4.65,5.51,428.82,94
+31206,Puente la Reina/Gares,Navarra,2024,74,3.8,5.17,6.91,471.42,90
+31208,Ribaforada,Navarra,2024,33,2.7,3.47,4.7,331.09,88
+31215,San Adrián,Navarra,2024,155,2.49,4.33,5.53,398.9,96
+31216,Sangüesa/Zangoza,Navarra,2024,119,3.84,4.93,5.76,448.77,94
+31221,Doneztebe/Santesteban,Navarra,2024,72,4.14,4.68,5.42,448.77,96.3
+31224,Sesma,Navarra,2023,10,1.6,3.26,4.17,300,108.5
+31227,Tafalla,Navarra,2024,452,3.65,4.84,5.83,448.77,91.95
+31232,Tudela,Navarra,2024,1506,4.7,6.01,7.5,535.68,86.94
+31236,Ultzama,Navarra,2024,17,3.64,4.18,4.86,448.77,107.26
+31249,Valtierra,Navarra,2024,28,3.01,3.76,4.92,349.04,91
+31250,Bera,Navarra,2024,144,4.53,5.18,5.92,498.63,92.3
+31251,Viana,Navarra,2024,96,3.57,4.61,5.63,398.9,88.59
+31254,Villafranca,Navarra,2024,73,3.01,3.86,5.21,339.07,83.94
+31257,Villatuerta,Navarra,2024,12,2.67,4.53,5.75,427.47,97.33
+31258,Villava/Atarrabia,Navarra,2024,374,5.84,7.02,8.34,606.25,88.11
+31901,Barañáin/Barañain,Navarra,2024,1031,6.37,7.87,9.35,653.21,80
+31902,Berrioplano/Berriobeiti,Navarra,2024,307,6.14,7.32,8.66,675.71,96.1
+31903,Berriozar,Navarra,2024,375,5.62,6.46,7.58,575.42,87
+31904,Irurtzun,Navarra,2024,78,3.73,4.97,6.23,435.47,86
+31905,Beriáin,Navarra,2024,92,4.91,5.9,6.93,548.49,87
+31906,Orkoien,Navarra,2024,86,5.75,6.27,6.75,600.78,99.69
+31907,Zizur Mayor/Zizur Nagusia,Navarra,2024,502,5.96,7.08,8.47,648.22,92
+31908,Lekunberri,Navarra,2024,31,3.38,4.28,5.32,388.93,94.94
+32001,Allariz,Ourense,2024,237,3.3,3.89,4.69,359.1,99
+32006,Bande,Ourense,2024,15,1.76,2.43,3.63,250,114
+32008,Barbadás,Ourense,2024,644,3.85,4.74,5.94,400,93
+32009,"Barco de Valdeorras, O",Ourense,2024,769,2.94,3.85,5.05,338.89,93
+32017,Carballeda de Valdeorras,Ourense,2024,15,1.31,1.84,2.3,217.73,106
+32019,"Carballiño, O",Ourense,2024,637,2.67,3.55,4.69,330,96
+32023,Castro Caldelas,Ourense,2024,16,1.87,2.48,3.43,282.43,112
+32024,Celanova,Ourense,2024,201,2.33,3.14,4,300,107
+32027,Cortegada,Ourense,2024,10,1.88,2.34,3.42,280,111.5
+32032,Xinzo de Limia,Ourense,2024,373,2.48,3.11,3.98,320,110
+32034,"Gudiña, A",Ourense,2020,10,2.89,3.79,5.06,418.36,110
+32043,Maceda,Ourense,2024,47,1.96,2.84,4.22,300,112
+32054,Ourense,Ourense,2024,9607,3.9,5.07,6.67,410,88
+32058,"Pereiro de Aguiar, O",Ourense,2012,11,2.14,3.64,4.02,300,82
+32063,"Pobra de Trives, A",Ourense,2024,39,2.21,2.86,3.72,279.24,110
+32069,Ribadavia,Ourense,2024,146,2.38,3.02,3.83,284.67,98
+32072,"Rúa, A",Ourense,2024,150,2.52,2.97,3.97,300,108
+32075,San Cibrao das Viñas,Ourense,2024,78,3.67,4.28,5,398.91,100.5
+32085,Verín,Ourense,2024,516,2.69,3.4,4.18,330,107
+32086,Viana do Bolo,Ourense,2024,61,2.15,3.15,4.04,300,100
+33001,Allande,Asturias,2024,22,3.15,3.84,5.1,292.33,82.5
+33002,Aller,Asturias,2024,214,3.39,4.2,5.56,300,72
+33004,Avilés,Asturias,2024,4190,4.9,5.98,7.25,450,75
+33005,Belmonte de Miranda,Asturias,2021,10,1.56,3.72,4.35,280,84.5
+33007,Boal,Asturias,2024,17,2.67,3.29,4.56,260,88
+33008,Cabrales,Asturias,2024,35,3.49,4.35,6.08,300,74
+33011,Cangas del Narcea,Asturias,2024,376,3.7,4.69,6,361.35,82
+33012,Cangas de Onís,Asturias,2024,367,4.37,5.65,7.46,400,76
+33014,Carreño,Asturias,2024,492,4.32,5.54,6.92,425,81
+33016,Castrillón,Asturias,2024,958,4.9,6.16,7.74,452.38,80
+33017,Castropol,Asturias,2024,41,2.8,4.11,6.52,300,72
+33018,Coaña,Asturias,2024,54,4.66,5.56,7.03,388.67,70
+33019,Colunga,Asturias,2024,60,4.55,6.01,7.85,400,74.5
+33020,Corvera de Asturias,Asturias,2024,567,4.22,4.98,6.2,380,75
+33021,Cudillero,Asturias,2024,56,3.85,4.49,5.85,350,70
+33023,"Franco, El",Asturias,2024,92,3.26,4.11,5.17,308.92,83
+33024,Gijón,Asturias,2024,19552,5.84,7.21,9.02,509.43,76
+33025,Gozón,Asturias,2024,369,4.93,6.31,7.68,442.25,74
+33026,Grado,Asturias,2024,426,3.37,4.22,5.23,350,88
+33031,Langreo,Asturias,2024,1302,3.85,4.9,6.21,360,75
+33032,Laviana,Asturias,2024,278,3.41,4.16,5.24,350,84
+33033,Lena,Asturias,2024,387,3.1,4.05,5.04,321.47,83
+33034,Valdés,Asturias,2024,268,3.53,4.66,5.86,349.43,79.5
+33035,Llanera,Asturias,2024,512,4.47,5.56,6.95,400,81
+33036,Llanes,Asturias,2024,544,4.65,6.02,7.53,422.13,75
+33037,Mieres,Asturias,2024,1273,3.9,5,6.33,360,71
+33038,Morcín,Asturias,2024,47,3.89,5.04,6.04,350,79
+33039,Muros de Nalón,Asturias,2024,65,5.19,6.56,8.58,380,67
+33040,Nava,Asturias,2024,103,3.7,4.74,6.32,330,78
+33041,Navia,Asturias,2024,354,4.12,5.07,6.19,406.53,84.5
+33042,Noreña,Asturias,2024,324,4.17,5.19,6.32,400,81
+33044,Oviedo,Asturias,2024,18172,5.86,7.32,9.15,500,74
+33045,Parres,Asturias,2024,214,3.82,5,6.16,400,84.5
+33047,Peñamellera Baja,Asturias,2024,12,3.34,5.6,7.42,339.58,71
+33049,Piloña,Asturias,2024,121,3.3,4.28,5.65,330,81
+33051,Pravia,Asturias,2024,318,3.36,4.27,5.54,350,85
+33055,Ribadedeva,Asturias,2024,37,4.9,6.02,7.36,400,76
+33056,Ribadesella,Asturias,2024,200,4.54,5.8,7.17,420,80
+33057,Ribera de Arriba,Asturias,2024,12,2.46,3.54,6.2,300,83
+33058,Riosa,Asturias,2024,21,2.49,3.17,3.77,278.33,82
+33059,Salas,Asturias,2024,87,3.28,4.15,5.29,325,83
+33060,San Martín del Rey Aurelio,Asturias,2024,383,3.28,4.15,5,300,73
+33066,Siero,Asturias,2024,2309,4.79,6.02,7.57,425,77
+33068,Somiedo,Asturias,2024,22,4.91,5.86,9.14,341.73,63
+33069,Soto del Barco,Asturias,2024,148,4.55,5.93,7.14,394.55,70
+33070,Tapia de Casariego,Asturias,2024,88,3.94,5.01,6.14,350,69
+33072,Teverga,Asturias,2024,10,3.2,3.58,4.23,300,87
+33073,Tineo,Asturias,2024,191,2.91,3.58,4.67,300,82
+33074,Vegadeo,Asturias,2024,132,3.16,3.78,4.59,322.5,87
+33076,Villaviciosa,Asturias,2024,575,4.38,5.61,7.08,420,78
+34004,Aguilar de Campoo,Palencia,2024,378,4.6,5.76,7.17,420,79
+34005,Alar del Rey,Palencia,2024,21,3.08,3.79,5.01,330,90
+34022,Baltanás,Palencia,2024,14,2.62,3.02,3.83,310.32,114
+34023,Venta de Baños,Palencia,2024,214,3.43,4.41,5.42,358.25,87
+34027,Barruelo de Santullán,Palencia,2024,10,2.45,2.81,4.12,260,90
+34047,Carrión de los Condes,Palencia,2024,50,2.86,3.52,4.29,324.92,104.5
+34056,Cervera de Pisuerga,Palencia,2024,127,3.12,4.17,5.52,337.05,88
+34069,Dueñas,Palencia,2024,57,3.67,4.53,5.65,357,83
+34074,Frómista,Palencia,2024,10,2.12,3.52,4.53,306.28,94.5
+34079,Grijota,Palencia,2024,23,4.64,5.5,6.8,425.75,74
+34080,Guardo,Palencia,2024,183,3.33,4.1,5.44,350,95
+34083,Herrera de Pisuerga,Palencia,2024,44,3.19,3.88,4.67,300.82,83
+34098,Magaz de Pisuerga,Palencia,2024,18,3.02,3.19,4.13,318,103.5
+34120,Palencia,Palencia,2024,4832,4.67,5.76,7.16,450,82
+34123,Paredes de Nava,Palencia,2024,17,3.17,3.85,4.03,343.75,97
+34157,Saldaña,Palencia,2024,127,3.07,3.73,4.93,335.83,93
+34206,Villada,Palencia,2024,10,3.96,4.23,4.49,342.93,79
+34217,Villalobón,Palencia,2024,51,5,6.5,8.37,400,79
+34225,Villamuriel de Cerrato,Palencia,2024,166,3.64,4.44,5.26,400,87
+34901,Osorno la Mayor,Palencia,2024,13,3.46,4.67,4.99,388.55,94
+35001,Agaete,"Palmas, Las",2024,118,5.56,6.79,8.84,480.25,79.5
+35002,Agüimes,"Palmas, Las",2024,1582,5.78,7.37,9.3,500,76
+35003,Antigua,"Palmas, Las",2024,131,7.21,9.18,11.83,499.26,51
+35004,Arrecife,"Palmas, Las",2024,3944,5.62,7.1,8.89,500,75
+35006,Arucas,"Palmas, Las",2024,1242,5.11,6.33,8.07,500.83,88
+35008,Firgas,"Palmas, Las",2024,35,3.66,4.51,5.95,400,81
+35009,Gáldar,"Palmas, Las",2024,416,4.59,6.1,7.8,467.91,83.5
+35010,Haría,"Palmas, Las",2024,37,5.3,7.68,10.36,550,68
+35011,Ingenio,"Palmas, Las",2024,1010,5.0,6.22,7.68,454.98,81
+35012,Mogán,"Palmas, Las",2024,712,8.77,13.1,16.92,600,47
+35013,Moya,"Palmas, Las",2024,124,5.34,6.67,8.36,472.5,79
+35014,"Oliva, La","Palmas, Las",2024,913,6.86,8.59,11.09,541.67,65
+35015,Pájara,"Palmas, Las",2024,504,7.12,8.87,11.25,510,61
+35016,"Palmas de Gran Canaria, Las","Palmas, Las",2024,21347,6.11,8.1,10.81,600,77
+35017,Puerto del Rosario,"Palmas, Las",2024,2949,5.6,6.82,8.33,480.83,73
+35018,San Bartolomé,"Palmas, Las",2024,528,6.96,8.57,10.63,507.29,63
+35019,San Bartolomé de Tirajana,"Palmas, Las",2024,1992,6.94,8.93,12.04,600,72
+35020,"Aldea de San Nicolás, La","Palmas, Las",2024,46,3.68,5.1,8.21,340,86
+35021,Santa Brígida,"Palmas, Las",2024,231,5.58,7.0,8.91,562.5,87
+35022,Santa Lucía de Tirajana,"Palmas, Las",2024,3963,5.46,6.77,8.33,500,80
+35023,Santa María de Guía de Gran Canaria,"Palmas, Las",2024,270,4.81,6.08,8.13,500,92.5
+35024,Teguise,"Palmas, Las",2024,170,7.49,9.22,12.87,611,68
+35026,Telde,"Palmas, Las",2024,3938,5.62,7.14,8.87,520,78
+35027,Teror,"Palmas, Las",2024,159,4.48,5.71,6.92,450,88
+35028,Tías,"Palmas, Las",2024,880,7.38,9.7,12.51,595.07,61
+35029,Tinajo,"Palmas, Las",2024,116,6.65,8.33,10.76,512.08,61
+35030,Tuineje,"Palmas, Las",2024,461,5.56,7.07,8.94,453.18,66
+35031,Valsequillo de Gran Canaria,"Palmas, Las",2024,134,5.04,6.09,7.8,450,80
+35032,Valleseco,"Palmas, Las",2024,12,3.54,4.73,5.75,442.77,86
+35033,Vega de San Mateo,"Palmas, Las",2024,173,4.4,5.88,7.26,450,80
+35034,Yaiza,"Palmas, Las",2024,194,7.8,9.37,11.32,600,66
+36002,Barro,Pontevedra,2024,16,3.37,4.27,4.64,372.5,99
+36003,Baiona,Pontevedra,2024,603,5.74,7.27,9.11,500,79
+36004,Bueu,Pontevedra,2024,245,3.83,4.93,6.18,416.65,98
+36005,Caldas de Reis,Pontevedra,2024,337,3.13,3.95,5.13,350,95
+36006,Cambados,Pontevedra,2024,323,3.57,4.63,5.87,400,99
+36008,Cangas,Pontevedra,2024,1031,4.43,5.63,6.87,429.29,85
+36009,"Cañiza, A",Pontevedra,2024,156,3.39,4.33,5.54,300,71
+36010,Catoira,Pontevedra,2024,30,3.19,4.01,4.55,350,91
+36013,Covelo,Pontevedra,2024,15,3.38,4.71,5.48,328.74,85
+36015,Cuntis,Pontevedra,2024,52,3.01,3.98,4.95,342.05,97.5
+36017,"Estrada, A",Pontevedra,2024,521,2.77,3.59,4.56,340,100
+36018,Forcarei,Pontevedra,2024,16,1.77,2.29,3.1,255,116
+36021,Gondomar,Pontevedra,2024,318,5.36,6.67,8.59,461.25,85.5
+36022,"Grove, O",Pontevedra,2024,311,3.36,4.5,5.95,400,92
+36023,"Guarda, A",Pontevedra,2024,388,3.24,4.43,5.83,342.65,86
+36024,Lalín,Pontevedra,2024,938,2.8,3.84,5.15,320,89.5
+36026,Marín,Pontevedra,2024,737,3.33,4.46,6,400,98
+36027,Meaño,Pontevedra,2024,61,3.62,4.53,6.29,390,93
+36028,Meis,Pontevedra,2024,37,3.59,4.64,5.7,425,88
+36029,Moaña,Pontevedra,2024,425,3.66,5,6.27,446.13,92
+36030,Mondariz,Pontevedra,2024,43,3.23,4.76,5.67,324.41,91
+36031,Mondariz-Balneario,Pontevedra,2024,39,4.84,6.4,7.2,400,76
+36032,Moraña,Pontevedra,2024,54,3.14,3.92,4.72,320.42,96
+36033,Mos,Pontevedra,2024,65,3.6,5.85,7.42,450,89
+36034,"Neves, As",Pontevedra,2024,16,2.67,3.99,5.15,335,83
+36035,Nigrán,Pontevedra,2024,548,5.83,7.03,8.85,510.65,80.5
+36038,Pontevedra,Pontevedra,2024,5471,4.88,6.32,7.98,512.58,91
+36039,"Porriño, O",Pontevedra,2024,1063,4.78,6.16,7.85,450,81
+36041,Poio,Pontevedra,2024,634,4.63,6.06,7.87,450,83
+36042,Ponteareas,Pontevedra,2024,996,3.62,4.33,5.38,375.62,100
+36043,Ponte Caldelas,Pontevedra,2024,75,3.53,4.54,5.66,375,90
+36044,Pontecesures,Pontevedra,2024,105,3.09,3.73,4.75,350,101
+36045,Redondela,Pontevedra,2024,793,4.17,5.46,6.85,416.67,90
+36046,Ribadumia,Pontevedra,2024,100,3.44,4.34,5.06,356,91
+36047,Rodeiro,Pontevedra,2024,26,1.67,2.24,2.79,240,111
+36048,"Rosal, O",Pontevedra,2024,118,3.76,4.96,6.15,340.25,80
+36049,Salceda de Caselas,Pontevedra,2024,444,3.9,4.81,5.98,384.32,92
+36050,Salvaterra de Miño,Pontevedra,2024,433,4.1,5,6.01,400,91
+36051,Sanxenxo,Pontevedra,2024,475,4.4,5.68,7.33,406.25,81
+36052,Silleda,Pontevedra,2024,241,2.88,3.65,4.64,300,93
+36053,Soutomaior,Pontevedra,2024,386,3.71,4.94,6.73,400,98
+36054,Tomiño,Pontevedra,2024,227,3.61,4.56,5.74,360,89
+36055,Tui,Pontevedra,2024,507,3.7,4.61,5.83,419.24,97
+36056,Valga,Pontevedra,2024,17,3.14,3.72,5.01,380,108
+36057,Vigo,Pontevedra,2024,21337,5.65,7.61,10.02,548.75,82
+36059,Vila de Cruces,Pontevedra,2024,63,2.03,2.91,4.02,275,100
+36060,Vilagarcía de Arousa,Pontevedra,2024,1655,3.94,5.1,6.56,440,94
+36061,Vilanova de Arousa,Pontevedra,2024,111,3.76,4.65,5.61,370,81
+36901,"Illa de Arousa, A",Pontevedra,2024,61,4.67,5.62,7.49,368.42,83
+37008,Alba de Tormes,Salamanca,2024,149,2.61,3.19,3.95,316.74,104
+37010,"Alberca, La",Salamanca,2024,18,2.76,3.34,3.8,303.82,95
+37016,Aldealengua,Salamanca,2024,13,4.14,5.09,6.46,365,67
+37023,Aldeatejada,Salamanca,2024,58,4.02,5.01,6.05,411.69,98
+37032,Arapiles,Salamanca,2024,35,3.53,4.01,5.36,300,88
+37046,Béjar,Salamanca,2024,526,3.4,4.18,5.34,350,81
+37067,Cabrerizos,Salamanca,2024,61,3.8,4.76,6.15,417,89
+37069,Calvarrasa de Abajo,Salamanca,2024,69,3.68,4.67,5.97,325,71
+37073,Calzada de Valdunciel,Salamanca,2024,17,3.84,4.3,5.35,349.18,96
+37078,Candelario,Salamanca,2024,11,3.47,4.59,4.93,300,66
+37085,Carbajosa de la Sagrada,Salamanca,2024,357,4.17,4.9,5.89,450,91
+37092,Castellanos de Moriscos,Salamanca,2024,263,4.39,5.33,6.33,397.9,74
+37107,Ciudad Rodrigo,Salamanca,2024,427,2.63,3.33,4.17,300,94
+37117,Doñinos de Salamanca,Salamanca,2024,12,3.64,4.17,7.64,387.5,96.5
+37135,"Fuente de San Esteban, La",Salamanca,2024,13,2.95,3.23,4.22,305,84
+37140,Fuentes de Oñoro,Salamanca,2020,10,1.75,2.55,3.19,205,88.5
+37156,Guijuelo,Salamanca,2024,228,3.44,4,4.79,400,99
+37170,Ledesma,Salamanca,2024,18,2.5,3.16,4.24,300,94
+37173,Lumbrales,Salamanca,2024,20,1.65,2.41,3.48,230,111.5
+37207,Moriscos,Salamanca,2024,39,4.3,5.29,6.5,350,68
+37209,Mozárbez,Salamanca,2024,10,3.71,4.4,5.31,295,68.5
+37240,Pelabravo,Salamanca,2024,25,3.47,4.66,5.72,408.94,90
+37246,Peñaranda de Bracamonte,Salamanca,2024,267,2.8,3.24,3.93,308.33,97
+37274,Salamanca,Salamanca,2024,13798,5.12,6.38,7.96,515,85
+37278,San Cristóbal de la Cuesta,Salamanca,2024,79,3.85,4.91,5.9,350,71
+37294,Santa Marta de Tormes,Salamanca,2024,751,4.28,5.17,6.34,448.95,91
+37322,Terradillos,Salamanca,2024,98,3.02,3.87,4.46,322.39,88
+37354,Villamayor,Salamanca,2024,347,4.08,4.88,6.17,422,93
+37362,Villares de la Reina,Salamanca,2024,387,3.94,4.8,6.02,400,84
+37376,Vitigudino,Salamanca,2024,62,2.75,3.12,3.94,300,103.5
+38001,Adeje,Santa Cruz de Tenerife,2024,2025,7.97,10,12.51,633.33,69
+38003,Alajeró,Santa Cruz de Tenerife,2024,62,6.54,7.82,8.95,435,56
+38004,Arafo,Santa Cruz de Tenerife,2024,59,5,5.81,6.92,475,88
+38005,Arico,Santa Cruz de Tenerife,2024,172,7.48,9.03,11.36,560,67
+38006,Arona,Santa Cruz de Tenerife,2024,4949,7.14,9.15,11.74,557.68,62
+38008,Breña Alta,Santa Cruz de Tenerife,2024,157,4.92,6.21,8.34,450,78
+38009,Breña Baja,Santa Cruz de Tenerife,2024,251,6.3,7.78,9.62,507.5,71
+38010,Buenavista del Norte,Santa Cruz de Tenerife,2024,40,4.16,6.18,7.6,443.51,85
+38011,Candelaria,Santa Cruz de Tenerife,2024,1855,7.53,9.37,11.63,600,66
+38012,Fasnia,Santa Cruz de Tenerife,2024,24,5.33,7.33,10.23,450,64.5
+38013,Frontera,Santa Cruz de Tenerife,2024,69,5.52,7.07,8.52,401.32,58
+38014,Fuencaliente de la Palma,Santa Cruz de Tenerife,2024,13,5.43,7.35,8.62,458.75,68
+38015,Garachico,Santa Cruz de Tenerife,2024,42,5.15,7.41,9.61,450,63
+38017,Granadilla de Abona,Santa Cruz de Tenerife,2024,2884,6.67,8.47,10.7,550,70
+38018,"Guancha, La",Santa Cruz de Tenerife,2024,30,4.58,6.21,7.9,480.38,103
+38019,Guía de Isora,Santa Cruz de Tenerife,2024,833,6.9,8.64,10.83,550,70
+38020,Güímar,Santa Cruz de Tenerife,2024,900,5.89,8.08,10.67,550,71
+38021,Hermigua,Santa Cruz de Tenerife,2024,11,3.64,5.48,6.29,365,73
+38022,Icod de los Vinos,Santa Cruz de Tenerife,2024,524,4.12,5.33,7.36,472.26,96
+38023,San Cristóbal de La Laguna,Santa Cruz de Tenerife,2024,9571,5.66,7.31,9.3,537.5,79
+38024,"Llanos de Aridane, Los",Santa Cruz de Tenerife,2024,720,5.21,6.65,8.46,479.5,77
+38025,"Matanza de Acentejo, La",Santa Cruz de Tenerife,2024,210,5.14,6.49,7.97,500,86.5
+38026,"Orotava, La",Santa Cruz de Tenerife,2024,782,4.57,5.95,7.52,500,94
+38027,"Paso, El",Santa Cruz de Tenerife,2024,68,4.23,5.88,7.28,420,75.5
+38028,Puerto de la Cruz,Santa Cruz de Tenerife,2024,2171,7.6,10.21,13.54,580,58
+38029,Puntagorda,Santa Cruz de Tenerife,2024,12,6.16,7.07,7.32,368.17,50
+38030,Puntallana,Santa Cruz de Tenerife,2024,11,5.05,7.69,8,450,57
+38031,"Realejos, Los",Santa Cruz de Tenerife,2024,1015,4.67,5.97,7.86,496.87,89
+38032,"Rosario, El",Santa Cruz de Tenerife,2024,603,7.04,8.82,11.14,650,71
+38033,San Andrés y Sauces,Santa Cruz de Tenerife,2024,87,3.49,4.84,6.29,387.5,86
+38034,San Juan de la Rambla,Santa Cruz de Tenerife,2024,22,4.65,6.04,6.84,460,74.5
+38035,San Miguel de Abona,Santa Cruz de Tenerife,2024,608,6.86,8.83,11.4,562.5,74
+38036,San Sebastián de la Gomera,Santa Cruz de Tenerife,2024,397,5.71,7.36,9.27,480.12,69
+38037,Santa Cruz de la Palma,Santa Cruz de Tenerife,2024,710,5.15,6.61,8.55,500,83
+38038,Santa Cruz de Tenerife,Santa Cruz de Tenerife,2024,12308,6.02,7.8,10.13,598.93,78
+38039,Santa Úrsula,Santa Cruz de Tenerife,2024,650,4.38,5.9,7.76,471.33,84
+38040,Santiago del Teide,Santa Cruz de Tenerife,2024,558,7.03,9.11,11.9,575,63
+38041,"Sauzal, El",Santa Cruz de Tenerife,2024,156,4.8,6.58,8.46,500,91.5
+38042,"Silos, Los",Santa Cruz de Tenerife,2024,46,4.53,5.91,8.41,400,70.5
+38043,Tacoronte,Santa Cruz de Tenerife,2024,492,5.48,6.91,8.88,500,78
+38045,Tazacorte,Santa Cruz de Tenerife,2024,97,5.71,7.05,10.0,500,71
+38046,Tegueste,Santa Cruz de Tenerife,2024,302,4.75,6.11,7.77,499.18,87
+38048,Valverde,Santa Cruz de Tenerife,2024,84,6.18,8.27,9.95,450,54
+38049,Valle Gran Rey,Santa Cruz de Tenerife,2024,112,6.82,8.68,11.11,500,56
+38050,Vallehermoso,Santa Cruz de Tenerife,2024,12,3.98,6,11.84,450,71.5
+38051,"Victoria de Acentejo, La",Santa Cruz de Tenerife,2024,262,4.81,6.02,7.51,475.83,81
+38053,Villa de Mazo,Santa Cruz de Tenerife,2024,33,4.64,5.23,7.21,433,71
+38901,"Pinar de El Hierro, El",Santa Cruz de Tenerife,2024,24,4.94,8.09,9.26,422.08,57
+39001,Alfoz de Lloredo,Cantabria,2024,26,5.28,6.73,7.58,475,90
+39002,Ampuero,Cantabria,2024,126,3.84,4.53,6.12,403.09,92.5
+39005,Argoños,Cantabria,2024,17,4.23,5.69,7.2,376.5,72
+39006,Arnuero,Cantabria,2024,20,4.9,5.67,7.3,450,79
+39008,"Astillero, El",Cantabria,2024,923,5.54,6.79,8.33,507.77,80
+39009,Bárcena de Cicero,Cantabria,2024,204,4.68,5.59,7.44,418.7,74.5
+39011,Bareyo,Cantabria,2024,36,4.72,5.95,7.14,400,68
+39012,Cabezón de la Sal,Cantabria,2024,341,4.23,5.39,6.94,450,85
+39016,Camargo,Cantabria,2024,1165,5.8,6.78,8.09,515,82
+39018,Cartes,Cantabria,2024,255,5.39,6.61,7.64,450.83,78
+39019,Castañeda,Cantabria,2024,170,5.36,6.36,7.48,420,67
+39020,Castro-Urdiales,Cantabria,2024,1297,6.63,8.2,9.81,608.33,76
+39022,Cillorigo de Liébana,Cantabria,2024,65,4.62,5.97,7.06,374.44,66
+39023,Colindres,Cantabria,2024,395,4.72,5.68,7.15,500,87
+39024,Comillas,Cantabria,2024,75,5.67,6.85,9.16,491.25,81
+39025,"Corrales de Buelna, Los",Cantabria,2024,325,4.48,5.39,6.41,420,86
+39026,Corvera de Toranzo,Cantabria,2024,58,3.12,4.38,5.57,323.03,90.5
+39027,Campoo de Enmedio,Cantabria,2024,47,4.07,5.06,5.77,360,80
+39028,Entrambasaguas,Cantabria,2024,366,5.06,5.91,7.16,475,79.5
+39029,Escalante,Cantabria,2024,11,3.8,4.55,5.28,360,91
+39030,Guriezo,Cantabria,2024,28,4.5,5.08,6.3,500,107.5
+39031,Hazas de Cesto,Cantabria,2024,53,3.02,4.92,6.78,375,79
+39035,Laredo,Cantabria,2024,338,5.5,6.67,8.69,500,79
+39037,Liérganes,Cantabria,2024,66,5.33,6.17,7.26,437.5,74
+39038,Limpias,Cantabria,2024,95,4.81,5.71,7.46,420.44,73
+39040,Marina de Cudeyo,Cantabria,2024,84,5.53,6.72,8.75,485,77
+39042,Medio Cudeyo,Cantabria,2024,380,5.05,6.18,7.78,463.58,79
+39043,Meruelo,Cantabria,2024,66,4.51,5.33,6.08,400,77
+39044,Miengo,Cantabria,2024,266,6.42,7.73,9.51,486.25,70
+39047,Noja,Cantabria,2024,81,5.14,6.96,8.39,450,68
+39048,Penagos,Cantabria,2024,18,4.12,5.04,6.52,451.11,90.5
+39052,Piélagos,Cantabria,2024,908,5.15,6.4,7.91,500,88
+39054,Polanco,Cantabria,2024,148,6.1,7.21,8.49,460,78.5
+39055,Potes,Cantabria,2024,74,4.05,4.95,7.44,400,82
+39056,Puente Viesgo,Cantabria,2024,39,4.79,5.35,6.81,422.31,88
+39057,Ramales de la Victoria,Cantabria,2024,98,3.76,5.0,6.5,357.92,73
+39059,Reinosa,Cantabria,2024,401,4.04,5.19,6.53,403.31,83
+39060,Reocín,Cantabria,2024,189,4.74,5.78,6.89,450,81
+39061,Ribamontán al Mar,Cantabria,2024,150,6.3,7.74,9.44,473.96,63.5
+39062,Ribamontán al Monte,Cantabria,2024,37,5.45,6.32,7.12,404.17,71
+39063,Rionansa,Cantabria,2023,10,3.92,4.55,5.65,314.58,84
+39064,Riotuerto,Cantabria,2024,19,4,4.79,6.41,400,89
+39068,Ruiloba,Cantabria,2024,14,6.12,8.82,10.17,450.43,51
+39069,San Felices de Buelna,Cantabria,2024,10,3.56,4.25,5.3,385.38,94.5
+39073,Santa Cruz de Bezana,Cantabria,2024,541,6.32,7.35,8.66,575,81
+39074,Santa María de Cayón,Cantabria,2024,376,4.87,5.7,6.81,420,77
+39075,Santander,Cantabria,2024,12703,6.69,8.28,10.18,595,72
+39076,Santillana del Mar,Cantabria,2024,14,4.57,5.62,6.9,435,80.5
+39079,Santoña,Cantabria,2024,428,4.73,5.8,7.25,450,77
+39080,San Vicente de la Barquera,Cantabria,2024,182,4.4,5.55,6.87,439.04,82
+39082,Selaya,Cantabria,2024,45,3.58,4.16,5.07,351.44,87
+39084,Solórzano,Cantabria,2024,13,4.67,6.67,8.78,408.22,74
+39085,Suances,Cantabria,2024,348,5.72,6.9,8.43,480,73
+39087,Torrelavega,Cantabria,2024,2482,5.09,6.27,7.69,472.5,78
+39090,Udías,Cantabria,2024,23,5.49,6.78,9.23,442.87,72
+39091,Valdáliga,Cantabria,2024,19,4.6,5.48,5.73,400,94
+39092,Valdeolea,Cantabria,2024,14,3.83,4.72,5.28,300,60.5
+39095,Val de San Vicente,Cantabria,2024,95,4.6,5.49,7,380,61
+39098,Villacarriedo,Cantabria,2024,17,2.72,3.67,4.16,330,100
+39102,Voto,Cantabria,2024,63,4.5,5.35,6.81,400,78
+40024,Ayllón,Segovia,2024,39,2.7,3.83,4.79,333.33,86
+40031,Bernuy de Porreros,Segovia,2024,119,5.15,6.51,7.97,406.18,78
+40032,Boceguillas,Segovia,2024,33,3.44,3.75,5.07,300,86
+40040,Cantalejo,Segovia,2024,155,3.33,4,5.35,350,93
+40041,Cantimpalos,Segovia,2024,29,4.2,5.49,7.01,400,82
+40043,Carbonero el Mayor,Segovia,2024,41,3.11,3.89,4.45,357.88,118
+40057,Coca,Segovia,2024,13,3.86,5.22,6.15,350,76
+40063,Cuéllar,Segovia,2024,342,3.56,4.38,5.3,392.5,91.5
+40076,"Espinar, El",Segovia,2024,402,4.45,5.77,7.04,450,84
+40077,Espirdo,Segovia,2024,161,4.92,6.1,7.4,392.31,64
+40097,Grajera,Segovia,2024,12,2.92,4.05,4.99,300,74
+40101,Hontanares de Eresma,Segovia,2024,20,4.74,5.68,7.27,350,73.5
+40112,"Lastrilla, La",Segovia,2024,266,5.24,6.18,7.75,450,72
+40134,Mozoncillo,Segovia,2024,10,2.87,5.94,7.31,425,76.5
+40138,Nava de la Asunción,Segovia,2024,63,3.27,3.91,4.67,360,95
+40152,Otero de Herreros,Segovia,2024,34,3.54,4.93,6.56,407,91.5
+40155,Palazuelos de Eresma,Segovia,2024,234,5.11,6.32,8,450,84.5
+40170,Riaza,Segovia,2024,110,3.94,4.97,6.19,398.91,83
+40181,Real Sitio de San Ildefonso,Segovia,2024,318,4.95,6.22,7.79,460.37,78.5
+40194,Segovia,Segovia,2024,4290,5.42,6.86,8.67,550,82
+40195,Sepúlveda,Segovia,2024,30,2.44,3.52,5.38,333.09,95.5
+40203,Torrecaballeros,Segovia,2024,107,4.91,6.15,7.4,420,73
+40208,Turégano,Segovia,2024,21,3.51,4.11,4.79,321.18,94
+40216,Valverde del Majano,Segovia,2024,78,4.49,5.92,7.3,400,84
+40225,Villacastín,Segovia,2024,21,3.31,4.55,5.65,400,85
+40906,San Cristóbal de Segovia,Segovia,2024,152,4.88,5.92,7.53,450,93.5
+41004,Alcalá de Guadaíra,Sevilla,2024,1359,5.09,6.29,7.89,500,83
+41005,Alcalá del Río,Sevilla,2024,120,3.97,5.09,6.09,400,89
+41007,"Algaba, La",Sevilla,2024,274,4.82,6.06,7.33,456.93,83
+41010,Almensilla,Sevilla,2024,15,4.55,5.39,6,500,122
+41011,Arahal,Sevilla,2024,37,3.75,4.75,5.89,400,83
+41012,Aznalcázar,Sevilla,2024,40,4.43,6.16,7.9,500,83
+41016,Bollullos de la Mitación,Sevilla,2024,15,3.68,5.54,7.14,500,98
+41017,Bormujos,Sevilla,2024,415,6.39,8.05,11.21,635.42,89
+41018,Brenes,Sevilla,2024,120,4.29,5,5.75,400,82
+41019,Burguillos,Sevilla,2024,46,3.87,4.57,5.47,400.3,89
+41020,"Cabezas de San Juan, Las",Sevilla,2024,22,2.86,4.04,4.48,322.5,94.5
+41021,Camas,Sevilla,2024,1245,5.97,7.45,9.41,532.5,75
+41022,"Campana, La",Sevilla,2024,11,1.68,2.34,3.8,327.07,128
+41023,Cantillana,Sevilla,2024,61,2.76,3.57,4.62,350,99
+41024,Carmona,Sevilla,2024,256,4.45,5.56,6.74,430,84
+41029,Castilleja de la Cuesta,Sevilla,2024,495,5.49,6.71,8.14,530,79
+41032,Cazalla de la Sierra,Sevilla,2024,14,2.76,3.64,4.78,344.21,99.5
+41033,Constantina,Sevilla,2024,40,2.98,3.88,4.96,331.67,91
+41034,Coria del Río,Sevilla,2024,430,4.83,5.94,7.46,450,80
+41038,Dos Hermanas,Sevilla,2024,3261,6.1,7.45,9.09,556.48,82
+41039,Écija,Sevilla,2024,995,3.0,3.89,5.07,328.02,81
+41040,Espartinas,Sevilla,2024,52,8.36,9.67,10.8,641.56,65
+41041,Estepa,Sevilla,2024,111,2.91,3.72,4.93,350,94
+41044,Gelves,Sevilla,2024,272,6.42,7.81,9.87,514.61,67
+41045,Gerena,Sevilla,2024,11,4.17,4.57,6.97,460,93
+41047,Gines,Sevilla,2024,102,4.98,6.67,8.47,500,76.5
+41049,Guillena,Sevilla,2024,78,4.04,5.27,6.73,492.66,112
+41050,Herrera,Sevilla,2024,15,2.49,2.74,3.99,315,108
+41053,Lebrija,Sevilla,2024,138,3.29,4.17,5.46,370,91
+41055,Lora del Río,Sevilla,2024,94,3.74,4.24,5.46,350,86
+41058,Mairena del Alcor,Sevilla,2024,92,4.01,4.9,6.38,462.88,92.5
+41059,Mairena del Aljarafe,Sevilla,2024,2041,7.13,8.44,9.85,669.5,81
+41060,Marchena,Sevilla,2024,176,3.75,4.5,5.18,350.0,78
+41065,Morón de la Frontera,Sevilla,2024,291,3.72,4.58,5.86,375.56,79
+41067,Olivares,Sevilla,2024,49,4.63,5.55,6.87,400,72
+41068,Osuna,Sevilla,2024,118,3.19,3.99,5,400,98
+41069,"Palacios y Villafranca, Los",Sevilla,2024,205,3.76,4.79,6.01,400,88
+41070,Palomares del Río,Sevilla,2024,18,4.56,6.6,10.33,495,89.5
+41075,Pilas,Sevilla,2024,87,4.05,5.16,7.26,400,78
+41077,"Puebla de Cazalla, La",Sevilla,2024,16,2.97,3.59,5.6,355,99
+41079,"Puebla del Río, La",Sevilla,2024,72,4.63,5.46,7.49,450,80
+41081,"Rinconada, La",Sevilla,2024,548,5.16,6.25,7.4,500,82
+41082,"Roda de Andalucía, La",Sevilla,2016,10,1.99,2.37,2.98,300,133.5
+41085,Salteras,Sevilla,2024,43,5.04,6.55,7.93,458.33,84
+41086,San Juan de Aznalfarache,Sevilla,2024,1124,6.45,7.9,9.3,525,66
+41087,Sanlúcar la Mayor,Sevilla,2024,315,5.01,6.74,8.65,450,75
+41089,Santiponce,Sevilla,2024,40,4.72,6.21,7.03,450,83
+41091,Sevilla,Sevilla,2024,34668,7.32,9.17,11.34,668.33,75
+41092,Tocina,Sevilla,2024,27,4.03,4.35,5.93,350,69
+41093,Tomares,Sevilla,2024,729,6.37,7.64,9.38,681.6,94
+41094,Umbrete,Sevilla,2024,19,4.09,5.85,6.99,450,78
+41095,Utrera,Sevilla,2024,752,4.3,5.43,6.9,450,92
+41096,Valencina de la Concepción,Sevilla,2024,17,6.36,7.61,9.44,532.89,67
+41097,Villamanrique de la Condesa,Sevilla,2024,17,5,5.6,6.78,280,54
+41098,Villanueva del Ariscal,Sevilla,2024,11,4.07,4.85,5.9,450,86
+41102,"Viso del Alcor, El",Sevilla,2024,78,3.86,4.94,5.93,422.5,82
+41902,Isla Mayor,Sevilla,2024,13,4.61,6.03,8.71,358.53,58
+41903,"Cuervo de Sevilla, El",Sevilla,2024,23,3.43,4.32,6.01,343.33,92
+42004,Ágreda,Soria,2024,139,2.71,3.75,4.57,350,111
+42020,Almazán,Soria,2024,173,3.69,4.63,5.33,400,86
+42025,Arcos de Jalón,Soria,2024,49,3.38,4.12,4.78,300,75
+42035,Berlanga de Duero,Soria,2024,22,2.52,3.07,4.4,300,92
+42043,Burgo de Osma-Ciudad de Osma,Soria,2024,186,3.89,4.49,5.55,381.67,86
+42069,Covaleda,Soria,2024,25,2.5,3.69,4.37,301.41,92
+42094,Garray,Soria,2024,13,4.42,6.57,8.93,440,76
+42095,Golmayo,Soria,2024,85,6.34,7.72,9.2,450,63
+42113,Medinaceli,Soria,2024,21,3.26,3.89,4.91,325.33,90
+42134,Ólvega,Soria,2024,153,3.45,4.25,5.48,400,104
+42162,San Esteban de Gormaz,Soria,2024,129,3.48,3.92,4.73,360,94
+42164,San Leonardo de Yagüe,Soria,2024,34,2.95,3.89,4.5,322.74,92
+42165,San Pedro Manrique,Soria,2018,10,1.46,3.12,3.9,278.33,82
+42173,Soria,Soria,2024,3018,5.31,6.75,8.33,535.76,84
+42215,Vinuesa,Soria,2024,15,3.57,4.74,5.24,300,90
+43001,Aiguamúrcia,Tarragona,2024,10,4.55,5.71,7.16,354.66,65.5
+43004,Alcanar,Tarragona,2024,342,3.8,4.94,6.3,367.23,80
+43005,Alcover,Tarragona,2024,116,4.56,5.45,6.73,474.86,87.5
+43007,"Aleixar, L'",Tarragona,2024,12,3.44,4.3,6.7,389.8,95.5
+43009,Alforja,Tarragona,2024,22,3.92,5.31,7.18,482.5,96
+43011,Almoster,Tarragona,2024,13,5.44,7.08,8.0,533.33,80
+43012,Altafulla,Tarragona,2024,235,7.55,9.53,11.38,587.32,69
+43013,"Ametlla de Mar, L'",Tarragona,2024,268,4.46,5.34,6.56,415.67,82.5
+43014,Amposta,Tarragona,2024,990,3.85,4.85,6.22,380,80
+43016,"Arboç, L'",Tarragona,2024,328,4.87,5.91,7.47,480,82
+43019,Ascó,Tarragona,2024,17,3.24,3.47,3.73,300,95
+43020,Banyeres del Penedès,Tarragona,2024,52,4.5,5.18,6.54,450,89
+43024,Bellvei,Tarragona,2024,45,5.82,7.12,8.21,450,59
+43026,Benissanet,Tarragona,2024,13,3.39,3.95,4.23,320,94
+43028,"Bisbal del Penedès, La",Tarragona,2024,40,4.24,4.75,6.11,468.75,98.5
+43031,"Borges del Camp, Les",Tarragona,2024,69,3.91,5.07,6.51,440.97,87
+43033,Botarell,Tarragona,2024,26,4.87,5.88,6.68,445,71
+43037,Calafell,Tarragona,2024,2329,6.9,8.65,10.65,600,74
+43038,Cambrils,Tarragona,2024,2250,6.35,8,10.23,550,73
+43043,"Catllar, El",Tarragona,2024,36,4.68,5.4,6.53,451.28,97
+43044,"Sénia, La",Tarragona,2024,140,2.4,3.19,4.15,300,99.5
+43047,Constantí,Tarragona,2024,209,4.06,5.31,6.84,450,83
+43048,Corbera d'Ebre,Tarragona,2011,10,3.23,4.13,4.88,250,61.5
+43049,Cornudella de Montsant,Tarragona,2024,23,3.81,5.25,6.31,370,75
+43050,Creixell,Tarragona,2024,182,6.24,7.75,9.58,518.96,68
+43051,Cunit,Tarragona,2024,999,6.87,8.43,10.12,597.87,73
+43054,"Espluga de Francolí, L'",Tarragona,2024,120,4.0,5.14,6.46,408.33,79
+43055,Falset,Tarragona,2024,102,3.81,4.94,6.02,409.17,91
+43060,Flix,Tarragona,2024,91,2.97,3.91,4.72,329.93,83
+43064,Gandesa,Tarragona,2024,56,2.89,3.7,5.28,346.99,97
+43074,Llorenç del Penedès,Tarragona,2024,68,4.43,5.54,6.25,537.5,102
+43078,Masdenverge,Tarragona,2024,23,3.23,3.59,4.47,345,103
+43086,Montblanc,Tarragona,2024,280,3.94,4.8,5.79,443.32,93
+43088,Montbrió del Camp,Tarragona,2024,182,5.69,6.89,8.19,474.56,78
+43092,Mont-roig del Camp,Tarragona,2024,378,5.65,7.22,8.94,477.02,69
+43093,Móra d'Ebre,Tarragona,2024,189,3.61,4.51,5.71,380,85
+43094,Móra la Nova,Tarragona,2024,50,2.9,3.64,4.21,352.11,101
+43095,"Morell, El",Tarragona,2024,202,4.56,6.25,7.94,500,86.5
+43098,Nulles,Tarragona,2023,10,4.1,5.05,6.95,446.4,86
+43100,"Pallaresos, Els",Tarragona,2024,22,6.11,6.98,7.76,641.91,94
+43103,Perafort,Tarragona,2024,43,4.5,5.36,6.88,495,94
+43104,"Perelló, El",Tarragona,2024,67,2.8,3.7,4.78,320,90
+43108,"Pla de Santa Maria, El",Tarragona,2024,41,4.29,5.4,6.71,410,93
+43109,"Pobla de Mafumet, La",Tarragona,2024,238,5.53,6.73,8.33,525,78
+43111,"Pobla de Montornès, La",Tarragona,2024,60,5.08,6.13,7.4,500,84.5
+43116,Prades,Tarragona,2024,28,2.7,3.71,5.07,325,79
+43119,Puigpelat,Tarragona,2024,14,5.64,6.87,7.44,545.92,79.5
+43123,Reus,Tarragona,2024,6607,5.15,6.44,8.14,509.38,81
+43124,"Riba, La",Tarragona,2024,21,3.28,5.17,6.33,350,65
+43125,Riba-roja d'Ebre,Tarragona,2023,12,2.01,4.74,5.76,324.58,60
+43126,"Riera de Gaià, La",Tarragona,2024,35,4.66,5.84,6.85,500,89
+43127,Riudecanyes,Tarragona,2024,14,4.05,6.5,9.36,396.67,49
+43128,Riudecols,Tarragona,2024,38,5.46,7.13,8.91,459.53,59
+43129,Riudoms,Tarragona,2024,250,4.35,5.46,6.54,475,93
+43131,Roda de Barà,Tarragona,2024,376,5.86,7.3,9.24,515,74
+43133,Roquetes,Tarragona,2024,146,3.78,4.61,5.78,412.83,97.5
+43136,Sant Carles de la Ràpita,Tarragona,2024,934,4.39,5.51,6.98,409.86,78
+43137,Sant Jaume dels Domenys,Tarragona,2024,36,4.36,5.15,6.1,482.5,96.5
+43138,Santa Bàrbara,Tarragona,2024,120,3.14,4.22,5.06,350,90
+43139,Santa Coloma de Queralt,Tarragona,2024,63,3.48,4.62,6.18,375.27,79
+43140,Santa Oliva,Tarragona,2024,33,4.08,5.56,6.65,450,81
+43142,Sarral,Tarragona,2024,31,3.54,3.78,4.75,339.74,85
+43144,"Secuita, La",Tarragona,2024,49,5.0,6.25,7.61,477.61,89
+43145,"Selva del Camp, La",Tarragona,2024,173,4.6,5.77,7.5,505.68,89
+43148,Tarragona,Tarragona,2024,9987,5.98,7.5,9.38,571.98,78
+43149,Tivenys,Tarragona,2024,11,3.7,4.53,5.39,325,91
+43150,Tivissa,Tarragona,2024,11,3.93,4.47,6.05,380.95,91
+43153,Torredembarra,Tarragona,2024,1333,6.04,7.33,8.93,525,74
+43155,Tortosa,Tarragona,2024,2020,3.98,5.13,6.56,416.67,87.5
+43156,Ulldecona,Tarragona,2024,188,3.02,3.78,5.0,330,84
+43160,Vallmoll,Tarragona,2024,19,3.6,4.41,4.89,410,103
+43161,Valls,Tarragona,2024,1309,4.55,5.62,6.84,476.5,87
+43162,Vandellòs i l'Hospitalet de l'Infant,Tarragona,2024,425,5.46,6.7,8.27,475,74
+43163,"Vendrell, El",Tarragona,2024,2818,5.57,7,8.62,529.67,79
+43166,Vilallonga del Camp,Tarragona,2024,98,5,6.32,7.94,500,87.5
+43167,Vilanova d'Escornalbou,Tarragona,2021,12,3.76,7.85,10.37,377.43,70
+43170,Vila-rodona,Tarragona,2024,51,3.49,4.43,5.33,400,88
+43171,Vila-seca,Tarragona,2024,1467,5.66,7.05,8.95,513.32,76
+43176,Vimbodí i Poblet,Tarragona,2024,19,3.48,3.81,4.68,350,83
+43178,Vinyols i els Arcs,Tarragona,2024,102,5.97,7.5,9.12,512.46,73
+43901,Deltebre,Tarragona,2024,360,4.19,5.41,6.89,385.19,77
+43902,Sant Jaume d'Enveja,Tarragona,2024,115,4.16,5.44,7.0,370,72
+43903,Camarles,Tarragona,2024,85,3.83,5.15,7.05,400,76
+43904,"Aldea, L'",Tarragona,2024,150,3.76,4.79,5.73,335.93,77
+43905,Salou,Tarragona,2024,2904,6.71,8.22,10.09,535.75,66
+43906,"Ampolla, L'",Tarragona,2024,225,5.28,6.87,8.72,450,66
+43907,"Canonja, La",Tarragona,2024,217,4.57,5.68,7.66,469.87,80
+44008,Albalate del Arzobispo,Teruel,2024,12,2.61,3.39,4.07,355,115
+44009,Albarracín,Teruel,2024,36,3.82,4.82,6.03,350,71.5
+44013,Alcañiz,Teruel,2024,1010,3.7,4.5,5.5,370,88
+44014,Alcorisa,Teruel,2024,93,2.6,3.31,4.1,300,100
+44025,Andorra,Teruel,2024,194,3.09,3.76,4.88,350,92
+44037,Beceite,Teruel,2024,13,3.05,4.51,4.96,320,91
+44045,Bronchales,Teruel,2024,19,4.06,5.65,6.49,380.42,90
+44050,Calamocha,Teruel,2024,245,3.41,4.36,5.42,360,96
+44051,Calanda,Teruel,2024,94,2.75,3.39,4.76,300,86
+44059,Cantavieja,Teruel,2023,10,3.0,3.21,3.78,291.98,94.5
+44074,Cedrillas,Teruel,2022,10,3.54,3.93,5.65,350,93.5
+44076,Cella,Teruel,2024,50,3.21,3.95,5.12,325,78
+44122,Híjar,Teruel,2024,38,2.79,3.63,4.39,300.03,86
+44143,Manzanera,Teruel,2024,12,1.38,3.47,3.71,240,72
+44145,Mas de las Matas,Teruel,2024,13,2.38,3.45,3.97,200.36,85
+44153,Monreal del Campo,Teruel,2024,53,2.63,3.06,3.85,300,113
+44155,Montalbán,Teruel,2020,12,3.17,4.14,5.0,278.62,77.5
+44158,Mora de Rubielos,Teruel,2024,82,3.57,4.84,5.44,342.58,73
+44201,Rubielos de Mora,Teruel,2024,33,2.51,3.89,5.05,300,90
+44210,Sarrión,Teruel,2024,25,2.01,3.57,4.51,300,92
+44216,Teruel,Teruel,2024,2725,4.49,5.82,7.28,465,92
+44238,Utrillas,Teruel,2024,62,2.99,3.69,4.51,326.07,94.5
+44246,Valderrobres,Teruel,2024,122,3.49,4.07,5.21,350,87
+44263,Villastar,Teruel,2024,14,3.59,4.37,4.81,381.89,102
+45002,Alameda de la Sagra,Toledo,2024,138,4.11,5.15,6.82,400,89
+45012,Almonacid de Toledo,Toledo,2024,38,5.06,5.62,6.1,405,92
+45013,Almorox,Toledo,2024,42,3.65,4.6,6.17,350,79.5
+45014,Añover de Tajo,Toledo,2024,38,2.97,4.16,5.43,350,89
+45016,Argés,Toledo,2024,128,3.75,4.82,6.0,450,108.5
+45019,Bargas,Toledo,2024,476,5.31,6.9,9.15,470,73
+45021,Borox,Toledo,2024,133,4.54,6.19,7.73,420,82
+45023,Burguillos de Toledo,Toledo,2024,58,4.91,6.15,7.32,430.83,69
+45025,Cabañas de la Sagra,Toledo,2024,79,3.57,4.48,5.54,400,96
+45028,Calera y Chozas,Toledo,2024,33,2.69,3.3,4.68,312.5,73
+45031,Camarena,Toledo,2024,255,4.57,5.67,6.99,410.08,78
+45036,Carmena,Toledo,2024,14,6.16,6.95,7.54,490.95,85
+45038,Carranque,Toledo,2024,35,5.38,6.39,8.45,456.91,82
+45040,"Casar de Escalona, El",Toledo,2024,14,5.01,5.97,7.21,334.52,64.5
+45041,Casarrubios del Monte,Toledo,2024,447,4.72,6.22,7.96,458.33,80
+45045,Cazalegas,Toledo,2024,10,4.23,4.83,7.14,454.05,76
+45046,Cebolla,Toledo,2024,22,2.56,3.75,5.71,302.75,82
+45047,Cedillo del Condado,Toledo,2024,265,4.85,6.32,7.94,450,76
+45051,Cobeja,Toledo,2024,79,4.5,5.74,7.25,450,91
+45052,Cobisa,Toledo,2024,28,5.75,6.72,7.27,442.59,88
+45053,Consuegra,Toledo,2024,128,2.61,3.68,5.47,350,100.5
+45054,Corral de Almaguer,Toledo,2024,36,3.26,3.92,4.66,337.58,93
+45059,Dosbarrios,Toledo,2024,16,3.0,4.2,6.54,352.5,105
+45061,Escalona,Toledo,2024,17,2.56,3.48,6.14,300,85
+45062,Escalonilla,Toledo,2024,14,2.55,3.77,4.62,320.27,100
+45064,Esquivias,Toledo,2024,155,3.9,5.28,6.96,500,100
+45066,Fuensalida,Toledo,2024,561,3.54,4.54,5.61,370,91
+45067,Gálvez,Toledo,2024,35,2.78,3.56,5.31,350,99
+45069,Gerindote,Toledo,2024,91,3.69,5.0,6,383.92,101
+45070,Guadamur,Toledo,2024,11,5.3,6.83,8.44,470,74
+45071,"Guardia, La",Toledo,2024,16,2.32,3.55,4.37,305.83,97
+45078,Huerta de Valdecarábanos,Toledo,2024,12,2.7,2.87,5.72,282.5,106.5
+45079,"Iglesuela, La",Toledo,2024,11,2.38,2.68,3.18,257,95
+45081,Illescas,Toledo,2024,1233,5.69,6.88,8.33,600,94
+45085,Lominchar,Toledo,2024,116,3.98,5.62,7.03,423.34,88
+45087,Madridejos,Toledo,2024,120,2.63,3.89,4.92,327.5,95.5
+45088,Magán,Toledo,2024,138,4.65,5.71,7.31,400,76
+45091,Maqueda,Toledo,2024,16,4.55,5.08,5.84,404.36,102
+45098,Menasalbas,Toledo,2024,15,2,2.39,3.51,200,92
+45099,Méntrida,Toledo,2024,80,4.53,5.88,7.4,436.46,80.5
+45101,Miguel Esteban,Toledo,2024,39,2.82,3.55,4.55,250,75
+45102,Mocejón,Toledo,2024,98,3.97,5.11,7.31,397.5,82.5
+45106,Mora,Toledo,2024,202,2.98,4.27,6.34,376.98,95
+45107,Nambroca,Toledo,2024,29,3.87,5.15,6.31,397.95,92
+45109,Navahermosa,Toledo,2024,15,1.91,2.98,3.61,384.07,109
+45113,"Navalucillos, Los",Toledo,2024,11,2.12,2.82,3.45,250,71
+45115,Noblejas,Toledo,2024,54,3.72,5.48,6.99,400,79.5
+45118,Novés,Toledo,2024,14,3.76,5.31,6.33,315,82
+45119,Numancia de la Sagra,Toledo,2024,251,5.46,6.95,8.49,500,83
+45121,Ocaña,Toledo,2024,1604,4.9,6.38,7.94,425.01,74
+45122,Olías del Rey,Toledo,2024,169,4.57,5.82,7.25,481.58,100
+45123,Ontígola,Toledo,2024,70,6.62,8.21,9.15,478.28,68
+45125,Oropesa,Toledo,2024,34,2.99,4.23,5.29,327.5,91.5
+45128,Pantoja,Toledo,2024,54,4.05,5.72,6.67,450,90
+45132,Pepino,Toledo,2024,15,3.79,4.55,5.3,347.17,86
+45133,Polán,Toledo,2024,30,2.64,3.47,4.52,350.14,110
+45134,Portillo de Toledo,Toledo,2024,38,3.55,4.72,7.04,377.5,87.5
+45135,"Puebla de Almoradiel, La",Toledo,2022,13,2.34,2.91,4.64,300,112
+45136,"Puebla de Montalbán, La",Toledo,2024,91,2.69,3.49,4.28,333.33,97
+45140,Pulgar,Toledo,2024,27,3.6,4.39,4.99,367.7,87
+45142,Quintanar de la Orden,Toledo,2024,263,2.87,3.68,5.06,320,89
+45143,Quismondo,Toledo,2024,10,2.82,3.63,5.13,359.72,95
+45145,Recas,Toledo,2024,171,4.14,5.63,7.54,430,77
+45156,Santa Cruz de la Zarza,Toledo,2024,38,2.67,3.2,4.03,302.62,101.5
+45157,Santa Cruz del Retamar,Toledo,2024,45,3.8,5.38,5.97,419.17,90
+45158,Santa Olalla,Toledo,2024,48,3.61,4.48,5.04,350,91.5
+45161,Seseña,Toledo,2024,1247,5.75,6.79,7.52,635.42,110
+45163,Sonseca,Toledo,2024,93,2.69,3.73,5.22,383.47,105
+45165,Talavera de la Reina,Toledo,2024,4585,4.03,5.16,6.66,427.11,82
+45166,Tembleque,Toledo,2024,11,3.2,3.5,4.81,347.92,106
+45168,Toledo,Toledo,2024,5916,5.88,7.33,9.09,582.41,84
+45171,"Torre de Esteban Hambrán, La",Toledo,2024,19,4.05,4.6,5.61,393.75,78
+45173,Torrijos,Toledo,2024,726,3.91,4.95,6.25,400,93
+45176,Ugena,Toledo,2024,58,6.24,7.74,8.85,590.07,76
+45180,Valmojado,Toledo,2024,273,4.49,5.84,7.28,470.96,90
+45183,"Ventas de Retamosa, Las",Toledo,2024,116,4.5,5.43,7.06,449.4,96.5
+45185,Villacañas,Toledo,2024,79,2.63,3.98,5.15,350,94
+45187,Villafranca de los Caballeros,Toledo,2024,14,2.08,3.81,5.06,334.4,91.5
+45188,Villaluenga de la Sagra,Toledo,2024,36,3.85,5.31,6.86,434.35,100
+45189,Villamiel de Toledo,Toledo,2024,11,4.39,5.88,6.54,400,78
+45195,Villarrubia de Santiago,Toledo,2024,11,2.05,2.42,5.75,300,97
+45196,Villaseca de la Sagra,Toledo,2024,59,3.75,4.71,6.65,380,100
+45197,Villasequilla,Toledo,2024,12,3.6,4.62,5.65,350,73
+45198,Villatobas,Toledo,2024,34,4.17,5.1,5.85,350,84
+45199,"Viso de San Juan, El",Toledo,2024,174,5.27,6.43,7.63,520,84.5
+45200,"Yébenes, Los",Toledo,2024,38,2.64,3.84,4.61,347.5,99
+45201,Yeles,Toledo,2024,414,6.56,8.25,9.98,500,67
+45202,Yepes,Toledo,2024,94,3.79,5.45,6.51,400.55,86
+45203,Yuncler,Toledo,2024,294,4.99,6.14,7.54,476.25,89.5
+45204,Yunclillos,Toledo,2024,10,3.98,4.32,5.19,410,93
+45205,Yuncos,Toledo,2024,462,5.34,6.82,8.12,490.95,78
+45901,Santo Domingo-Caudilla,Toledo,2024,19,4.39,5.9,6.57,350,70
+46001,Ademuz,Valencia/Valéncia,2024,25,1.42,2.03,3.7,220,119
+46002,Ador,Valencia/Valéncia,2024,13,3.29,5.26,6.44,400,98
+46003,Atzeneta d'Albaida,Valencia/Valéncia,2024,12,2.41,2.91,3.53,315.57,115
+46004,Agullent,Valencia/Valéncia,2024,33,2.42,3.13,4.15,300,95
+46005,Alaquàs,Valencia/Valéncia,2024,1414,5,6.15,7.8,506.36,83
+46006,Albaida,Valencia/Valéncia,2024,175,2.63,3.44,4.05,330,98
+46007,Albal,Valencia/Valéncia,2024,762,4.54,5.67,7.06,545.49,100
+46008,Albalat de la Ribera,Valencia/Valéncia,2024,47,2.97,3.54,4.34,350,103
+46009,Albalat dels Sorells,Valencia/Valéncia,2024,141,4.62,5.89,7.88,550,93
+46011,Alberic,Valencia/Valéncia,2024,238,2.94,3.54,4.72,377.94,106
+46012,Alborache,Valencia/Valéncia,2024,16,3.17,3.94,4.88,369.43,97
+46013,Alboraya,Valencia/Valéncia,2024,1732,5.93,8.09,10.82,700,96
+46014,Albuixech,Valencia/Valéncia,2024,170,4.63,5.95,8.03,530,93
+46015,Alcàsser,Valencia/Valéncia,2024,397,3.83,4.8,6.03,474.34,103
+46016,Alcàntera de Xúquer,Valencia/Valéncia,2024,24,2.62,3.21,3.97,328.78,106
+46017,Alzira,Valencia/Valéncia,2024,1569,3.69,4.64,5.88,450,100
+46019,"Alcúdia, l'",Valencia/Valéncia,2024,411,3.34,4.11,5.29,391.67,99
+46020,"Alcúdia de Crespins, l'",Valencia/Valéncia,2024,100,2.78,3.39,4.21,322.12,109
+46021,Aldaia,Valencia/Valéncia,2024,1602,4.72,5.95,7.63,515.38,89
+46022,Alfafar,Valencia/Valéncia,2024,1076,4.54,5.82,7.31,500,88
+46025,Alfara del Patriarca,Valencia/Valéncia,2024,350,6.08,7.81,10.33,700,93
+46026,Alfarp,Valencia/Valéncia,2024,18,3.09,3.87,4.49,390,107
+46027,Alfarrasí,Valencia/Valéncia,2024,11,2.43,2.88,4,285,106
+46029,Algemesí,Valencia/Valéncia,2024,797,3.2,4.0,5.06,400,103
+46031,Alginet,Valencia/Valéncia,2024,405,3.57,4.47,5.52,415,103
+46032,Almàssera,Valencia/Valéncia,2024,341,4.69,6.17,7.82,524,85
+46034,Almoines,Valencia/Valéncia,2024,47,3.56,5.24,6.74,423.75,82
+46035,Almussafes,Valencia/Valéncia,2024,346,3.67,4.45,5.29,457.75,107
+46037,"Alqueria de la Comtessa, l'",Valencia/Valéncia,2024,11,2.75,3.72,5.06,400,114
+46039,Anna,Valencia/Valéncia,2024,41,2.11,2.67,3.97,300,105
+46042,Aielo de Malferit,Valencia/Valéncia,2024,41,2.27,3.23,3.65,348.1,117
+46044,Ayora,Valencia/Valéncia,2024,119,2.2,3.18,3.85,325,108
+46048,Bellreguard,Valencia/Valéncia,2024,125,3.65,4.62,5.91,417.09,96
+46051,Benaguasil,Valencia/Valéncia,2024,479,3.75,5.0,6.61,450.33,97
+46052,Benavites,Valencia/Valéncia,2023,11,4.12,5.37,5.91,391.67,75
+46054,Benetússer,Valencia/Valéncia,2024,824,4.86,6.11,7.5,512.5,86
+46055,Beniarjó,Valencia/Valéncia,2024,37,3.3,4.42,6.35,400,99
+46058,Benifairó de les Valls,Valencia/Valéncia,2024,71,3.44,4.32,5.6,400,101
+46059,Benifairó de la Valldigna,Valencia/Valéncia,2024,11,2.18,2.85,2.97,305.0,118
+46060,Benifaió,Valencia/Valéncia,2024,425,3.79,4.64,5.88,459,102
+46061,Beniflá,Valencia/Valéncia,2022,10,3.6,4.18,5.16,352.5,82.5
+46062,Benigánim,Valencia/Valéncia,2024,70,2.39,3.06,3.58,312.36,109.5
+46063,Benimodo,Valencia/Valéncia,2024,25,3.68,4.17,4.63,380,91
+46065,Beniparrell,Valencia/Valéncia,2024,73,3.86,5.1,6.06,450,95
+46066,Benirredrà,Valencia/Valéncia,2024,12,4.76,5.39,6.75,517.0,93
+46067,Benisanó,Valencia/Valéncia,2024,87,3.81,4.52,6.12,450,107
+46068,Benissoda,Valencia/Valéncia,2023,10,3.6,4.52,5.49,300,69
+46070,Bétera,Valencia/Valéncia,2024,917,4.76,6.07,8.11,566,101
+46072,Bocairent,Valencia/Valéncia,2024,52,2.96,3.66,5.02,299.65,83
+46073,Bolbaite,Valencia/Valéncia,2024,11,2.16,2.66,3.08,276.67,114
+46074,Bonrepòs i Mirambell,Valencia/Valéncia,2024,188,4.95,6.34,8.16,507.98,92
+46077,Buñol,Valencia/Valéncia,2024,259,3.14,4.07,5.11,400,101
+46078,Burjassot,Valencia/Valéncia,2024,2529,4.93,6.33,8.15,550,88
+46081,Canals,Valencia/Valéncia,2024,329,2.79,3.51,4.54,350,105
+46082,Canet d'En Berenguer,Valencia/Valéncia,2024,577,6.52,8.33,10.58,575,75
+46083,Carcaixent,Valencia/Valéncia,2024,577,3.46,4.33,5.41,404.32,97
+46084,Càrcer,Valencia/Valéncia,2024,26,2.65,3.19,4.14,319.29,101
+46085,Carlet,Valencia/Valéncia,2024,542,3.37,4.21,5.53,400,97
+46089,Casinos,Valencia/Valéncia,2024,38,3.7,4.38,5.78,387.5,91
+46090,Castelló de Rugat,Valencia/Valéncia,2024,50,2.08,2.62,3.24,299.18,115
+46093,Catadau,Valencia/Valéncia,2024,47,3.32,3.83,4.38,377,108
+46094,Catarroja,Valencia/Valéncia,2024,1441,4.49,5.71,7.15,533.33,97
+46098,Corbera,Valencia/Valéncia,2024,50,2.75,3.45,4.61,351.67,107.5
+46102,Quart de Poblet,Valencia/Valéncia,2024,1316,4.92,6.15,7.86,490.17,75
+46103,Quartell,Valencia/Valéncia,2024,34,3.47,4.33,5.39,450,101
+46105,Cullera,Valencia/Valéncia,2024,1065,4.52,5.9,7.95,453.17,80
+46106,Chelva,Valencia/Valéncia,2024,36,3.12,3.81,5.18,289.39,75
+46107,Chella,Valencia/Valéncia,2024,37,2.02,2.64,3.07,235,93
+46108,Chera,Valencia/Valéncia,2024,10,2.62,3.51,5.41,277.5,110
+46109,Cheste,Valencia/Valéncia,2024,391,3.31,4.29,5.32,400,104
+46110,Xirivella,Valencia/Valéncia,2024,1602,4.76,6.06,7.67,500,82
+46111,Chiva,Valencia/Valéncia,2024,434,3.52,4.53,6.25,430,97
+46112,Chulilla,Valencia/Valéncia,2024,14,2.65,3.26,4.99,245,66
+46113,Daimús,Valencia/Valéncia,2024,129,4.76,7.06,8.55,450,68
+46116,"Eliana, l'",Valencia/Valéncia,2024,636,5.87,7.59,9.46,650,90
+46117,Emperador,Valencia/Valéncia,2024,35,5.65,6.94,8.45,578.75,92
+46118,Enguera,Valencia/Valéncia,2024,87,2.67,3.55,4.43,320,100
+46120,Estivella,Valencia/Valéncia,2024,18,3.36,4.12,5.43,387.94,90
+46122,Faura,Valencia/Valéncia,2024,130,3.71,4.43,5.38,410,102
+46123,Favara,Valencia/Valéncia,2024,68,3.31,4.42,5.88,388.75,99
+46126,Foios,Valencia/Valéncia,2024,370,4.74,5.96,7.43,517.5,86
+46127,"Font d'En Carròs, la",Valencia/Valéncia,2024,83,2.82,3.71,4.96,365,105
+46128,"Font de la Figuera, la",Valencia/Valéncia,2024,42,2.04,2.49,3.4,242.18,112
+46131,Gandia,Valencia/Valéncia,2024,4279,3.98,5.22,6.88,480,96
+46132,Genovés,Valencia/Valéncia,2024,33,2.54,3.09,4.51,325.49,105
+46134,Gilet,Valencia/Valéncia,2024,58,3.96,5.11,6.44,427.5,92
+46135,Godella,Valencia/Valéncia,2024,482,4.82,6.25,8.21,550,84.5
+46136,Godelleta,Valencia/Valéncia,2024,34,3.06,3.57,4.96,356.18,97.5
+46139,Guadassuar,Valencia/Valéncia,2024,87,3.12,3.6,4.36,399.07,113
+46140,Guardamar de la Safor,Valencia/Valéncia,2024,25,6.03,7.59,10.55,509.15,72
+46143,Xeraco,Valencia/Valéncia,2024,155,3.49,4.25,6.27,412.52,100
+46145,Xàtiva,Valencia/Valéncia,2024,1389,3.68,4.66,5.73,437.61,98
+46146,Xeresa,Valencia/Valéncia,2024,32,3.27,4.93,6.85,400,92
+46147,Llíria,Valencia/Valéncia,2024,932,3.4,4.4,5.66,430,101
+46148,Loriguilla,Valencia/Valéncia,2024,41,5.43,8.26,9.71,499.59,98
+46150,Llutxent,Valencia/Valéncia,2022,11,1.66,2.25,2.43,246.67,109
+46155,Llaurí,Valencia/Valéncia,2024,14,2.81,4.03,4.73,336.55,101
+46156,Llombai,Valencia/Valéncia,2024,38,2.96,3.62,4.26,360.32,107
+46157,"Llosa de Ranes, la",Valencia/Valéncia,2024,45,2.36,3.19,3.95,300,92
+46158,Macastre,Valencia/Valéncia,2024,29,2.33,3.22,4.3,300,94
+46159,Manises,Valencia/Valéncia,2024,1453,5.09,6.4,8.23,510,82
+46160,Manuel,Valencia/Valéncia,2024,48,2.8,3.81,4.9,344.05,101
+46162,Massalavés,Valencia/Valéncia,2024,48,2.93,3.64,5.26,357.23,100
+46163,Massalfassar,Valencia/Valéncia,2024,130,4.49,5.97,7.5,550,102
+46164,Massamagrell,Valencia/Valéncia,2024,659,4.6,5.87,7.63,500,88
+46165,Massanassa,Valencia/Valéncia,2024,516,4.56,5.89,7.69,520,97
+46166,Meliana,Valencia/Valéncia,2024,527,4.72,6.11,7.81,525.17,90
+46168,Miramar,Valencia/Valéncia,2024,111,4.15,5.48,7.17,430,89
+46169,Mislata,Valencia/Valéncia,2024,2714,5.18,6.62,8.61,558.02,85
+46170,Mogente/Moixent,Valencia/Valéncia,2024,82,2.32,3.01,3.89,300,104
+46171,Moncada,Valencia/Valéncia,2024,1057,5.16,6.69,8.69,600,91
+46172,Montserrat,Valencia/Valéncia,2024,296,3.74,4.69,5.76,440,98.5
+46173,Montaverner,Valencia/Valéncia,2024,16,2.53,3.22,4.23,350,131
+46176,Montroy,Valencia/Valéncia,2024,62,3.63,4.27,5.66,427.5,113.5
+46177,Museros,Valencia/Valéncia,2024,391,4.76,6.19,7.79,520,89
+46178,Náquera,Valencia/Valéncia,2024,396,4.91,6.25,8.0,503.75,90
+46179,Navarrés,Valencia/Valéncia,2024,47,2.2,2.78,3.26,280,98
+46180,Novelé/Novetlè,Valencia/Valéncia,2021,10,3.06,3.92,4.76,406.67,152.5
+46181,Oliva,Valencia/Valéncia,2024,893,3.31,4.39,5.88,434.39,105
+46183,"Olleria, l'",Valencia/Valéncia,2024,154,2.73,3.34,4.35,350,111
+46184,Ontinyent,Valencia/Valéncia,2024,1337,3.29,4.12,5.08,400,104
+46186,Paiporta,Valencia/Valéncia,2024,1366,4.95,6.13,7.66,550,93
+46188,Palmera,Valencia/Valéncia,2024,20,3.2,4.52,5.98,402.42,94
+46190,Paterna,Valencia/Valéncia,2024,3328,5.24,6.62,8.42,600,97
+46191,Pedralba,Valencia/Valéncia,2024,42,3.12,4.02,6.07,385.01,86.5
+46192,Petrés,Valencia/Valéncia,2024,27,3.29,4.07,6.33,346.17,82
+46193,Picanya,Valencia/Valéncia,2024,469,4.49,5.84,7.44,500,92
+46194,Picassent,Valencia/Valéncia,2024,961,4.23,5.31,6.69,500,103
+46195,Piles,Valencia/Valéncia,2024,108,3.57,4.68,7.26,400,93
+46197,Polinyà de Xúquer,Valencia/Valéncia,2024,41,3.18,4.04,5.55,350,91
+46198,Potríes,Valencia/Valéncia,2024,21,3.2,3.75,5.41,375,105
+46199,"Pobla de Farnals, la",Valencia/Valéncia,2024,647,5.62,7.5,9.76,578.38,80
+46200,"Pobla del Duc, la",Valencia/Valéncia,2024,23,2.32,2.84,3.03,300,112
+46202,"Pobla de Vallbona, la",Valencia/Valéncia,2024,805,4.68,5.88,7.34,533,101
+46203,"Pobla Llarga, la",Valencia/Valéncia,2024,86,2.96,3.71,4.51,370.53,108
+46204,Puig,Valencia/Valéncia,2024,427,5.19,6.72,8.3,590,94
+46205,Puçol,Valencia/Valéncia,2024,895,4.93,6.43,8.27,550,90
+46206,Quesa,Valencia/Valéncia,2024,12,1.27,1.87,2.5,201.88,127
+46207,Rafelbuñol/Rafelbunyol,Valencia/Valéncia,2024,507,5.42,6.74,8.56,533.33,84
+46208,Rafelcofer,Valencia/Valéncia,2024,18,3.16,4.13,4.96,364.14,111.5
+46209,Rafelguaraf,Valencia/Valéncia,2024,10,2.64,3.7,4.91,325,100.5
+46211,Real de Gandía,Valencia/Valéncia,2024,51,3.64,4.33,5.73,449.98,102
+46212,Real,Valencia/Valéncia,2024,60,3.31,4.35,5.05,400,102.5
+46213,Requena,Valencia/Valéncia,2024,697,3.13,3.92,5.01,387.63,102
+46214,Riba-roja de Túria,Valencia/Valéncia,2024,684,4.37,5.49,6.75,510,100
+46215,Riola,Valencia/Valéncia,2024,12,1.99,2.88,3.83,300.41,108
+46216,Rocafort,Valencia/Valéncia,2024,361,5.67,6.95,8.43,637,97
+46218,Rótova,Valencia/Valéncia,2024,15,2.36,3.44,3.73,352.89,108
+46220,Sagunto/Sagunt,Valencia/Valéncia,2024,2955,4.6,5.97,7.76,512.5,94
+46223,Sedaví,Valencia/Valéncia,2024,461,4.87,6.04,7.65,518.33,89
+46228,Serra,Valencia/Valéncia,2024,99,3.38,4.61,5.87,407.33,97
+46229,Siete Aguas,Valencia/Valéncia,2024,45,3.04,3.89,5.48,300,78
+46230,Silla,Valencia/Valéncia,2024,883,4.21,5.54,7.0,500,91
+46231,Simat de la Valldigna,Valencia/Valéncia,2024,60,2.67,3.33,3.95,321.97,97
+46232,Sinarcas,Valencia/Valéncia,2024,13,2.28,2.53,2.84,250,99
+46233,Sollana,Valencia/Valéncia,2024,156,3.53,4.2,5.06,420,103
+46234,Sot de Chera,Valencia/Valéncia,2024,11,3.92,4.56,4.76,300,79
+46235,Sueca,Valencia/Valéncia,2024,957,3.54,4.42,5.75,400,93
+46237,Tavernes Blanques,Valencia/Valéncia,2024,408,4.46,5.58,7.14,500,93
+46238,Tavernes de la Valldigna,Valencia/Valéncia,2024,452,2.97,3.7,4.87,379.77,104
+46244,Torrent,Valencia/Valéncia,2024,4243,4.88,6.28,8.15,550,92
+46247,Tuéjar,Valencia/Valéncia,2024,28,3.22,3.75,4.44,300,80
+46248,Turís,Valencia/Valéncia,2024,186,3.39,4.27,5.84,389.22,98.5
+46249,Utiel,Valencia/Valéncia,2024,308,3.15,3.94,4.91,350.26,97.5
+46250,Valencia,Valencia/Valéncia,2024,65742,6.14,8.18,10.85,680.83,85
+46251,Vallada,Valencia/Valéncia,2024,39,2.14,2.75,3.2,300,116
+46255,Villalonga,Valencia/Valéncia,2024,104,2.98,4.17,5.56,350,95.5
+46256,Vilamarxant,Valencia/Valéncia,2024,422,4.32,5.39,6.88,452.5,94
+46257,Villanueva de Castellón,Valencia/Valéncia,2024,108,2.72,3.26,4.17,340,114
+46258,Villar del Arzobispo,Valencia/Valéncia,2024,48,2.5,3.52,5.36,304.18,84
+46260,Vinalesa,Valencia/Valéncia,2024,127,4.7,6.08,7.3,513.75,92
+46261,Yátova,Valencia/Valéncia,2024,26,2.82,3.63,4.58,350,97
+46903,San Antonio de Benagéber,Valencia/Valéncia,2024,47,4.91,6.04,8.82,550,106
+46904,Benicull de Xúquer,Valencia/Valéncia,2024,14,4.29,4.79,6.79,450,95
+47010,Arroyo de la Encomienda,Valladolid,2024,1359,6.12,7.14,8.42,550,91
+47023,Boecillo,Valladolid,2024,69,4.62,5.66,6.37,450,88
+47027,Cabezón de Pisuerga,Valladolid,2024,145,5.16,6.06,6.99,428.03,83
+47050,Cigales,Valladolid,2024,230,4.67,5.81,7.12,375,64
+47052,Cistérniga,Valladolid,2024,509,5,6.04,7.08,496.19,92
+47066,Fuensaldaña,Valladolid,2024,73,4.56,5.65,6.85,425,87
+47075,Íscar,Valladolid,2024,164,3.27,3.94,4.87,366.33,100
+47076,Laguna de Duero,Valladolid,2024,867,4.99,5.79,6.9,510,95
+47084,Mayorga,Valladolid,2024,16,3.09,3.64,3.85,300.41,92
+47085,Medina del Campo,Valladolid,2024,914,3.78,4.59,5.72,391.67,86
+47086,Medina de Rioseco,Valladolid,2024,122,3.67,4.26,5.07,380,94
+47090,Mojados,Valladolid,2024,26,3.32,4.43,5.11,359.2,83.5
+47104,Olmedo,Valladolid,2024,109,3.72,4.59,5.43,400,93
+47112,Pedrajas de San Esteban,Valladolid,2024,53,2.81,3.65,4.34,348.86,96
+47114,Peñafiel,Valladolid,2024,192,3.44,4.22,5.48,395.63,90.5
+47122,Portillo,Valladolid,2024,47,3.21,4,4.74,350,93
+47133,Renedo de Esgueva,Valladolid,2024,29,4.45,5.17,6.45,453,94
+47155,Santovenia de Pisuerga,Valladolid,2024,297,4.71,5.7,6.96,441.67,91
+47161,Simancas,Valladolid,2024,44,4.56,5.34,6.84,415,80.5
+47165,Tordesillas,Valladolid,2024,342,3.54,4.25,5.26,390,96
+47175,Tudela de Duero,Valladolid,2024,353,4.46,5.5,6.67,400,83
+47186,Valladolid,Valladolid,2024,21101,5.54,6.76,8.23,530.83,81
+47193,Viana de Cega,Valladolid,2024,11,2.91,4.02,6.64,436.97,89
+47214,Villalón de Campos,Valladolid,2024,20,2.47,2.98,4.21,300,99.5
+47217,Villanubla,Valladolid,2024,93,3.85,4.82,5.88,375,84
+47231,Zaratán,Valladolid,2024,353,5.61,6.43,7.5,480,78
+48001,Abadiño,Bizkaia,2024,171,6.58,7.44,8.82,600,79.86
+48002,Abanto y Ciérvana-Abanto Zierbena,Bizkaia,2024,146,7.73,8.96,10.27,601.64,66.45
+48003,Amorebieta-Etxano,Bizkaia,2024,502,6.96,8.02,9.31,669.5,83.71
+48011,Arrigorriaga,Bizkaia,2024,266,7.38,8.24,9.73,682.9,80.07
+48012,Bakio,Bizkaia,2024,95,7.13,8.55,10.58,681.45,79.32
+48013,Barakaldo,Bizkaia,2024,3259,9.23,10.47,11.89,705.76,67.48
+48014,Barrika,Bizkaia,2024,38,8.78,11.55,13.39,700,52.66
+48015,Basauri,Bizkaia,2024,1223,8.43,9.65,10.97,669.5,68.93
+48016,Berango,Bizkaia,2024,163,9.51,10.66,12.2,893.01,85.98
+48017,Bermeo,Bizkaia,2024,560,5.52,6.82,8.21,525.3,77.41
+48018,Berriatua,Bizkaia,2024,33,4.96,5.53,6.46,520,90.71
+48019,Berriz,Bizkaia,2024,95,6.08,7.42,8.65,587.1,76.64
+48020,Bilbao,Bizkaia,2024,13729,9.89,11.51,13.52,800,70.25
+48021,Busturia,Bizkaia,2024,41,4.78,5.61,6.7,501.37,86.9
+48022,Karrantza Harana/Valle de Carranza,Bizkaia,2024,22,3.11,4.71,5.92,419.12,88.23
+48024,Zeanuri,Bizkaia,2024,15,5.14,5.66,6.74,550,91.66
+48026,Dima,Bizkaia,2024,13,5.83,6.73,7.92,600,86.59
+48027,Durango,Bizkaia,2024,1081,7.26,8.71,10.38,679.86,78.67
+48028,Ea,Bizkaia,2024,19,3.63,5.39,6.29,400,84.43
+48029,Etxebarri,Bizkaia,2024,264,8.48,9.5,10.64,792.9,84.97
+48030,Etxebarria,Bizkaia,2024,10,4.66,5.46,6.2,503.5,100.08
+48032,Elorrio,Bizkaia,2024,177,6.22,6.98,7.78,589.39,83.94
+48034,Ermua,Bizkaia,2024,322,7.12,8.12,9.18,577.83,70.3
+48036,Galdakao,Bizkaia,2024,802,7.57,8.59,10,701.92,80.41
+48040,Gatika,Bizkaia,2024,17,7.16,8.17,9.41,698.66,74.88
+48041,Gautegiz Arteaga,Bizkaia,2024,10,5.42,5.73,6.01,526.82,93.3
+48042,Gordexola,Bizkaia,2024,25,6.03,6.68,8.09,566.5,80.62
+48043,Gorliz,Bizkaia,2024,192,7.52,8.94,10.41,760.19,87.85
+48044,Getxo,Bizkaia,2024,2604,9.75,11.34,13.37,900,82.31
+48045,Güeñes,Bizkaia,2024,166,7.03,7.95,9.11,589.08,72.16
+48046,Gernika-Lumo,Bizkaia,2024,535,6.06,7.09,7.97,630,88.03
+48052,Larrabetzu,Bizkaia,2024,62,7.39,8.64,10.09,650,79.59
+48054,Leioa,Bizkaia,2024,961,9.43,10.65,12.18,826.06,79.42
+48055,Lemoa,Bizkaia,2024,127,6.38,7.56,8.77,601.64,80.49
+48056,Lemoiz,Bizkaia,2024,21,6.7,7.71,8.72,600,77.8
+48057,Lekeitio,Bizkaia,2024,140,6.34,7.41,8.79,551.58,75.17
+48058,Mallabia,Bizkaia,2024,20,6.79,8.52,9.75,551.81,63.04
+48059,Mañaria,Bizkaia,2024,12,4.96,6.55,7.44,560.83,88.97
+48060,Markina-Xemein,Bizkaia,2024,149,5.59,6.38,7.2,543.4,84.72
+48065,Ugao-Miraballes,Bizkaia,2024,125,7.28,8.14,9.38,601.64,74.28
+48068,Mundaka,Bizkaia,2024,38,6.29,7,8.37,573.14,83.74
+48069,Mungia,Bizkaia,2024,629,7.31,8.38,9.67,721,85.92
+48071,Muskiz,Bizkaia,2024,123,6.96,7.96,8.96,601.64,76.41
+48072,Otxandio,Bizkaia,2024,22,5.01,5.62,6.13,529.14,92.69
+48073,Ondarroa,Bizkaia,2024,184,5.88,7.07,8.16,535.81,75.96
+48074,Urduña/Orduña,Bizkaia,2024,125,5.67,6.25,7.51,511.4,79.77
+48075,Orozko,Bizkaia,2024,53,4.77,5.43,6.05,551.51,101.75
+48077,Plentzia,Bizkaia,2024,104,8.27,9.27,10.95,751.02,77.73
+48078,Portugalete,Bizkaia,2024,1148,8.79,10.16,11.57,696.42,66.8
+48080,Valle de Trápaga-Trapagaran,Bizkaia,2024,224,7.9,8.79,9.94,651.78,73.18
+48081,Lezama,Bizkaia,2024,44,7,8.11,8.73,747.17,92.34
+48082,Santurtzi,Bizkaia,2024,1309,8.68,10.05,11.77,695.25,68.58
+48083,Ortuella,Bizkaia,2024,145,8.03,8.95,10,603.35,68.15
+48084,Sestao,Bizkaia,2024,874,8.53,9.75,11.05,650,65.36
+48085,Sopela,Bizkaia,2024,487,9.31,10.37,11.71,830.5,82.3
+48086,Sopuerta,Bizkaia,2024,44,5.71,6.63,7.49,563.44,79.44
+48089,Urduliz,Bizkaia,2024,164,8.72,10.19,11.74,848.38,84.87
+48090,Balmaseda,Bizkaia,2024,260,6.61,7.53,8.58,572.84,74.05
+48091,Atxondo,Bizkaia,2024,21,5.25,5.67,6.13,536.91,92.86
+48092,Bedia,Bizkaia,2024,16,7.76,8.75,10.23,627.66,73.69
+48093,Areatza,Bizkaia,2024,37,5.96,6.64,8.37,515,78.9
+48094,Igorre,Bizkaia,2024,149,5.71,6.38,6.99,567.52,91.15
+48095,Zaldibar,Bizkaia,2024,83,5.89,6.57,7.37,551.51,81.87
+48096,Zalla,Bizkaia,2024,204,6.55,7.5,8.37,601.64,80.05
+48097,Zaratamo,Bizkaia,2024,29,6.86,8.29,9.62,601.64,73.18
+48901,Derio,Bizkaia,2024,166,7.88,9.07,10.33,716.34,80.07
+48902,Erandio,Bizkaia,2024,602,8.97,10.1,11.42,721.49,69.5
+48903,Loiu,Bizkaia,2024,29,8.12,9.12,10.73,772.5,75
+48904,Sondika,Bizkaia,2024,122,7.83,9.18,10.18,696.85,78.31
+48905,Zamudio,Bizkaia,2024,122,8.18,9.07,9.8,700,75.39
+48906,Forua,Bizkaia,2024,13,5.91,6.57,7.24,527.16,79.69
+48910,Iurreta,Bizkaia,2024,98,7.1,7.98,9.36,644.52,78.07
+48912,Alonsotegi,Bizkaia,2024,79,7.82,9.04,9.82,636.5,71.75
+48913,Zierbena,Bizkaia,2024,10,7.69,9.21,10.05,692.4,83.42
+49003,Alcañices,Zamora,2024,12,2.19,2.94,4.6,270,93
+49021,Benavente,Zamora,2024,820,3.18,3.9,4.76,350,90
+49081,Fuentesaúco,Zamora,2024,14,2.65,3.12,3.99,260,82
+49085,Galende,Zamora,2024,14,3.61,5.71,10.29,312.5,70
+49122,Monfarracinos,Zamora,2024,12,3.05,3.76,4.4,357.5,104
+49127,Morales del Vino,Zamora,2024,51,3.65,4.17,5.14,350,92
+49166,Puebla de Sanabria,Zamora,2024,59,4.15,4.62,5.7,376.28,83
+49219,Toro,Zamora,2024,289,3.26,4.18,5.48,360,94
+49250,Villalpando,Zamora,2024,14,2.64,3.11,3.74,282.23,95.5
+49261,Villaralbo,Zamora,2024,13,3.23,3.52,4.09,306.82,93
+49275,Zamora,Zamora,2024,3865,3.91,4.91,6.23,409.7,91
+50008,Alagón,Zaragoza,2024,380,4.35,5.48,6.59,424,85
+50020,Alhama de Aragón,Zaragoza,2024,12,2.66,3.31,4.06,289.26,94.5
+50025,"Almunia de Doña Godina, La",Zaragoza,2024,367,4.03,5.08,6.27,401.28,85
+50034,Ariza,Zaragoza,2018,10,2.26,3.45,4.18,250.07,81.5
+50038,Ateca,Zaragoza,2024,29,3.31,4.28,5.62,353.14,85
+50055,Borja,Zaragoza,2024,229,3.77,4.55,5.49,352.5,80
+50057,Brea de Aragón,Zaragoza,2024,16,2.22,3.1,3.43,250,81
+50062,"Burgo de Ebro, El",Zaragoza,2024,96,4.64,5.81,6.97,465,91
+50066,Cadrete,Zaragoza,2024,286,6.02,7.08,8.3,476.25,78
+50067,Calatayud,Zaragoza,2024,1290,3.73,4.77,5.92,400,87
+50068,Calatorao,Zaragoza,2024,52,3.27,4.23,5.41,350,80.5
+50073,Cariñena,Zaragoza,2024,163,3.65,4.24,5.26,349.18,87
+50074,Caspe,Zaragoza,2024,268,3.0,3.7,4.7,331.67,94.5
+50089,Cuarte de Huerva,Zaragoza,2024,988,6.44,7.63,9.03,565,82
+50094,Daroca,Zaragoza,2024,74,4.01,4.79,5.44,350,78.5
+50095,Ejea de los Caballeros,Zaragoza,2024,680,3.97,4.85,6.02,413.96,92
+50099,Épila,Zaragoza,2024,93,4.24,5.07,6.33,400.73,85
+50107,Figueruelas,Zaragoza,2024,18,3.01,3.99,4.95,372.5,104
+50115,Fuentes de Ebro,Zaragoza,2024,115,3.57,4.76,6.29,375,86
+50118,Gallur,Zaragoza,2024,58,3.08,3.91,5.43,330.86,75
+50126,Illueca,Zaragoza,2024,54,2.53,3.06,3.58,300,104
+50152,Maella,Zaragoza,2024,17,3.01,3.67,4.74,350,84
+50160,Mallén,Zaragoza,2024,50,3.69,4.33,5.24,365.31,91.5
+50163,María de Huerva,Zaragoza,2024,129,4.97,6.41,7.51,475,82
+50165,Mequinenza,Zaragoza,2024,14,4.42,5.61,6.27,395.42,97.5
+50175,Morata de Jalón,Zaragoza,2024,13,2.06,2.48,3.36,230.64,75
+50181,Muel,Zaragoza,2024,42,3.82,4.52,6.27,369.08,81.5
+50182,"Muela, La",Zaragoza,2024,428,5.26,6.33,7.45,499.82,84
+50204,Pedrola,Zaragoza,2024,98,3.81,4.56,5.75,400,97
+50208,Pina de Ebro,Zaragoza,2024,58,3.57,4.27,4.76,349.59,84
+50209,Pinseque,Zaragoza,2024,42,4.43,5.53,7.38,460,84
+50219,"Puebla de Alfindén, La",Zaragoza,2024,324,5.22,6.59,7.69,500,80.5
+50225,Ricla,Zaragoza,2024,54,3.73,4.25,5.3,325,82
+50230,Sádaba,Zaragoza,2024,21,3.48,3.91,4.75,340,89
+50235,San Mateo de Gállego,Zaragoza,2024,125,4.29,5.34,6.61,407.33,82
+50247,Sobradiel,Zaragoza,2024,11,3.48,4.55,4.8,430.0,115
+50251,Tarazona,Zaragoza,2024,404,3.88,4.95,5.93,400,89
+50252,Tauste,Zaragoza,2024,267,3.23,4.03,5,350,89
+50262,Torres de Berrellén,Zaragoza,2024,12,3.76,4.05,6.69,449.59,88
+50272,Utebo,Zaragoza,2024,1020,5.49,6.63,8.11,504.57,84
+50288,Villanueva de Gállego,Zaragoza,2024,207,5.59,7.37,8.76,511.67,76
+50297,Zaragoza,Zaragoza,2024,53437,6.35,7.72,9.35,550,71
+50298,Zuera,Zaragoza,2024,402,4.17,5.16,6.17,425,85
+51001,Ceuta,Ceuta,2024,2230,7.59,9.45,11.96,675,73
+52001,Melilla,Melilla,2024,2621,7.35,9.1,11.18,600,69

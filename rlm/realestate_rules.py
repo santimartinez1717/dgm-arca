@@ -19,6 +19,9 @@ Sources, consulted in September 2026:
   regulation (RD 439/2007), art. 13 and 14 (3 % depreciation of the building).
 * RDL 1/1993 (TRLITPAJD) and Ley 11/2021: the ITP base is the cadastral reference value when
   it is higher than the declared price.
+* RDL 29/2026 (BOE-A-2026-20823), art. 6 and DT 38.ª LIRPF: new art. 23.2 reductions for
+  contracts signed from 01/12/2026 (``rental_reduction_pct_2026``), read in November 2026.
+  The phase 1 dataset predates it and keeps the 2023 rules (``rental_reduction_pct``).
 
 This is an educational model of the rules, not tax advice.
 """
@@ -26,6 +29,7 @@ This is an educational model of the rules, not tax advice.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import date
 
 CENT = 0.01
 
@@ -238,6 +242,87 @@ def rental_reduction_pct(
     if rehabilitation_last_2y:
         return 60
     return 50
+
+
+# Dates that decide which version of art. 23.2 LIRPF applies (DT 38.ª LIRPF as worded by
+# RDL 29/2026, BOE-A-2026-20823, read on 17/11/2026).
+LEY_VIVIENDA_IN_FORCE = date(2023, 5, 26)
+RDL_29_2026_CONTRACTS = date(2026, 12, 1)
+
+
+def rental_reduction_pct_2026(
+    large_holder: bool,
+    previously_rented: bool,
+    rent_change_pct: float | None,
+    same_tenant_after_term: bool,
+    below_index: bool,
+    stressed_zone: bool,
+    tenant_age: int,
+    public_or_social_tenant: bool,
+    rehabilitation_last_2y: bool,
+) -> int:
+    """Reduction of art. 23.2 LIRPF for contracts signed from 01/12/2026 (RDL 29/2026).
+
+    ``rent_change_pct`` is the change of the new initial rent against the last, updated rent
+    of the previous contract (``-10`` is a 10 % cut); it is ignored on a first rental.
+
+    a) New contract on a dwelling rented before, landlord not a large holder:
+       1.º rent cut by more than 5 %: 100 % if the same tenant renews after the minimum term
+       and its extensions, or another tenant pays less than the reference-index limit;
+       else 95 % stressed zone and tenant aged 18-35; 90 % stressed zone; 85 % tenant aged
+       18-35; 70 % otherwise.
+       2.º rent not above the previous one: 50 %.
+       3.º rent raised: 40 % up to 5 %, 30 % up to 10 %, 25 % up to 15 %, 20 % up to 20 %,
+       15 % above 20 %.
+    b) First rental, landlord not a large holder: 100 % below the index limit; else 95 %,
+       90 % or 85 % as in a)1.º; 50 % otherwise.
+    c) 70 % when the tenant is a public administration or non-profit for social housing.
+    d) 60 % rehabilitation finished in the two years before the contract.
+
+    When several apply, the highest wins. Out of scope here: the proportional split among
+    several tenants of different ages, the 80 % of a tacit extension, and the loss of the
+    reduction when the contract breaks LAU art. 17.6 or the return is filed late.
+    """
+    young = 18 <= tenant_age <= 35
+    candidates = [0]
+    if not large_holder:
+        if not previously_rented:
+            if below_index:
+                candidates.append(100)
+            elif stressed_zone and young:
+                candidates.append(95)
+            elif stressed_zone:
+                candidates.append(90)
+            elif young:
+                candidates.append(85)
+            else:
+                candidates.append(50)
+        elif rent_change_pct is not None:
+            if rent_change_pct < -5:
+                if same_tenant_after_term or below_index:
+                    candidates.append(100)
+                elif stressed_zone and young:
+                    candidates.append(95)
+                elif stressed_zone:
+                    candidates.append(90)
+                elif young:
+                    candidates.append(85)
+                else:
+                    candidates.append(70)
+            elif rent_change_pct <= 0:
+                candidates.append(50)
+            else:
+                for limit, pct in ((5, 40), (10, 30), (15, 25), (20, 20)):
+                    if rent_change_pct <= limit:
+                        candidates.append(pct)
+                        break
+                else:
+                    candidates.append(15)
+    if public_or_social_tenant:
+        candidates.append(70)
+    if rehabilitation_last_2y:
+        candidates.append(60)
+    return max(candidates)
 
 
 def rental_income_tax(

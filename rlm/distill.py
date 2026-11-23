@@ -107,7 +107,7 @@ Remember: reason as an expert who knows all this; never refer to these notes."""
 # A trace that cites the sheet teaches the student to refer to rules it will never be shown.
 # The first probe with the sheet lost 25 % of its traces here (2026-10-06, EXPERIMENTS.md).
 # "background knowledge" is how the sheet itself starts: 143 of 703 verified traces said it, and
-# the student learnt to write "From the background knowledge" (docs/analisis_fallos_fase1.md).
+# the student learnt to write "From the background knowledge" (docs/fase1/analisis_fallos_fase1.md).
 RULES_LEAK = re.compile(
     r"(rules? (provided|given|listed|above|you gave|i was given)|(provided|given|listed) "
     r"(rules?|notes|instructions)|(the|these) notes|system prompt|instructions (provided|given)|"

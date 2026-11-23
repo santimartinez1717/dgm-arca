@@ -1,0 +1,98 @@
+{
+ "args": {
+  "data": "rlm/data/train.jsonl",
+  "model": "Qwen/Qwen3-1.7B",
+  "adapter": "rlm/weights/sft2_lora",
+  "families": [
+   "acquisition_cost"
+  ],
+  "branch": [
+   "new_build=True"
+  ],
+  "n_per_family": 6,
+  "k": 8,
+  "temperature": 1.0,
+  "max_new_tokens": 2048,
+  "batch_size": 2,
+  "seed": 1,
+  "out": "reports/sample_check_sft2_obra_nueva.json"
+ },
+ "summary": {
+  "acquisition_cost": {
+   "problems": 6,
+   "pass@8": 1.0,
+   "useful (some right, some wrong)": 1.0,
+   "right answers": 0.625,
+   "truncated": 0.041666666666666664,
+   "process reward of wrong answers": 0.4166666666666667
+  }
+ },
+ "problems": [
+  {
+   "question": "Estoy analizando un piso de obra nueva que se vende por 146.500 €. El edificio es de 1978 y tiene la ITE favorable. El tipo de AJD de la comunidad es del 1 %. No hay comisión de agencia. El valor de referencia del Catastro es 139.100 €. Notaría, registro y gestoría suman 2.900 €. Hay que invertir 21.600 € en reforma. ¿Cuál es el desembolso total de la operación? Responde en euros con dos decimales.",
+   "family": "acquisition_cost",
+   "hits": 6,
+   "truncated": 0,
+   "process_wrong": [
+    0.5,
+    0.5
+   ]
+  },
+  {
+   "question": "Quiero comprar para alquilar una vivienda de obra nueva por 153.000 €. El tipo de AJD de la comunidad es del 0,7 %. Notaría, registro y gestoría suman 2.130 €. El valor de referencia del Catastro es 121.500 €. No necesita reforma. No hay comisión de agencia. La cocina se reformó hace unos años. ¿Cuánto capital necesito en total? Indica la cifra en euros con dos decimales.",
+   "family": "acquisition_cost",
+   "hits": 3,
+   "truncated": 1,
+   "process_wrong": [
+    0.5,
+    0.0,
+    0.0,
+    0.5,
+    0.5
+   ]
+  },
+  {
+   "question": "Estoy analizando un piso de obra nueva que se vende por 103.500 €. Es un tercero exterior con ascensor. No necesita reforma. El valor de referencia del Catastro es 102.400 €. Notaría, registro y gestoría suman 3.570 €. El tipo de AJD de la comunidad es del 0,7 %. La agencia cobra 3.100 € al comprador. ¿Cuál es el desembolso total de la operación? Da el resultado en euros, con dos decimales.",
+   "family": "acquisition_cost",
+   "hits": 3,
+   "truncated": 0,
+   "process_wrong": [
+    0.5,
+    0.0,
+    0.5,
+    0.0,
+    1.0
+   ]
+  },
+  {
+   "question": "Precio de compra: 88.000 € (vivienda de obra nueva). La agencia cobra 2.640 € al comprador. El valor de referencia del Catastro es 79.000 €. El tipo de AJD de la comunidad es del 1,2 %. Notaría, registro y gestoría suman 3.610 €. Hay que invertir 38.000 € en reforma. Calcula la inversión total, impuestos incluidos. Da el resultado en euros, con dos decimales.",
+   "family": "acquisition_cost",
+   "hits": 4,
+   "truncated": 1,
+   "process_wrong": [
+    1.0,
+    0.0,
+    1.0,
+    0.5
+   ]
+  },
+  {
+   "question": "Estoy analizando un piso de obra nueva que se vende por 283.500 €. La vivienda tiene orientación sur y dos baños. El valor de referencia del Catastro es 244.400 €. No necesita reforma. El tipo de AJD de la comunidad es del 0,5 %. No hay comisión de agencia. Notaría, registro y gestoría suman 4.110 €. ¿Cuál es el desembolso total de la operación? Da el resultado en euros, con dos decimales.",
+   "family": "acquisition_cost",
+   "hits": 7,
+   "truncated": 0,
+   "process_wrong": [
+    0.5
+   ]
+  },
+  {
+   "question": "Estoy analizando un piso de obra nueva que se vende por 340.000 €. Es un tercero exterior con ascensor. El valor de referencia del Catastro es 297.600 €. Notaría, registro y gestoría suman 1.630 €. No hay comisión de agencia. El tipo de AJD de la comunidad es del 1,2 %. No necesita reforma. ¿Cuál es el desembolso total de la operación? Da el resultado en euros, con dos decimales.",
+   "family": "acquisition_cost",
+   "hits": 7,
+   "truncated": 0,
+   "process_wrong": [
+    0.0
+   ]
+  }
+ ]
+}

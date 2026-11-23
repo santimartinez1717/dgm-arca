@@ -1,0 +1,12 @@
+[
+  {
+    "serie": "D_1NBAF472",
+    "descripcionCorta": "Euribor a un año",
+    "codFrecuencia": "M",
+    "decimales": 3,
+    "simbolo": "%",
+    "tendencia": "-",
+    "fechaValor": "2026-10-01T08:15:00Z",
+    "valor": 3.239
+  }
+]

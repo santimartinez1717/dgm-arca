@@ -13,6 +13,13 @@ inmobiliaria para alquilar en España (propuesta en `docs/propuesta.md`). Enunci
   (`could not read Username`): el push lo hace el usuario desde su terminal de code-server.
 - `docs/fase1_plan.md`, `docs/dgx.md` y el enunciado son del profesor: no editarlos.
 
+## Dónde va cada cosa (`docs/estructura.md`)
+
+- Scripts de lanzamiento en `scripts/faseN/`, resultados en `reports/faseN/`, logs en `logs/`
+  (nunca sueltos en la raíz). Documentación nuestra en `docs/faseN/` o `docs/investigacion/`;
+  la raíz de `docs/` es del profesor, más `propuesta.md` y `servir_api.md`.
+- Los módulos de `rlm/` y `tool_use/` no se mueven: la plantilla y la API los importan por nombre.
+
 ## La DGX (lo que no está en `docs/dgx.md`)
 
 - Cada sesión es un trabajo de Slurm que corre `code-server`; Claude vive dentro. Recursos:
@@ -37,20 +44,21 @@ Para lanzar y vigilar procesos largos, usar la skill `lanzar-dgx`.
   pass@1 en test (1024 tokens): base 3,3 % → SFT 32,0 % → GRPO 36,3 %; con 2048: 10,3 / 37,7 /
   38,3 %. Desde el 18/11 la cifra principal es la de **2048 tokens** (evaluación, muestreo y
   GRPO 2): las trazas del profesor miden ~1.900 tokens y cortar a 1024 las penalizaba. Detalle en EXPERIMENTS.md;
-  cinco fallos analizados en `docs/analisis_fallos_fase1.md`.
+  cinco fallos analizados en `docs/fase1/analisis_fallos_fase1.md`.
 - `rlm/realestate_rules.py` es la única fuente de verdad del dominio. `TEACHER_RULES` en
   `rlm/distill.py` la resume para el profesor: **si cambia una regla, cambiar las dos**.
 - Lo que GRPO no arregló: `irpf_rental` (se salta la amortización), `cash_on_cash` (cuota a mano)
   y obra nueva (IVA). GRPO solo aprende de grupos con algún acierto; en irpf hubo 0 de 552.
 - Ronda 2 (nov 2026): destilación con información privilegiada (`--privileged
   --only-unsolved`: el profesor ve la clave del motor) + `rlm/rewrite_traces.py` (reescribe sin
-  citar la clave) → SFT 3 (40,3 % a 2048) → **GRPO 2** (`grpo2.sh`, `rlm/weights/grpo2_lora`):
+  citar la clave) → SFT 3 (40,3 % a 2048) → **GRPO 2** (`scripts/fase1/grpo2.sh`, `rlm/weights/grpo2_lora`):
   **47,3 % en test a 2048**, el mejor modelo. Pendiente: `irpf_rental` (2/50) y max_price.
 - Filtro de fugas (`RULES_LEAK`): la hoja ("background knowledge") y la clave ("the key says…")
   no pueden llegar al alumno; `train_sft` las limpia (`scrub_leaks`) o descarta la traza.
 - Memoria en la MIG de 17 GB: destilación lotes de 2; SFT 1,7B con `--batch-size 2 --grad-accum
   8 --max-length 3328` (5,3 GB); GRPO con micro-lotes de 2 y sin atención de cuDNN (10,6 GB).
-- La GPU está libre solo si `pgrep -af "python -m rlm"` no devuelve nada.
+- La GPU está libre solo si `pgrep -af "python -m (rlm|tool_use)"` no devuelve nada (la fase 2
+  corre como `python -m tool_use`; mirar solo `rlm` provocó un OOM el 18/11).
 
 ## EXPERIMENTS.md
 

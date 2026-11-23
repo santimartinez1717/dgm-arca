@@ -29,7 +29,7 @@ VARIANTS = ("hoy", "todas", "fecha")
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--gold", default="rag/gold/temporal.jsonl")
-    parser.add_argument("--out", default="reports/phase3_temporal.json")
+    parser.add_argument("--out", default="reports/fase3/phase3_temporal.json")
     parser.add_argument("--weight-bm25", type=float, default=0.2)
     args = parser.parse_args()
 

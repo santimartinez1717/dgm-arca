@@ -1,0 +1,398 @@
+{
+ "args": {
+  "data": "rlm/data/train.jsonl",
+  "model": "Qwen/Qwen3-1.7B",
+  "adapter": "rlm/weights/sft2_lora",
+  "families": [
+   "irpf_rental",
+   "legal_rent",
+   "cash_on_cash"
+  ],
+  "branch": [],
+  "n_per_family": 8,
+  "k": 8,
+  "temperature": 1.0,
+  "max_new_tokens": 1536,
+  "batch_size": 2,
+  "seed": 1,
+  "out": "reports/sample_check_sft2.json"
+ },
+ "summary": {
+  "irpf_rental": {
+   "problems": 8,
+   "pass@8": 0.0,
+   "useful (some right, some wrong)": 0.0,
+   "right answers": 0.0,
+   "truncated": 0.21875,
+   "process reward of wrong answers": 0.0703125
+  },
+  "legal_rent": {
+   "problems": 8,
+   "pass@8": 0.875,
+   "useful (some right, some wrong)": 0.875,
+   "right answers": 0.53125,
+   "truncated": 0.15625,
+   "process reward of wrong answers": 0.36666666666666664
+  },
+  "cash_on_cash": {
+   "problems": 8,
+   "pass@8": 0.0,
+   "useful (some right, some wrong)": 0.0,
+   "right answers": 0.0,
+   "truncated": 0.625,
+   "process reward of wrong answers": 0.125
+  }
+ },
+ "problems": [
+  {
+   "question": "Ingresos por alquiler del año: 21.000 €. Inquilino: una persona de 29 años, contrato de 2025. El IBI es de 741 €, la comunidad de 710 € al año y el seguro de 323 €. Compré por un coste total, gastos e impuestos incluidos, de 167.000 €. No hubo reparaciones. Está en zona de mercado residencial tensionado. Ya había estado alquilada antes y en el nuevo contrato bajé la renta más de un 5 % respecto al anterior. Pago 2.980 € de intereses de la hipoteca al año. El valor catastral es 121.000 €, del que 42.600 € corresponde al suelo. No he hecho obras de rehabilitación. Calcula el rendimiento neto reducido a efectos del IRPF. Indica la cifra en euros con dos decimales.",
+   "family": "irpf_rental",
+   "hits": 0,
+   "truncated": 1,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Ingresos por alquiler del año: 17.700 €. Inquilino: una persona de 35 años, contrato de 2025. Es la primera vez que la alquilo. Pago 5.650 € de intereses de la hipoteca al año. El valor catastral es 168.000 €, del que 72.500 € corresponde al suelo. No he hecho obras de rehabilitación. Está en zona de mercado residencial tensionado. El IBI es de 759 €, la comunidad de 1.340 € al año y el seguro de 213 €. Compré por un coste total, gastos e impuestos incluidos, de 269.000 €. Este año gasté 1.460 € en reparaciones. Calcula el rendimiento neto reducido a efectos del IRPF. Da el resultado en euros, con dos decimales.",
+   "family": "irpf_rental",
+   "hits": 0,
+   "truncated": 1,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Alquilo una vivienda como residencia habitual a una persona de 35 años por 12.100 € al año (contrato firmado en 2025). No he hecho obras de rehabilitación. Es la primera vez que la alquilo. Está en zona de mercado residencial tensionado. El valor catastral es 198.000 €, del que 100.000 € corresponde al suelo. Este año gasté 1.510 € en reparaciones. El IBI es de 227 €, la comunidad de 600 € al año y el seguro de 204 €. Pago 5.760 € de intereses de la hipoteca al año. Compré por un coste total, gastos e impuestos incluidos, de 333.000 €. Es un tercero exterior con ascensor. ¿Cuál es el rendimiento neto reducido del capital inmobiliario que declaro en el IRPF? Responde en euros con dos decimales.",
+   "family": "irpf_rental",
+   "hits": 0,
+   "truncated": 0,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Alquilo una vivienda como residencia habitual a una persona de 35 años por 18.100 € al año (contrato firmado en 2025). Terminé una rehabilitación de la vivienda un año antes de firmar el contrato. Es la primera vez que la alquilo. El IBI es de 897 €, la comunidad de 1.740 € al año y el seguro de 377 €. Compré por un coste total, gastos e impuestos incluidos, de 286.000 €. Está en zona de mercado residencial tensionado. Pago 4.090 € de intereses de la hipoteca al año. Este año gasté 1.340 € en reparaciones. El valor catastral es 171.000 €, del que 89.300 € corresponde al suelo. ¿Cuál es el rendimiento neto reducido del capital inmobiliario que declaro en el IRPF? Responde en euros con dos decimales.",
+   "family": "irpf_rental",
+   "hits": 0,
+   "truncated": 2,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Ingresos por alquiler del año: 13.600 €. Inquilino: una persona de 36 años, contrato de 2025. Ya había estado alquilada antes y en el nuevo contrato bajé la renta más de un 5 % respecto al anterior. El IBI es de 657 €, la comunidad de 300 € al año y el seguro de 398 €. El valor catastral es 300.000 €, del que 75.500 € corresponde al suelo. Compré por un coste total, gastos e impuestos incluidos, de 380.000 €. No está en zona tensionada. No he hecho obras de rehabilitación. No hubo reparaciones. Pago 2.640 € de intereses de la hipoteca al año. Calcula el rendimiento neto reducido a efectos del IRPF. Responde en euros con dos decimales.",
+   "family": "irpf_rental",
+   "hits": 0,
+   "truncated": 4,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Ingresos por alquiler del año: 22.800 €. Inquilino: una persona de 35 años, contrato de 2025. No tengo hipoteca. No he hecho obras de rehabilitación. El valor catastral es 141.000 €, del que 56.600 € corresponde al suelo. Está en zona de mercado residencial tensionado. No hubo reparaciones. Es la primera vez que la alquilo. El IBI es de 934 €, la comunidad de 980 € al año y el seguro de 282 €. Compré por un coste total, gastos e impuestos incluidos, de 340.000 €. Calcula el rendimiento neto reducido a efectos del IRPF. Indica la cifra en euros con dos decimales.",
+   "family": "irpf_rental",
+   "hits": 0,
+   "truncated": 1,
+   "process_wrong": [
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    1.0,
+    1.0,
+    0.5,
+    0.0
+   ]
+  },
+  {
+   "question": "Ingresos por alquiler del año: 21.500 €. Inquilino: una persona de 39 años, contrato de 2025. Es la primera vez que la alquilo. Está en zona de mercado residencial tensionado. Compré por un coste total, gastos e impuestos incluidos, de 262.000 €. El IBI es de 258 €, la comunidad de 1.610 € al año y el seguro de 230 €. Terminé una rehabilitación de la vivienda un año antes de firmar el contrato. Este año gasté 2.220 € en reparaciones. Pago 3.950 € de intereses de la hipoteca al año. El valor catastral es 83.000 €, del que 35.200 € corresponde al suelo. Calcula el rendimiento neto reducido a efectos del IRPF. Indica la cifra en euros con dos decimales.",
+   "family": "irpf_rental",
+   "hits": 0,
+   "truncated": 4,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Ingresos por alquiler del año: 14.200 €. Inquilino: una persona de 36 años, contrato de 2025. El valor catastral es 135.000 €, del que 52.300 € corresponde al suelo. El IBI es de 841 €, la comunidad de 1.660 € al año y el seguro de 276 €. Está en zona de mercado residencial tensionado. No hubo reparaciones. Ya había estado alquilada antes, con una renta igual o superior a la actual. Terminé una rehabilitación de la vivienda un año antes de firmar el contrato. Pago 1.030 € de intereses de la hipoteca al año. Compré por un coste total, gastos e impuestos incluidos, de 250.000 €. Calcula el rendimiento neto reducido a efectos del IRPF. Indica la cifra en euros con dos decimales.",
+   "family": "irpf_rental",
+   "hits": 0,
+   "truncated": 1,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "La vivienda no ha estado alquilada en los últimos cinco años. La vivienda está en una zona declarada de mercado residencial tensionado. El propietario tiene 6 viviendas en total, con 680 m² de uso residencial; 3 están en esta zona. La resolución extiende el índice de referencia a las viviendas sin contrato en los últimos cinco años. La declaración de la zona no modifica el umbral general de gran tenedor. Tiene 54 m², el valor superior del índice de referencia (SERPAVI) es 17,4 €/m² al mes y el mercado pagaría 1.220 € al mes. La vivienda tiene orientación sur y dos baños. ¿Cuál es la renta anual máxima que puede cobrar en el primer año del nuevo contrato? Responde en euros con dos decimales.",
+   "family": "legal_rent",
+   "hits": 7,
+   "truncated": 0,
+   "process_wrong": [
+    1.0
+   ]
+  },
+  {
+   "question": "El propietario tiene 6 viviendas en total, con 425 m² de uso residencial; 6 están en esta zona. La declaración de la zona rebaja el umbral de gran tenedor a cinco viviendas en la zona. Hace dos años tuvo un contrato de vivienda habitual cuya última renta, ya actualizada, es de 1.945 € al mes. La vivienda está en una zona declarada de mercado residencial tensionado. La resolución extiende el índice de referencia a las viviendas sin contrato en los últimos cinco años. Tiene 98 m², el valor superior del índice de referencia (SERPAVI) es 17,2 €/m² al mes y el mercado pagaría 1.870 € al mes. La cocina se reformó hace unos años. ¿Cuál es la renta anual máxima que puede cobrar en el primer año del nuevo contrato? Responde en euros con dos decimales.",
+   "family": "legal_rent",
+   "hits": 0,
+   "truncated": 3,
+   "process_wrong": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Voy a firmar un nuevo contrato de alquiler de vivienda habitual. La resolución no extiende el índice a las viviendas sin contrato previo. El propietario tiene 5 viviendas en total, con 328 m² de uso residencial; 3 están en esta zona. La declaración de la zona no modifica el umbral general de gran tenedor. La vivienda está en una zona declarada de mercado residencial tensionado. La vivienda no ha estado alquilada en los últimos cinco años. Tiene 66 m², el valor superior del índice de referencia (SERPAVI) es 12,9 €/m² al mes y el mercado pagaría 1.120 € al mes. ¿Cuánto puedo ingresar como máximo en el primer año? Da el resultado en euros, con dos decimales.",
+   "family": "legal_rent",
+   "hits": 3,
+   "truncated": 2,
+   "process_wrong": [
+    0.0,
+    0.0,
+    1.0,
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "question": "El edificio es de 1978 y tiene la ITE favorable. La declaración de la zona no modifica el umbral general de gran tenedor. La resolución no extiende el índice a las viviendas sin contrato previo. El propietario tiene 2 viviendas en total, con 191 m² de uso residencial; 2 están en esta zona. La vivienda está en una zona declarada de mercado residencial tensionado. La vivienda no ha estado alquilada en los últimos cinco años. Tiene 108 m², el valor superior del índice de referencia (SERPAVI) es 21,1 €/m² al mes y el mercado pagaría 2.300 € al mes. Calcula la renta máxima del primer año del nuevo contrato (doce mensualidades). Indica la cifra en euros con dos decimales.",
+   "family": "legal_rent",
+   "hits": 7,
+   "truncated": 1,
+   "process_wrong": [
+    0.0
+   ]
+  },
+  {
+   "question": "La vivienda no ha estado alquilada en los últimos cinco años. El propietario tiene 3 viviendas en total, con 268 m² de uso residencial; 1 está en esta zona. La vivienda está en una zona declarada de mercado residencial tensionado. La declaración de la zona rebaja el umbral de gran tenedor a cinco viviendas en la zona. La resolución extiende el índice de referencia a las viviendas sin contrato en los últimos cinco años. Tiene 98 m², el valor superior del índice de referencia (SERPAVI) es 19,2 €/m² al mes y el mercado pagaría 2.330 € al mes. Es un tercero exterior con ascensor. ¿Cuál es la renta anual máxima que puede cobrar en el primer año del nuevo contrato? Da el resultado en euros, con dos decimales.",
+   "family": "legal_rent",
+   "hits": 5,
+   "truncated": 0,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Voy a firmar un nuevo contrato de alquiler de vivienda habitual. La vivienda está en una zona declarada de mercado residencial tensionado. El propietario tiene 3 viviendas en total, con 173 m² de uso residencial; 2 están en esta zona. La declaración de la zona no modifica el umbral general de gran tenedor. La vivienda no ha estado alquilada en los últimos cinco años. La resolución extiende el índice de referencia a las viviendas sin contrato en los últimos cinco años. Tiene 38 m², el valor superior del índice de referencia (SERPAVI) es 14,9 €/m² al mes y el mercado pagaría 610 € al mes. ¿Cuánto puedo ingresar como máximo en el primer año? Da el resultado en euros, con dos decimales.",
+   "family": "legal_rent",
+   "hits": 5,
+   "truncated": 0,
+   "process_wrong": [
+    1.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Tiene plaza de garaje incluida en el precio. La vivienda está en una zona declarada de mercado residencial tensionado. La resolución no extiende el índice a las viviendas sin contrato previo. La vivienda no ha estado alquilada en los últimos cinco años. El propietario tiene 5 viviendas en total, con 549 m² de uso residencial; 3 están en esta zona. La declaración de la zona rebaja el umbral de gran tenedor a cinco viviendas en la zona. Tiene 116 m², el valor superior del índice de referencia (SERPAVI) es 16,9 €/m² al mes y el mercado pagaría 1.940 € al mes. Calcula la renta máxima del primer año del nuevo contrato (doce mensualidades). Da el resultado en euros, con dos decimales.",
+   "family": "legal_rent",
+   "hits": 6,
+   "truncated": 2,
+   "process_wrong": [
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Voy a firmar un nuevo contrato de alquiler de vivienda habitual. La vivienda está en una zona declarada de mercado residencial tensionado. El propietario tiene 1 vivienda en total, con 82 m² de uso residencial; 0 están en esta zona. La resolución extiende el índice de referencia a las viviendas sin contrato en los últimos cinco años. La declaración de la zona rebaja el umbral de gran tenedor a cinco viviendas en la zona. Hace dos años tuvo un contrato de vivienda habitual cuya última renta, ya actualizada, es de 625 € al mes. Tiene 43 m², el valor superior del índice de referencia (SERPAVI) es 16,8 €/m² al mes y el mercado pagaría 710 € al mes. ¿Cuánto puedo ingresar como máximo en el primer año? Responde en euros con dos decimales.",
+   "family": "legal_rent",
+   "hits": 1,
+   "truncated": 2,
+   "process_wrong": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    1.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Con una hipoteca de 202.000 € (20 años, 4,25 %) compro un piso que en total me cuesta 386.000 € y que da 24.880 € netos al año. ¿Cuál es mi rentabilidad sobre fondos propios? Expresa la respuesta como porcentaje con dos decimales.",
+   "family": "cash_on_cash",
+   "hits": 0,
+   "truncated": 5,
+   "process_wrong": [
+    0.0,
+    0.3333333333333333,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.6666666666666666,
+    0.0
+   ]
+  },
+  {
+   "question": "Operación: inversión total 400.000 €, préstamo 262.000 € a 20 años, interés fijo del 3,55 %, ingreso neto operativo de 25.870 € anuales. Calcula el flujo de caja sobre capital propio. Responde en porcentaje con dos decimales.",
+   "family": "cash_on_cash",
+   "hits": 0,
+   "truncated": 5,
+   "process_wrong": [
+    0.3333333333333333,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Es un tercero exterior con ascensor. Con una hipoteca de 186.000 € (20 años, 2,45 %) compro un piso que en total me cuesta 362.000 € y que da 16.090 € netos al año. ¿Cuál es mi rentabilidad sobre fondos propios? Da el resultado en %, con dos decimales.",
+   "family": "cash_on_cash",
+   "hits": 0,
+   "truncated": 2,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333
+   ]
+  },
+  {
+   "question": "Es un tercero exterior con ascensor. Con una hipoteca de 238.000 € (15 años, 3,1 %) compro un piso que en total me cuesta 339.000 € y que da 13.940 € netos al año. ¿Cuál es mi rentabilidad sobre fondos propios? Expresa la respuesta como porcentaje con dos decimales.",
+   "family": "cash_on_cash",
+   "hits": 0,
+   "truncated": 8,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Es un tercero exterior con ascensor. Con una hipoteca de 229.000 € (20 años, 2,5 %) compro un piso que en total me cuesta 371.000 € y que da 15.130 € netos al año. ¿Cuál es mi rentabilidad sobre fondos propios? Expresa la respuesta como porcentaje con dos decimales.",
+   "family": "cash_on_cash",
+   "hits": 0,
+   "truncated": 3,
+   "process_wrong": [
+    0.3333333333333333,
+    0.0,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.0,
+    0.3333333333333333,
+    0.3333333333333333,
+    0.0
+   ]
+  },
+  {
+   "question": "Operación: inversión total 160.000 €, préstamo 111.000 € a 25 años, interés fijo del 3,55 %, ingreso neto operativo de 6.470 € anuales. Calcula el flujo de caja sobre capital propio. Responde en porcentaje con dos decimales.",
+   "family": "cash_on_cash",
+   "hits": 0,
+   "truncated": 5,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.3333333333333333,
+    0.0,
+    0.3333333333333333,
+    0.0,
+    0.3333333333333333,
+    0.0
+   ]
+  },
+  {
+   "question": "Invierto 347.000 € en total en un piso y financio 207.000 € con una hipoteca a 25 años al 2,8 % fijo. El piso genera 12.280 € netos al año antes de la hipoteca. ¿Qué rentabilidad obtengo sobre el dinero que pongo yo (cash-on-cash)? Responde en porcentaje con dos decimales.",
+   "family": "cash_on_cash",
+   "hits": 0,
+   "truncated": 7,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.3333333333333333,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "question": "Invierto 431.000 € en total en un piso y financio 326.000 € con una hipoteca a 30 años al 3,9 % fijo. El piso genera 22.500 € netos al año antes de la hipoteca. Tiene plaza de garaje incluida en el precio. ¿Qué rentabilidad obtengo sobre el dinero que pongo yo (cash-on-cash)? Da el resultado en %, con dos decimales.",
+   "family": "cash_on_cash",
+   "hits": 0,
+   "truncated": 5,
+   "process_wrong": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.3333333333333333,
+    0.0,
+    0.3333333333333333,
+    0.0
+   ]
+  }
+ ]
+}

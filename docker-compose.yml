@@ -8,12 +8,18 @@
 #   docker compose run --rm train           shell interactiva con GPU para entrenar
 #
 # Variables (todas opcionales, ver .env.example): CUDA_VISIBLE_DEVICES, HF_CACHE_DIR,
-# ARCA_API_PORT, HF_TOKEN.
+# ARCA_API_PORT, HF_TOKEN y las ARCA_* de la API. Todas se leen de .env si existe; sin .env
+# la API arranca con los valores por defecto. Hace falta Docker Compose 2.24 o posterior.
 
 x-arca: &arca
   build: .
   image: dgm-arca:latest
   working_dir: /app
+  # Las ARCA_* (equipo, adaptadores, modelo de /tools...) llegan al contenedor desde .env.
+  # Lo de "environment" manda sobre .env: HF_HOME sigue apuntando a la caché montada.
+  env_file:
+    - path: .env
+      required: false
   volumes:
     # El código se monta en caliente: editas fuera, se ejecuta dentro.
     - ./:/app

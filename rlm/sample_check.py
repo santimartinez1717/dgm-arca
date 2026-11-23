@@ -45,7 +45,7 @@ def main() -> None:
         default=0,
         help="append rlm/hints.py hints (1 or 2) to see if they give signal",
     )
-    parser.add_argument("--out", default="reports/sample_check.json")
+    parser.add_argument("--out", default="reports/fase1/sample_check.json")
     args = parser.parse_args()
 
     rows = [json.loads(line) for line in Path(args.data).read_text().splitlines()]
