@@ -74,8 +74,27 @@ def legal_rent(asking: float, previous: float | None, area: float, **kwargs: Any
     )["max_monthly_rent"]
 
 
-def irpf(**kwargs: Any) -> dict[str, Any]:
-    return calc.rental_income_tax(**kwargs)
+def analysed(**fields: Any) -> dict[str, float]:
+    """The figures ``analyze_property`` writes for a property: the agent's own path to them.
+
+    The agent registry drops the phase 2 calculators that overlap with analyze_property
+    (``acquisition_cost``, ``rental_returns``, ``legal_rent_cap``, ``rental_income_tax``), so
+    every per-property figure an answer needs must be reachable through it.
+    """
+    from agent.analysis import analyze
+    from agent.case_file import InvestorProfile, Property
+
+    return analyze(Property(id="X", **fields), InvestorProfile()).figures
+
+
+def irpf_of(figures: dict[str, float]) -> dict[str, float]:
+    """The IRPF figures of an analysis, under the names of ``rental_income_tax``."""
+    return {
+        "depreciation": figures["irpf_depreciation"],
+        "net_income": figures["irpf_net_income"],
+        "reduction_pct": figures["irpf_reduction_pct"],
+        "reduced_net_income": figures["irpf_reduced_net_income"],
+    }
 
 
 # --------------------------------------------------------------------------- the 15 flats
@@ -321,28 +340,29 @@ def levers() -> list[Spec]:
 
     # 1. Sign before the RDL 29/2026 scale: a 3 % rent rise gets 50 % instead of 40 %.
     base = dict(
-        annual_rent=12 * 1030,
-        acquisition_cost_total=214000,
+        municipality="Madrid",
+        price=200000,
+        area_m2=70,
+        monthly_rent=1030,
+        previous_rent=1000,
         cadastral_value=90000,
         land_share_pct=40,
         ibi=400,
-        community_annual=720,
+        community_monthly=60,
         insurance=180,
-        monthly_rent=1030,
-        previous_rent=1000,
     )
-    before = irpf(contract_date=date(2026, 11, 30), **base)
-    after = irpf(contract_date=date(2026, 12, 15), **base)
+    before = irpf_of(analysed(contract_date=date(2026, 11, 30), **base))
+    after = irpf_of(analysed(contract_date=date(2026, 12, 15), **base))
     assert before["reduction_pct"] > after["reduction_pct"]
     specs.append(
         Spec(
             id="lever-01",
             category="lever",
-            task="Tengo un piso en Madrid (no es zona tensionada). El inquilino anterior pagaba "
-            "1.000 € al mes y al nuevo le voy a cobrar 1.030 €. Pensaba firmar el 15/12/2026. "
-            "Coste de adquisición con impuestos 214.000 €, valor catastral 90.000 € (40 % "
-            "suelo), IBI 400 €, comunidad 720 € al año y seguro 180 €. ¿Hay alguna forma legal "
-            "de pagar menos IRPF por el alquiler?",
+            task="Compro un piso de segunda mano de 70 m² en Madrid por 200.000 €, al contado. "
+            "El inquilino anterior pagaba 1.000 € al mes y al nuevo le voy a cobrar 1.030 €. "
+            "Pensaba firmar el 15/12/2026. Valor catastral 90.000 € (40 % suelo), IBI 400 €, "
+            "comunidad 60 € al mes y seguro 180 €. ¿Hay alguna forma legal de pagar menos IRPF "
+            "por el alquiler?",
             required_tools=["find_levers", "what_if"],
             check=all_of(
                 number(after["reduced_net_income"], 1),
@@ -368,27 +388,28 @@ def levers() -> list[Spec]:
 
     # 2. A rent cut over 5 % in a stressed zone, contract from 2027: 90 % instead of 50 %.
     common = dict(
-        acquisition_cost_total=178000,
+        municipality="A Coruña",
+        price=165000,
+        area_m2=72,
         cadastral_value=80000,
         land_share_pct=35,
         ibi=360,
-        community_annual=660,
+        community_monthly=55,
         insurance=170,
-        stressed_zone=True,
         previous_rent=900,
         tenant_age=42,
         contract_date=date(2027, 1, 10),
     )
-    same = irpf(annual_rent=12 * 900, monthly_rent=900, **common)
-    cut = irpf(annual_rent=12 * 846, monthly_rent=846, **common)
+    same = irpf_of(analysed(monthly_rent=900, **common))
+    cut = irpf_of(analysed(monthly_rent=846, **common))
     specs.append(
         Spec(
             id="lever-02",
             category="lever",
-            task="Piso en A Coruña, en zona tensionada. El inquilino anterior pagaba 900 € y "
-            "firmo un contrato nuevo el 10/01/2027 con un inquilino de 42 años. Coste de "
-            "adquisición 178.000 €, valor catastral 80.000 € (35 % suelo), IBI 360 €, comunidad "
-            "660 € al año, seguro 170 €. Si mantengo los 900 €, ¿qué tributo? ¿Me compensaría "
+            task="Piso de segunda mano de 72 m² en A Coruña, comprado al contado por 165.000 €. "
+            "El inquilino anterior pagaba 900 € y firmo un contrato nuevo el 10/01/2027 con un "
+            "inquilino de 42 años. Valor catastral 80.000 € (35 % suelo), IBI 360 €, comunidad "
+            "55 € al mes, seguro 170 €. Si mantengo los 900 €, ¿qué tributo? ¿Me compensaría "
             "bajar la renta un 6 % (a 846 €)?",
             required_tools=["find_levers", "what_if"],
             check=all_of(
@@ -413,10 +434,20 @@ def levers() -> list[Spec]:
 
     # 3. The 10 % exception to the 17.6 cap after an energy rehabilitation.
     total = total_cost(180000, "Pamplona")
-    capped = legal_rent(1100, 950, 70)
-    raised = legal_rent(1100, 950, 70, ten_percent_exception=True)
-    y_capped = net_yield(total, capped, 400, 55, 170)
-    y_raised = net_yield(total, raised, 400, 55, 170)
+    flat = dict(
+        municipality="Pamplona",
+        price=180000,
+        area_m2=70,
+        monthly_rent=1100,
+        previous_rent=950,
+        ibi=400,
+        community_monthly=55,
+        insurance=170,
+    )
+    plain, rehab = analysed(**flat), analysed(rehabilitation_last_2y=True, **flat)
+    capped, raised = plain["effective_rent"], rehab["effective_rent"]
+    y_capped, y_raised = plain["net_yield_pct"], rehab["net_yield_pct"]
+    assert raised == legal_rent(1100, 950, 70, ten_percent_exception=True)
     specs.append(
         Spec(
             id="lever-03",
@@ -447,8 +478,13 @@ def levers() -> list[Spec]:
     )
 
     # 4. New build vs second hand at the same price in Madrid.
-    new = calc.acquisition_cost(price=210000, region="Madrid", new_build=True, ajd_rate_pct=0.75)
-    used = calc.acquisition_cost(price=210000, region="Madrid")
+    new = {
+        "total": analysed(municipality="Madrid", price=210000, new_build=True, ajd_rate_pct=0.75)[
+            "total_investment"
+        ]
+    }
+    used = {"total": analysed(municipality="Madrid", price=210000)["total_investment"]}
+    assert new["total"] == total_cost(210000, "Madrid", new_build=True, ajd_rate_pct=0.75)
     specs.append(
         Spec(
             id="lever-04",
@@ -456,7 +492,7 @@ def levers() -> list[Spec]:
             task="Dudo entre dos pisos en Madrid de 210.000 € cada uno: uno de obra nueva de la "
             "promotora (AJD del 0,75 %) y otro de segunda mano. Para alquilar, ¿cuál me sale "
             "más barato de comprar con impuestos y cuánto me ahorro?",
-            required_tools=["find_levers", "acquisition_cost"],
+            required_tools=["analyze_property", "what_if"],
             check=all_of(
                 number(new["total"], 1),
                 number(used["total"], 1),
@@ -645,25 +681,28 @@ def large_holder() -> list[Spec]:
 
 
 def law_on_date() -> list[Spec]:
-    data = dict(
-        annual_rent=9600,
-        acquisition_cost_total=165000,
-        cadastral_value=70000,
-        land_share_pct=45,
-        ibi=300,
-        community_annual=600,
-        insurance=160,
-        interest=1800,
+    old = irpf_of(
+        analysed(
+            municipality="Sevilla",
+            price=155000,
+            area_m2=75,
+            monthly_rent=800,
+            cadastral_value=70000,
+            land_share_pct=45,
+            ibi=300,
+            community_monthly=50,
+            insurance=160,
+            contract_date=date(2023, 3, 15),
+        )
     )
-    old = irpf(contract_date=date(2023, 3, 15), stressed_zone=True, **data)
     s1 = Spec(
         id="law_on_date-01",
         category="law_on_date",
-        task="Mi contrato de alquiler se firmó el 15/03/2023. Cobro 9.600 € al año; coste de "
-        "adquisición 165.000 €, valor catastral 70.000 € (45 % suelo), IBI 300 €, comunidad "
-        "600 €, seguro 160 € e intereses 1.800 €. ¿Qué reducción del IRPF me aplica y cuánto "
-        "tributo por el alquiler?",
-        required_tools=["search_knowledge_base", "rental_income_tax"],
+        task="Tengo un piso de 75 m² en Sevilla que compré al contado por 155.000 € (segunda "
+        "mano) y alquilo por 800 € al mes con un contrato firmado el 15/03/2023. Valor "
+        "catastral 70.000 € (45 % suelo), IBI 300 €, comunidad 50 € al mes y seguro 160 €. "
+        "¿Qué reducción del IRPF me aplica y cuánto tributo por el alquiler?",
+        required_tools=["search_knowledge_base", "analyze_property"],
         check=all_of(number(60, 0), number(old["reduced_net_income"], 1)),
         notes="Contrato anterior al 26/05/2023: 60 % (art. 23.2 en la redacción de 2021).",
         good=f"Tu contrato es anterior al 26/05/2023, así que se aplica la redacción antigua del "
@@ -673,26 +712,29 @@ def law_on_date() -> list[Spec]:
         figures=old,
     )
 
-    new = irpf(
-        contract_date=date(2026, 12, 10),
-        annual_rent=12 * 972,
-        monthly_rent=972,
-        previous_rent=900,
-        acquisition_cost_total=190000,
-        cadastral_value=85000,
-        land_share_pct=40,
-        ibi=380,
-        community_annual=720,
-        insurance=170,
+    new = irpf_of(
+        analysed(
+            municipality="Málaga",
+            price=178000,
+            area_m2=68,
+            contract_date=date(2026, 12, 10),
+            monthly_rent=972,
+            previous_rent=900,
+            cadastral_value=85000,
+            land_share_pct=40,
+            ibi=380,
+            community_monthly=60,
+            insurance=170,
+        )
     )
     s2 = Spec(
         id="law_on_date-02",
         category="law_on_date",
-        task="Firmo un contrato nuevo el 10/12/2026 en Málaga (no es zona tensionada). El "
-        "inquilino anterior pagaba 900 € y el nuevo pagará 972 €. Coste de adquisición "
-        "190.000 €, valor catastral 85.000 € (40 % suelo), IBI 380 €, comunidad 720 € al año, "
-        "seguro 170 €. ¿Qué reducción tengo y cuánto tributo?",
-        required_tools=["search_knowledge_base", "rental_income_tax"],
+        task="Piso de segunda mano de 68 m² en Málaga, comprado al contado por 178.000 €. "
+        "Firmo un contrato nuevo el 10/12/2026: el inquilino anterior pagaba 900 € y el nuevo "
+        "pagará 972 €. Valor catastral 85.000 € (40 % suelo), IBI 380 €, comunidad 60 € al "
+        "mes, seguro 170 €. ¿Qué reducción tengo y cuánto tributo?",
+        required_tools=["search_knowledge_base", "analyze_property"],
         check=all_of(number(new["reduction_pct"], 0), number(new["reduced_net_income"], 1)),
         notes=(
             "Contrato desde el 01/12/2026: escala del RDL 29/2026. Subida del 8 % → "
@@ -711,41 +753,48 @@ def law_on_date() -> list[Spec]:
 
 
 def kb_plus_tool() -> list[Spec]:
-    tax = irpf(
-        annual_rent=9000,
-        acquisition_cost_total=180000,
-        cadastral_value=95000,
-        land_value=38000,
-        contract_date=date(2026, 6, 1),
-        ibi=320,
-        community_annual=600,
-        insurance=160,
+    tax = irpf_of(
+        analysed(
+            municipality="Murcia",
+            price=167000,
+            area_m2=80,
+            monthly_rent=750,
+            cadastral_value=95000,
+            land_share_pct=40,
+            contract_date=date(2026, 6, 1),
+            ibi=320,
+            community_monthly=50,
+            insurance=160,
+        )
     )
     s1 = Spec(
         id="kb_plus_tool-01",
         category="kb_plus_tool",
         task="¿Cómo funciona la amortización del piso en el IRPF y cuánto puedo deducirme al "
-        "año? Coste de adquisición con gastos 180.000 €, valor catastral 95.000 €, de los que "
-        "38.000 € son suelo. Cobro 9.000 € al año; IBI 320 €, comunidad 600 €, seguro 160 €; "
-        "contrato del 01/06/2026.",
-        required_tools=["search_knowledge_base", "rental_income_tax"],
+        "año? Compré al contado un piso de segunda mano de 80 m² en Murcia por 167.000 €; "
+        "valor catastral 95.000 €, 40 % suelo. Lo alquilo por 750 € al mes desde el "
+        "01/06/2026; IBI 320 €, comunidad 50 € al mes, seguro 160 €.",
+        required_tools=["search_knowledge_base", "analyze_property"],
         check=all_of(number(tax["depreciation"], 1), regex(r"suelo"), regex(r"3 ?%")),
         notes="RIRPF art. 14: 3 % del mayor entre coste y valor catastral, sin el suelo.",
         good=f"Se amortiza el 3 % al año del mayor entre el coste de adquisición y el valor "
         f"catastral, quitando la parte del suelo (40 %): {eur(tax['depreciation'])} al año. "
         f"{DISCLAIMER}",
-        bad="Puedes amortizar el 3 % del precio entero: 5.400 € al año.",
+        bad="Puedes amortizar el 3 % del precio entero: 5.010 € al año.",
         figures=tax,
     )
 
-    cap = legal_rent(950, 850, 68)
+    cap = analysed(
+        municipality="Pamplona", price=170000, area_m2=68, monthly_rent=950, previous_rent=850
+    )["effective_rent"]
     s2 = Spec(
         id="kb_plus_tool-02",
         category="kb_plus_tool",
         task="¿Qué es una zona de mercado residencial tensionado y qué límite pone a la renta? "
-        "Tengo un piso de 68 m² en Pamplona; el anterior inquilino pagaba 850 € y yo querría "
+        "Compro un piso de 68 m² en Pamplona por 170.000 €; el anterior inquilino pagaba 850 € "
+        "y yo querría "
         "pedir 950 €. ¿Cuánto puedo cobrar?",
-        required_tools=["search_knowledge_base", "get_rent_reference", "legal_rent_cap"],
+        required_tools=["search_knowledge_base", "get_rent_reference", "analyze_property"],
         check=all_of(number(cap, 0.5), regex(r"tensionad"), regex(r"anterior")),
         notes="Pamplona es zona tensionada: tope de la renta del contrato anterior (LAU 17.6).",
         good=f"Una zona tensionada es la que declara la comunidad por la Ley 12/2023 cuando la "
@@ -755,14 +804,15 @@ def kb_plus_tool() -> list[Spec]:
         figures={"cap": cap},
     )
 
-    acq = calc.acquisition_cost(price=150000, region="Sevilla", reference_value=170000)
+    figs = analysed(municipality="Sevilla", price=150000, reference_value=170000)
+    acq = {"transfer_tax": figs["transfer_tax"], "total": figs["total_investment"]}
     s3 = Spec(
         id="kb_plus_tool-03",
         category="kb_plus_tool",
         task="¿Sobre qué valor se paga el ITP? Compro un piso usado en Sevilla por 150.000 € y "
         "el valor de referencia del Catastro es 170.000 €. ¿Cuánto pago de ITP y cuánto "
         "necesito en total?",
-        required_tools=["search_knowledge_base", "acquisition_cost"],
+        required_tools=["search_knowledge_base", "analyze_property"],
         check=all_of(
             number(acq["transfer_tax"], 1), number(acq["total"], 1), regex("valor de referencia")
         ),
@@ -861,25 +911,32 @@ def impossible() -> list[Spec]:
 
 
 def broken_tool() -> list[Spec]:
-    cap = legal_rent(950, 800, 66)
+    cap = analysed(
+        municipality="Santiago de Compostela",
+        price=140000,
+        area_m2=66,
+        monthly_rent=950,
+        previous_rent=800,
+    )["effective_rent"]
     s1 = Spec(
         id="broken_tool-01",
         category="broken_tool",
-        task="Tengo un piso de 66 m² en Santiago de Compostela. El último inquilino pagaba "
-        "800 € y quiero pedir 950 €. ¿Cuál es la renta máxima legal?",
-        required_tools=["get_rent_reference", "legal_rent_cap"],
+        task="Compro un piso de 66 m² en Santiago de Compostela por 140.000 €. El último "
+        "inquilino pagaba 800 € y quiero pedir 950 €. ¿Cuál es la renta máxima legal?",
+        required_tools=["get_rent_reference", "analyze_property"],
         break_tool="get_rent_reference",
         break_mode="error",
         check=any_of(
-            all_of(number(cap, 0.5), number(950, 0)),
+            number(cap, 0.5),
             regex(
                 r"no (?:he podido|pude|puedo|se ha podido) (?:\w+ )?"
                 r"(comprobar|verificar|consultar|confirmar)"
             ),
         ),
         notes=(
-            "get_rent_reference falla: el agente debe decir que no ha podido comprobar la zona o "
-            "bifurcar (800 € si es tensionada, 950 € si no). No vale afirmar la zona sin datos."
+            "get_rent_reference falla. analyze_property consulta las zonas por su cuenta y da "
+            "800 €; si el agente no llega a llamarla, debe decir que no ha podido comprobar la "
+            "zona. Lo que no vale es dar los 950 € como legales."
         ),
         good=f"No he podido comprobar si Santiago es zona tensionada (la consulta ha fallado). "
         f"Si lo es, el tope es la renta anterior, {eur(cap)}; si no, puedes pedir los 950 €. "
@@ -888,31 +945,36 @@ def broken_tool() -> list[Spec]:
         figures={"cap_if_stressed": cap},
     )
 
-    tax = irpf(
-        contract_date=date(2023, 4, 20),
-        annual_rent=8400,
-        acquisition_cost_total=150000,
-        cadastral_value=60000,
-        land_share_pct=50,
-        ibi=280,
-        community_annual=540,
-        insurance=150,
+    tax = irpf_of(
+        analysed(
+            municipality="Murcia",
+            price=140000,
+            area_m2=70,
+            monthly_rent=700,
+            contract_date=date(2023, 4, 20),
+            cadastral_value=60000,
+            land_share_pct=50,
+            ibi=280,
+            community_monthly=45,
+            insurance=150,
+        )
     )
     s2 = Spec(
         id="broken_tool-02",
         category="broken_tool",
-        task="Contrato firmado el 20/04/2023. Cobro 8.400 € al año; coste de adquisición "
-        "150.000 €, valor catastral 60.000 € (50 % suelo), IBI 280 €, comunidad 540 €, seguro "
-        "150 €. ¿Qué ley se aplica a la reducción y cuánto tributo?",
-        required_tools=["search_knowledge_base", "rental_income_tax"],
+        task="Piso de segunda mano de 70 m² en Murcia, comprado al contado por 140.000 € y "
+        "alquilado por 700 € al mes con un contrato firmado el 20/04/2023. Valor catastral "
+        "60.000 € (50 % suelo), IBI 280 €, comunidad 45 € al mes, seguro 150 €. ¿Qué ley se "
+        "aplica a la reducción y cuánto tributo?",
+        required_tools=["search_knowledge_base", "analyze_property"],
         break_tool="search_knowledge_base",
         break_mode="timeout",
         check=all_of(number(60, 0), number(tax["reduced_net_income"], 1)),
         notes=(
-            "El buscador se queda colgado: el agente debe seguir con rental_income_tax, que "
+            "El buscador se queda colgado: el agente debe seguir con analyze_property, que "
             "aplica el 60 % a contratos anteriores al 26/05/2023."
         ),
-        good=f"La búsqueda en la base legal no ha respondido, pero la calculadora aplica la "
+        good=f"La búsqueda en la base legal no ha respondido, pero el análisis aplica la "
         f"regla: contrato anterior al 26/05/2023, reducción del 60 %. Tributas "
         f"{eur(tax['reduced_net_income'])}. {DISCLAIMER}",
         bad="No puedo responder porque la herramienta ha fallado.",

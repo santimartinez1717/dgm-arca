@@ -26,8 +26,8 @@ CATEGORIES = (
     "broken_tool",
 )
 
-# The tools of the agent (docs/fase4/diseno.md, "Tools del agente") plus the phase 2
-# calculators, which the agent registry keeps.
+# The tools of the agent registry (docs/fase4/issues/11-bucle-react.md, "Registro"): the
+# phase 2 calculators that overlap with analyze_property are not in it.
 AGENT_TOOLS = frozenset(
     {
         "record_property",
@@ -44,10 +44,6 @@ AGENT_TOOLS = frozenset(
         "get_portfolio",
         "save_to_portfolio",
         "write_investment_report",
-        "acquisition_cost",
-        "rental_returns",
-        "legal_rent_cap",
-        "rental_income_tax",
     }
 )
 
