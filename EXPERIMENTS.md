@@ -1645,3 +1645,60 @@ api` y se exponga con ngrok. Queríamos saber si la DGX puede hacer las dos cosa
 - `save_to_portfolio` pide `area_m2` obligatorio, y si el usuario no lo da, el modelo lo
   rellena con otra cifra. Es la misma lección que con los ejemplos numéricos: no dejar que
   una cifra ocupe en silencio el lugar de otra.
+
+---
+
+### 2026-11-23 · API · Servir la fase 1 fuera de la DGX y una sola copia del modelo para todas las fases
+
+**Qué queríamos saber.** Si la API con el modelo final (GRPO 2) se puede servir desde un
+portátil para la corrección: el MacBook Air M2 de 8 GB del equipo o un portátil Windows con una
+RTX 3060 de 6 GB. Y, en ese caso, si caben la fase 1 y la fase 2 a la vez.
+
+**Qué hicimos.**
+- **Mac.** `uv run --env-file .env arca-api` con el adaptador en la GPU de Apple (MPS,
+  bfloat16), y la misma pregunta de coste de adquisición dos veces por `curl`.
+- **MLX.** Fusionamos el GRPO 2 con la base y lo convertimos con
+  `mlx_lm.convert -q --q-bits 8` (1,8 GB, en Hugging Face privado,
+  `umbral-qwen3-1.7b-grpo2-mlx-8bit`). Añadimos `ARCA_RLM_MLX` y `rlm/eval_mlx.py` para
+  medirlo.
+- **Modelo compartido.** `api/shared_model.py` carga Qwen3-1.7B una vez. La fase 1 genera con
+  el adaptador GRPO 2 y la fase 2 con `disable_adapter()`, todo en un solo hilo. Lo comparamos
+  en la GPU de la DGX con cada fase cargada por separado (como antes): la misma pregunta, 300 y
+  200 tokens greedy, alternando fase 2, fase 1, fase 2, fase 1.
+
+**Qué pasó.**
+- **Mac.**
+  - La primera petición respondió bien (355.552,50 €): 477 tokens en 132 s con la carga, unos
+    2,5 tokens/s.
+  - La segunda se quedaba colgada para siempre. FastAPI atiende cada petición en un hilo
+    distinto y, en MPS, el modelo cargado en un hilo se bloqueaba al generar desde otro. Desde
+    entonces, cargar y generar van siempre en el mismo hilo.
+  - Con 8 GB de memoria compartida, a ese ritmo una respuesta de 1.900 tokens tardaría más de
+    10 minutos. Descartado.
+- **MLX.** No lo pudimos medir en el Mac. En la DGX, `mlx[cuda12]` compila sus kernels contra
+  las cabeceras de CUDA 12.6 del sistema y falla. Queda como plan B sin probar.
+- **Fusionar el adaptador cambia el texto.** En el Mac, con el adaptador fusionado, la misma
+  pregunta dio 506 tokens en vez de 477, con la misma respuesta final. Es el redondeo en
+  bfloat16 de W + BA. El modelo compartido vuelve a usarlo sin fusionar, como
+  `rlm/evaluate.py`.
+- **Modelo compartido**, en la GPU de la DGX (`max_memory_reserved`):
+
+| Configuración | Memoria de GPU |
+|---|---|
+| Fase 1 sola (base + GRPO 2) | 4,22 GB |
+| Fase 2 sola (base) | 4,13 GB |
+| Las dos por separado | 8,35 GB |
+| **Las dos con el modelo compartido** | **4,31 GB** |
+
+  - Las cuatro generaciones alternadas son idénticas carácter a carácter a las de cada fase
+    sola.
+  - Velocidad en la DGX: 29 tokens/s. La primera generación tras cargar tardó 128 s y la
+    segunda 10 s, así que hay que calentar la API antes de abrirla.
+
+**Qué concluimos.**
+- **El Mac no sirve** para la corrección. Lo que sirve es la DGX (entrada anterior) o un
+  portátil con NVIDIA y Docker, siguiendo `docs/servir_api.md`; esa guía está sin ensayar.
+- **Sin el modelo compartido, la API no cabe en 6 GB.** `/health` carga todas las fases al
+  primer aviso. Con él caben las dos con margen.
+- **Norma para las fases 3 y 4:** reutilizar `api/shared_model.get_model()` con su adaptador
+  en vez de cargar otra copia del modelo.
