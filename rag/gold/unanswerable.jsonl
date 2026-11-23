@@ -1,5 +1,4 @@
 {"id": "none-01", "question": "¿Cuál es el precio medio del metro cuadrado en alquiler en Madrid?", "notes": "El corpus no tiene precios de mercado."}
-{"id": "none-02", "question": "¿Qué tipo de ITP aplica la Comunidad de Madrid a la compra de vivienda usada?", "notes": "Solo está el tipo estatal supletorio (6 %); responder 6 % sería una alucinación plausible."}
 {"id": "none-03", "question": "¿Está Madrid declarada zona de mercado residencial tensionado?", "notes": "No aparece en ninguna resolución del corpus; eso no prueba que no lo esté."}
 {"id": "none-04", "question": "¿Qué banco ofrece ahora mismo el menor diferencial sobre el euríbor?", "notes": "Información comercial y cambiante."}
 {"id": "none-05", "question": "¿Cuánto vale el IRAV publicado para el mes pasado?", "notes": "El PDF del INE explica el cálculo pero no publica valores."}

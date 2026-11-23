@@ -328,13 +328,11 @@
   applies_when: []
   engine: null
   evidence:
-    source: boe/lirpf.md
-    section: Artículo 23
+    source: boe/lis-tipo-gravamen.md
+    section: Artículo 29
     quote: >-
-      2. En los supuestos de arrendamiento de bienes inmuebles destinados a vivienda a que se
-      refiere el apartado 1 del artículo 2 de la Ley 29/1994, de 24 de noviembre, de
-      Arrendamientos Urbanos, el rendimiento neto positivo calculado con arreglo a lo
-      dispuesto en el apartado anterior se reducirá
+      El tipo general de gravamen para los contribuyentes de este Impuesto será el 25 por
+      ciento
   risk: >-
     La sociedad no tiene la reducción del IRPF por alquiler de vivienda, sacar el dinero a
     los socios vuelve a tributar y tiene costes de constitución y contabilidad; con pocas
@@ -373,12 +371,11 @@
   applies_when: []
   engine: null
   evidence:
-    source: boe/ley-credito-inmobiliario.md
-    section: Disposición final primera
+    source: boe/lec-subastas.md
+    section: Artículo 669
     quote: >-
-      El valor en que los interesados tasen la finca para que sirva de tipo en la subasta no
-      podrá ser distinto del que, en su caso, se haya fijado para el procedimiento de
-      ejecución judicial directa
+      Por el mero hecho de participar en la subasta se entenderá que los postores aceptan
+      como suficiente la titulación que consta en autos o que no exista titulación
   risk: >-
     El piso se compra sin visitarlo, puede estar ocupado o tener cargas que no se cancelan,
     hay que consignar un depósito y pagar el resto en pocos días, y la toma de posesión puede
@@ -387,6 +384,47 @@
     Las subastas de viviendas embargadas o ejecutadas pueden adjudicarse por debajo del
     valor de mercado. El descuento es real, pero también los riesgos: conviene estudiar la
     certificación de cargas y el estado de ocupación antes de pujar.
+
+# ---------------------------------------------------------------- autonómicas (issue #13)
+
+- id: madrid_empty_home_deduction
+  level: legal
+  title: Deducción autonómica de Madrid por alquilar una vivienda vacía
+  applies_when:
+    - {field: property.region, op: eq, value: madrid}
+    - {field: property.previous_rent, op: is_null}
+  engine: null
+  evidence:
+    source: boe/madrid-tributos-cedidos.md
+    section: Artículo 8 ter
+    quote: >-
+      Los contribuyentes propietarios o usufructuarios de viviendas vacías, durante al menos
+      un año anterior a la celebración de un contrato de arrendamiento de vivienda sujeto a la
+      Ley 29/1994
+  risk: null
+  explanation: >-
+    En la Comunidad de Madrid, quien alquila como vivienda un piso que llevaba al menos un año
+    vacío puede deducirse una cantidad fija en el tramo autonómico del IRPF el año en que firma
+    el contrato. El motor no calcula deducciones autonómicas: hay que sumarla aparte.
+
+- id: madrid_rental_expenses_deduction
+  level: legal
+  title: Deducción autonómica de Madrid por gastos del alquiler
+  applies_when:
+    - {field: property.region, op: eq, value: madrid}
+  engine: null
+  evidence:
+    source: boe/madrid-tributos-cedidos.md
+    section: Artículo 8 bis
+    quote: >-
+      Los contribuyentes que tengan inmuebles arrendados como vivienda podrán deducirse el 10
+      por ciento de las cantidades satisfechas en el ejercicio por gastos de conservación y
+      reparación
+  risk: null
+  explanation: >-
+    En la Comunidad de Madrid, una parte de lo gastado en reparaciones, en formalizar el
+    contrato, en el seguro de impago y en el certificado energético se deduce además en el
+    tramo autonómico del IRPF, con un límite anual pequeño. El motor no la calcula.
 
 # ---------------------------------------------------------------- trampas: solo advertir
 

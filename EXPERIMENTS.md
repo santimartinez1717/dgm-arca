@@ -2227,3 +2227,68 @@ Auditoría del motor de reglas (versión del 15/09/2026 frente a la del 22/11/20
   1/12/2026 sigue valiendo, por la transitoria 38.ª; eso lo decide una persona. Cuando se
   fusione la fase 2, que añade `rental_reduction_pct_2026` al motor, hay que darle reglas en
   `RULES`.
+
+---
+
+### 2026-11-23 · Fase 4 · Corpus ampliado con normativa autonómica, Sociedades y subastas (issue #13)
+
+**Qué queríamos saber.** Si añadir las fuentes que piden las palancas del playbook (issue #10)
+empeora la recuperación de la fase 3. La spec pide que no empeore el Recall@5 ni el MRR de las 51
+preguntas doradas.
+
+**Qué hicimos.** Añadimos seis documentos oficiales a `rag/download_corpus.py`, documentados en
+`rag/CORPUS.md`:
+
+- los textos de tributos cedidos de Madrid (DLeg 1/2010), Cataluña (DLeg 1/2024, libro 6),
+  Andalucía (Ley 5/2021) y la Comunitat Valenciana (Ley 13/1997), en su versión consolidada del
+  BOE/BOCM;
+- el artículo 29 de la Ley 27/2014 del Impuesto sobre Sociedades;
+- los artículos 643 a 675 de la LEC (subastas).
+
+Medimos dos veces sobre el mismo corpus de la fase 3, antes y después de añadirlos, con
+`rag.evaluate` y la configuración de la fase 3. El "después" está en
+`scripts/fase4/ampliar_corpus_eval.sh` y tardó 1.235 s:
+
+- con las 51 preguntas y las 6 sin respuesta del commit 9b1c9ad;
+- con las 59 preguntas actuales (8 nuevas sobre los documentos nuevos).
+
+Al final reindexamos el pipeline de `/rag`: 3.956 fragmentos. `none-02` (el ITP de Madrid) deja
+de ser una pregunta sin respuesta y pasa a ser `ccaa-01`.
+
+**Qué pasó.** Semántico p90, la configuración de `/rag`:
+
+| Retriever | R@5 antes (51) | R@5 después (51) | MRR antes (51) | MRR después (51) | R@5 (59) | MRR (59) |
+|---|---|---|---|---|---|---|
+| híbrido λ = 0,2 | 0,529 | 0,510 | 0,421 | 0,395 | 0,492 | 0,375 |
+| denso | 0,529 | 0,510 | 0,414 | 0,391 | 0,492 | 0,372 |
+| BM25 | 0,382 | 0,353 | 0,218 | 0,208 | 0,322 | 0,197 |
+
+Fragmentos: 2.897 antes y 3.883 después (+34 %). Con troceado recursivo, el R@5 híbrido no cambia
+(0,441) y el MRR baja de 0,292 a 0,273.
+
+Con el híbrido, cambia el primer acierto de 6 de las 51 preguntas: 1 mejora y 5 empeoran.
+
+- itp-01 pasa de la posición 1 a la 4. Pregunta por el tipo estatal supletorio del ITP, y los
+  cuatro textos autonómicos hablan también del tipo del ITP de la vivienda usada: compiten, y con
+  razón.
+- lau-06 pasa de 3 a 10, irpf-03 de 2 a 3, y lau-11 e ibi-01, que estaban en la posición 10,
+  salen del top 10.
+
+De las 8 preguntas nuevas, 3 tienen un fragmento relevante en el top 5: lec-01 (1), lec-02 (2) y
+ccaa-05 (2). Las 4 del tipo autonómico del ITP (ccaa-01 a 04) y lis-01 no aparecen en el top 10.
+Las leyes autonómicas son largas y repiten "tipo de gravamen" en cada impuesto cedido, así que el
+fragmento del ITP de la vivienda no destaca.
+
+**Qué concluimos.**
+
+- **No se cumple el criterio "no empeora".** En las 51 preguntas, el R@5 baja 0,019, es decir, una
+  pregunta menos en el top 5, y el MRR baja 0,026. Con 51 preguntas es una diferencia pequeña.
+  Aun así, el sentido es claro: más documentos parecidos diluyen el ranking. La mantenemos
+  porque, sin estas fuentes, las palancas autonómicas, la de la sociedad y la de las subastas no
+  tienen cita en el corpus (issue #10).
+- **Siguiente paso**, para no diluir los textos estatales: trocear las leyes autonómicas solo por
+  los artículos del ITP y de las deducciones del IRPF, como ya hacemos con `trlrhl` y `liva`, en
+  vez de descargarlas enteras. Sería una pregunta para la issue.
+- Las citas del playbook (`evidence.quote`) se comprueban contra el corpus en el test de la
+  issue #10. Siguen siendo correctas aunque el retriever no encuentre esos pasajes: el agente las
+  cita desde `find_levers`, no desde la búsqueda.

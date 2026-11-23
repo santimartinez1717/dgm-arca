@@ -1,8 +1,12 @@
 # Conjunto dorado de la fase 3
 
-- `gold.jsonl`: 51 preguntas con respuesta en el corpus.
-- `unanswerable.jsonl`: 6 preguntas que el corpus **no** responde, para comprobar que
-  `/rag` dice «no lo sé».
+- `gold.jsonl`: 59 preguntas con respuesta en el corpus. Las 51 primeras son las de la fase 3;
+  las 8 últimas (`ccaa-*`, `lis-01`, `lec-*`) preguntan por los documentos que añadió la
+  issue #13 (tributos cedidos de cuatro comunidades, tipo del Impuesto sobre Sociedades y
+  subastas de la LEC).
+- `unanswerable.jsonl`: 5 preguntas que el corpus **no** responde, para comprobar que
+  `/rag` dice «no lo sé». `none-02` (el ITP de la Comunidad de Madrid) pasó a `gold.jsonl`
+  como `ccaa-01` cuando entró el texto refundido madrileño.
 - `temporal.jsonl`: 17 preguntas con fecha para el derecho aplicable en una fecha
   ([`docs/fase3/fase3.md`](../../docs/fase3/fase3.md), sección 8). Cada una anota ley, artículo (`block_id`
   del BOE) y cita, y se resuelve a la versión vigente en su `date`; `control` marca las que
