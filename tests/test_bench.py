@@ -169,6 +169,15 @@ def test_abstains():
     assert not abstains("No puedo saberlo, pero bajarán un 5 %.", no_figures=True)
 
 
+def test_abstains_in_english():
+    """The thinking brain abstained in English on impossible-01 (issue 20): still abstaining."""
+    assert abstains("Price Predictions: No tools can predict 2027 price drops.", no_figures=True)
+    assert abstains("I cannot predict what the Euribor will be in 2030.")
+    assert abstains("It is impossible to know future prices.")
+    assert not abstains("Prices will fall by 5 % in 2027.")
+    assert not abstains("No tools can predict it, but expect a 5 % drop.", no_figures=True)
+
+
 def test_unknown_check_fails_closed():
     assert not check_answer({"check": {"type": "magic"}}, "anything")
     assert not check_answer({}, "anything")

@@ -43,14 +43,19 @@ from rag.eval_generation import ABSTAIN as RAG_ABSTAIN
 # a letter is part of an id ("P07", "BOE-A-2026") and not a figure.
 NUMBER_TOKEN = re.compile(r"(?<![\w.,])[-−]?\d+(?:[.,]\d+)*")
 
-# What an agent says when it cannot answer, on top of phase 3's wording for passages.
+# What an agent says when it cannot answer, on top of phase 3's wording for passages. English
+# too: abstaining is what the check measures, the language of the answer is measured apart
+# (the thinking brain abstained in English on impossible-01, EXPERIMENTS.md, issue 20).
 AGENT_ABSTAIN = re.compile(
     r"no (?:es posible|se puede|puedo|podemos|sabría) (?:\w+ ){0,2}"
     r"(?:saber|predecir|prever|anticipar|garantizar|determinar|asegurar|calcular|responder)"
     r"|no (?:tengo|dispongo de|hay) (?:\w+ ){0,2}(?:forma|manera|modo|datos|información)"
     r"|nadie (?:puede|sabe)"
     r"|no existe (?:\w+ ){0,3}(?:dato|información|registro|forma)"
-    r"|(?:imposible|no se puede) (?:de )?(?:saber|predecir|prever)",
+    r"|(?:imposible|no se puede) (?:de )?(?:saber|predecir|prever)"
+    r"|(?:can ?not|can't|cannot|unable to|no (?:\w+ )?(?:one|tool|tools|model) can|nobody can)"
+    r" (?:\w+ ){0,2}(?:predict|forecast|know|tell|determine|guarantee)"
+    r"|(?:impossible|not possible) to (?:predict|forecast|know|tell|determine)",
     re.IGNORECASE,
 )
 # A figure with a unit: what an abstention must not invent.
