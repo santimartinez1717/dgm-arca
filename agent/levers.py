@@ -106,7 +106,7 @@ def effective_property(prop: Property, base: Analysis) -> Property:
     update = {}
     if prop.stressed_zone is None and base.stressed_zone is not None:
         update["stressed_zone"] = base.stressed_zone
-    if prop.region is None and base.region is not None:
+    if base.region is not None:  # resolved: "Comunidad de Madrid" -> "madrid", as levers say
         update["region"] = base.region
     return prop.model_copy(update=update)
 

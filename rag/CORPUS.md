@@ -5,19 +5,19 @@ está en git (`rag/corpus/*` está en `.gitignore`); se regenera con:
 
 ```bash
 uv run python -m rag.download_corpus          # ~2 min; salta lo que ya existe (--force para rehacer)
-uv run python -m rag.ingest                   # comprobar: 52 documentos, ~2,6 M caracteres
+uv run python -m rag.ingest                   # comprobar: 58 documentos, ~3,4 M caracteres
 ```
 
 El script escribe `rag/corpus/manifest.json` con la URL, la licencia, la fecha de la versión y
 el sha256 de cada fichero. También guarda en `rag/corpus/versions/<ley>.jsonl` cada versión de
-cada artículo del BOE con sus fechas de vigencia (2.049 versiones), para la recuperación por
+cada artículo del BOE con sus fechas de vigencia (2.985 versiones), para la recuperación por
 fecha de `rag/temporal.py`. `rag/ingest.py` no lee esos ficheros.
 
 ## Fuentes
 
 | Carpeta | Qué | Cuántos | Cómo se descarga |
 |---|---|---|---|
-| `boe/` | Leyes consolidadas: LAU, Ley 12/2023 de vivienda, RDL 29/2026, LIRPF y su reglamento, TRLITPAJD, TRL del Catastro, Ley 5/2019 de crédito inmobiliario, Ley de Propiedad Horizontal, TRLRHL (solo arts. 60-77, IBI, y 104-110, plusvalía) y LIVA (solo arts. 20, 90 y 91) | 11 | API de datos abiertos del BOE, XML por artículos → Markdown con un `### Artículo N` por artículo |
+| `boe/` | Leyes consolidadas: LAU, Ley 12/2023 de vivienda, RDL 29/2026, LIRPF y su reglamento, TRLITPAJD, TRL del Catastro, Ley 5/2019 de crédito inmobiliario, Ley de Propiedad Horizontal, TRLRHL (solo arts. 60-77, IBI, y 104-110, plusvalía) y LIVA (solo arts. 20, 90 y 91). Desde la issue #13, también los textos de tributos cedidos de Madrid, Cataluña, Andalucía y la Comunitat Valenciana, la Ley del Impuesto sobre Sociedades (solo art. 29) y la LEC (solo arts. 643-675, subastas) | 17 | API de datos abiertos del BOE, XML por artículos → Markdown con un `### Artículo N` por artículo |
 | `boe_diario/` | Resoluciones del sistema de índices de precios de referencia (SERPAVI, 2024 y 2026) y las ocho relaciones trimestrales de zonas tensionadas (mar. 2024 – jul. 2026) con su corrección de erratas | 11 | `diario_boe/xml.php` → Markdown |
 | `aeat/` | Manual práctico de Renta 2025: capítulo 4 (rendimientos del capital inmobiliario) y régimen de imputación de rentas inmobiliarias del capítulo 10 | 28 | HTML de la sede, solo el `<main>` → Markdown, una página por fichero |
 | `pdf/` | Metodología del IRAV (INE, dic. 2024) y folleto del Banco de España sobre préstamos hipotecarios | 2 | PDF tal cual; `rag/ingest.py` lo lee con pypdf |
@@ -27,6 +27,8 @@ fecha de `rag/temporal.py`. `rag/ingest.py` no lee esos ficheros.
 - **BOE** (`boe/`, `boe_diario/`): reutilización libre citando la fuente y sin desnaturalizar
   el contenido (Ley 37/2007 de reutilización de la información del sector público, RD
   1495/2011 y aviso legal del BOE). Los textos consolidados no tienen valor jurídico oficial.
+  Las cuatro normas autonómicas salen de su boletín (BOCM, DOGC, BOJA, DOGV); las tomamos de
+  la consolidación que publica el BOE, con su misma licencia.
 - **AEAT** (`aeat/`): reutilización con cita de la fuente según el aviso legal de la sede
   electrónica (Ley 37/2007).
 - **INE** (`pdf/ine-irav-metodologia.pdf`): reutilización con cita de la fuente según el
@@ -60,3 +62,14 @@ texto hasta los fragmentos.
   `<main>` se recorta: aparecía igual en las 28 páginas.
 - **Metodología del SERPAVI fuera.** El PDF del ministerio devuelve 403 al descargarlo con un
   script; entran las resoluciones del BOE que lo determinan.
+- **Normativa autonómica (issue #13).** Entran los textos de tributos cedidos de las cuatro
+  comunidades con más peso en el banco: Madrid (DLeg 1/2010, `BOCM-m-2010-90068`), Cataluña
+  (libro sexto del Código tributario, DLeg 1/2024), Andalucía (Ley 5/2021) y Comunitat
+  Valenciana (Ley 13/1997). Los cuatro están consolidados en la misma API del BOE, así que se
+  descargan igual que las leyes estatales y quedan fijados a la misma fecha. Van enteros:
+  traen los tipos y reducciones del ITP y las deducciones autonómicas por alquiler, pero
+  también sucesiones, juego e hidrocarburos, que hacen de distractores. El corpus crece un
+  33 % (de ~2,6 a ~3,4 M caracteres). El resto de comunidades queda fuera por ahora.
+- **Solo lo que piden las palancas.** De la Ley del Impuesto sobre Sociedades entra el art. 29
+  (tipo de gravamen, palanca `buy_through_company`) y de la LEC los arts. 643-675, la subasta
+  de bienes (palanca `boe_auction`). Enteras serían el doble del corpus y casi todo ruido.

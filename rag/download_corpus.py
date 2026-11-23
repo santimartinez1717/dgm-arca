@@ -83,6 +83,15 @@ BOE_LAWS = [  # (id, file name, article ranges to keep; empty = whole law)
     ("BOE-A-1960-10906", "lph", ()),  # Ley 49/1960, propiedad horizontal
     ("BOE-A-2004-4214", "trlrhl-ibi-plusvalia", ((60, 77), (104, 110))),  # RDLeg 2/2004
     ("BOE-A-1992-28740", "liva-vivienda", ((20, 20), (90, 91))),  # Ley 37/1992
+    # Regional ceded taxes (ITP rates and reductions, regional IRPF deductions for renting),
+    # the four communities with most weight in the bench. BOE consolidates them too.
+    ("BOCM-m-2010-90068", "madrid-tributos-cedidos", ()),  # DLeg 1/2010 Comunidad de Madrid
+    ("BOE-A-2024-6951", "cataluna-codigo-tributario-libro6", ()),  # DLeg 1/2024 Catalunya
+    ("BOE-A-2021-17915", "andalucia-tributos-cedidos", ()),  # Ley 5/2021 Andalucía
+    ("BOE-A-1998-8202", "valenciana-tributos-cedidos", ()),  # Ley 13/1997 Comunitat Valenciana
+    # Sources the levers ask for (issue #10): company tax rate and court auctions.
+    ("BOE-A-2014-12328", "lis-tipo-gravamen", ((29, 29),)),  # Ley 27/2014, Sociedades
+    ("BOE-A-2000-323", "lec-subastas", ((643, 675),)),  # Ley 1/2000, LEC: subastas
 ]
 
 BOE_DIARIO_DOCS = [
