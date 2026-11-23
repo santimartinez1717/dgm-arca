@@ -210,10 +210,21 @@ def question_date(question: str) -> str | None:
 
 
 def resolve_temporal(gold: list[dict], chunks: list[VersionedChunk], today: str) -> list[dict]:
-    """Each temporal gold item plus ``relevant_chunk_ids``: the chunks of the version in force
-    on the item's date (``today`` if it has none) that hold at least half of the quote."""
+    """Each dated gold item plus ``relevant_chunk_ids``: the chunks that give the rule that
+    applied on the item's date (``today`` if it has none).
+
+    Relevance is by content, not by version id: a chunk of the same article, of any version,
+    whose version holds the whole quote and none of the ``absent`` phrases, and that holds
+    the quote itself (or one half of it, 20+ characters, when the quote is split between two
+    chunks). The paragraph that answers often survives unchanged through
+    amendments to other paragraphs, and a version with the same text gives the same answer.
+    The quote must be in the version in force on the date: otherwise the item is wrong.
+    """
     from rag.gold import normalise
 
+    texts = {c.doc_id: "" for c in chunks}
+    for c in chunks:
+        texts[c.doc_id] += " " + c.text
     resolved = []
     for item in gold:
         on = item.get("date") or today
@@ -221,16 +232,25 @@ def resolve_temporal(gold: list[dict], chunks: list[VersionedChunk], today: str)
         for evidence in item["evidence"]:
             prefix = f"{evidence['law']}-{evidence['block_id']}-v"
             quote = normalise(evidence["quote"])
-            halves = (quote[: len(quote) // 2], quote[len(quote) // 2 :])
-            candidates = [c for c in chunks if c.doc_id.startswith(prefix) and c.in_force(on)]
-            if not candidates:
+            halves = tuple(
+                h for h in (quote[: len(quote) // 2], quote[len(quote) // 2 :]) if len(h) >= 20
+            )
+            absent = [normalise(a) for a in evidence.get("absent", [])]
+            article = [c for c in chunks if c.doc_id.startswith(prefix)]
+            in_force = [c for c in article if c.in_force(on)]
+            if not in_force:
                 raise ValueError(f"{item['id']}: no version of {prefix[:-2]} in force on {on}")
-            whole = [c.id for c in candidates if quote in normalise(c.text)]
-            halves = tuple(h for h in halves if len(h) >= 20)  # a short half proves nothing
-            part = [c.id for c in candidates if any(h in normalise(c.text) for h in halves)]
-            if not (whole or part):
+
+            def gives_rule(c: VersionedChunk, quote=quote, halves=halves, absent=absent) -> bool:
+                version = normalise(texts[c.doc_id])
+                if quote not in version or any(a in version for a in absent):
+                    return False  # this version does not state the rule
+                text = normalise(c.text)  # the quote may be split between two chunks
+                return quote in text or any(h in text for h in halves)
+
+            if not any(gives_rule(c) for c in in_force):
                 raise ValueError(f"{item['id']}: quote not in the version in force on {on}")
-            relevant += whole or part
+            relevant += [c.id for c in article if gives_rule(c)]
         resolved.append(item | {"relevant_chunk_ids": relevant, "on": on})
     return resolved
 

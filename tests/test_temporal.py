@@ -80,23 +80,40 @@ def test_question_date(question, expected):
     assert question_date(question) == expected
 
 
-def test_resolve_temporal_picks_the_version_in_force():
+XML_3 = XML.replace(
+    '</bloque>\n<bloque id="ti"',
+    """<version fecha_vigencia="20261008" id_norma="BOE-A-2026-20823">
+    <p class="articulo">Artículo 9. Plazo mínimo.</p><p class="parrafo">Cinco años.</p>
+    <p class="parrafo">Nuevo apartado.</p>
+  </version>
+</bloque>
+<bloque id="ti\"""",
+    1,
+)
+
+
+def test_resolve_temporal_is_by_content_not_by_version_id():
     from rag.temporal import resolve_temporal
 
-    chunks = version_chunks(article_versions(XML, "lau", "Ley 29/1994"))
+    chunks = version_chunks(article_versions(XML_3, "lau", "Ley 29/1994"))
+    assert [c.doc_id for c in chunks] == ["lau-a9-v0", "lau-a9-v1", "lau-a9-v2"]
+    five = [{"law": "lau", "block_id": "a9", "quote": "Cinco años."}]
     gold = [
         {"id": "old", "date": "2017-07-01",
          "evidence": [{"law": "lau", "block_id": "a9", "quote": "Tres años."}]},
-        {"id": "today", "date": None,
-         "evidence": [{"law": "lau", "block_id": "a9", "quote": "Cinco años."}]},
+        {"id": "2021", "date": "2021-07-01", "evidence": five},
+        {"id": "excluding", "date": "2021-07-01",
+         "evidence": [five[0] | {"absent": ["Nuevo apartado"]}]},
     ]  # fmt: skip
-    old, today = resolve_temporal(gold, chunks, today="2026-11-23")
-    assert old["relevant_chunk_ids"] == ["lau-a9-v0-00"] and old["on"] == "2017-07-01"
-    assert today["relevant_chunk_ids"] == ["lau-a9-v1-00"]
+    old, same_text, excluding = resolve_temporal(gold, chunks, today="2026-11-23")
+    assert old["relevant_chunk_ids"] == ["lau-a9-v0-00"]
+    # the 2021 answer is also in today's version, which changed another paragraph
+    assert same_text["relevant_chunk_ids"] == ["lau-a9-v1-00", "lau-a9-v2-00"]
+    assert excluding["relevant_chunk_ids"] == ["lau-a9-v1-00"]
     with pytest.raises(ValueError, match="quote not in"):
-        evidence = [{"law": "lau", "block_id": "a9", "quote": "Cinco años."}]
-        bad = [{"id": "x", "date": "2017-07-01", "evidence": evidence}]
-        resolve_temporal(bad, chunks, today="2026-11-23")
+        resolve_temporal(
+            [{"id": "x", "date": "2017-07-01", "evidence": five}], chunks, "2026-11-23"
+        )
 
 
 def test_date_filtered_retriever_reads_the_date(tmp_path):
