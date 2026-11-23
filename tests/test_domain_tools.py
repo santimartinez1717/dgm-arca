@@ -61,7 +61,8 @@ def test_acquisition_cost_uses_reference_value_and_regional_itp(registry):
         renovation=12000,
     )
     assert result["transfer_tax"] == 13650 and result["total"] == 208850
-    assert any("sin verificar" in w for w in result["warnings"])
+    # Every row was checked against an official source on 2026-11-23 (tool_use/itp_rates.py).
+    assert not any("sin verificar" in w for w in result["warnings"])
 
 
 def test_acquisition_cost_new_build_needs_ajd(registry):
