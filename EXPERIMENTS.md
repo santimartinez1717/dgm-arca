@@ -1596,3 +1596,52 @@ Informes: `reports/phase2_bench_base_v6.json`, `_v7.json` y `_v8.json`. Unos 9 m
 - **Siguen sin encadenar:** `chain-01` y `chain-03` lanzan a la vez llamadas que dependen una
   de otra, y `chain-02` y `chain-04` responden tras el primer resultado. Esto ya no parece
   arreglable con texto. El siguiente paso sería un SFT con trazas que esperan al resultado.
+
+---
+
+### 2026-11-23 · API · `docker compose up api` en la DGX, con /tools
+
+**Qué queríamos saber.** El MacBook no puede servir la API ahora que la fase 1 y la fase 2
+cargan cada una su Qwen3-1.7B. El enunciado pide que la API levante con `docker compose up
+api` y se exponga con ngrok. Queríamos saber si la DGX puede hacer las dos cosas, porque
+`docs/dgx.md` dice que allí no hay Docker.
+
+**Qué hicimos.**
+- Las sesiones ya tienen Docker 29.6 *rootless* y Compose v5.2, con las GPUs del nodo
+  expuestas por CDI.
+- `docker compose build api` funcionó a la primera: imagen de 26 GB, en `/tmp`, que se borra
+  al acabar la sesión.
+- La reserva de GPU del compose monta las 8 GPUs, pero Slurm solo deja abrir la nuestra, así
+  que no hay riesgo de usar las de otros.
+- Faltaban los ficheros `/dev/nvidia-caps/nvidia-capN` de nuestra partición MIG. Sin ellos,
+  torch dice "No CUDA GPUs are available".
+- Esos números cambian en cada sesión. En esta, la partición está en la GPU física 5, gi8
+  (cap750 y cap751), aunque la sesión la llama GPU 0.
+- `smoke/docker_dgx.sh` busca los que la sesión puede abrir, escribe un override con ellos y
+  llama a `docker compose`. El `docker-compose.yml` no cambia para otras máquinas.
+- `.env` con `ARCA_RLM_ADAPTER=rlm/weights/grpo2_lora`. `/tools` usa el modelo base, como en
+  el banco v8.
+- Lanzamos `smoke/docker_dgx.sh run --rm check-gpu`, después `smoke/docker_dgx.sh up api`, y
+  luego `/health` y cuatro preguntas a `/tools`.
+
+**Qué pasó.**
+- `check-gpu`: H200 MIG 1g.18gb, 17,2 GB, 101 TFLOP/s en bf16.
+- `/health`: `reasoning` y `tools` en `ready` en 9,5 s; las dos cargan con los modelos ya en
+  la caché del clúster.
+
+| Pregunta | Herramientas | Tiempo | Resultado |
+|---|---|---|---|
+| Piso en Madrid de 250.000 €, coste total | `acquisition_cost` | 69 s | ✅ 265.000 € (ITP 6 %) |
+| Diferencia entre rentabilidad bruta y neta | ninguna | 9 s | ✅ responde sin herramientas |
+| ¿Barcelona es zona tensionada? Si lo es, ¿soy gran tenedor? | `get_portfolio` | 37 s | ❌ no llama a `get_rent_reference`, afirma que Barcelona no está tensionada (lo está, BOE-A-2024-5214) y responde en inglés |
+| Guarda un piso en Valencia de 180.000 € y 900 €/mes | `save_to_portfolio` | 10 s | ⚠️ guarda, pero se inventa `area_m2=180` (copia el precio) porque el usuario no da la superficie |
+
+**Qué concluimos.**
+- La DGX sirve para la corrección: `docker compose up api` (vía `smoke/docker_dgx.sh`) más
+  ngrok, en una sesión abierta cuando corrijan. Falta instalar ngrok y probar la URL pública;
+  la conexión de salida al servidor de ngrok funciona.
+- La pregunta encadenada falla igual que `chain-02`/`chain-04` del banco: responde tras el
+  primer resultado. Además, inventa la conclusión.
+- `save_to_portfolio` pide `area_m2` obligatorio, y si el usuario no lo da, el modelo lo
+  rellena con otra cifra. Es la misma lección que con los ejemplos numéricos: no dejar que
+  una cifra ocupe en silencio el lugar de otra.
