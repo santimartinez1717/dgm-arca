@@ -96,6 +96,17 @@ def test_missing_data_is_reported_not_raised():
     assert analyze(Property(id="P3"), InvestorProfile()).missing == ["price"]
 
 
+def test_absurd_monthly_rent_is_not_computed():
+    # bench inconsistent-03: "se alquila por 10.200 € al mes" for a 140.000 € flat
+    flat = Property(id="P1", municipality="Murcia", price=140000, monthly_rent=10200)
+    result = analyze(flat, InvestorProfile())
+    assert "net_yield_pct" not in result.figures
+    assert any(m.startswith("monthly_rent") for m in result.missing)
+    case = CaseFile(session_id="s", properties={"P1": flat})
+    out = levers.simulate(case, "P1", overrides={"monthly_rent": 850})
+    assert out["scenarios"][0]["net_yield_pct"] > 0
+
+
 def test_contract_date_decides_the_irpf_scale():
     before = analyze(barcelona(contract_date=date(2026, 11, 30)), PROFILE)
     after = analyze(barcelona(), PROFILE)

@@ -213,6 +213,14 @@ def analyze(prop: Property, profile: InvestorProfile, today: date | None = None)
         out.missing.append("monthly_rent")
         return out
     rent = prop.monthly_rent
+    if rent >= calculators.MAX_MONTHLY_RENT:
+        # "10.200 € al mes" for a 140.000 € flat is a yearly figure or a typo: computing with it
+        # gives a yield above 80 % that the auditor would accept, since a tool produced it.
+        out.missing.append(
+            f"monthly_rent: {rent:g} EUR per month looks like a yearly figure or a typo; "
+            "ask the user (what_if with overrides can show both readings)"
+        )
+        return out
     out.set("asking_rent", rent)
     needs_index = stressed and (large_holder or (prop.previous_rent is None and caps_unrented))
     if needs_index and prop.index_upper_eur_m2 is None:
