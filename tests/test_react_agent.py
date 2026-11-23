@@ -307,3 +307,41 @@ def test_memory_is_compressed_with_the_base_brain():
     assert "Summary of the earlier steps" in brain.seen[-1][0]["content"]
     assert brain.seen[-1][1]["content"] == "tarea"  # the task stays pinned
     assert response.tokens_used == 120 * (len(brain.seen) + len(summarizer.seen))
+
+
+def test_a_missing_rlm_adapter_answers_with_base_and_says_so():
+    class Unloadable(ScriptedBrain):
+        def load(self):
+            raise FileNotFoundError("brain adapter rlm/weights/grpo2_lora not found")
+
+    base = ScriptedBrain([answer("Hecho.")], name="Qwen3-1.7B")
+    agent = ReActAgent(brains={"base": base, "rlm": Unloadable([], name="rlm")})
+    response = agent.run("tarea", max_steps=2, brain="rlm")
+    assert response.succeeded
+    assert response.model == "Qwen3-1.7B [rlm no disponible: responde base]"
+
+
+def test_an_invented_on_date_is_dropped_and_a_given_one_kept(monkeypatch):
+    seen = []
+
+    @tool
+    def search_knowledge_base(query: str, on_date: str | None = None) -> str:
+        """Fake search.
+
+        Args:
+            query: q.
+            on_date: d.
+        """
+        seen.append(on_date)
+        return "[K1] pasaje"
+
+    search = call("search_knowledge_base", query="ITP Madrid", on_date="2023-01-01")
+    agent, _ = make_agent(search, answer("Hecho."))
+    agent.registry.register(search_knowledge_base)
+    response = agent.run("¿Qué ITP pago en Madrid?", max_steps=3, brain="base")
+    assert seen == [None] and "on_date 2023-01-01 ignored" in response.steps[0].observation
+
+    agent, _ = make_agent(search, answer("Hecho."))
+    agent.registry.register(search_knowledge_base)
+    agent.run("Firmé el contrato en marzo de 2023, ¿qué ley aplica?", max_steps=3, brain="base")
+    assert seen == [None, "2023-01-01"]
