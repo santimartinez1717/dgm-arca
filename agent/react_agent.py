@@ -95,8 +95,8 @@ TOOL_ERROR_HINT = (
 # where the system prompt does not: after reading English tool results the model answered
 # Spanish questions in English, and it rarely wrote a thought before a native tool call.
 TURN_HINT = (
-    "\n\n[{left} of {total} steps left. Start your next message with 'Thought:' and one "
-    "sentence on what you know and what you need. Do not repeat a call you already made. "
+    "\n\n[{left} of {total} steps left. In ONE message: a line 'Thought: ...' with what you "
+    "know and what you need, then the tool call. Do not repeat a call you already made. "
     "When you have what the user asked for, call final_answer, in Spanish.]"
 )
 THOUGHT_ONLY = (
@@ -254,6 +254,8 @@ class _Run:
     calls: Counter = field(default_factory=Counter)
     tokens: int = 0
     rejections: int = 0
+    pending_thought: str = ""  # a "Thought:" without a call, for the next step's thought
+    stuck: bool = False  # the same call a fourth time: the loop ends
     last_audit: AuditResult | None = None
     levers: list[dict[str, Any]] = field(default_factory=list)
     scenarios: list[dict[str, Any]] = field(default_factory=list)
@@ -385,20 +387,22 @@ class ReActAgent:
 
             if not parsed.tool_calls:
                 text = _strip_label(parsed.text)
+                thought = _join(state.pending_thought, thought)
                 if not text:
+                    state.pending_thought = ""
                     state.step(thought, None, EMPTY_OUTPUT)
                     memory.add("assistant", "")
                     memory.add("user", EMPTY_OUTPUT)
                     continue
                 labelled = parsed.text.strip().lower().startswith("thought:")
-                last = state.steps[-1] if state.steps else None
-                thought_before = last is not None and last.observation == THOUGHT_ONLY
-                if labelled and not thought_before:
-                    # "Thought: I need to call what_if" is an intention, not an answer.
-                    state.step(thought, None, THOUGHT_ONLY)
+                if labelled and not state.pending_thought:
+                    # "Thought: I need to call what_if" is an intention, not an answer: it is
+                    # not a step (steps are tool calls) and becomes the next step's thought.
+                    state.pending_thought = thought
                     memory.add("assistant", parsed.text)
                     memory.add("user", THOUGHT_ONLY)
                     continue
+                state.pending_thought = ""
                 response = self._finish(state, text, NO_TOOL_CALL + thought, None)
                 if response is not None:
                     return response
@@ -412,6 +416,8 @@ class ReActAgent:
                     state, f"se agotó el presupuesto de {self.token_budget} tokens"
                 )
 
+            thought = _join(state.pending_thought, thought)
+            state.pending_thought = ""
             done: list[tuple[ToolCall, str]] = []
             for i, call in enumerate(parsed.tool_calls):
                 if state.steps_left <= 0:
@@ -452,6 +458,8 @@ class ReActAgent:
                 memory.messages[-1]["content"] += TURN_HINT.format(
                     left=state.steps_left, total=state.max_steps
                 )
+            if state.stuck:
+                return self._fallback(state, "repetía la misma llamada sin avanzar")
             memory.compress(lambda old: self._summarize(state, old))
         return self._fallback(state, f"se agotaron los {state.max_steps} pasos")
 
@@ -463,6 +471,7 @@ class ReActAgent:
         state.calls[key] += 1
         repeats = state.calls[key]
         if repeats >= 3:
+            state.stuck = repeats >= 4
             return LOOP_STOP
         tool_ = self._tools().get(call.name)
         if tool_ is not None and tool_.requires_confirmation and not state.confirm:
@@ -608,6 +617,10 @@ class ReActAgent:
         state.tokens += prompt_tokens + completion_tokens
         parsed = parse_tool_calls(text)
         return parsed.text.strip() or text.strip()
+
+
+def _join(first: str, second: str) -> str:
+    return "\n".join(t for t in (first.strip(), second.strip()) if t)
 
 
 def _strip_label(text: str) -> str:

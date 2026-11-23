@@ -163,6 +163,14 @@ def test_loop_is_detected_warned_and_stopped():
     assert response.succeeded
 
 
+def test_a_fourth_identical_call_ends_the_run():
+    rates = call("ping")
+    agent, _ = make_agent(rates, rates, rates, rates, answer("never reached"))
+    response = agent.run("tarea", max_steps=8, brain="base")
+    assert not response.succeeded
+    assert response.n_steps == 4 and "misma llamada" in response.final_answer
+
+
 def test_tool_with_an_effect_needs_confirmation():
     save = call("save_to_portfolio", property_id="P1", municipality="Valencia", price=180000)
     agent, _ = make_agent(save, answer("Pendiente de tu confirmación."))
@@ -227,11 +235,12 @@ def test_a_labelled_thought_without_a_call_is_not_an_answer():
         "Thought: the answer is pong.",
     )
     response = agent.run("tarea", max_steps=6, brain="base")
-    assert response.steps[0].action is None and "called no tool" in response.steps[0].observation
-    assert response.steps[1].action.name == "ping"
-    assert "called no tool" in response.steps[2].observation
+    # the thought is not a step: it is the thought of the next tool call
+    assert response.steps[0].action.name == "ping"
+    assert response.steps[0].thought == "I need to call ping."
     # two thoughts in a row: the second one is taken as the answer, flagged
-    assert response.steps[3].thought.startswith(NO_TOOL_CALL)
+    assert response.n_steps == 2
+    assert response.steps[1].thought.startswith(NO_TOOL_CALL + "still thinking.")
     assert response.final_answer.startswith("the answer is pong.")
     assert "called no tool" in brain.seen[1][-1]["content"]
 
