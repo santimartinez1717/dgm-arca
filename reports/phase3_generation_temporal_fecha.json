@@ -1,0 +1,786 @@
+{
+ "generator": "Qwen/Qwen3-1.7B",
+ "config": {
+  "chunking": "semantic",
+  "chunk_size": 800,
+  "chunk_overlap": 100,
+  "semantic_threshold": 0.8215,
+  "max_chunk_chars": 1500,
+  "weight_bm25": 0.2,
+  "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+  "generator_model": "Qwen/Qwen3-1.7B",
+  "generator_adapter": null,
+  "temporal": true,
+  "thinking": false,
+  "max_new_tokens": 512,
+  "index_dir": "rag/index"
+ },
+ "retriever": "hybrid",
+ "top_k": 5,
+ "metrics": {
+  "n_answerable": 17,
+  "n_unanswerable": 0,
+  "cites_any": 0.882,
+  "answers_with_invented_ids": 0.0,
+  "relevant_retrieved": 0.0,
+  "cites_relevant_when_retrieved": null,
+  "figures_match": 0.091,
+  "figures_match_when_retrieved": null,
+  "abstains_answerable": 0.176,
+  "abstains_when_retrieved": null,
+  "abstains_when_not_retrieved": 0.176,
+  "abstains_unanswerable": null
+ },
+ "elapsed_s": 259.0,
+ "items": [
+  {
+   "id": "t-plazo-2017",
+   "unanswerable": false,
+   "question": "Firmé un alquiler de vivienda con un particular en 2017 por un año. ¿Hasta cuántos años podía prorrogarlo el inquilino?",
+   "reference": "Hasta tres años (prórroga obligatoria anual hasta una duración mínima de tres años).",
+   "answer": "La información disponible indica que el contrato de alquiler prorrogable puede ser prorrogado un año más, siempre que se notifique al menos con treinta días de antelación. Esto se establece en el artículo 10 de la Ley 29/1994, de 24 de noviembre, de Arrendamientos Urbanos.\n\nLa respuesta directa es: **un año más**.\n\nBasado en el pasaje [lau-a10-v1-00].",
+   "citations": [
+    "lau-a10-v1-00"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "lau-a10-v1-00",
+     "boe/lau.md#a10@2013-06-06",
+     0.8
+    ],
+    [
+     "lau-a9-v2-00",
+     "boe/lau.md#a9@2013-06-06",
+     0.4585
+    ],
+    [
+     "rirpf-a55-v1-02",
+     "boe/rirpf.md#a55@2008-06-01",
+     0.4155
+    ],
+    [
+     "rirpf-a55-v1-03",
+     "boe/rirpf.md#a55@2008-06-01",
+     0.4017
+    ],
+    [
+     "rirpf-dtdecima-v0-01",
+     "boe/rirpf.md#dtdecima@2008-12-03",
+     0.3394
+    ]
+   ],
+   "law_date": "2017-07-01",
+   "control": false
+  },
+  {
+   "id": "t-plazo-2021",
+   "unanswerable": false,
+   "question": "Firmé un alquiler de vivienda con un particular en 2021 por un año. ¿Hasta cuántos años podía prorrogarlo el inquilino?",
+   "reference": "Hasta cinco años (siete si el arrendador es persona jurídica).",
+   "answer": "La pregunta se basa en el pasaje [lau-a10-v4-00], donde se menciona que si el contrato no se renovó, el inquilino podía prorrogarlo obligatoriamente por plazos anuales hasta un máximo de tres años más, salvo que el inquilino manifiestara su voluntad de no renovar con un mes de antelación. \n\nLa respuesta es: **hasta tres años más**.\n\nNúmero del pasaje: [lau-a10-v4-00]",
+   "citations": [
+    "lau-a10-v4-00"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "lau-a10-v4-00",
+     "boe/lau.md#a10@2019-03-06",
+     0.8
+    ],
+    [
+     "lau-a14-v2-00",
+     "boe/lau.md#a14@2019-03-06",
+     0.5367
+    ],
+    [
+     "lau-a9-v5-00",
+     "boe/lau.md#a9@2019-03-06",
+     0.5183
+    ],
+    [
+     "lau-a9-v5-01",
+     "boe/lau.md#a9@2019-03-06",
+     0.4152
+    ],
+    [
+     "lau-dtsegunda-v0-12",
+     "boe/lau.md#dtsegunda@1995-01-01",
+     0.382
+    ]
+   ],
+   "law_date": "2021-07-01",
+   "control": true
+  },
+  {
+   "id": "t-plazo-2019-01",
+   "unanswerable": false,
+   "question": "Firmé un contrato de alquiler de vivienda el 10 de enero de 2019. ¿Cuál era la duración mínima con las prórrogas obligatorias?",
+   "reference": "Cinco años (siete si el arrendador es persona jurídica): estaba en vigor el RDL 21/2018.",
+   "answer": "La duración mínima con las prórrogas obligatorias se establece según el artículo 9 de la Ley 29/1994, de 24 de noviembre, de Arrendamientos Urbanos. Según el pasaje [lau-a9-v3-00], si el plazo es inferior a cinco años, o inferior a siete años si el arrendador es persona jurídica, el contrato se prorrogará obligatoriamente por plazos anuales hasta que alcance una duración mínima de cinco años, o de siete años si el arrendador es persona jurídica, salvo que el arrendatario manifieste al arrendador, con treinta días de antelación, su voluntad de no renovarlo.\n\nPor lo tanto, la duración mínima con las prórrogas obligatorias es de **cinco años**, salvo que el arrendatario indique su voluntad de no renovar el contrato antes de los treinta días previos al vencimiento.\n\nRespuesta: La duración mínima con las prórrogas obligatorias es de **cinco años**. [lau-a9-v3-00]",
+   "citations": [
+    "lau-a9-v3-00"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "lau-a9-v3-00",
+     "boe/lau.md#a9@2018-12-19",
+     0.9995
+    ],
+    [
+     "lau-a10-v2-00",
+     "boe/lau.md#a10@2018-12-19",
+     0.9065
+    ],
+    [
+     "lau-a9-v3-01",
+     "boe/lau.md#a9@2018-12-19",
+     0.4867
+    ],
+    [
+     "lau-a9-v3-02",
+     "boe/lau.md#a9@2018-12-19",
+     0.3616
+    ],
+    [
+     "lau-daprimera-v1-02",
+     "boe/lau.md#daprimera@2015-04-01",
+     0.2954
+    ]
+   ],
+   "law_date": "2019-01-10",
+   "control": true
+  },
+  {
+   "id": "t-plazo-2019-02",
+   "unanswerable": false,
+   "question": "Firmé un contrato de alquiler de vivienda el 1 de febrero de 2019. ¿Cuál era la duración mínima con las prórrogas obligatorias?",
+   "reference": "Tres años: el RDL 21/2018 se había derogado y volvía el plazo de 2013.",
+   "answer": "La duración mínima con las prórrogas obligatorias se establece según el artículo 9 del texto legal mencionado. Según el pasaje [lau-a9-v4-00], si el plazo es inferior a tres años, el contrato se prorrogará obligatoriamente por plazos anuales hasta que alcance tres años, salvo que el arrendatario manifieste su voluntad de no renovarlo con treinta días de antelación.\n\nPor lo tanto, la duración mínima con las prórrogas obligatorias es **tres años**.\n\nRespuesta: [lau-a9-v4-00] La duración mínima con las prórrogas obligatorias es tres años.",
+   "citations": [
+    "lau-a9-v4-00"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "lau-a9-v4-00",
+     "boe/lau.md#a9@2019-01-24",
+     1.0
+    ],
+    [
+     "lau-a10-v3-00",
+     "boe/lau.md#a10@2019-01-24",
+     0.8491
+    ],
+    [
+     "lau-a9-v4-01",
+     "boe/lau.md#a9@2019-01-24",
+     0.4923
+    ],
+    [
+     "lau-a9-v4-02",
+     "boe/lau.md#a9@2019-01-24",
+     0.3302
+    ],
+    [
+     "lau-a9-v4-03",
+     "boe/lau.md#a9@2019-01-24",
+     0.29
+    ]
+   ],
+   "law_date": "2019-02-01",
+   "control": false
+  },
+  {
+   "id": "t-tacita-2016",
+   "unanswerable": false,
+   "question": "Mi contrato de alquiler de 2016 llegó al final sin que nadie avisara. ¿Por cuánto tiempo se renovaba solo?",
+   "reference": "Un año más.",
+   "answer": "La información disponible indica que si el contrato de alquiler de 2016 llegó al final sin que nadie avisara, el contrato se renovaría automáticamente durante un año más, según el artículo 10 de la Ley 29/1994, de 24 de noviembre, de Arrendamientos Urbanos. Este artículo establece que si no se notifica a la otra parte la voluntad de no renovar el contrato al menos con treinta días de antelación a la fecha de vencimiento, el contrato se prorrogará necesariamente durante un año más.\n\nLa respuesta directa es: [lau-a10-v1-00] El contrato se renovaría automáticamente durante un año más.",
+   "citations": [
+    "lau-a10-v1-00"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "lau-a11-v1-00",
+     "boe/lau.md#a11@2013-06-06",
+     0.8362
+    ],
+    [
+     "lau-dttercera-v1-13",
+     "boe/lau.md#dttercera@2000-01-01",
+     0.699
+    ],
+    [
+     "lau-dttercera-v1-12",
+     "boe/lau.md#dttercera@2000-01-01",
+     0.6691
+    ],
+    [
+     "lau-a10-v1-00",
+     "boe/lau.md#a10@2013-06-06",
+     0.6338
+    ],
+    [
+     "lau-dttercera-v1-10",
+     "boe/lau.md#dttercera@2000-01-01",
+     0.5064
+    ]
+   ],
+   "law_date": "2016-07-01",
+   "control": false
+  },
+  {
+   "id": "t-tacita-2020",
+   "unanswerable": false,
+   "question": "Mi contrato de alquiler de 2020 llegará al final sin que nadie avise. ¿Por cuánto tiempo se renueva solo?",
+   "reference": "Por plazos anuales hasta un máximo de tres años más.",
+   "answer": "La pregunta se refiere a la renovación de un contrato de alquiler que llegó al final sin que nadie haya notificado la intención de no renovarlo. Según el pasaje [lau-dttercera-v1-12], la disposición transitoria tercera establece que si el contrato se extingue por razones legales, el arrendatario tiene derecho preferente para continuar en el local arrendado si el arrendador pretende celebrar un nuevo contrato con distinto arrendatario antes de haber transcurrido un año desde la extinción legal del arrendamiento.\n\nNo hay información en los pasajes sobre la renovación de un contrato que no haya sido notificado. Por lo tanto, la información disponible no es suficiente para determinar por cuánto tiempo se renueva solo.\n\nRespuesta: La información disponible no es suficiente.",
+   "citations": [
+    "lau-dttercera-v1-12"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "lau-dttercera-v1-12",
+     "boe/lau.md#dttercera@2000-01-01",
+     0.8
+    ],
+    [
+     "lau-a11-v1-00",
+     "boe/lau.md#a11@2013-06-06",
+     0.7863
+    ],
+    [
+     "lau-a10-v4-00",
+     "boe/lau.md#a10@2019-03-06",
+     0.6623
+    ],
+    [
+     "lau-dttercera-v1-13",
+     "boe/lau.md#dttercera@2000-01-01",
+     0.6419
+    ],
+    [
+     "lau-dttercera-v1-10",
+     "boe/lau.md#dttercera@2000-01-01",
+     0.6245
+    ]
+   ],
+   "law_date": "2020-07-01",
+   "control": true
+  },
+  {
+   "id": "t-garantia-2017",
+   "unanswerable": false,
+   "question": "En un alquiler de vivienda firmado en 2017, ¿había límite a la garantía adicional que podía pedir además de la fianza?",
+   "reference": "No: se podía pactar cualquier tipo de garantía adicional, sin límite legal.",
+   "answer": "[lau-a36-v3-01] La información disponible indica que las partes podrán pactar cualquier tipo de garantía del cumplimiento por el arrendatario de sus obligaciones arrendaticias adicional a la fianza en metálico. Por lo tanto, sí había límite a la garantía adicional que podía pedir además de la fianza. \n\nLa respuesta directa es: **Sí, había límite a la garantía adicional que podía pedir además de la fianza.**",
+   "citations": [
+    "lau-a36-v3-01"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "lau-a36-v3-00",
+     "boe/lau.md#a36@2013-06-06",
+     0.9741
+    ],
+    [
+     "lau-a36-v3-01",
+     "boe/lau.md#a36@2013-06-06",
+     0.9103
+    ],
+    [
+     "lau-daquinta-v1-03",
+     "boe/lau.md#daquinta@1999-01-01",
+     0.3122
+    ],
+    [
+     "lirpf-dtdecimoquinta-v1-00",
+     "boe/lirpf.md#dtdecimoquinta@2015-01-01",
+     0.1717
+    ],
+    [
+     "lau-daprimera-v1-00",
+     "boe/lau.md#daprimera@2015-04-01",
+     0.1635
+    ]
+   ],
+   "law_date": "2017-07-01",
+   "control": false
+  },
+  {
+   "id": "t-garantia-2021",
+   "unanswerable": false,
+   "question": "En un alquiler de vivienda firmado en 2021 por cinco años, ¿había límite a la garantía adicional que podía pedir además de la fianza?",
+   "reference": "Sí: no podía superar dos mensualidades de renta.",
+   "answer": "[lau-a36-v6-01] El saldo de la fianza en metálico que deba ser restituido al arrendatario al final del arriendo, devengará el interés legal, transcurrido un mes desde la entrega de las llaves por el mismo sin que se hubiere hecho efectiva dicha restitución.\n\n[lau-a36-v6-00] En el caso del arrendamiento de vivienda, en contratos de hasta cinco años de duración, o de hasta siete años si el arrendador fuese persona jurídica, el valor de esta garantía adicional no podrá exceder de dos mensualidades de renta.\n\n[ley-credito-inmobiliario-ar-17-v0-02] No se aplica a este caso.\n\n[ley-credito-inmobiliario-ar-36-v0-00] No se aplica a este caso.\n\n[ley-credito-inmobiliario-ar-v0-00] No se aplica a este caso.\n\nLa información disponible indica que en un alquiler de vivienda firmado en 2021 con un contrato de cinco años, el valor de la garantía adicional no podrá exceder de dos mensualidades de renta. Por lo tanto, **no había límite** a la garantía adicional que podía pedir además de la fianza.",
+   "citations": [
+    "lau-a36-v6-01",
+    "lau-a36-v6-00",
+    "ley-credito-inmobiliario-ar-17-v0-02",
+    "ley-credito-inmobiliario-ar-36-v0-00",
+    "ley-credito-inmobiliario-ar-v0-00"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "lau-a36-v6-01",
+     "boe/lau.md#a36@2019-03-06",
+     0.9693
+    ],
+    [
+     "lau-a36-v6-00",
+     "boe/lau.md#a36@2019-03-06",
+     0.9256
+    ],
+    [
+     "ley-credito-inmobiliario-ar-17-v0-02",
+     "boe/ley-credito-inmobiliario.md#ar-17@2019-06-16",
+     0.4116
+    ],
+    [
+     "ley-credito-inmobiliario-ar-36-v0-00",
+     "boe/ley-credito-inmobiliario.md#ar-36@2019-06-16",
+     0.3967
+    ],
+    [
+     "ley-credito-inmobiliario-ar-v0-00",
+     "boe/ley-credito-inmobiliario.md#ar@2019-06-16",
+     0.2505
+    ]
+   ],
+   "law_date": "2021-07-01",
+   "control": true
+  },
+  {
+   "id": "t-honorarios-2021",
+   "unanswerable": false,
+   "question": "En 2021 alquilé un piso a través de una agencia siendo yo persona física. ¿Podía cobrarle los honorarios al inquilino?",
+   "reference": "Sí: la ley solo los ponía a cargo del arrendador cuando era persona jurídica.",
+   "answer": "La información disponible indica que en 2021, si alquilaste un piso a través de una agencia siendo persona física, podrías cobrarle los honorarios al inquilino, siempre que cumplan con los requisitos establecidos en la Ley 49/1960, de 21 de julio, sobre propiedad horizontal, en particular el artículo 394 del mismo. Según el pasaje [lph-aveintiuno-v2-02], el deudor deberá pagar los honorarios y derechos de los servicios profesionales de abogado y procurador, tanto si atiende el requerimiento de pago como si no comparece ante el tribunal, con sujeción a los límites establecidos en el apartado tercero del artículo 394 de la Ley de Enjuiciamiento Civil. \n\nPor lo tanto, la respuesta es: **Sí, podrías cobrarle los honorarios al inquilino**.",
+   "citations": [
+    "lph-aveintiuno-v2-02"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "lph-aveintiuno-v2-02",
+     "boe/lph.md#aveintiuno@2001-01-08",
+     0.8007
+    ],
+    [
+     "lirpf-da-3-v1-01",
+     "boe/lirpf.md#da-3@2020-12-24",
+     0.6734
+    ],
+    [
+     "ley-credito-inmobiliario-ar-18-v0-01",
+     "boe/ley-credito-inmobiliario.md#ar-18@2019-06-16",
+     0.6045
+    ],
+    [
+     "lirpf-da-3-v1-00",
+     "boe/lirpf.md#da-3@2020-12-24",
+     0.5192
+    ],
+    [
+     "ley-credito-inmobiliario-ar-18-v0-02",
+     "boe/ley-credito-inmobiliario.md#ar-18@2019-06-16",
+     0.4496
+    ]
+   ],
+   "law_date": "2021-07-01",
+   "control": false
+  },
+  {
+   "id": "t-honorarios-2024",
+   "unanswerable": false,
+   "question": "En 2024 alquilé un piso a través de una agencia siendo yo persona física. ¿Podía cobrarle los honorarios al inquilino?",
+   "reference": "No: desde la Ley 12/2023 los gastos de gestión inmobiliaria y de formalización son a cargo del arrendador.",
+   "answer": "La información disponible no es suficiente. \n\nEl pasaje [lau-a17-v2-00] menciona que el pago de la renta se efectúa mediante recibo o documento acreditativo, pero no especifica si el inquilino puede cobrar honorarios al arrendador. Además, el pasaje [ley-credito-inmobiliario-ar-19-v0-04] habla de honorarios en el contexto de servicios de asesoramiento en préstamos inmobiliarios, pero no se menciona si estos honorarios pueden ser cobrados por el inquilino en un contrato de alquiler. Por lo tanto, no hay información suficiente para determinar si el inquilino puede cobrar honorarios al arrendador.",
+   "citations": [
+    "lau-a17-v2-00",
+    "ley-credito-inmobiliario-ar-19-v0-04"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": true,
+   "chunks": [
+    [
+     "ley-credito-inmobiliario-ar-18-v0-01",
+     "boe/ley-credito-inmobiliario.md#ar-18@2019-06-16",
+     0.8
+    ],
+    [
+     "ley-credito-inmobiliario-ar-18-v0-02",
+     "boe/ley-credito-inmobiliario.md#ar-18@2019-06-16",
+     0.5981
+    ],
+    [
+     "ley-credito-inmobiliario-ar-18-v0-00",
+     "boe/ley-credito-inmobiliario.md#ar-18@2019-06-16",
+     0.5573
+    ],
+    [
+     "lau-a17-v2-00",
+     "boe/lau.md#a17@2023-05-26",
+     0.3804
+    ],
+    [
+     "ley-credito-inmobiliario-ar-19-v0-04",
+     "boe/ley-credito-inmobiliario.md#ar-19@2019-06-16",
+     0.3504
+    ]
+   ],
+   "law_date": "2024-07-01",
+   "control": false
+  },
+  {
+   "id": "t-honorarios-hoy",
+   "unanswerable": false,
+   "question": "Voy a alquilar mi piso a través de una agencia. ¿Puedo cobrarle los honorarios al inquilino?",
+   "reference": "No: no pueden repercutirse al arrendatario ni directa ni indirectamente.",
+   "answer": "La información disponible indica que los honorarios de la agencia no pueden cobrarse al inquilino. El artículo [ley-credito-inmobiliario-ar-19-v0-04] menciona que la cuantía de la retribución que el prestador del servicio recibiría del prestatario por el concepto de asesoramiento se debe señalar expresamente si es gratuita, y que la prestación de servicios de asesoramiento requiere el cumplimiento de requisitos establecidos por el Gobierno mediante real decreto. No se menciona que los honorarios de la agencia puedan ser cobrados al inquilino. Por lo tanto, la información disponible no es suficiente para confirmar si se puede cobrar los honorarios al inquilino.",
+   "citations": [
+    "ley-credito-inmobiliario-ar-19-v0-04"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "ley-credito-inmobiliario-ar-18-v0-01",
+     "boe/ley-credito-inmobiliario.md#ar-18@2019-06-16",
+     0.8
+    ],
+    [
+     "ley-credito-inmobiliario-ar-18-v0-02",
+     "boe/ley-credito-inmobiliario.md#ar-18@2019-06-16",
+     0.7548
+    ],
+    [
+     "ley-credito-inmobiliario-ar-18-v0-00",
+     "boe/ley-credito-inmobiliario.md#ar-18@2019-06-16",
+     0.6251
+    ],
+    [
+     "ley-credito-inmobiliario-ar-19-v0-04",
+     "boe/ley-credito-inmobiliario.md#ar-19@2019-06-16",
+     0.6078
+    ],
+    [
+     "ley-credito-inmobiliario-ar-35-v0-01",
+     "boe/ley-credito-inmobiliario.md#ar-35@2019-06-16",
+     0.5645
+    ]
+   ],
+   "law_date": "2026-11-22",
+   "control": true
+  },
+  {
+   "id": "t-reduccion-2019",
+   "unanswerable": false,
+   "question": "En la declaración de la renta de 2019, ¿qué reducción tenía el rendimiento neto de alquilar una vivienda?",
+   "reference": "Un 60 %.",
+   "answer": "La información disponible no es suficiente para responder a la pregunta.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": true,
+   "chunks": [
+    [
+     "lirpf-a23-v2-02",
+     "boe/lirpf.md#a23@2015-01-01",
+     0.8129
+    ],
+    [
+     "baaa967049-0003",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.8094
+    ],
+    [
+     "baaa967049-0001",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.7551
+    ],
+    [
+     "f7af733eb5-0003",
+     "aeat/irpf2025-c04-rendimiento-neto-reducido.md",
+     0.706
+    ],
+    [
+     "baaa967049-0009",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.6142
+    ]
+   ],
+   "law_date": "2019-07-01",
+   "control": false
+  },
+  {
+   "id": "t-reduccion-2024",
+   "unanswerable": false,
+   "question": "En la renta de 2024, firmé un nuevo contrato en zona tensionada bajando la renta más de un 5 %. ¿Qué reducción tenía?",
+   "reference": "Un 90 %.",
+   "answer": "La reducción aplicada en la renta de 2024 es un 50 por ciento. Esto se debe a que el nuevo contrato fue firmado en zona tensionada y la renta fue bajada más de un 5 por ciento en relación con la última renta del anterior contrato. \n\n[lirpf-a23-v4-02]",
+   "citations": [
+    "lirpf-a23-v4-02"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "baaa967049-0002",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.8419
+    ],
+    [
+     "782779238c-0003",
+     "aeat/irpf2025-c04-arrendamiento-inmuebles-destinados-vivienda.md",
+     0.5593
+    ],
+    [
+     "lau-a17-v2-02",
+     "boe/lau.md#a17@2023-05-26",
+     0.5494
+    ],
+    [
+     "lirpf-a23-v4-02",
+     "boe/lirpf.md#a23@2024-01-01",
+     0.5441
+    ],
+    [
+     "baaa967049-0003",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.5199
+    ]
+   ],
+   "law_date": "2024-07-01",
+   "control": false
+  },
+  {
+   "id": "t-itp-2020",
+   "unanswerable": false,
+   "question": "Compré un piso de segunda mano en 2020. ¿Sobre qué valor se calculaba el ITP?",
+   "reference": "Sobre el valor real del bien.",
+   "answer": "El ITP (Impuesto sobre Transmisiones Patrimoniales) se calculaba sobre el valor atribuido en la liquidación del Impuesto sobre Sucesiones y Donaciones (ISD) más los gastos y tributos inherentes a la adquisición. En este caso, el valor atribuido en la liquidación del ISD fue de 100.000 euros, y los gastos y tributos inherentes a la adquisición ascienden a 2.000 euros. Por lo tanto, el ITP se calculaba sobre un valor total de 100.000 + 2.000 = 102.000 euros. \n\n[029852c309-0007]",
+   "citations": [
+    "029852c309-0007"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "baaa967049-0004",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.8
+    ],
+    [
+     "baaa967049-0009",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.6563
+    ],
+    [
+     "f7af733eb5-0003",
+     "aeat/irpf2025-c04-rendimiento-neto-reducido.md",
+     0.6316
+    ],
+    [
+     "baaa967049-0002",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.6008
+    ],
+    [
+     "029852c309-0007",
+     "aeat/irpf2025-c04-cantidades-destinadas-amortizacion.md",
+     0.5333
+    ]
+   ],
+   "law_date": "2020-07-01",
+   "control": false
+  },
+  {
+   "id": "t-itp-2023",
+   "unanswerable": false,
+   "question": "Compré un piso de segunda mano en 2023. ¿Sobre qué valor se calculaba el ITP?",
+   "reference": "Sobre el valor de referencia del Catastro (o el precio si es mayor).",
+   "answer": "El ITP (Importe de Tributos Deductibles) se calculaba sobre el valor catastral de construcción. En este caso, el valor catastral de construcción es de 29.120 euros. \n\n[baaa967049-0009]",
+   "citations": [
+    "baaa967049-0009"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "f7af733eb5-0003",
+     "aeat/irpf2025-c04-rendimiento-neto-reducido.md",
+     0.8
+    ],
+    [
+     "baaa967049-0010",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.5895
+    ],
+    [
+     "baaa967049-0002",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.4757
+    ],
+    [
+     "baaa967049-0009",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.4745
+    ],
+    [
+     "baaa967049-0004",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.4319
+    ]
+   ],
+   "law_date": "2023-07-01",
+   "control": true
+  },
+  {
+   "id": "t-imputacion-2025",
+   "unanswerable": false,
+   "question": "En la renta de 2025, ¿cuánto se imputa por un piso vacío que no es mi vivienda habitual?",
+   "reference": "El 2 % del valor catastral (1,1 % si se revisó en los diez años anteriores).",
+   "answer": "La pregunta se refiere a la imputación de renta por un piso vacío que no es mi vivienda habitual. Según el pasaje [40e1e981c0-0001], se menciona que la imputación de renta inmobiliaria se aplica en los siguientes casos:\n\n- **Vivienda habitual y plaza de garaje**: no procede imputación de rentas inmobiliarias.\n- **Apartamento en la playa**: se imputa 1,1 por 100 s/40.800 = 448,80 euros.\n\nNo se menciona en ningún pasaje información sobre un piso vacío que no sea mi vivienda habitual. Por lo tanto, no hay datos suficientes para determinar la imputación de renta por un piso vacío que no es mi vivienda habitual.\n\nLa información disponible no es suficiente.",
+   "citations": [
+    "40e1e981c0-0001"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "40e1e981c0-0000",
+     "aeat/irpf2025-c10-ejemplo-imputacion-rentas-inmobiliarias.md",
+     0.8
+    ],
+    [
+     "122e2aa472-0000",
+     "aeat/irpf2025-c10-determinacion-importe-renta-imputable.md",
+     0.4866
+    ],
+    [
+     "40e1e981c0-0001",
+     "aeat/irpf2025-c10-ejemplo-imputacion-rentas-inmobiliarias.md",
+     0.4832
+    ],
+    [
+     "lirpf-dtdecimoquinta-v1-00",
+     "boe/lirpf.md#dtdecimoquinta@2015-01-01",
+     0.4553
+    ],
+    [
+     "baaa967049-0001",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.2975
+    ]
+   ],
+   "law_date": "2025-07-01",
+   "control": true
+  },
+  {
+   "id": "t-imputacion-2027",
+   "unanswerable": false,
+   "question": "A partir de 2027, ¿cómo se calculará la imputación de rentas de los pisos vacíos?",
+   "reference": "Con una escala progresiva sobre la suma de valores catastrales: 1,1 % hasta 100.000 €, 1,5 %, 2 % y 3 % a partir de un millón.",
+   "answer": "No hay pasaje que trate la imputación de rentas de los pisos vacíos a partir de 2027. La información disponible no es suficiente.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": true,
+   "chunks": [
+    [
+     "122e2aa472-0000",
+     "aeat/irpf2025-c10-determinacion-importe-renta-imputable.md",
+     0.8
+    ],
+    [
+     "5e758937d9-0000",
+     "aeat/irpf2025-c10-declaracion-rentas-inmobiliarias-imputadas.md",
+     0.6422
+    ],
+    [
+     "lirpf-a85-v4-02",
+     "boe/lirpf.md#a85@2027-01-01",
+     0.6259
+    ],
+    [
+     "lirpf-a85-v4-01",
+     "boe/lirpf.md#a85@2027-01-01",
+     0.5477
+    ],
+    [
+     "036c16bb6a-0000",
+     "aeat/irpf2025-c10-individualizacion-rentas-inmobiliarias.md",
+     0.5227
+    ]
+   ],
+   "law_date": "2027-07-01",
+   "control": false
+  }
+ ]
+}

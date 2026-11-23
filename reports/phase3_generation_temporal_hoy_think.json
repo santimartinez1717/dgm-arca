@@ -1,0 +1,786 @@
+{
+ "generator": "Qwen/Qwen3-1.7B",
+ "config": {
+  "chunking": "semantic",
+  "chunk_size": 800,
+  "chunk_overlap": 100,
+  "semantic_threshold": 0.8215,
+  "max_chunk_chars": 1500,
+  "weight_bm25": 0.2,
+  "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+  "generator_model": "Qwen/Qwen3-1.7B",
+  "generator_adapter": null,
+  "temporal": false,
+  "thinking": true,
+  "max_new_tokens": 1536,
+  "index_dir": "rag/index"
+ },
+ "retriever": "hybrid",
+ "top_k": 5,
+ "metrics": {
+  "n_answerable": 17,
+  "n_unanswerable": 0,
+  "cites_any": 0.765,
+  "answers_with_invented_ids": 0.0,
+  "relevant_retrieved": 0.0,
+  "cites_relevant_when_retrieved": null,
+  "figures_match": 0.364,
+  "figures_match_when_retrieved": null,
+  "abstains_answerable": 0.294,
+  "abstains_when_retrieved": null,
+  "abstains_when_not_retrieved": 0.294,
+  "abstains_unanswerable": null
+ },
+ "elapsed_s": 1555.6,
+ "items": [
+  {
+   "id": "t-plazo-2017",
+   "unanswerable": false,
+   "question": "Firmé un alquiler de vivienda con un particular en 2017 por un año. ¿Hasta cuántos años podía prorrogarlo el inquilino?",
+   "reference": "Hasta tres años (prórroga obligatoria anual hasta una duración mínima de tres años).",
+   "answer": "La información disponible indica que el inquilino podría prorrogar el contrato de vivienda habitual **hasta un máximo de dos años adicionales** en caso de solicitud y aprobación del arrendador, siempre que esté al corriente del alquiler. Además, los contratos de vivienda habitual con plazo mínimo de cinco años permiten prorrogas anuales obligatorias hasta alcanzar ese plazo. \n\n**Respuesta:**  \nEl inquilino podría prorrogar el contrato de vivienda habitual **hasta un máximo de dos años adicionales** (en total, hasta 7 años si se aplican las prorrogas obligatorias y extraordinarias).  \n\n[ff7be5a4bd-0075] [d0a26f8298-0039] [ff7be5a4bd-0175]",
+   "citations": [
+    "ff7be5a4bd-0075",
+    "d0a26f8298-0039",
+    "ff7be5a4bd-0175"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "ff7be5a4bd-0075",
+     "boe/rdl-29-2026.md",
+     0.8
+    ],
+    [
+     "d0a26f8298-0035",
+     "boe/lau.md",
+     0.4773
+    ],
+    [
+     "d0a26f8298-0005",
+     "boe/lau.md",
+     0.3819
+    ],
+    [
+     "d0a26f8298-0039",
+     "boe/lau.md",
+     0.3781
+    ],
+    [
+     "ff7be5a4bd-0175",
+     "boe/rdl-29-2026.md",
+     0.3444
+    ]
+   ],
+   "law_date": null,
+   "control": false
+  },
+  {
+   "id": "t-plazo-2021",
+   "unanswerable": false,
+   "question": "Firmé un alquiler de vivienda con un particular en 2021 por un año. ¿Hasta cuántos años podía prorrogarlo el inquilino?",
+   "reference": "Hasta cinco años (siete si el arrendador es persona jurídica).",
+   "answer": "La información disponible indica que, según la disposición final cuarta, el inquilino podría prorrogar el contrato de vivienda habitual por un máximo de **dos años adicionales** a la fecha de finalización de la prórroga obligatoria. Sin embargo, esta prórroga se puede aplicar solo si el arrendador está al corriente de pago del alquiler y ha estado mensualmente al corriente durante los ocho meses anteriores. \n\n**Respuesta:** [ff7be5a4bd-0075] El inquilino podría prorrogar el contrato por un máximo de dos años adicionales.",
+   "citations": [
+    "ff7be5a4bd-0075"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "ff7be5a4bd-0075",
+     "boe/rdl-29-2026.md",
+     0.8
+    ],
+    [
+     "d0a26f8298-0035",
+     "boe/lau.md",
+     0.4834
+    ],
+    [
+     "ff7be5a4bd-0175",
+     "boe/rdl-29-2026.md",
+     0.4631
+    ],
+    [
+     "d0a26f8298-0005",
+     "boe/lau.md",
+     0.401
+    ],
+    [
+     "d0a26f8298-0039",
+     "boe/lau.md",
+     0.3865
+    ]
+   ],
+   "law_date": null,
+   "control": true
+  },
+  {
+   "id": "t-plazo-2019-01",
+   "unanswerable": false,
+   "question": "Firmé un contrato de alquiler de vivienda el 10 de enero de 2019. ¿Cuál era la duración mínima con las prórrogas obligatorias?",
+   "reference": "Cinco años (siete si el arrendador es persona jurídica): estaba en vigor el RDL 21/2018.",
+   "answer": "La duración mínima con las prórrogas obligatorias es de **cinco años**, según la información del pasaje [d0a26f8298-0005]. Este plazo se establece como mínimo y se puede extender mediante prórrogas anuales obligatorias hasta alcanzar cinco años, si el pacto inicial fue inferior.",
+   "citations": [
+    "d0a26f8298-0005"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0005",
+     "boe/lau.md",
+     1.0
+    ],
+    [
+     "d0a26f8298-0035",
+     "boe/lau.md",
+     0.9506
+    ],
+    [
+     "b139194ed5-0114",
+     "boe/lirpf.md",
+     0.862
+    ],
+    [
+     "ff7be5a4bd-0075",
+     "boe/rdl-29-2026.md",
+     0.8213
+    ],
+    [
+     "ff7be5a4bd-0175",
+     "boe/rdl-29-2026.md",
+     0.636
+    ]
+   ],
+   "law_date": null,
+   "control": true
+  },
+  {
+   "id": "t-plazo-2019-02",
+   "unanswerable": false,
+   "question": "Firmé un contrato de alquiler de vivienda el 1 de febrero de 2019. ¿Cuál era la duración mínima con las prórrogas obligatorias?",
+   "reference": "Tres años: el RDL 21/2018 se había derogado y volvía el plazo de 2013.",
+   "answer": "La duración mínima con las prórrogas obligatorias es de **cinco años**, según el pasaje [d0a26f8298-0005]. Este plazo se establece como mínimo y se complementa con prórrogas anuales obligatorias, que pueden extender el contrato hasta alcanzar ese plazo.",
+   "citations": [
+    "d0a26f8298-0005"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0005",
+     "boe/lau.md",
+     0.9405
+    ],
+    [
+     "d0a26f8298-0035",
+     "boe/lau.md",
+     0.9124
+    ],
+    [
+     "ff7be5a4bd-0075",
+     "boe/rdl-29-2026.md",
+     0.7651
+    ],
+    [
+     "b139194ed5-0114",
+     "boe/lirpf.md",
+     0.7427
+    ],
+    [
+     "ff7be5a4bd-0175",
+     "boe/rdl-29-2026.md",
+     0.7132
+    ]
+   ],
+   "law_date": null,
+   "control": false
+  },
+  {
+   "id": "t-tacita-2016",
+   "unanswerable": false,
+   "question": "Mi contrato de alquiler de 2016 llegó al final sin que nadie avisara. ¿Por cuánto tiempo se renovaba solo?",
+   "reference": "Un año más.",
+   "answer": "La información disponible indica que, si el contrato de alquiler termina sin notificación de parte alguna, el contrato se prorrogará obligatoriamente por plazos anuales hasta un máximo de tres años más, salvo que el arrendatario manifieste su voluntad de no renovar con un mes de antelación. Por lo tanto, el contrato se renovaría **más de tres años** (máximo de tres años) sin necesidad de notificación.  \n\n[d0a26f8298-0036]",
+   "citations": [
+    "d0a26f8298-0036"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0036",
+     "boe/lau.md",
+     0.8
+    ],
+    [
+     "d0a26f8298-0200",
+     "boe/lau.md",
+     0.6166
+    ],
+    [
+     "d0a26f8298-0043",
+     "boe/lau.md",
+     0.5652
+    ],
+    [
+     "d0a26f8298-0041",
+     "boe/lau.md",
+     0.4602
+    ],
+    [
+     "d0a26f8298-0034",
+     "boe/lau.md",
+     0.4098
+    ]
+   ],
+   "law_date": null,
+   "control": false
+  },
+  {
+   "id": "t-tacita-2020",
+   "unanswerable": false,
+   "question": "Mi contrato de alquiler de 2020 llegará al final sin que nadie avise. ¿Por cuánto tiempo se renueva solo?",
+   "reference": "Por plazos anuales hasta un máximo de tres años más.",
+   "answer": "La información disponible indica que si el contrato de alquiler no tiene notificación de renuncia de parte alguna, se renovará **obligatoriamente por plazos anuales hasta un máximo de tres años más**. Esto se establece en [d0a26f8298-0036]. \n\n**Respuesta:** El contrato se renovará obligatoriamente por **tres años adicionales**.",
+   "citations": [
+    "d0a26f8298-0036"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0036",
+     "boe/lau.md",
+     0.8
+    ],
+    [
+     "d0a26f8298-0200",
+     "boe/lau.md",
+     0.7709
+    ],
+    [
+     "d0a26f8298-0043",
+     "boe/lau.md",
+     0.573
+    ],
+    [
+     "d0a26f8298-0198",
+     "boe/lau.md",
+     0.5109
+    ],
+    [
+     "ff7be5a4bd-0075",
+     "boe/rdl-29-2026.md",
+     0.4837
+    ]
+   ],
+   "law_date": null,
+   "control": true
+  },
+  {
+   "id": "t-garantia-2017",
+   "unanswerable": false,
+   "question": "En un alquiler de vivienda firmado en 2017, ¿había límite a la garantía adicional que podía pedir además de la fianza?",
+   "reference": "No: se podía pactar cualquier tipo de garantía adicional, sin límite legal.",
+   "answer": "La garantía adicional no podrá exceder de dos mensualidades de renta en el arrendamiento de vivienda y de una mensualidad en los arrendamientos temporales, según lo establecido en [d0a26f8298-0126]. Por lo tanto, en un alquiler firmado en 2017 (que se encuentra dentro del período de hasta cinco años), el límite máximo de la garantía adicional es **dos mensualidades de renta**.",
+   "citations": [
+    "d0a26f8298-0126"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0127",
+     "boe/lau.md",
+     1.0
+    ],
+    [
+     "d0a26f8298-0126",
+     "boe/lau.md",
+     0.6474
+    ],
+    [
+     "c1e9ef0fb3-0066",
+     "boe/ley-credito-inmobiliario.md",
+     0.4151
+    ],
+    [
+     "c1e9ef0fb3-0015",
+     "boe/ley-credito-inmobiliario.md",
+     0.2905
+    ],
+    [
+     "ff7be5a4bd-0057",
+     "boe/rdl-29-2026.md",
+     0.2609
+    ]
+   ],
+   "law_date": null,
+   "control": false
+  },
+  {
+   "id": "t-garantia-2021",
+   "unanswerable": false,
+   "question": "En un alquiler de vivienda firmado en 2021 por cinco años, ¿había límite a la garantía adicional que podía pedir además de la fianza?",
+   "reference": "Sí: no podía superar dos mensualidades de renta.",
+   "answer": "La garantía adicional no podrá exceder de dos mensualidades de renta en el caso de arrendamientos de vivienda con contrato de hasta cinco años. Esta limitación se establece en el artículo 36 del texto, específicamente en el párrafo que menciona el valor máximo de la garantía adicional. \n\n[d0a26f8298-0126]",
+   "citations": [
+    "d0a26f8298-0126"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0127",
+     "boe/lau.md",
+     1.0
+    ],
+    [
+     "d0a26f8298-0126",
+     "boe/lau.md",
+     0.5376
+    ],
+    [
+     "ff7be5a4bd-0075",
+     "boe/rdl-29-2026.md",
+     0.2892
+    ],
+    [
+     "c1e9ef0fb3-0066",
+     "boe/ley-credito-inmobiliario.md",
+     0.1713
+    ],
+    [
+     "1378e54815-0047",
+     "boe/ley-vivienda.md",
+     0.12
+    ]
+   ],
+   "law_date": null,
+   "control": true
+  },
+  {
+   "id": "t-honorarios-2021",
+   "unanswerable": false,
+   "question": "En 2021 alquilé un piso a través de una agencia siendo yo persona física. ¿Podía cobrarle los honorarios al inquilino?",
+   "reference": "Sí: la ley solo los ponía a cargo del arrendador cuando era persona jurídica.",
+   "answer": "La información disponible no es suficiente para determinar si los honorarios al inquilino podían ser deducidos en 2021. Los pasajes no mencionan claramente si los gastos relacionados con honorarios al inquilino son considerados deducibles en el contexto de la renta inmobiliaria.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "b139194ed5-0577",
+     "boe/lirpf.md",
+     0.8
+    ],
+    [
+     "baaa967049-0012",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.6527
+    ],
+    [
+     "baaa967049-0002",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.6013
+    ],
+    [
+     "c1e9ef0fb3-0120",
+     "boe/ley-credito-inmobiliario.md",
+     0.593
+    ],
+    [
+     "c1e9ef0fb3-0119",
+     "boe/ley-credito-inmobiliario.md",
+     0.4263
+    ]
+   ],
+   "law_date": null,
+   "control": false
+  },
+  {
+   "id": "t-honorarios-2024",
+   "unanswerable": false,
+   "question": "En 2024 alquilé un piso a través de una agencia siendo yo persona física. ¿Podía cobrarle los honorarios al inquilino?",
+   "reference": "No: desde la Ley 12/2023 los gastos de gestión inmobiliaria y de formalización son a cargo del arrendador.",
+   "answer": "La información disponible no es suficiente. El pasaje [baaa967049-0002] menciona que los ingresos íntegros correspondientes al contrato se calculan según el precio fijo, pero no se aborda el tema de cobrar honorarios al inquilino. Los pasajes [c1e9ef0fb3-0120], [1378e54815-0043] y [60685c58f3-0002] no tratan de cómo se gestionan los honorarios de agencias en relación con los arrendamientos. Por lo tanto, no se puede determinar si el usuario podía cobrarle honorarios al inquilino basándose en los pasajes proporcionados.",
+   "citations": [
+    "baaa967049-0002",
+    "c1e9ef0fb3-0120",
+    "1378e54815-0043",
+    "60685c58f3-0002"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": true,
+   "chunks": [
+    [
+     "baaa967049-0002",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.8
+    ],
+    [
+     "c1e9ef0fb3-0120",
+     "boe/ley-credito-inmobiliario.md",
+     0.6256
+    ],
+    [
+     "1378e54815-0043",
+     "boe/ley-vivienda.md",
+     0.4713
+    ],
+    [
+     "d0a26f8298-0161",
+     "boe/lau.md",
+     0.4244
+    ],
+    [
+     "60685c58f3-0002",
+     "aeat/irpf2025-c04-rendimientos-integros.md",
+     0.3943
+    ]
+   ],
+   "law_date": null,
+   "control": false
+  },
+  {
+   "id": "t-honorarios-hoy",
+   "unanswerable": false,
+   "question": "Voy a alquilar mi piso a través de una agencia. ¿Puedo cobrarle los honorarios al inquilino?",
+   "reference": "No: no pueden repercutirse al arrendatario ni directa ni indirectamente.",
+   "answer": "La información disponible no es suficiente. No hay pasajes que indiquen si el inquilino puede cobrar honorarios de la agencia o cómo se gestionan estos honorarios en el contrato de alquiler.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "df4be3ee94-0065",
+     "boe/lph.md",
+     0.8
+    ],
+    [
+     "c1e9ef0fb3-0120",
+     "boe/ley-credito-inmobiliario.md",
+     0.7409
+    ],
+    [
+     "c1e9ef0fb3-0119",
+     "boe/ley-credito-inmobiliario.md",
+     0.7252
+    ],
+    [
+     "c1e9ef0fb3-0053",
+     "boe/ley-credito-inmobiliario.md",
+     0.6959
+    ],
+    [
+     "d0a26f8298-0126",
+     "boe/lau.md",
+     0.6177
+    ]
+   ],
+   "law_date": null,
+   "control": true
+  },
+  {
+   "id": "t-reduccion-2019",
+   "unanswerable": false,
+   "question": "En la declaración de la renta de 2019, ¿qué reducción tenía el rendimiento neto de alquilar una vivienda?",
+   "reference": "Un 60 %.",
+   "answer": "La información disponible no es suficiente. Los pasajes proporcionados no mencionan ningún dato relacionado con la reducción del rendimiento neto de alquilar una vivienda en el ejercicio 2019.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": true,
+   "chunks": [
+    [
+     "baaa967049-0003",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.809
+    ],
+    [
+     "baaa967049-0001",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.7538
+    ],
+    [
+     "f7af733eb5-0003",
+     "aeat/irpf2025-c04-rendimiento-neto-reducido.md",
+     0.7252
+    ],
+    [
+     "ff7be5a4bd-0043",
+     "boe/rdl-29-2026.md",
+     0.6095
+    ],
+    [
+     "baaa967049-0009",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.6089
+    ]
+   ],
+   "law_date": null,
+   "control": false
+  },
+  {
+   "id": "t-reduccion-2024",
+   "unanswerable": false,
+   "question": "En la renta de 2024, firmé un nuevo contrato en zona tensionada bajando la renta más de un 5 %. ¿Qué reducción tenía?",
+   "reference": "Un 90 %.",
+   "answer": "La reducción aplicada en la renta de 2024, al firmar el nuevo contrato en zona tensionada y reducir la renta más de un 5%, es del **90%**. Esto se basa en el cuadro-resumen de la Ley del IRPF [f2f4407c91-0000], que establece que para contratos celebrados después de 26 de mayo de 2023, se aplica un 90% de reducción si la renta se rebaja más de un 5% en relación con la última renta del contrato anterior en una zona de mercado residencial tensionado. \n\n[f2f4407c91-0000]",
+   "citations": [
+    "f2f4407c91-0000"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "baaa967049-0002",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.8404
+    ],
+    [
+     "782779238c-0003",
+     "aeat/irpf2025-c04-arrendamiento-inmuebles-destinados-vivienda.md",
+     0.5857
+    ],
+    [
+     "baaa967049-0008",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.5538
+    ],
+    [
+     "baaa967049-0003",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.5453
+    ],
+    [
+     "f2f4407c91-0000",
+     "aeat/irpf2025-c04-cuadro-reducciones-arrendamiento.md",
+     0.3736
+    ]
+   ],
+   "law_date": null,
+   "control": false
+  },
+  {
+   "id": "t-itp-2020",
+   "unanswerable": false,
+   "question": "Compré un piso de segunda mano en 2020. ¿Sobre qué valor se calculaba el ITP?",
+   "reference": "Sobre el valor real del bien.",
+   "answer": "La información disponible indica que el ITP (Impuesto sobre Transmisiones Patrimoniales) se calculaba basándose en el valor atribuido en la liquidación del Impuesto sobre Sucesiones y Donaciones (ISD) del inmueble. En el caso del pasaje [029852c309-0007], se menciona que el valor atribuido en la liquidación del ISD fue de **100.000 euros**. Por lo tanto, el ITP se calculaba sobre este valor. \n\n**Respuesta:** El ITP se calculaba sobre un valor de **100.000 euros**.",
+   "citations": [
+    "029852c309-0007"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "baaa967049-0004",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.8
+    ],
+    [
+     "baaa967049-0009",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.6807
+    ],
+    [
+     "f7af733eb5-0003",
+     "aeat/irpf2025-c04-rendimiento-neto-reducido.md",
+     0.6603
+    ],
+    [
+     "baaa967049-0002",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.6347
+    ],
+    [
+     "029852c309-0007",
+     "aeat/irpf2025-c04-cantidades-destinadas-amortizacion.md",
+     0.5787
+    ]
+   ],
+   "law_date": null,
+   "control": false
+  },
+  {
+   "id": "t-itp-2023",
+   "unanswerable": false,
+   "question": "Compré un piso de segunda mano en 2023. ¿Sobre qué valor se calculaba el ITP?",
+   "reference": "Sobre el valor de referencia del Catastro (o el precio si es mayor).",
+   "answer": "<think>\nOkay, let's see. The user is asking about the ITP (Impuesto sobre el Patrimonio) calculation for a property bought in 2023. I need to check the provided passages to find the relevant information.\n\nLooking at passage [baaa967049-0010], it mentions the amortization limit. The formula is 3% of the higher of the construction value or acquisition cost, excluding the land value. The example given has a construction value of 29,120 euros and acquisition cost of 73,000 euros. The amortization is 3% of 73,000 (excluded land) which is 2,190 euros. But the user is asking about the ITP, which is different. \n\nPassage [baaa967049-0002] talks about the ITP calculation for a property in a non-tensioned area. The example uses a construction value of 29,120 euros and acquisition cost of 73,000 euros. The ITP is calculated based on the acquisition cost, but the exact method isn't detailed here. \n\nPassage [baaa967049-0009] also mentions the ITP, but it's about a property in a tensioned area. The example uses a construction value of 46,200 euros and acquisition cost of 73,000 euros. The ITP here is calculated as 3% of the higher value, which would be 46,200 euros. \n\nWait, but the user bought the property in 2023. The ITP is calculated based on the acquisition cost. The construction value might be different. In passage [baaa967049-0004], there's an example where the construction value is 39,120 euros and acquisition cost is 120,000 euros. But that's for a different scenario. \n\nThe key here is that the ITP is calculated on the acquisition cost, but the exact value depends on the construction value. The user's property was bought in 2023, so the construction value might be 29,120 euros as in passage [baaa967049-0010], but in other examples, it's 46,200 or 39,120. \n\nWait, the user's question is about the ITP calculation. The ITP is based on the acquisition cost, but the exact amount is 3% of the higher of the construction value or the acquisition cost (excluding land). So if the user bought the property for 73,000 euros (acquisition cost) and the construction value is 29,120, then the ITP is 3% of 73,000, which is 2,190 euros. But if the construction value is higher, like 46,200, then it's 3% of 46,200, which is 1,386 euros. \n\nBut the user hasn't provided the construction value. However, in passage [baaa967049-0010], the example uses 29,120 as the construction value. In passage [baaa967049-0004], the construction value is 39,120. So depending on the specific case, the ITP would be calculated differently. \n\nBut the question is asking \"sobre qué valor se calculaba el ITP?\" which translates to \"on which value was the ITP calculated?\" So the answer would be the acquisition cost, but the exact calculation depends on the construction value. However, the user might be referring to the standard method where the ITP is 3% of the higher of the construction value or the acquisition cost (excluding land). \n\nIn the absence of specific numbers, the answer would be that the ITP is calculated on the acquisition cost, but the exact amount depends on the construction value. However, if the construction value is 29,120, then it's 3% of 73,000 (acquisition cost), which is 2,190. But if the construction value is higher, like 46,200, then it's 3% of 46,200. \n\nBut the user's question is about the ITP calculation, so the answer would be that the ITP is calculated on the acquisition cost, but the exact value is 3% of the higher of the construction value or the acquisition cost (excluding land). However, without specific numbers, the answer can't be determined exactly. But since the user bought the property in 2023, the construction value might be 29,120 as in passage [baaa967049-0010], leading to 2,190. But the answer should be based on the information given. \n\nWait, the user's question is in Spanish, and the answer needs to be in Spanish. The answer should be based on the provided passages. The ITP is calculated on the acquisition cost, but the exact value is 3% of the higher of the construction value or the acquisition cost (excluding land). So the answer is that the ITP is calculated on the acquisition cost, but the exact amount depends on the construction value. However, if the construction value is 29,120, then it's 3% of 73,000 (acquisition cost) which is 2,190. But the user might not have provided the construction value. \n\nBut the question is asking \"sobre qué valor se calculaba el ITP?\" which is \"on which value was the ITP calculated?\" So the answer is the acquisition cost, but the exact calculation uses the construction value. However, the user might be referring to the standard method where the ITP is 3% of the higher of the construction value or the acquisition cost. Therefore, the answer is that the ITP is calculated on the acquisition cost, but the exact value is 3% of the higher of the construction value or the acquisition cost (excluding land). \n\nBut the user might need the specific value. Since the user bought the property in 2023, and the construction value is 29,120 as in passage [baaa967049-0010], the ITP would be 3% of 73,000 (acquisition cost) which is 2,190. However, the answer should be based on the information given. The answer is that the ITP is calculated on the acquisition cost, but the exact amount depends on the construction value. However, the user might need the specific value. \n\nBut the answer should be based on the information in the passages. The answer is that the ITP is calculated on the acquisition cost, but the exact value is 3% of the higher of the construction value or the acquisition cost (excluding land). Therefore, the answer is that the ITP is calculated on the acquisition cost, and the exact value is 3% of the higher of the construction value or the acquisition cost (excluding land). However, the user might need the specific value. Since the construction value is 29,120 and the acquisition cost is 73,000, the ITP is 3% of 73,000, which is 2,190. But the answer should be based on the information given. \n\nWait, the user's",
+   "citations": [
+    "baaa967049-0010",
+    "baaa967049-0002",
+    "baaa967049-0009",
+    "baaa967049-0004"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "f7af733eb5-0003",
+     "aeat/irpf2025-c04-rendimiento-neto-reducido.md",
+     0.8
+    ],
+    [
+     "baaa967049-0010",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.6214
+    ],
+    [
+     "baaa967049-0002",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.5249
+    ],
+    [
+     "baaa967049-0009",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.5239
+    ],
+    [
+     "baaa967049-0004",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.4878
+    ]
+   ],
+   "law_date": null,
+   "control": true
+  },
+  {
+   "id": "t-imputacion-2025",
+   "unanswerable": false,
+   "question": "En la renta de 2025, ¿cuánto se imputa por un piso vacío que no es mi vivienda habitual?",
+   "reference": "El 2 % del valor catastral (1,1 % si se revisó en los diez años anteriores).",
+   "answer": "<think>\nOkay, let's tackle this question. The user is asking how much is imputed for a vacant apartment that isn't considered a habitual residence in 2025.\n\nFirst, I need to look at the relevant passages. The question is about imputing rental income for a vacant property that isn't a habitual residence. \n\nLooking at passage [40e1e981c0-0001], there's an example where an apartment was vacant and not notified of the cadastral value. The solution mentioned that in such cases, the rental income is imputed using the 1.1% rate. However, the note says that if the cadastral value hasn't been notified, the 1.1% applies. But the user's question is about a property that's vacant and not a habitual residence. \n\nPassage [dbe8d46e77-0004] talks about when a property isn't considered a habitual residence. It mentions that if there are two floors, and they're not connected internally, the one without the habitual residence is subject to imputation. Also, if the property is vacant and not notified, the imputation might still apply. \n\nIn the example from [40e1e981c0-0001], the apartment was vacant and not notified, so the 1.1% was applied. The calculation was 1.1% of 50% of the purchase price, which was 105,000 euros. The 50% is because the cadastral value wasn't notified yet. \n\nBut the user's question is about a vacant property that isn't a habitual residence. According to [dbe8d46e77-0004], if the property is vacant and not notified, the imputation still applies. So even if it's not a habitual residence, the 1.1% rate would be used. \n\nSo the answer would be the 1.1% of 50% of the purchase price. The example in [40e1e981c0-0001] had 105,000, so 50% is 52,500, multiplied by 1.1% gives 577.50 euros. But the note in [40e1e981c0-0001] says the calculation was 1,1% of (50% x 105,000) x 62/365, which is 98.10. Wait, that's the calculation for the monthly rent. But the question is about the total imputation for the year. \n\nWait, the example in [40e1e981c0-0001] says the apartment was rented for 600 euros monthly, so the annual rent is 600*12=7,200. The calculation was 1.1% of 50% of 105,000, which is 52,500, times 1.1% is 577.50. But the note says 98.10. Wait, maybe the 62/365 is for the daily rate? That's confusing. \n\nBut the user's question is about the imputation for the year. The example in [40e1e981c0-0001] says the total was 448.80 (from 1.1% of 40,800) and 98.10 (from 1.1% of 50% of 105,000). So the total is 546.90. \n\nBut the user is asking about a vacant property that isn't a habitual residence. According to [40e1e981c0-0001], even if it's vacant and not notified, the 1.1% applies. So the imputation would be 1.1% of 50% of the purchase price. \n\nIn the example, the purchase price was 105,000, so 50% is 52,500. 1.1% of that is 577.50. But the note in [40e1e981c0-0001] says the calculation was 1,1% of (50% x 105,000) x 62/365 = 98.10. That seems like a daily rate. But the question is about the annual imputation. \n\nWait, the example in [40e1e981c0-0001] mentions that the 1.1% is applied to 50% of the cadastral value, but the calculation for the apartment in the example was 1.1% of 50% of 105,000, which is 52,500, times 1.1% is 577.50. However, the note says 98.10. That's confusing. Maybe the 62/365 is for the daily rate, but the question is about the annual. \n\nBut the user's question is about a vacant property that isn't a habitual residence. According to [40e1e981c0-0001], even if it's vacant and not notified, the 1.1% applies. So the imputation would be 1.1% of 50% of the purchase price. \n\nSo the answer would be 1.1% of 50% of 105,000, which is 577.50 euros. But the note in [40e1e981c0-0001] says 98.10. Wait, maybe the 62/365 is for the daily rate, but the question is about the annual. So 62/365 is 0.17, so 52,500 * 0.17 = 9,000? No, that doesn't make sense. \n\nAlternatively, maybe the 62/365 is for the daily rate, but the question is about the annual. So 52,500 * 1.1% = 577.50. \n\nBut the example in [40e1e981c0-0001] says the calculation was 1,1% of (50% x 105,000) x 62/365 = 98.10. That seems like a daily rate. But the question is about the annual imputation. \n\nThis is confusing. However, the user's question is about a vacant property that isn't a habitual residence. According to [40e1e981c0-0001], even if it's vacant and not notified, the 1.1% applies. So the answer would be 1.1% of 50% of the purchase price. \n\nIn the example, the purchase price was 105,000, so 50% is 52,500. 1.1% of that is 577.50. But the note in [40e1e981c0-0001] says 98.10. Maybe the 62/365 is for the daily rate, but the question is about the annual. So 52,500 * 1.1% = 577.50. \n\nBut the user's question is about the imputation for the year. So the answer would be 577.50 euros. However, the note in [40e1e981c0-0001] says 98.10, which is different. Maybe the 62/365 is for the daily rate,",
+   "citations": [
+    "40e1e981c0-0001",
+    "dbe8d46e77-0004"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "40e1e981c0-0000",
+     "aeat/irpf2025-c10-ejemplo-imputacion-rentas-inmobiliarias.md",
+     0.8
+    ],
+    [
+     "122e2aa472-0000",
+     "aeat/irpf2025-c10-determinacion-importe-renta-imputable.md",
+     0.5757
+    ],
+    [
+     "40e1e981c0-0001",
+     "aeat/irpf2025-c10-ejemplo-imputacion-rentas-inmobiliarias.md",
+     0.5683
+    ],
+    [
+     "dbe8d46e77-0004",
+     "aeat/irpf2025-c10-concepto-requisitos.md",
+     0.4656
+    ],
+    [
+     "baaa967049-0001",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.4443
+    ]
+   ],
+   "law_date": null,
+   "control": true
+  },
+  {
+   "id": "t-imputacion-2027",
+   "unanswerable": false,
+   "question": "A partir de 2027, ¿cómo se calculará la imputación de rentas de los pisos vacíos?",
+   "reference": "Con una escala progresiva sobre la suma de valores catastrales: 1,1 % hasta 100.000 €, 1,5 %, 2 % y 3 % a partir de un millón.",
+   "answer": "La información disponible no es suficiente para determinar cómo se calculará la imputación de rentas de los pisos vacíos a partir de 2027. Los pasajes mencionados no especifican las reglas particulares para pisos vacíos en este contexto.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": true,
+   "chunks": [
+    [
+     "122e2aa472-0000",
+     "aeat/irpf2025-c10-determinacion-importe-renta-imputable.md",
+     0.8
+    ],
+    [
+     "5e758937d9-0000",
+     "aeat/irpf2025-c10-declaracion-rentas-inmobiliarias-imputadas.md",
+     0.66
+    ],
+    [
+     "036c16bb6a-0000",
+     "aeat/irpf2025-c10-individualizacion-rentas-inmobiliarias.md",
+     0.5842
+    ],
+    [
+     "40e1e981c0-0000",
+     "aeat/irpf2025-c10-ejemplo-imputacion-rentas-inmobiliarias.md",
+     0.5301
+    ],
+    [
+     "ff7be5a4bd-0043",
+     "boe/rdl-29-2026.md",
+     0.5034
+    ]
+   ],
+   "law_date": null,
+   "control": false
+  }
+ ]
+}

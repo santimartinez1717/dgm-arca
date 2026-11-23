@@ -1086,3 +1086,57 @@ tensionada?» saca 0,75.
   - Las filas de tabla partidas separan el municipio de su definición (zon-02, zon-03).
   - El IVA no tiene puente de vocabulario: «piso usado» frente a «segundas y ulteriores
     entregas».
+
+---
+
+### 2026-11-23 · Fase 3 · Generación con citas: base, base con pensamiento y modelo de la fase 1
+
+**Qué queríamos saber.** Qué generador poner detrás de `/rag`, y si el modelo entrenado en la
+fase 1 lee y cita mejor que el base.
+
+**Qué hicimos.**
+- Pipeline de `rag/generate.py`: semántico p90, híbrido λ = 0,2, cinco primeros fragmentos.
+- La plantilla de clase en español, con citas numeradas [1]…[5] que se traducen a ids después
+  de generar.
+- Antes, tres pruebas cortas de 8 preguntas (`reports/phase3_generation_smoke*.json`). Con la
+  plantilla inglesa, Qwen3-1.7B contestaba en inglés la mitad de las preguntas, citaba
+  «artículo 36» en vez del id, y abría respuestas correctas con «no se especifica».
+- Las 57 preguntas (51 + 6 sin respuesta) con `rag_gen_compare.sh` y `rag_round2.sh`:
+  `rag.eval_generation --name {base, base_think, rlm_think}`. El modelo de la fase 1 es
+  `rlm/weights/grpo2_lora`. Pensamiento con 1.536 tokens, sin él con 512.
+- Las métricas se recalcularon con `--rescore` después de mejorar el detector de abstención:
+  no reconocía «No se encuentra información en los pasajes».
+- **Corpus.** `base` se repitió (13:04) sobre el corpus definitivo, tras dejar de tomar por
+  vigente la versión sin fecha del art. 6 bis RIRPF. La primera ejecución, de las 11:27, está
+  en `reports/phase3_generation_base_corpus_previo.json` y da las mismas cifras salvo en las
+  citas: cita algo en el 74,5 % frente al 76,5 %, y el relevante en 14 de 30 frente a 15. Es la
+  variación de una o dos respuestas. La evaluación de recuperación también se repitió (12:44) y
+  reproduce la entrada anterior con diferencias de milésimas.
+
+**Qué pasó.** El fragmento relevante se recupera en 30 de las 51 preguntas respondibles.
+
+| | Qwen3-1.7B | Qwen3-1.7B con pensamiento | Fase 1 (GRPO 2) con pensamiento |
+|---|---|---|---|
+| Cita algún fragmento | 76,5 % | **88,2 %** | 74,5 % |
+| Cita el relevante, cuando se recuperó | 50,0 % (15/30) | **70,0 %** (21/30) | 46,7 % |
+| Cifras de la referencia en la respuesta, cuando se recuperó | 39,1 % | **43,5 %** | 30,4 % |
+| Se abstiene con el fragmento delante | 6,7 % | **3,3 %** | 6,7 % |
+| Se abstiene sin el fragmento (lo correcto) | 33,3 % | 33,3 % | 14,3 % |
+| Se abstiene en las 6 sin respuesta | **6/6** | **6/6** | 5/6 |
+| Ids inventados | 0 | 0 | 0 |
+| Razonamiento cortado sin cerrar | 0 | 2 | 10 |
+| Tiempo para las 57 | **9 min** | 35 min | 31 min |
+
+**Qué concluimos.**
+- **Pensar ayuda a leer.** Con pensamiento, el modelo cita el fragmento correcto en 21 de las 30
+  preguntas en que lo tiene delante, frente a 15. Pero cuesta cuatro veces más. `/rag` queda sin
+  pensamiento por defecto, porque la API se sirve desde el MacBook; `ARCA_RAG_THINKING=1` lo
+  activa.
+- **El modelo de la fase 1 es peor generador de RAG que el base.** Razona largo y en inglés,
+  como le enseñó GRPO, y agota los 1.536 tokens sin cerrar en 10 de 57 preguntas. Cita y
+  acierta menos, y contesta una pregunta sin respuesta. El entrenamiento para hacer cuentas no
+  se transfiere a leer y citar: dato para la comparación de cerebros de la fase 4.
+- **El «no lo sé» funciona** cuando lo decide el generador: 6/6 en las preguntas sin respuesta,
+  y solo 1-2 abstenciones de 30 cuando tiene el fragmento delante.
+- La «coincidencia de cifras» es una aproximación: no ve paráfrasis ni penaliza cifras de más.
+  Las respuestas están guardadas en los JSON.

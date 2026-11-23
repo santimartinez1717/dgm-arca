@@ -74,7 +74,15 @@ umbral. La distancia media en nuestro corpus es 0,63: el 0,25 de la docstring co
 cada frase. Probamos el umbral en los percentiles 70, 80, 90 y 95. Las frases de más de 1.500
 caracteres (las filas de las tablas de zonas tensionadas) se cortan antes por espacios.
 
-<!-- TABLA_TROCEADO: se rellena con reports/phase3_eval.json de la segunda tanda -->
+Acierto@5 y MRR de cada retriever ([`reports/phase3_eval.json`](../reports/phase3_eval.json)):
+
+| Troceado | Fragmentos | Media (car.) | BM25 | Denso | Híbrido (λ) | MRR del híbrido en validación cruzada |
+|---|---|---|---|---|---|---|
+| Recursivo 800/100 | 4.411 | 600 | 27,5 % / 0,147 | 41,2 % / 0,272 | 45,1 % / 0,292 (0,2) | 0,275 ± 0,056 |
+| Semántico p70 (0,7615) | 5.377 | 481 | 37,3 % / 0,226 | **62,7 %** / 0,394 | 58,8 % / **0,432** (0,3) | **0,417** ± 0,060 |
+| Semántico p80 (0,7891) | 4.066 | 636 | 39,2 % / 0,200 | 56,9 % / 0,387 | 56,9 % / 0,401 (0,4) | 0,384 ± 0,055 |
+| **Semántico p90 (0,8215)** | 2.894 | 894 | 39,2 % / 0,212 | 58,8 % / 0,425 | 58,8 % / 0,425 (0,0) | 0,414 ± 0,057 |
+| Semántico p95 (0,8451) | 2.394 | 1.081 | 37,3 % / 0,220 | 54,9 % / 0,358 | 56,9 % / 0,372 (0,1) | 0,357 ± 0,057 |
 
 - **El troceado importa más que el retriever.** El recursivo corta artículos por la mitad y
   deja fragmentos de un solo número de apartado («7», «II»). El semántico respeta mejor las
@@ -112,14 +120,23 @@ resultado.
 
 Qwen3-Embedding embebe la consulta con una instrucción. Probamos seis sobre el troceado p90:
 
-<!-- TABLA_INSTRUCCION: se rellena con reports/phase3_eval.json de la segunda tanda -->
+| Instrucción | Acierto@5 | MRR | MRR respuesta en BOE (33) | MRR resto (18) | Top-5 del BOE / AEAT |
+|---|---|---|---|---|---|
+| Ninguna | 60,8 % | 0,431 | 0,473 | 0,353 | 154 / 58 |
+| Por defecto (inglés, genérica) | 58,8 % | 0,425 | 0,476 | 0,332 | 142 / 69 |
+| Genérica en español | 58,8 % | 0,423 | 0,470 | 0,337 | 151 / 59 |
+| De dominio en español | 49,0 % | 0,355 | 0,426 | 0,224 | 175 / 35 |
+| De dominio en inglés | 49,0 % | 0,329 | 0,392 | 0,214 | 168 / 33 |
+| Equivocada («mismo estilo informal») | 54,9 % | 0,427 | 0,477 | 0,336 | 130 / 78 |
 
 Las genéricas (en inglés, en español o ninguna) quedan empatadas. **Una instrucción de dominio
 empeora el MRR un 20 %, igual en inglés que en español: no es el idioma, es el contenido.**
 Pedir «el artículo de ley, la norma o el pasaje oficial» empuja los resultados hacia el BOE
-(176 de los 255 primeros cinco, frente a 142). Las preguntas que se responden con la AEAT o los
+(175 de los 255 fragmentos que salen entre los cinco primeros, frente a 142). Las preguntas que se responden con la AEAT o los
 PDF caen de 0,33 a 0,22 de MRR, y las del BOE también bajan, porque las tapan los distractores
-de la LIRPF y su reglamento. La instrucción es una palanca real, también en contra.
+de la LIRPF y su reglamento. La instrucción es una palanca real, también en contra. Nos
+quedamos con la instrucción por defecto: «ninguna» saca una pregunta más entre los cinco
+primeros, una diferencia que con 51 preguntas es ruido.
 
 ## 7. Generación con citas
 
@@ -143,7 +160,33 @@ tensionada?» saca 0,75 de similitud con su mejor fragmento, por encima de la me
 preguntas que sí tienen respuesta (0,66). Lo tiene que decidir el generador, y lo hace: se
 abstiene en las 6 preguntas sin respuesta.
 
-<!-- TABLA_GENERACION: base / base con pensamiento / modelo de la fase 1 -->
+Tres generadores sobre las 57 preguntas, con la misma recuperación (semántico p90, híbrido
+λ = 0,2, cinco primeros). El fragmento relevante está entre los cinco en 30 de las 51 preguntas
+respondibles (`reports/phase3_generation_{base,base_think,rlm_think}.json`):
+
+| | Qwen3-1.7B | Qwen3-1.7B con pensamiento | Modelo de la fase 1 (GRPO 2) con pensamiento |
+|---|---|---|---|
+| Cita algún fragmento | 76,5 % | **88,2 %** | 74,5 % |
+| Cita el relevante, cuando se recuperó | 50,0 % | **70,0 %** | 46,7 % |
+| Cifras de la referencia en la respuesta, cuando se recuperó | 39,1 % | **43,5 %** | 30,4 % |
+| Se abstiene teniendo el fragmento delante | 6,7 % | **3,3 %** | 6,7 % |
+| Se abstiene sin el fragmento (lo correcto) | 33,3 % | 33,3 % | 14,3 % |
+| Se abstiene en las 6 sin respuesta | **100 %** | **100 %** | 83,3 % |
+| Ids inventados | 0 | 0 | 0 |
+| Razonamiento cortado sin cerrar | 0 | 2 | 10 |
+| Tiempo para las 57 (MIG) | **9 min** | 35 min | 31 min |
+
+- **Pensar ayuda a leer.** Con pensamiento, el modelo cita el fragmento correcto en 21 de las 30
+  preguntas en que lo tiene delante, frente a 15 sin pensamiento. Cuesta cuatro veces más de
+  tiempo. `/rag` va **sin pensamiento por defecto**, porque la API se sirve desde un portátil;
+  `ARCA_RAG_THINKING=1` lo activa.
+- **El modelo de la fase 1 es peor generador de RAG que el base.** GRPO le enseñó a razonar
+  largo y en inglés para hacer cuentas. Aquí agota los 1.536 tokens sin cerrar el razonamiento
+  en 10 de 57 preguntas, cita menos y acierta menos cifras. Fuera de su tarea, el entrenamiento
+  no se transfiere a leer y citar. Es un primer dato para la pregunta de la fase 4 de si ayuda
+  haber entrenado el modelo.
+- La «coincidencia de cifras» es una aproximación barata: no ve paráfrasis («una mensualidad»
+  frente a «un mes») ni penaliza cifras de más. Las respuestas están guardadas para leerlas.
 
 La abstención se mide aparte según se recuperara o no el fragmento con la respuesta. Si no se
 recuperó, decir «no lo sé» es lo correcto.

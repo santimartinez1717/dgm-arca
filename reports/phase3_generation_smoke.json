@@ -1,0 +1,363 @@
+{
+ "generator": "Qwen/Qwen3-1.7B",
+ "config": {
+  "chunking": "semantic",
+  "chunk_size": 800,
+  "chunk_overlap": 100,
+  "semantic_threshold": 0.8215,
+  "max_chunk_chars": 1500,
+  "weight_bm25": 0.2,
+  "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+  "generator_model": "Qwen/Qwen3-1.7B",
+  "generator_adapter": null,
+  "max_new_tokens": 512,
+  "index_dir": "rag/index"
+ },
+ "retriever": "hybrid",
+ "top_k": 5,
+ "metrics": {
+  "n_answerable": 8,
+  "n_unanswerable": 0,
+  "cites_any": 0.625,
+  "answers_with_invented_ids": 0.0,
+  "relevant_retrieved": 1.0,
+  "cites_relevant_when_retrieved": 0.5,
+  "figures_match": null,
+  "abstains_answerable": 0.25,
+  "abstains_unanswerable": null
+ },
+ "elapsed_s": 160.1,
+ "items": [
+  {
+   "id": "lau-01",
+   "unanswerable": false,
+   "question": "Soy particular y quiero alquilar mi piso con un contrato de un año. ¿Puede el inquilino quedarse más tiempo aunque yo no quiera?",
+   "reference": "Sí: el contrato se prorroga obligatoriamente por años hasta cinco (siete si el arrendador es persona jurídica), salvo que el inquilino no quiera renovar.",
+   "answer": "The information provided indicates that if the lease term is shorter than five years, it will be automatically renewed annually until it reaches a minimum duration of five years, unless the tenant notifies the landlord in writing at least thirty days in advance of the lease expiration or any renewal. Therefore, the tenant cannot stay longer than the lease term unless the tenant chooses to renew the lease, which is not automatically granted.\n\nThus, the tenant cannot stay longer than the lease term unless they choose to renew the lease, which is not automatically granted. The tenant has the right to terminate the lease, but the landlord may choose to renew it. The tenant cannot force the landlord to renew the lease unless they choose to do so.\n\nTherefore, the answer is: [d0a26f8298-0031]",
+   "citations": [
+    "d0a26f8298-0031"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "ff7be5a4bd-0037",
+     "boe/rdl-29-2026.md",
+     0.8
+    ],
+    [
+     "d0a26f8298-0005",
+     "boe/lau.md",
+     0.5605
+    ],
+    [
+     "d0a26f8298-0035",
+     "boe/lau.md",
+     0.5466
+    ],
+    [
+     "d0a26f8298-0031",
+     "boe/lau.md",
+     0.5424
+    ],
+    [
+     "d0a26f8298-0032",
+     "boe/lau.md",
+     0.5019
+    ]
+   ]
+  },
+  {
+   "id": "lau-02",
+   "unanswerable": false,
+   "question": "Pasados los cinco años de contrato, ¿con cuánto tiempo tengo que avisar al inquilino si no quiero seguir alquilándole?",
+   "reference": "Con al menos cuatro meses de antelación; si nadie avisa, se prorroga por años hasta tres más.",
+   "answer": "No se especifica un tiempo exacto para avisar al inquilino si no quiero seguir alquilándole pasados los cinco años de contrato en el texto proporcionado. Sin embargo, se menciona en un pasaje que si el arrendador y el arrendatario no notifican su voluntad de no renovar el contrato con al menos cuatro meses de antelación a la fecha de vencimiento, el contrato se prorrogará obligatoriamente por plazos anuales hasta un máximo de tres años más, salvo que el arrendatario manifieste al arrendador con un mes de antelación a la fecha de terminación de cualquiera de las anualidades su voluntad de no renovar el contrato.\n\nPor lo tanto, el tiempo mínimo para avisar al inquilino es **cuatro meses** si no se desea renovar el contrato.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "d0a26f8298-0041",
+     "boe/lau.md",
+     0.8
+    ],
+    [
+     "d0a26f8298-0036",
+     "boe/lau.md",
+     0.7651
+    ],
+    [
+     "d0a26f8298-0200",
+     "boe/lau.md",
+     0.7002
+    ],
+    [
+     "d0a26f8298-0043",
+     "boe/lau.md",
+     0.6908
+    ],
+    [
+     "d0a26f8298-0091",
+     "boe/lau.md",
+     0.679
+    ]
+   ]
+  },
+  {
+   "id": "lau-03",
+   "unanswerable": false,
+   "question": "¿Puede el inquilino marcharse a los siete meses de firmar y qué preaviso me debe dar?",
+   "reference": "Sí: puede desistir una vez pasados seis meses, avisando con al menos treinta días.",
+   "answer": "The information provided does not specify the exact conditions for a tenant to move out after seven months of signing a lease. However, based on the information given:\n\n- If the lease is for a temporary rental, the tenant can cancel the contract within one month of signing, provided they notify the landlord at least ten days in advance [d0a26f8298-0043].\n- If the lease is for a habitual rental, the tenant can cancel the contract after six months, provided they notify the landlord at least thirty days in advance [d0a26f8298-0041].\n\nThere is no specific mention of a seven-month period or the required notice period for such a scenario. Therefore, the information is insufficient to answer the question directly.",
+   "citations": [
+    "d0a26f8298-0043",
+    "d0a26f8298-0041"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0043",
+     "boe/lau.md",
+     0.8
+    ],
+    [
+     "d0a26f8298-0041",
+     "boe/lau.md",
+     0.7955
+    ],
+    [
+     "d0a26f8298-0091",
+     "boe/lau.md",
+     0.7737
+    ],
+    [
+     "d0a26f8298-0054",
+     "boe/lau.md",
+     0.6059
+    ],
+    [
+     "d0a26f8298-0036",
+     "boe/lau.md",
+     0.3962
+    ]
+   ]
+  },
+  {
+   "id": "lau-04",
+   "unanswerable": false,
+   "question": "¿Cuánta fianza debo pedir al firmar un alquiler de vivienda?",
+   "reference": "Una mensualidad de renta en metálico (dos en uso distinto de vivienda).",
+   "answer": "La fianza arrendaticia debe ser obligatoria y su cuantía se fija en una o dos mensualidades de renta, según sea el tipo de arrendamiento (vivienda o de uso distinto). Durante los primeros cinco años del contrato, o siete años si el arrendador es una persona jurídica, la fianza no estará sujeta a actualización. Sin embargo, cada vez que el arrendamiento se prorrogue, el arrendador podrá exigir que la fianza sea incrementada, o el arrendatario que disminuya, hasta hacerse igual a una o dos mensualidades de la renta vigente, según proceda.\n\nEsta información se encuentra en el artículo 36 del título IV del texto legal proporcionado.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0126",
+     "boe/lau.md",
+     0.9678
+    ],
+    [
+     "d0a26f8298-0010",
+     "boe/lau.md",
+     0.4838
+    ],
+    [
+     "ff7be5a4bd-0166",
+     "boe/rdl-29-2026.md",
+     0.3613
+    ],
+    [
+     "ff7be5a4bd-0143",
+     "boe/rdl-29-2026.md",
+     0.3187
+    ],
+    [
+     "ff7be5a4bd-0057",
+     "boe/rdl-29-2026.md",
+     0.2345
+    ]
+   ]
+  },
+  {
+   "id": "lau-05",
+   "unanswerable": false,
+   "question": "Además de la fianza, ¿puedo exigir al inquilino un aval o un seguro de impago?",
+   "reference": "Se puede pactar una garantía adicional de hasta dos mensualidades (contratos de hasta cinco o siete años), pero nunca exigir un seguro de impago.",
+   "answer": "According to the provided information, the answer is:\n\nNo, the passage does not mention the possibility of requiring an aval or a rent payment insurance from the tenant beyond the required surety (fianza). The information only states that the tenant may be required to provide a financial guarantee (fianza) in cash equivalent to a monthly rent payment, and that additional guarantees may be agreed upon, but it explicitly states that the tenant cannot be required to contract rent payment insurance or other similar coverage. \n\nTherefore, the answer is: [d0a26f8298-0127]",
+   "citations": [
+    "d0a26f8298-0127"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "d0a26f8298-0126",
+     "boe/lau.md",
+     0.9678
+    ],
+    [
+     "d0a26f8298-0127",
+     "boe/lau.md",
+     0.7435
+    ],
+    [
+     "c1e9ef0fb3-0093",
+     "boe/ley-credito-inmobiliario.md",
+     0.487
+    ],
+    [
+     "d0a26f8298-0109",
+     "boe/lau.md",
+     0.4811
+    ],
+    [
+     "c1e9ef0fb3-0163",
+     "boe/ley-credito-inmobiliario.md",
+     0.4377
+    ]
+   ]
+  },
+  {
+   "id": "lau-06",
+   "unanswerable": false,
+   "question": "¿Puedo cobrarle al inquilino los honorarios de la agencia inmobiliaria que me busca inquilino?",
+   "reference": "No: los gastos de gestión inmobiliaria y de formalización del contrato no pueden repercutirse al arrendatario.",
+   "answer": "The information provided does not specify whether you can charge the tenant for the real estate agent's fees. Therefore, it is not possible to determine the answer based on the given information.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "c1e9ef0fb3-0120",
+     "boe/ley-credito-inmobiliario.md",
+     0.8
+    ],
+    [
+     "c1e9ef0fb3-0119",
+     "boe/ley-credito-inmobiliario.md",
+     0.5813
+    ],
+    [
+     "d0a26f8298-0079",
+     "boe/lau.md",
+     0.3731
+    ],
+    [
+     "1378e54815-0102",
+     "boe/ley-vivienda.md",
+     0.2952
+    ],
+    [
+     "40e1e981c0-0001",
+     "aeat/irpf2025-c10-ejemplo-imputacion-rentas-inmobiliarias.md",
+     0.2587
+    ]
+   ]
+  },
+  {
+   "id": "lau-07",
+   "unanswerable": false,
+   "question": "Si en el contrato no pusimos nada sobre subir el alquiler cada año, ¿puedo actualizarlo con la inflación?",
+   "reference": "No: sin pacto expreso no se aplica actualización de la renta.",
+   "answer": "The information provided does not specify whether the rent can be updated with inflation if no specific provisions are made in the contract. However, it mentions that if no express agreement is made between the parties, the rent may be updated annually based on the variation of the Indice General de Precios al Consumo (IGPC) in the 12 months prior to the date of the update. \n\nTherefore, based on the information given, it is possible to update the rent with inflation annually, provided that the parties have not made an express agreement to exclude this provision. \n\nCite the passage that supports this: [d0a26f8298-0180]",
+   "citations": [
+    "d0a26f8298-0180"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0072",
+     "boe/lau.md",
+     0.8122
+    ],
+    [
+     "d0a26f8298-0184",
+     "boe/lau.md",
+     0.7059
+    ],
+    [
+     "c1e9ef0fb3-0251",
+     "boe/ley-credito-inmobiliario.md",
+     0.6831
+    ],
+    [
+     "d0a26f8298-0180",
+     "boe/lau.md",
+     0.6676
+    ],
+    [
+     "ff7be5a4bd-0177",
+     "boe/rdl-29-2026.md",
+     0.4978
+    ]
+   ]
+  },
+  {
+   "id": "lau-08",
+   "unanswerable": false,
+   "question": "Tengo un piso en zona tensionada y el contrato anterior acaba. ¿En qué casos puedo subir la renta del nuevo contrato hasta un 10 %?",
+   "reference": "Si se rehabilitó o mejoró (energía o accesibilidad) en los dos años anteriores, o si el contrato es de diez o más años.",
+   "answer": "According to the provided information, the following cases allow the rent of the new lease to be increased up to 10%:\n\n1. **In the case of a 90% increase** when the new lease is signed with the same landlord in a \"zona de mercado residencial tensionado\" and the rent is increased by 90% due to the new lease being signed with the same landlord, and the rent is increased by 90% due to the new lease being signed with the same landlord, and the rent is increased by 90% due to the new lease being signed with the same landlord.\n\n2. **In the case of a 70% increase** when the rent is increased by 70% due to the new lease being signed with the same landlord, and the rent is increased by 70% due to the new lease being signed with the same landlord, and the rent is increased by 70% due to the new lease being signed with the same landlord.\n\n3. **In the case of a 10% increase** when the rent is increased by 10% due to the new lease being signed with the same landlord, and the rent is increased by 10% due to the new lease being signed with the same landlord, and the rent is increased by 10% due to the new lease being signed with the same landlord.\n\nThese cases are based on the information provided in the passage [d0a26f8298-0065].",
+   "citations": [
+    "d0a26f8298-0065"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0065",
+     "boe/lau.md",
+     0.9485
+    ],
+    [
+     "782779238c-0003",
+     "aeat/irpf2025-c04-arrendamiento-inmuebles-destinados-vivienda.md",
+     0.5848
+    ],
+    [
+     "d0a26f8298-0120",
+     "boe/lau.md",
+     0.3397
+    ],
+    [
+     "b139194ed5-0116",
+     "boe/lirpf.md",
+     0.3315
+    ],
+    [
+     "ff7be5a4bd-0177",
+     "boe/rdl-29-2026.md",
+     0.3202
+    ]
+   ]
+  }
+ ]
+}
