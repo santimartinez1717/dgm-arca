@@ -211,3 +211,62 @@ def test_required_tools_are_measured():
     row = ev.run_task(agent, BENCH["kb_plus_tool-02"], "base", 10, None)
     assert row["tools_used"] == ["final_answer", "get_rent_reference"]
     assert row["required_tools_used"] is False  # search_knowledge_base and analyze_property
+
+
+def test_checkpoint_resumes_a_cut_run(tmp_path):
+    tasks = [BENCH[i] for i in SCRIPT]
+    checkpoint = tmp_path / "eval.partial.jsonl"
+    made: list[ScriptedAgent] = []
+
+    def make_agent():
+        made.append(ScriptedAgent(script=SCRIPT))
+        return made[-1]
+
+    # A run cut after two tasks: their rows are in the checkpoint, the last line half written.
+    first = ev.evaluate(
+        tasks[:2], make_agent, ["base"], ["full"], log=lambda _: None, checkpoint=checkpoint
+    )
+    with checkpoint.open("a") as handle:
+        handle.write('{"config": "full", "brain": "base", "id": "impossible-01", "corr')
+    lines: list[str] = []
+    resumed = ev.evaluate(
+        tasks, make_agent, ["base"], ["full"], log=lines.append, checkpoint=checkpoint
+    )
+    assert sum("(reanudada)" in line for line in lines) == 2
+    assert len(made) == 2  # the second run built an agent only for the missing tasks
+    run = resumed["runs"]["full/base"]
+    assert run["n"] == 4 and run["correct"] == 4
+    assert run["rows"][:2] == first["runs"]["full/base"]["rows"]
+
+
+def test_fully_resumed_configuration_loads_no_agent(tmp_path):
+    checkpoint = tmp_path / "eval.partial.jsonl"
+    tasks = [BENCH["kb_plus_tool-02"]]
+    ev.evaluate(
+        tasks,
+        lambda: ScriptedAgent(script=SCRIPT),
+        ["base"],
+        ["full"],
+        log=lambda _: None,
+        checkpoint=checkpoint,
+    )
+
+    def no_agent():
+        raise AssertionError("nothing left to run: the model must not load")
+
+    assert (
+        ev.evaluate(tasks, no_agent, ["base"], ["full"], log=lambda _: None, checkpoint=checkpoint)[
+            "runs"
+        ]["full/base"]["correct"]
+        == 1
+    )
+
+
+def test_no_playbook_uses_the_loop_switch():
+    from agent.react_agent import ReActAgent
+
+    agent = ev.configure(ReActAgent(), "no_playbook")
+    assert agent.use_playbook is False
+    assert not {"find_levers", "what_if"} & {
+        t["function"]["name"] for t in agent.tool_definitions()
+    }
