@@ -122,3 +122,351 @@
     Los alquileres de temporada escapan a los topes de renta de la vivienda habitual, pero
     solo si son de verdad de temporada. Usarlos para esquivar la ley de vivienda es la
     trampa más vigilada.
+
+# ---------------------------------------------------------------- cuantificadas (issue #10)
+
+- id: contract_date_before_rdl_29_2026
+  level: legal
+  title: Firmar el contrato antes del 1 de diciembre de 2026 (RDL 29/2026)
+  applies_when:
+    - {field: property.contract_date, op: ge, value: "2026-12-01"}
+  engine:
+    set: {property.contract_date: "2026-11-30"}
+  evidence:
+    source: boe/lirpf.md
+    section: Disposición transitoria trigésima octava
+    quote: >-
+      contratos de arrendamiento de vivienda que se hubieran celebrado entre las fechas de
+      entrada en vigor de la Ley 12/2023, de 24 de mayo, por el derecho a la vivienda y el 1
+      de diciembre de 2026, se les aplicará la reducción prevista en el apartado 2 del
+      artículo 23 de esta ley en su redacción vigente a 31 de diciembre de 2025
+  risk: null
+  explanation: >-
+    La reducción del IRPF del alquiler depende de la fecha en que se firma el contrato: los
+    firmados antes del uno de diciembre de 2026 siguen la escala de la Ley 12/2023 y los
+    posteriores la del RDL 29/2026. Según la renta y el inquilino, una escala sale mejor que
+    la otra, así que hay que calcular las dos. Solo sirve si todavía se puede firmar antes de
+    esa fecha.
+
+- id: cheapest_itp_region
+  level: legal
+  title: Comparar el ITP de la comunidad autónoma donde se compra
+  applies_when:
+    - {field: property.new_build, op: eq, value: false}
+  engine:
+    set: {property.region: "$cheapest_itp_region"}
+  evidence:
+    source: boe/trlitpajd.md
+    section: Artículo 11
+    quote: >-
+      Si la Comunidad Autónoma no hubiese aprobado el tipo a que se refiere el párrafo
+      anterior, se aplicará el 6 por 100 a la transmisión de inmuebles
+  risk: null
+  explanation: >-
+    El tipo del ITP de una vivienda de segunda mano lo fija cada comunidad autónoma, y la
+    diferencia entre comunidades cambia la inversión inicial. El cálculo compara el mismo
+    piso con el tipo general de la comunidad más barata; no tiene en cuenta los tipos
+    reducidos autonómicos (jóvenes, familia numerosa, vivienda protegida), que dependen del
+    comprador.
+
+- id: second_hand_instead_of_new_build
+  level: legal
+  title: Segunda mano (ITP) frente a obra nueva (IVA y AJD)
+  applies_when:
+    - {field: property.new_build, op: eq, value: true}
+  engine:
+    set: {property.new_build: false}
+  evidence:
+    source: boe/liva-vivienda.md
+    section: Artículo 91
+    quote: >-
+      7.º Los edificios o partes de los mismos aptos para su utilización como viviendas,
+      incluidas las plazas de garaje, con un máximo de dos unidades
+  risk: null
+  explanation: >-
+    La primera venta de una vivienda nueva por el promotor paga IVA al tipo reducido más el
+    AJD; una de segunda mano paga ITP. Con el mismo precio, el impuesto de compra cambia, y
+    con él la rentabilidad: el cálculo compara las dos compras.
+
+- id: new_build_instead_of_second_hand
+  level: legal
+  title: Obra nueva (IVA y AJD) frente a segunda mano (ITP)
+  applies_when:
+    - {field: property.new_build, op: eq, value: false}
+  engine:
+    set: {property.new_build: true}
+  evidence:
+    source: boe/trlitpajd.md
+    section: Artículo 7
+    quote: >-
+      los transmitentes sean empresarios o profesionales en el ejercicio de su actividad
+      económica y, en cualquier caso, cuando constituyan entregas de bienes o prestaciones de
+      servicios sujetas al Impuesto sobre el Valor Añadido
+  risk: null
+  explanation: >-
+    Si el vendedor es un promotor y la vivienda es nueva, la compra no paga ITP sino IVA y
+    AJD. En comunidades con un ITP alto puede salir más barato comprar obra nueva al mismo
+    precio; en las de ITP bajo, al revés. El cálculo compara las dos compras.
+
+- id: finance_with_deductible_interest
+  level: legal
+  title: Financiar la compra y deducir los intereses en el IRPF
+  applies_when:
+    - {field: profile.financing, op: ne, value: true}
+  engine:
+    set: {profile.financing: true}
+  evidence:
+    source: boe/lirpf.md
+    section: Artículo 23
+    quote: >-
+      El importe total a deducir por estos gastos no podrá exceder, para cada bien o derecho,
+      de la cuantía de los rendimientos íntegros obtenidos. El exceso se podrá deducir en los
+      cuatro años siguientes
+  risk: >-
+    La hipoteca añade riesgo de tipo de interés y de impago si el piso queda vacío; el ahorro
+    fiscal nunca compensa por sí solo los intereses que se pagan.
+  explanation: >-
+    Los intereses de la hipoteca y las reparaciones son gasto deducible del alquiler, con un
+    límite: no pueden dejar el rendimiento por debajo de cero, y lo que sobra se deduce en los
+    cuatro años siguientes. Financiar parte de la compra cambia el IRPF y la rentabilidad
+    sobre el dinero propio; el cálculo necesita el tipo de interés del préstamo.
+
+- id: ten_percent_rent_cap_exception
+  level: legal
+  title: Excepción del 10 % al tope de renta en zona tensionada
+  applies_when:
+    - {field: property.stressed_zone, op: ne, value: false}
+    - {field: property.previous_rent, op: not_null}
+    - {field: property.rehabilitation_last_2y, op: eq, value: false}
+  engine:
+    set: {property.rehabilitation_last_2y: true}
+  evidence:
+    source: boe/lau.md
+    section: Artículo 17
+    quote: >-
+      b) Cuando en los dos años anteriores a la fecha de la celebración del nuevo contrato de
+      arrendamiento se hubieran finalizado actuaciones de rehabilitación o mejora de la
+      vivienda en la que se haya acreditado un ahorro de energía primaria no renovable del 30
+      por ciento
+  risk: null
+  explanation: >-
+    En zona tensionada la renta del nuevo contrato no puede superar la del anterior, salvo
+    que en los dos años previos se haya rehabilitado la vivienda o mejorado su eficiencia
+    energética o su accesibilidad: entonces puede subir un poco más. El cálculo supone la
+    rehabilitación hecha y acreditada; también cambia la reducción del IRPF.
+
+- id: stay_below_large_holder
+  level: legal
+  title: No pasar de diez viviendas para no ser gran tenedor
+  applies_when:
+    - {field: profile.properties_owned, op: ge, value: 10}
+  engine:
+    set: {profile.properties_owned: 9}
+  evidence:
+    source: boe/ley-vivienda.md
+    section: Artículo 3
+    quote: >-
+      la persona física o jurídica que sea titular de más de diez inmuebles urbanos de uso
+      residencial o una superficie construida de más de 1.500 m² de uso residencial
+  risk: >-
+    Poner viviendas a nombre de familiares o de sociedades instrumentales solo para no
+    sumar es una simulación y puede recalificarse.
+  explanation: >-
+    Con más de diez viviendas el propietario es gran tenedor: en zona tensionada la renta
+    queda topada por el índice de referencia y pierde parte de la reducción del IRPF. Vender
+    otra vivienda antes de firmar, o no comprar esta, puede mantenerlo por debajo del umbral;
+    el cálculo muestra qué cambia.
+
+- id: stay_below_large_holder_in_zone
+  level: legal
+  title: No llegar a cinco viviendas en la zona tensionada que rebaja el umbral
+  applies_when:
+    - {field: property.stressed_zone, op: ne, value: false}
+    - {field: profile.zone_lowers_threshold, op: ne, value: false}
+    - {field: profile.properties_owned_stressed, op: ge, value: 4}
+  engine:
+    set: {profile.properties_owned_stressed: 3}
+  evidence:
+    source: boe/ley-vivienda.md
+    section: Artículo 3
+    quote: >-
+      Esta definición podrá ser particularizada en la declaración de entornos de mercado
+      residencial tensionado hasta aquellos titulares de cinco o más inmuebles de uso
+      residencial ubicadas en dicho ámbito
+  risk: >-
+    Repartir viviendas entre familiares o sociedades solo para no sumar es una simulación y
+    puede recalificarse.
+  explanation: >-
+    Algunas declaraciones de zona tensionada rebajan el umbral de gran tenedor a cinco
+    viviendas en la zona. Con esta compra el inversor podría cruzarlo; quedarse por debajo
+    evita el tope por índice y conserva la reducción del IRPF del pequeño propietario.
+
+# ---------------------------------------------------------------- cualitativas
+
+- id: amortization_construction_share
+  level: legal
+  title: Amortizar la construcción sobre el mayor de coste y valor catastral
+  applies_when: []
+  engine: null
+  evidence:
+    source: boe/lirpf.md
+    section: Artículo 23
+    quote: >-
+      el 3 por ciento sobre el mayor de los siguientes valores: el coste de adquisición
+      satisfecho o el valor catastral, sin incluir el valor del suelo
+  risk: null
+  explanation: >-
+    La amortización es el gasto deducible que más pesa y muchos propietarios la olvidan o la
+    calculan sobre el precio sin más. Se amortiza solo la construcción, con el reparto entre
+    suelo y construcción del recibo del IBI, y la base incluye los gastos e impuestos de la
+    compra y las mejoras. El motor ya la aplica cuando conoce el valor catastral y el peso del
+    suelo: pídelos si faltan.
+
+- id: buy_through_company
+  level: legal
+  title: Comprar a través de una sociedad
+  applies_when: []
+  engine: null
+  evidence:
+    source: boe/lirpf.md
+    section: Artículo 23
+    quote: >-
+      2. En los supuestos de arrendamiento de bienes inmuebles destinados a vivienda a que se
+      refiere el apartado 1 del artículo 2 de la Ley 29/1994, de 24 de noviembre, de
+      Arrendamientos Urbanos, el rendimiento neto positivo calculado con arreglo a lo
+      dispuesto en el apartado anterior se reducirá
+  risk: >-
+    La sociedad no tiene la reducción del IRPF por alquiler de vivienda, sacar el dinero a
+    los socios vuelve a tributar y tiene costes de constitución y contabilidad; con pocas
+    viviendas rara vez compensa.
+  explanation: >-
+    Una sociedad tributa por el Impuesto sobre Sociedades a un tipo fijo, lo que puede
+    interesar a quien ya paga un tipo marginal alto en el IRPF. A cambio pierde la reducción
+    por alquiler de vivienda, que solo existe en el IRPF. Es una decisión para un asesor
+    fiscal, con el caso concreto.
+
+- id: room_rental
+  level: grey
+  title: Alquiler por habitaciones
+  applies_when: []
+  engine: null
+  evidence:
+    source: boe/lau.md
+    section: Artículo 2
+    quote: >-
+      Se considera arrendamiento de vivienda habitual aquel arrendamiento que recae sobre una
+      edificación habitable cuyo destino primordial sea satisfacer la necesidad de vivienda del
+      arrendatario, incluido el arrendamiento parcial de una habitación o estancia de la
+      vivienda
+  risk: >-
+    Alquilar por habitaciones ya no saca el contrato de la LAU: si es la vivienda del
+    inquilino, se aplican la duración mínima y el tope de renta en zona tensionada, y además
+    hay más rotación, desgaste y conflictos entre inquilinos.
+  explanation: >-
+    Alquilar cada habitación por separado suele dar más renta total que el piso entero. Pero
+    la ley considera vivienda habitual también el alquiler de una habitación, así que no es
+    una forma de esquivar los topes. Su ventaja es la renta, no el régimen jurídico.
+
+- id: boe_auction
+  level: grey
+  title: Comprar en una subasta judicial o notarial
+  applies_when: []
+  engine: null
+  evidence:
+    source: boe/ley-credito-inmobiliario.md
+    section: Disposición final primera
+    quote: >-
+      El valor en que los interesados tasen la finca para que sirva de tipo en la subasta no
+      podrá ser distinto del que, en su caso, se haya fijado para el procedimiento de
+      ejecución judicial directa
+  risk: >-
+    El piso se compra sin visitarlo, puede estar ocupado o tener cargas que no se cancelan,
+    hay que consignar un depósito y pagar el resto en pocos días, y la toma de posesión puede
+    tardar meses.
+  explanation: >-
+    Las subastas de viviendas embargadas o ejecutadas pueden adjudicarse por debajo del
+    valor de mercado. El descuento es real, pero también los riesgos: conviene estudiar la
+    certificación de cargas y el estado de ocupación antes de pujar.
+
+# ---------------------------------------------------------------- trampas: solo advertir
+
+- id: undeclared_cash_price
+  level: illegal_warning
+  title: Escriturar por menos y pagar parte del precio en negro
+  applies_when: []
+  engine: null
+  evidence:
+    source: boe/trlitpajd.md
+    section: Artículo 10
+    quote: >-
+      La base imponible está constituida por el valor del bien transmitido o del derecho que
+      se constituya o ceda.
+  risk: >-
+    Es fraude fiscal para comprador y vendedor: Hacienda regulariza el impuesto con recargos
+    y sanción, el dinero en efectivo no consta como pagado si hay un conflicto, y al vender
+    se tributa por una ganancia mayor porque el precio de compra escriturado es más bajo.
+  explanation: >-
+    El ITP se paga sobre el valor del piso, no sobre lo que se pone en la escritura, y para
+    las viviendas ese valor es como mínimo el valor de referencia del Catastro. Pagar una
+    parte en negro no es una palanca: es un fraude que además suele salir caro.
+
+- id: undeclared_rent
+  level: illegal_warning
+  title: No declarar las rentas del alquiler o declarar menos
+  applies_when: []
+  engine: null
+  evidence:
+    source: boe/lirpf.md
+    section: Artículo 23
+    quote: >-
+      En ningún caso resultarán de aplicación las reducciones respecto de la parte de los
+      rendimientos netos positivos derivada de ingresos no incluidos o de gastos indebidamente
+      deducidos en la autoliquidación del contribuyente
+  risk: >-
+    Hacienda cruza la fianza depositada, los recibos, los suministros y las deducciones del
+    inquilino; si regulariza, se paga el impuesto con intereses y sanción y se pierde la
+    reducción por alquiler de vivienda sobre lo no declarado.
+  explanation: >-
+    Cobrar parte de la renta en efectivo sin declararla, o no declarar el alquiler, es fraude
+    fiscal. Además de la sanción, la ley quita la reducción del alquiler a todo lo que aflore
+    en una comprobación.
+
+- id: fake_residence_registration
+  level: illegal_warning
+  title: Falsear el empadronamiento o la vivienda habitual
+  applies_when: []
+  engine: null
+  evidence:
+    source: boe/trlrhl-ibi-plusvalia.md
+    section: Artículo 72
+    quote: >-
+      dentro de los cuales podrán figurar los relativos a los datos del padrón municipal, así
+      como los consumos de servicios de suministro
+  risk: >-
+    Empadronar a alguien que no vive en el piso o declarar como vivienda habitual una que no
+    lo es para ahorrar impuestos es falsedad y fraude: se pierden los beneficios fiscales con
+    recargos y sanción.
+  explanation: >-
+    El padrón y los consumos sirven al ayuntamiento para saber si un piso está vacío y a
+    Hacienda para comprobar la vivienda habitual. Falsearlos para esquivar el recargo de
+    vivienda vacía o para aplicar exenciones de vivienda habitual no es una palanca.
+
+- id: fake_seasonal_contract
+  level: illegal_warning
+  title: Disfrazar de temporada un alquiler de vivienda habitual
+  applies_when: []
+  engine: null
+  evidence:
+    source: boe/lau.md
+    section: Artículo 2
+    quote: >-
+      venga a cubrir la necesidad de vivienda del arrendatario cuando éste se encuentra
+      temporalmente desplazado de su domicilio habitual, por causa justificada y acreditable
+  risk: >-
+    Un contrato de temporada para quien vive allí todo el año es un fraude de ley: el
+    inquilino puede reclamar la duración y el tope de renta de la vivienda habitual, y hay
+    sanciones administrativas y pérdida de la reducción del IRPF.
+  explanation: >-
+    Solo es de temporada el alquiler a quien está desplazado de su domicilio por una causa
+    justificada y acreditable. Encadenar contratos de temporada con un inquilino que vive en
+    el piso de forma habitual para cobrar por encima del tope no es legal.

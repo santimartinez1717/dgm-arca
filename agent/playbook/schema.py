@@ -8,7 +8,7 @@ not) and that changes what the investment returns. Each one says *when* it appli
 
 Values in ``applies_when`` and ``engine.set`` may refer to the case instead of being
 constants: ``"$property.price"``, ``"$property.previous_rent*0.94"``, or one of the named
-values computed by ``agent.levers`` (``"$max_offer_price"``).
+values computed by ``agent.levers`` (``"$max_offer_price"``, ``"$cheapest_itp_region"``).
 """
 
 from __future__ import annotations
@@ -28,7 +28,7 @@ PLAYBOOK_PATH = Path(__file__).parent / "levers.yaml"
 Op = Literal["eq", "ne", "lt", "le", "gt", "ge", "in", "is_null", "not_null"]
 Level = Literal["legal", "grey", "illegal_warning"]
 
-NAMED_VALUES = {"$max_offer_price"}
+NAMED_VALUES = {"$max_offer_price", "$cheapest_itp_region"}
 REFERENCE = re.compile(r"^\$(property|profile)\.(\w+)(?:\*([0-9.]+))?$")
 # A figure in the explanation would be a number the engine did not produce.
 FIGURE = re.compile(r"\d[\d.,]*\s*(%|€|euros|por ciento)", re.IGNORECASE)
