@@ -225,7 +225,38 @@ en pares que solo se distinguen por la fecha:
 
 Siete son de control: su respuesta no ha cambiado, y el RAG normal también debería acertarlas.
 
-<!-- TABLA_TEMPORAL: recuperación hoy / todas / por fecha, y generación -->
+**Recuperación** ([`reports/fase3/phase3_temporal.json`](../../reports/fase3/phase3_temporal.json);
+acierto@5 y MRR, híbrido λ = 0,2). Un fragmento es relevante si su versión del artículo contiene
+la cita, sea cual sea su número de versión: el apartado que responde suele sobrevivir a reformas
+de otros apartados.
+
+| Versiones visibles | Respuesta cambiada (10) | Controles (7) |
+|---|---|---|
+| Solo las de hoy (RAG normal) | 0 % / 0,000 | 57 % / 0,397 |
+| Todas, sin filtro | 30 % / 0,225 | 29 % / 0,213 |
+| **Las vigentes en la fecha** | **60 % / 0,389** | **71 % / 0,440** |
+
+**Respuestas**, juzgadas a mano (`reports/fase3/phase3_generation_temporal_*.json`):
+
+| | Cambiadas: correctas | Cambiadas: regla equivocada | Controles: correctas |
+|---|---|---|---|
+| RAG normal, sin pensamiento | 0 | 5 | 2 |
+| RAG por fecha, sin pensamiento | 3 | 4 | 2 |
+| RAG normal, con pensamiento | 1 | 5 | 3 |
+| **RAG por fecha, con pensamiento** | **5** | **2** | 3 |
+
+- **El RAG normal se equivoca con aplomo.** A un contrato de febrero de 2019 le contesta
+  «cinco años», y a una prórroga de 2016, «hasta tres años más».
+- **El RAG por fecha con pensamiento acierta:**
+  - el plazo de 2017 y el de febrero de 2019 (tres años, tras la derogación del RDL 21/2018);
+  - la prórroga tácita de 2016 (un año);
+  - la reducción del IRPF de 2019 (60 %) y la de 2024 (90 %).
+- **Los controles no empeoran,** y en recuperación mejoran: en una fecha pasada desaparecen
+  distractores que hoy existen.
+- **Con 10 + 7 preguntas son indicios, no pruebas**, pero el patrón es el que predice el diseño:
+  ganan las preguntas cuya respuesta cambió y no pierden las demás.
+- **El límite ahora es el generador.** En 3 de los 5 fallos que quedan tiene delante la versión
+  correcta y la lee mal: el ITP de 2020, la escala de imputación de 2027 y la garantía de 2017.
 
 ### Auditoría del motor de reglas
 
@@ -243,7 +274,7 @@ existiendo el texto exacto en que se apoya:
 
 «Rota» quiere decir que el texto de la regla ya no está vigente, no que el motor se equivoque en
 todos los casos. Según la disposición transitoria 38.ª, la escala de 2023 sigue valiendo para
-contratos firmados hasta el 1/12/2026 ([`docs/fase2.md`](fase2.md), rama `fase2`). La auditoría
+contratos firmados hasta el 1/12/2026 ([`docs/fase2/fase2.md`](../fase2/fase2.md)). La auditoría
 avisa; el régimen transitorio lo decide una persona. Es la misma lección que la fase 2 sacó a
 mano, convertida en una prueba que se puede repetir cada vez que se descarga el corpus.
 
