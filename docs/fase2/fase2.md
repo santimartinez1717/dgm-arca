@@ -40,18 +40,22 @@ Construimos 10 herramientas de los tres tipos:
 | | `max_offer_price` | Precio máximo para llegar a una rentabilidad neta objetivo |
 | | `legal_rent_cap` | Renta máxima legal de un contrato nuevo (LAU art. 17.6 y 17.7) |
 | | `rental_income_tax` | Rendimiento neto del alquiler en el IRPF, con amortización y la reducción del art. 23.2 |
-| Acción con estado | `save_to_portfolio` | Guarda una vivienda en la cartera, en SQLite. Pide confirmación |
+| Acción con estado | `save_to_portfolio` | Guarda una vivienda en la cartera, en SQLite. Si el usuario no dice si está en zona tensionada, lo consulta. Pide confirmación |
 | | `get_portfolio` | Lee la cartera y dice si el usuario es gran tenedor |
 
 Tres criterios de diseño:
 - **Las calculadoras son una capa fina sobre `rlm/realestate_rules.py`.** El motor sigue
   siendo la única fuente de verdad: lo que entrena la fase 1 y lo que calcula la fase 2 no
   pueden discrepar.
-- **Deducen en vez de preguntar.** El ITP sale de la comunidad
-  ([`itp_rates.py`](../../tool_use/itp_rates.py)). El régimen de la reducción del IRPF sale de
-  la fecha del contrato y de las rentas anterior y nueva. Que sea zona tensionada y lo que dice
-  su declaración sale de los datos del BOE. Así el modelo no tiene que saberlo, y el usuario
-  tampoco.
+- **Deducen en vez de preguntar.**
+  - El ITP sale de la comunidad ([`itp_rates.py`](../../tool_use/itp_rates.py)). Sus 17 filas
+    están contrastadas con la hacienda de cada comunidad, con el enlace junto a cada fila.
+  - El régimen de la reducción del IRPF sale de la fecha del contrato y de las rentas anterior
+    y nueva.
+  - Si un municipio es zona tensionada, y lo que dice su declaración, sale de los datos del
+    BOE. `get_rent_reference` y `save_to_portfolio` usan la misma tabla.
+
+  Así el modelo no tiene que saberlo, y el usuario tampoco.
 - **Cada cifra va con la regla que la produce**, y con avisos cuando el caso se sale de lo
   modelado (un ITP progresivo, una zona tensionada solo en parte del municipio). La respuesta
   puede citarlos.
@@ -111,6 +115,18 @@ Las 10 definiciones ocupan **4.767 tokens** con el tokenizador de Qwen3. La más
   ser > 0, para que una llamada que todavía no tiene el valor falle en vez de calcular con 0.
 - **Decir en la descripción si una cantidad es mensual o anual** evitó que pusiera la renta
   anual en `monthly_rent`.
+- **Un argumento obligatorio que el usuario no da se rellena con otra cifra.** A "guarda un piso
+  en Valencia de 180.000 € alquilado por 900 €", el modelo respondió con `area_m2=180`: copió
+  el precio, porque la superficie era obligatoria. `stressed_zone` también lo era, y pasaba
+  `false` sin comprobarlo. Ahora los dos son opcionales:
+  - sin superficie, el piso se guarda y la herramienta avisa de que hay que pedirla;
+  - sin zona, la herramienta la consulta ella misma.
+- **"If known" no basta.** Con esa descripción, el modelo se inventaba la referencia catastral
+  `12345678901234`. Ahora dice "exactly as the user writes it… never make one up", y no la
+  inventa.
+- **El orden de los argumentos decide qué cifra se rellena primero.** Pasar `area_m2` detrás
+  del precio y la renta forma parte del arreglo. En la sección 5 un cambio de orden movió una
+  familia entera.
 
 ## 3. El bucle de cinco pasos
 
@@ -128,6 +144,17 @@ Está en [`tool_use/executor.py`](../../tool_use/executor.py), sin frameworks:
 - **Errores como observación:** si el JSON viene mal formado, la herramienta no existe, la
   validación falla o la herramienta lanza una excepción, el bucle no se rompe. El modelo recibe
   el error y puede corregirse.
+- **Un recordatorio al final de cada turno de resultados.** Tras el último resultado de cada
+  turno, el bucle añade "si la pregunta necesita otra herramienta que use estos resultados,
+  llámala ahora; si no, responde en el idioma en que escribió el usuario (en español si
+  escribió en español)".
+  - Sin la primera parte, el modelo respondía tras el primer resultado aunque la pregunta
+    pidiera un segundo paso.
+  - Sin la segunda, tras leer resultados en inglés contestaba en inglés. El prompt de sistema
+    ya lo pedía, pero lejos del punto donde empieza a responder: las respuestas en español
+    pasaron de 20 a 29 de 32 al moverla aquí.
+- **Límites contra los bucles.** Las llamadas idénticas de un turno se ejecutan una vez, y
+  como mucho 4 por turno. Si el modelo repite una llamada que ya falló, recibe un aviso.
 - **Dos formatos de prompt** (`ARCA_TOOLS_PROMPT`):
   - `native`: la plantilla de chat de Qwen3, que es con la que se post-entrenó para tool use;
   - `course`: el prompt de sistema de las diapositivas.
@@ -141,6 +168,13 @@ Está en [`tool_use/executor.py`](../../tool_use/executor.py), sin frameworks:
 
 El modelo que atiende `/tools` se elige con `ARCA_TOOLS_MODEL`, `ARCA_TOOLS_ADAPTER` y
 `ARCA_TOOLS_THINKING` (ver `.env.example`).
+
+- **La API carga una sola copia de Qwen3-1.7B para todas las fases**
+  ([`api/shared_model.py`](../../api/shared_model.py)). `/reasoning` genera con el adaptador
+  de la fase 1 y `/tools` con el adaptador desactivado, así que la fase 2 no cuesta memoria
+  extra: 4,3 GB las dos juntas.
+- **En GPU, la API desactiva la atención de cuDNN.** Construía un plan por cada longitud de
+  secuencia nueva, y la primera petición tras arrancar tardaba 145 s en vez de 19.
 
 ## 4. El banco de pruebas
 
@@ -174,26 +208,43 @@ Casos acertados, de 40. Formato nativo, sin thinking, decodificación voraz.
 | Qwen3-1.7B + GRPO de la fase 1 | 27 | 18 | 2 | 0 |
 | Qwen3-1.7B base | 34 | 24 | 4 | 0 |
 | Qwen3-1.7B base, tras los arreglos | 37 | 32 | 5 | 0 |
-| Qwen3-1.7B base, con los arreglos del encadenado (`eca9bc9`) | **40** | **33** | **6** | 0 |
+| Qwen3-1.7B base, con los arreglos del encadenado (`eca9bc9`, banco v8) | 40 | 33 | 6 | 0 |
+| Qwen3-1.7B + GRPO 2 de la fase 1 (`grpo2_lora`, v9) | 27 | 21 | 4 | 0 |
+| Qwen3-1.7B base, mismo código que la fila anterior (v9) | 39 | 32 | 6 | 0 |
+| **Qwen3-1.7B base, versión servida (`da42ac2`, v13)** | **40** | **33** | **5** | **0** |
 
 Informes en `reports/fase2/phase2_bench_*.json`. Detalle y pruebas estadísticas en EXPERIMENTS.md.
 
 - **El modelo base elige bien la herramienta y no llama cuando no hace falta.** Sus errores
   estaban en los argumentos, y la mayoría se arreglaron en las definiciones sin tocar el
   modelo: 8 casos mejoran y ninguno empeora (McNemar exacto, p = 0,008).
-- **El adaptador de la fase 1 ha perdido el formato de llamada.** Escribe
-  `<function name=…/>`, JSON sin etiquetas o la llamada en prosa, y hace las cuentas él
-  mismo. 7 casos empeoran en selección y ninguno mejora (p = 0,016). Por eso `/tools` usa el
-  modelo base.
-- **Encadenar es lo que sigue fallando:** 1 de 6, y 2 de 6 tras añadir un recordatorio
-  después de cada resultado y afinar los errores. El modelo lanza a la vez las llamadas que
-  dependen una de otra, o se salta la consulta y se inventa el dato. Las paralelas sí salen
-  bien (4 de 4).
+- **Los adaptadores de la fase 1 han perdido el formato de llamada.** Con el del primer GRPO,
+  7 casos empeoran en selección y ninguno mejora (p = 0,016). Con el GRPO 2, el mejor modelo
+  de la fase 1 (47,3 % en su test), empeoran 12 y no mejora ninguno (p = 0,0005):
+  - en 9 casos no llega a hacer una llamada válida. La escribe entre `<tools>` en vez de
+    `<tool_call>`, la deja sin cerrar, o hace las cuentas él mismo y acaba en LaTeX;
+  - en 3 elige otra herramienta, con todos los opcionales a 0.
+
+  El GRPO se entrenó para razonar y cerrar con su propio formato, sin herramientas, y ese
+  formato ha desplazado al de Qwen3. Por eso `/tools` usa el modelo base.
+- **De la v8 a la v13 la cifra apenas se mueve, pero los fallos son otros.** En medio
+  arreglamos tres invenciones: la superficie copiada del precio, la zona tensionada sin
+  comprobar y la referencia catastral inventada (sección 2). Las respuestas en español
+  pasaron de 20 a 29 de 32.
+  - **El argumento que el banco cuenta como fallo en `port-01` es correcto.** El usuario dice
+    "no está en zona tensionada", el modelo deja `stressed_zone` sin pasar y la herramienta
+    consulta Zaragoza y guarda `false`. No hemos cambiado el caso para no maquillar la cifra.
+  - **Cambiar el prompt mueve 1 o 2 casos al límite** (`rates-02`, `chain-04`, `chain-06`)
+    arriba y abajo. Con 40 casos, eso no distingue dos versiones.
+- **Encadenar es lo que sigue fallando:** entre 1 y 2 de 6 según la versión. El modelo lanza
+  a la vez las llamadas que dependen una de otra, o se salta la consulta y se inventa el dato.
+  Las paralelas sí salen bien (4 de 4).
 
 ### De una llamada a varias
 
-Con una sola herramienta, el modelo acierta 13 de 20 casos tras los arreglos. Con llamadas
-independientes en paralelo, 4 de 4. Con llamadas que dependen una de otra, 1 de 6. Lo difícil
+En la versión servida (v13), con una sola herramienta el modelo acierta los argumentos en 14 de
+20 casos. Con llamadas independientes en paralelo, 4 de 4. Con llamadas que dependen una de
+otra, 1 de 6. Lo difícil
 no es hacer varias llamadas, sino **esperar** al resultado de una para construir la
 siguiente: el modelo planea toda la respuesta en el primer turno. El bucle sí lo permite (el
 error "price must be > 0" vuelve como observación), pero el modelo no reintenta con el valor
@@ -257,12 +308,21 @@ Detalle en EXPERIMENTS.md.
 
 ## 6. Limitaciones conocidas
 
-- **La tabla de ITP viene de una fuente secundaria.** Sus 17 filas están marcadas
-  `verified=False` hasta contrastarlas con la web de cada comunidad. En las comunidades con
-  escala progresiva se usa el tramo general y se avisa.
+- **La tabla de ITP se verificó a mano el 23/11/2026.**
+  - Empezamos con una fuente secundaria (Gibobs), y 4 de sus 17 tipos estaban mal: Cantabria,
+    Comunitat Valenciana, Galicia y Murcia.
+  - Hay que revisarla con cada ley de presupuestos autonómica.
+  - En las comunidades con escala progresiva se usa el tramo general y se avisa con los tramos.
 - **Zonas tensionadas:**
   - Cataluña amplió su lista en julio de 2026, pero la ampliación aún no está en el BOE;
   - las declaraciones parciales se tratan por municipio, sin bajar a sección censal.
+    `save_to_portfolio` no decide en esos casos: guarda la zona como desconocida y avisa de que
+    hay que preguntar al usuario.
+- **Encadenado:** solo 1 o 2 de 6 casos dependientes salen bien (sección 4). El siguiente paso
+  sería un SFT con trazas que esperan al resultado. El enunciado lo propone como reto ("SFT
+  para tool use"), y además serviría para recuperar el formato de llamada del adaptador de la
+  fase 1.
+- **3 de 32 respuestas siguen saliendo en inglés** (`yield-03`, `cad-01`, `chain-03`).
 - **El IRPF no modela** el reparto entre varios inquilinos de edades distintas, el 80 % de la
   prórroga tácita ni el alquiler por habitaciones.
 - **Los tests de las APIs usan respuestas grabadas el 17/11/2026.** Un cambio de formato en
