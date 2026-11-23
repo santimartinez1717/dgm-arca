@@ -110,3 +110,12 @@ def test_every_source_has_a_licence_and_a_unique_file_name():
     sources = all_sources()
     assert all(s.license for s in sources)
     assert len({s.slug for s in sources}) == len(sources)
+
+
+def test_article_number_prefers_the_heading_over_the_block_id():
+    from rag.download_corpus import _article_number
+
+    assert _article_number("a17") == 17
+    assert _article_number("a2-3", "Artículo 8 bis") == 8  # Madrid numbers its blocks apart
+    assert _article_number("a6-2", "Artículo 641-5 bis. Tipo de gravamen") == 641
+    assert _article_number("a3bis", "Disposición adicional") is None
