@@ -54,6 +54,7 @@ una.
 | 2 | 60 problemas del test de la fase 1 con el modelo base | sin herramientas 1/60 · con una calculadora genérica 1/60 · **con las del dominio 20/60** |
 | 2 | Banco de 40 casos de `/tools` (v13) | selección de herramienta 40/40 · argumentos 33/40 · respuestas en español 29/32 |
 | 3 | Recuperación en 51 preguntas anotadas (semántico p90, híbrido λ = 0,2) | acierto@5 58,8 % · MRR 0,425; el troceado importa más que el retriever (recursivo: MRR 0,29) |
+| 3 → 4 | El mismo `/rag` con el corpus ampliado para las palancas (+34 % de fragmentos) | R@5 0,529 → 0,510 · MRR 0,421 → 0,395 en las 51 preguntas: más textos parecidos diluyen el ranking |
 | 3 | Generación con citas (cita el pasaje relevante cuando se recuperó) | base 50 % · **base con pensamiento 70 %** · modelo de la fase 1 46,7 %; 6/6 abstenciones correctas |
 | 3 | Ley vigente en una fecha, preguntas cuya respuesta cambió (10) | acierto@5: solo la ley de hoy 0 % → **versiones vigentes en la fecha 60 %** |
 | 4 | Banco de 24 tareas, tres cerebros y cuatro configuraciones | ⟦pendiente⟧ (`reports/fase4/phase4_eval.md`) |

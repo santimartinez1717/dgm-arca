@@ -81,6 +81,30 @@ Cada tarea se ejecuta aislada, con un expediente y una cartera nuevos. Intervalo
 La pregunta «¿ayuda haber entrenado?» se responde con la selección de tools y argumentos, los
 pasos y el éxito.
 
+**Pruebas preliminares del bucle** (EXPERIMENTS.md, 23/11). Son 6 tareas con `base` y 2 con
+`thinking`: indican dónde mirar, no miden nada.
+
+| Versión del bucle | Tareas | Check | Cierra con `final_answer` | Texto suelto como respuesta | Pasos con pensamiento |
+|---|---|---|---|---|---|
+| v1 (la spec) | 5 | 0 | 1 | 3 | 3/30 |
+| v2 (+ pista por turno) | 6 | 0 | 0 | 6 | 12/21 |
+| v4 (pensamiento suelto = pensamiento del paso siguiente) | 6 | 1 | 5 | 0 | 36/46 |
+
+- **El formato se arregla en el bucle, no en el modelo.** Sin pista, Qwen3 emite la tool call
+  sin pensamiento (27 de 30 pasos). Con la pista escribe «Thought: necesito llamar a what_if»
+  sin la llamada. En la v4 ese texto pasa a ser el pensamiento del paso siguiente, y 5 de 6
+  tareas cierran con `final_answer`.
+- **El auditor actúa sobre el modelo real.** Rechaza «6,8 %» cuando el motor dio 0,68 %, y
+  «1.140 €» cuando eran 11.400 €.
+- **Lo que falla es copiar los datos, no razonar.** En 3 de las 4 tareas con un piso, el modelo
+  deja fuera de `record_property` un dato que la tarea da: el valor catastral, la renta
+  anterior o la fecha. Sin ese dato, el motor no calcula el IRPF o el tope. La única tarea que
+  pasa es la única en que los copió todos. La respuesta de diseño es leer también el piso en
+  prosa en código, como el CSV (EXPERIMENTS.md, 23/11).
+- **`thinking`** cierra las dos tareas, pero en inconsistent-02 dice que el valor de referencia
+  «no influye» en el neto, y es falso porque cambia el ITP. En impossible-01 se abstiene bien,
+  aunque en inglés.
+
 ## 6.4 Ablaciones
 
 | Configuración | Qué se quita | Éxito (base) |
