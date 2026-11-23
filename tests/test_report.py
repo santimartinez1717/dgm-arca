@@ -82,7 +82,12 @@ def sections(text: str) -> dict[str, str]:
 
 
 def playbook_texts() -> list[str]:
-    return [f"{lever.title} {lever.risk or ''} {lever.evidence.source}" for lever in load_levers()]
+    # The report cites each lever as "source · section": an article number such as 669 (LEC,
+    # auctions) is part of the citation, not a figure.
+    return [
+        f"{lever.title} {lever.risk or ''} {lever.evidence.source} {lever.evidence.section or ''}"
+        for lever in load_levers()
+    ]
 
 
 def case_texts(case: CaseFile) -> list[str]:
