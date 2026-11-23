@@ -34,6 +34,9 @@ ABSTAIN = re.compile(
     r"|no (?:tengo|dispongo de|hay|encuentro) (?:suficiente )?(?:información|datos)"
     r"|no (?:es posible|se puede|puedo) (?:responder|determinar|saber)"
     r"|no se (?:menciona|especifica|indica|encuentra)\w* en (?:los|ningún|ninguno de los) pasajes?"
+    r"|no se (?:encuentra|proporciona|ofrece|incluye|recoge|dispone de) (?:\w+ )?"
+    r"(?:información|datos)"
+    r"|no hay (?:ningún )?pasaje"
     r"|not enough information",
     re.IGNORECASE,
 )
@@ -97,14 +100,37 @@ def score(items: list[dict]) -> dict:
         "figures_match": mean(
             i["figures_match"] for i in answerable if i["figures_match"] is not None
         ),
+        "figures_match_when_retrieved": mean(
+            i["figures_match"] for i in retrieved if i["figures_match"] is not None
+        ),
         "abstains_answerable": mean(i["abstains"] for i in answerable),
+        # abstaining is right when the passage with the answer was not retrieved
+        "abstains_when_retrieved": mean(i["abstains"] for i in retrieved),
+        "abstains_when_not_retrieved": mean(
+            i["abstains"] for i in answerable if not i["relevant_retrieved"]
+        ),
         "abstains_unanswerable": mean(i["abstains"] for i in unanswerable),
     }
 
 
+def rescore(path: Path) -> None:
+    """Re-apply ``abstains`` and ``figures_match`` to the saved answers (detectors improve)."""
+    report = json.loads(path.read_text())
+    for item in report["items"]:
+        item["abstains"] = abstains(item["answer"])
+        reference = numbers(item.get("reference") or "")
+        item["figures_match"] = reference <= numbers(item["answer"]) if reference else None
+    report["metrics"] = score(report["items"])
+    path.write_text(json.dumps(report, ensure_ascii=False, indent=1))
+    print(path, json.dumps(report["metrics"]))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    parser.add_argument("--name", required=True, help="suffix of the report file")
+    parser.add_argument("--name", help="suffix of the report file")
+    parser.add_argument(
+        "--rescore", nargs="+", metavar="REPORT", help="recompute checks and metrics of reports"
+    )
     parser.add_argument("--retriever", default="hybrid", choices=["bm25", "dense", "hybrid"])
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--batch-size", type=int, default=8)
@@ -112,6 +138,12 @@ def main() -> None:
     parser.add_argument("--gold", default="rag/gold/gold.jsonl")
     parser.add_argument("--unanswerable", default="rag/gold/unanswerable.jsonl", help="'' = none")
     args = parser.parse_args()
+    if args.rescore:
+        for path in args.rescore:
+            rescore(Path(path))
+        return
+    if not args.name:
+        parser.error("--name is required")
 
     from rag.evaluate import load_gold
     from rag.generate import RagPipeline

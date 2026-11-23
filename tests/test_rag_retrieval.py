@@ -136,6 +136,9 @@ def test_abstention_is_read_in_the_first_sentence():
     assert not abstains("Sí, se actualiza con el IPC [d-0001]. No hay un pacto expreso.")
     assert not abstains("La información indica que si no se especifica un índice, se usa el IRAV.")
     assert abstains("No se menciona en ningún pasaje. Por tanto no lo sé.")
+    assert abstains("No se encuentra información en los pasajes sobre el precio en Madrid.")
+    assert abstains("No hay pasaje que responda directamente a la pregunta.")
+    assert abstains("No se proporciona información específica sobre el valor del IRAV.")
 
 
 def test_pipeline_answer_with_a_fake_generator():

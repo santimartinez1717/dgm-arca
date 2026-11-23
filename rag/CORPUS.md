@@ -9,7 +9,9 @@ uv run python -m rag.ingest                   # comprobar: 52 documentos, ~2,6 M
 ```
 
 El script escribe `rag/corpus/manifest.json` con la URL, la licencia, la fecha de la versión y
-el sha256 de cada fichero.
+el sha256 de cada fichero. También guarda en `rag/corpus/versions/<ley>.jsonl` cada versión de
+cada artículo del BOE con sus fechas de vigencia (2.049 versiones), para la recuperación por
+fecha de `rag/temporal.py`. `rag/ingest.py` no lee esos ficheros.
 
 ## Fuentes
 
@@ -41,6 +43,9 @@ texto hasta los fragmentos.
   Cada artículo se toma en la versión vigente el `--as-of` (por defecto 2026-11-22), no en la
   última, para que dos descargas en días distintos den el mismo corpus y el conjunto dorado
   no se quede apuntando a un texto que ya no existe.
+- **Versiones sin fecha fuera.** Una versión sin `fecha_vigencia` no se toma por vigente (le
+  pasa al art. 6 bis del reglamento del IRPF). Hasta el 23/11 sí se tomaba, y por eso el
+  corpus de ese día cambió ligeramente (EXPERIMENTS.md).
 - **Sin notas de modificación.** Se quitan los «Se modifica por el art. X de…» y las notas al
   pie: duplican referencias a otras leyes y meterían ruido en BM25.
 - **Leyes enteras salvo dos.** LIRPF y su reglamento van completos aunque gran parte no trate

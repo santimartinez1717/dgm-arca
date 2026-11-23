@@ -3,6 +3,10 @@
 - `gold.jsonl`: 51 preguntas con respuesta en el corpus.
 - `unanswerable.jsonl`: 6 preguntas que el corpus **no** responde, para comprobar que
   `/rag` dice «no lo sé».
+- `temporal.jsonl`: 17 preguntas con fecha para el derecho aplicable en una fecha
+  ([`docs/fase3.md`](../../docs/fase3.md), sección 8). Cada una anota ley, artículo (`block_id`
+  del BOE) y cita, y se resuelve a la versión vigente en su `date`; `control` marca las que
+  tienen la misma respuesta hoy.
 
 ## Formato: por artículo y cita, no por id de fragmento
 
