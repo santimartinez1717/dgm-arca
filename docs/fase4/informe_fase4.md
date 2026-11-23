@@ -123,12 +123,17 @@ La tarea `lever-01` del banco, con las cifras del motor:
 > 15/12/2026. […] ¿Hay alguna forma legal de pagar menos IRPF por el alquiler?*
 
 1. `analyze_property(P1)`: el contrato, firmado desde el 01/12/2026 y con la renta un 3 % por
-   encima de la anterior, tiene una reducción del 40 % (RDL 29/2026). Tributan 4.346,40 €.
-2. `find_levers(P1)`: aplica la palanca de la fecha de firma frente al RDL 29/2026, con su
-   cita del BOE. Todavía no está en el playbook semilla; la añade el issue #1.
-3. `what_if(P1, overrides={"contract_date": "2026-11-30"})`: firmando el 30/11/2026 rige la
-   Ley 12/2023 con un 50 %, y tributan 3.622 €.
-4. `final_answer`: las dos cifras, la palanca con su cita y la remisión a un asesor. El
-   auditor la aprueba porque cada cifra sale de un paso anterior.
+   encima de la anterior, tiene una reducción del 40 % (RDL 29/2026). La base reducida es de
+   4.346,40 € y, con el tipo marginal medio que supone el motor (30 %), la cuota de IRPF del
+   alquiler es de 1.303,92 €.
+2. `find_levers(P1)`: entre las aplicables aparece `contract_date_before_rdl_29_2026`, la
+   fecha de firma frente al RDL 29/2026, con su cita del BOE.
+3. `what_if(P1, ["contract_date_before_rdl_29_2026"])`: firmando el 30/11/2026 rige la Ley
+   12/2023, con un 50 % de reducción (+10 puntos), y la cuota baja a 1.086,60 € (−217,32 €).
+4. `final_answer`: las dos cuotas, la palanca con su cita y la remisión a un asesor. El auditor
+   la aprueba porque cada cifra sale de un paso anterior. La resta (217,32 €) también, porque
+   `what_if` la devuelve como `income_tax_change`.
 
+Cifras comprobadas con el bucle de #29 y el playbook de #32 y un cerebro guionizado que hace
+esas llamadas.
 La traza real la pondremos cuando el bucle la produzca: ⟦pendiente⟧.
