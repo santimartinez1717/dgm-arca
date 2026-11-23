@@ -1,0 +1,36 @@
+{
+ "runs": 61,
+ "pass_check": 20,
+ "pass_audit_first_time": 17,
+ "median_steps_of_passing": 4.0,
+ "accepted": 12,
+ "acceptance_rate": 0.197,
+ "per_category": {
+  "inconsistent": {
+   "runs": 13,
+   "check": 1,
+   "accepted": 1
+  },
+  "legal_rent": {
+   "runs": 19,
+   "check": 1,
+   "accepted": 1
+  },
+  "impossible": {
+   "runs": 6,
+   "check": 3,
+   "accepted": 3
+  },
+  "yield": {
+   "runs": 13,
+   "check": 13,
+   "accepted": 7
+  },
+  "cost": {
+   "runs": 10,
+   "check": 2,
+   "accepted": 0
+  }
+ },
+ "generations_in_accepted": 32
+}
