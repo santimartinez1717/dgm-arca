@@ -59,6 +59,10 @@ def main() -> None:
     parser.add_argument("--grad-accum", type=int, default=8)
     parser.add_argument("--max-length", type=int, default=8192)
     parser.add_argument("--lora-rank", type=int, default=16)
+    parser.add_argument(
+        "--init-adapter",
+        help="LoRA to keep training (e.g. rlm/weights/grpo2_lora) instead of a new one",
+    )
     args = parser.parse_args()
 
     import torch
@@ -90,18 +94,33 @@ def main() -> None:
         report_to="none",
         model_init_kwargs={"dtype": torch.bfloat16 if torch.cuda.is_available() else torch.float32},
     )
-    trainer = SFTTrainer(
-        model=args.model,
-        args=config,
-        train_dataset=Dataset.from_list(examples),
-        processing_class=tokenizer,
-        peft_config=LoraConfig(
+    if args.init_adapter:
+        # Start from the phase-1 RLM, as the spec asks: same base, its LoRA kept trainable.
+        from peft import PeftModel
+        from transformers import AutoModelForCausalLM
+
+        dtype = torch.bfloat16 if torch.cuda.is_available() else torch.float32
+        base = AutoModelForCausalLM.from_pretrained(args.model, dtype=dtype)
+        model, peft_config = (
+            PeftModel.from_pretrained(base, args.init_adapter, is_trainable=True),
+            None,
+        )
+        config.model_init_kwargs = None
+    else:
+        model = args.model
+        peft_config = LoraConfig(
             r=args.lora_rank,
             lora_alpha=2 * args.lora_rank,
             lora_dropout=0.05,
             target_modules="all-linear",
             task_type="CAUSAL_LM",
-        ),
+        )
+    trainer = SFTTrainer(
+        model=model,
+        args=config,
+        train_dataset=Dataset.from_list(examples),
+        processing_class=tokenizer,
+        peft_config=peft_config,
     )
     trainer.train()
     trainer.save_model(args.output)
