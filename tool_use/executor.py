@@ -34,8 +34,6 @@ from __future__ import annotations
 
 import json
 import os
-import sys
-from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from typing import Any, Literal, Protocol
 
@@ -85,11 +83,6 @@ CHAIN_HINT = (
     "now; otherwise answer."
 )
 
-# Loading and generating run on this one thread, as in rlm/inference.py: FastAPI serves each
-# request from a different worker thread, and on Apple GPUs (MPS) a model loaded in one thread
-# can hang when another generates with it. One worker also queues concurrent requests.
-_MODEL_THREAD = ThreadPoolExecutor(max_workers=1, thread_name_prefix="tools-model")
-
 PromptStyle = Literal["native", "course"]
 ConfirmPolicy = Literal["auto", "deny"]
 
@@ -124,39 +117,24 @@ class HFChatModel:
         return f"{self.model_id}{suffix}{thinking}"
 
     def load(self) -> HFChatModel:
-        _MODEL_THREAD.submit(self._load).result()
+        # One copy of the base model for every phase (api/shared_model.py): phase 1 uses the
+        # same Qwen3-1.7B with its adapter, and two copies do not fit on a 6 GB GPU. Without
+        # an adapter, generation runs with the LoRA branches disabled: the bare base model.
+        from api.shared_model import get_model
+
+        self.shared = get_model(self.model_id)
+        self.tokenizer = self.shared.tokenizer
+        self.adapter = self.shared.add_adapter(self.adapter_path) if self.adapter_path else None
         return self
-
-    def _load(self) -> None:
-        import torch
-        from transformers import AutoModelForCausalLM, AutoTokenizer
-
-        # CUDA on the DGX; on a Mac, the Apple GPU (MPS) in bfloat16, like phase 1.
-        if torch.cuda.is_available():
-            device = "cuda"
-        elif torch.backends.mps.is_available():
-            device = "mps"
-        else:
-            device = "cpu"
-        dtype = torch.float32 if device == "cpu" else torch.bfloat16
-        if os.environ.get("ARCA_RLM_DTYPE"):  # float16 where bfloat16 on MPS is slow
-            dtype = getattr(torch, os.environ["ARCA_RLM_DTYPE"])
-        print(f"phase 2 model on {device} in {dtype}", file=sys.stderr, flush=True)
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_id)
-        model = AutoModelForCausalLM.from_pretrained(self.model_id, dtype=dtype, device_map=device)
-        if self.adapter_path:
-            from peft import PeftModel
-
-            model = PeftModel.from_pretrained(model, self.adapter_path)
-        self.model = model.eval()
 
     def generate(self, messages: list[dict[str, Any]], tools: list[dict] | None) -> str:
         """Step 2: one greedy generation from the conversation so far."""
-        return _MODEL_THREAD.submit(self._generate, messages, tools).result()
+        # On the model thread shared by every phase (see api/shared_model.py for why).
+        from api.shared_model import on_model_thread
+
+        return on_model_thread(self._generate, messages, tools)
 
     def _generate(self, messages: list[dict[str, Any]], tools: list[dict] | None) -> str:
-        import torch
-
         prompt = self.tokenizer.apply_chat_template(
             messages,
             tools=tools,
@@ -164,14 +142,14 @@ class HFChatModel:
             add_generation_prompt=True,
             enable_thinking=self.enable_thinking,
         )
-        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
-        with torch.no_grad():
-            out = self.model.generate(
-                **inputs,
-                max_new_tokens=self.max_new_tokens,
-                do_sample=False,
-                pad_token_id=self.tokenizer.eos_token_id,
-            )
+        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.shared.device)
+        out = self.shared.generate(
+            self.adapter,
+            **inputs,
+            max_new_tokens=self.max_new_tokens,
+            do_sample=False,
+            pad_token_id=self.tokenizer.eos_token_id,
+        )
         new_tokens = out[0, inputs["input_ids"].shape[1] :]
         # <tool_call> and <think> are ordinary added tokens in Qwen3, so they survive this.
         return self.tokenizer.decode(new_tokens, skip_special_tokens=True)

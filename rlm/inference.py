@@ -24,11 +24,11 @@ import os
 import re
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
 
 from api.schemas import ReasoningResponse, VerifierVerdict
+from api.shared_model import get_model, on_model_thread
 from rlm.data import build_prompt
 from rlm.rewards import extract_answer, has_valid_format
 from rlm.verifier import EuroVerifier, ExactMatchVerifier, NumericVerifier, Verifier
@@ -61,13 +61,6 @@ def _base_model_from_adapter(adapter: str) -> str:
         if base:
             return base
     return "Qwen/Qwen3-0.6B"
-
-
-# Every call that touches the model runs on this one thread. FastAPI serves each request from a
-# different worker thread, and on Apple GPUs (MPS) a model loaded in one thread can hang when a
-# second thread generates with it: the first request answered and the second never did. One
-# worker also queues concurrent requests, which a laptop GPU could not hold in memory anyway.
-_MODEL_THREAD = ThreadPoolExecutor(max_workers=1, thread_name_prefix="phase1-model")
 
 
 @dataclass
@@ -107,7 +100,7 @@ class ReasoningModel:
         )
 
     def load(self) -> None:
-        _MODEL_THREAD.submit(self._load).result()
+        on_model_thread(self._load)
 
     def _load(self) -> None:
         self.verifier = VERIFIERS[self.verifier_name]()
@@ -117,33 +110,15 @@ class ReasoningModel:
             self.model, self.tokenizer = load(self.mlx_path)
             print(f"phase 1 model on MLX from {self.mlx_path}", file=sys.stderr, flush=True)
             return
-        import torch
-        from peft import PeftModel
-        from transformers import AutoModelForCausalLM, AutoTokenizer
-
-        # CUDA on the DGX; on a Mac, the Apple GPU (MPS) in bfloat16: half the memory of float32
-        # on CPU (~3.5 GB for 1.7B instead of ~7 GB) and much faster.
-        if torch.cuda.is_available():
-            device = "cuda"
-        elif torch.backends.mps.is_available():
-            device = "mps"
-        else:
-            device = "cpu"
-        dtype = torch.float32 if device == "cpu" else torch.bfloat16
-        print(f"phase 1 model on {device} in {dtype}", file=sys.stderr, flush=True)
-        self.tokenizer = AutoTokenizer.from_pretrained(self.base_model)
-        model = AutoModelForCausalLM.from_pretrained(
-            self.base_model, dtype=dtype, device_map=device
-        )
-        if self.adapter_path:
-            # Merged into the base weights: the API never trains, and the unmerged LoRA adds
-            # two small matmuls per linear layer to every generated token.
-            model = PeftModel.from_pretrained(model, self.adapter_path).merge_and_unload()
-        self.model = model.eval()
+        # The base model is shared with the other phases (api/shared_model.py): phase 2 uses the
+        # same Qwen3-1.7B without adapter, and both fit on a 6 GB GPU only as one copy.
+        self.shared = get_model(self.base_model)
+        self.tokenizer = self.shared.tokenizer
+        self.adapter = self.shared.add_adapter(self.adapter_path) if self.adapter_path else None
 
     def generate(self, question: str, max_new_tokens: int = 2048) -> tuple[str, int]:
         """Return the raw completion and the number of generated tokens."""
-        return _MODEL_THREAD.submit(self._generate, question, max_new_tokens).result()
+        return on_model_thread(self._generate, question, max_new_tokens)
 
     def _generate(self, question: str, max_new_tokens: int) -> tuple[str, int]:
         text = self.tokenizer.apply_chat_template(
@@ -151,18 +126,16 @@ class ReasoningModel:
         )
         if self.mlx_path:
             return self._generate_mlx(text, max_new_tokens)
-        import torch
-
-        inputs = self.tokenizer(text, return_tensors="pt").to(self.model.device)
+        inputs = self.tokenizer(text, return_tensors="pt").to(self.shared.device)
         started = time.perf_counter()
-        with torch.no_grad():
-            out = self.model.generate(
-                **inputs,
-                max_new_tokens=max_new_tokens,
-                # Greedy, like rlm/evaluate.py: the API must agree with the reported pass@1.
-                do_sample=False,
-                pad_token_id=self.tokenizer.pad_token_id or self.tokenizer.eos_token_id,
-            )
+        out = self.shared.generate(
+            self.adapter,
+            **inputs,
+            max_new_tokens=max_new_tokens,
+            # Greedy, like rlm/evaluate.py: the API must agree with the reported pass@1.
+            do_sample=False,
+            pad_token_id=self.tokenizer.pad_token_id or self.tokenizer.eos_token_id,
+        )
         new_tokens = out[0, inputs["input_ids"].shape[1] :]
         seconds = time.perf_counter() - started
         print(

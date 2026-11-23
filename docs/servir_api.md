@@ -200,5 +200,8 @@ que mandar a los profesores. Comprobar desde el móvil `<URL>/health`.
 - Portátil enchufado y sin suspensión: *Configuración → Sistema → Energía → Suspender: Nunca*.
 - Las dos ventanas abiertas (Docker y ngrok). Si el portátil se reinicia: abrir Docker
   Desktop, `docker compose up api`, calentar (paso 7) y `ngrok http ...`.
-- La fase 1 ocupa unos 4,5 GB de los 6 de la tarjeta. La fase 2 (`POST /tools`) carga **otro**
-  modelo de 3,4 GB en el mismo proceso: las dos a la vez no caben en 6 GB.
+- Las fases 1 y 2 comparten una sola copia de Qwen3-1.7B (`api/shared_model.py`): la fase 1
+  con el adaptador GRPO 2 activado y la fase 2 con él desactivado. Las dos juntas ocupan unos
+  4,3 GB de GPU (por separado serían 8,4 GB y no cabrían en 6 GB), con respuestas idénticas
+  a las de cada fase cargada sola (comprobado en la DGX el 23/11).
+- Las peticiones se atienden de una en una, también entre fases.
