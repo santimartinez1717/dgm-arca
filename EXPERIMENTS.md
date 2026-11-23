@@ -2361,3 +2361,58 @@ construcción en paralelo, así que `_pipeline()` lleva ahora un candado.
   después de repetir búsquedas hasta el "NOT RUN".
 - Pendiente para el núcleo, fuera del bucle: que `search_knowledge_base` no acepte un `on_date`
   que la tarea no menciona, y probar `brain=rlm` (aquí no está el adaptador del GRPO 2).
+
+---
+
+### 2026-11-23 · Fase 4 · Por qué falla el cerebro en las pruebas del bucle, y tres checks imposibles del banco
+
+**Qué queríamos saber.** En `smoke_react_base_v4` solo 1 de 6 tareas pasa el check, y el bucle
+funciona. ¿Falla el modelo al razonar, al usar las tools o es el banco el que pide algo
+imposible?
+
+**Qué hicimos.** Sin GPU, sobre lo ya ejecutado y con el código de `fase4` (d2e9fb4):
+
+- Comparamos los argumentos de cada `record_property` de `reports/fase4/smoke_react_base_v4.json`
+  con los datos que la tarea da del piso, leídos con `agent.ingest.extract_prose` (PR #35).
+- Pasamos las 24 tareas por el `ReActAgent` real con un cerebro guionizado que hace las
+  llamadas ideales (`record_property`, `analyze_property`, `find_levers`, `what_if`), y
+  comprobamos si el check se puede pasar con las cifras que devuelven las tools. El auditor
+  rechaza una cifra que ninguna tool haya devuelto.
+
+**Qué pasó.** Datos de la tarea que el modelo no pasó a `record_property` (cerebro base, v4):
+
+| Tarea | Check | `record_property` | Datos del piso en la tarea | No pasados |
+|---|---|---|---|---|
+| lever-01 | no | 1 | 10 | `cadastral_value`, `contract_date`, `previous_rent` |
+| kb_plus_tool-01 | no | 1 | 9 | `cadastral_value`, `contract_date` |
+| broken_tool-01 | no | 1 | 4 | `previous_rent` |
+| inconsistent-02 | **sí** | 1 | 5 | ninguno |
+| lever-04 | no | 0 | dos pisos | no registra ninguno |
+| impossible-01 | no | 1 | ninguno | registra un piso inventado |
+
+- Sin el valor catastral o la fecha, `analyze_property` no calcula el IRPF. Sin la renta
+  anterior, el tope de la zona tensionada no se aplica: en broken_tool-01 da 950 € como renta
+  legal cuando son 800 €.
+- La única tarea que pasa es la única en que el modelo copió todos los datos.
+- Con el cerebro guionizado, tres checks pedían una cifra que ninguna tool devuelve:
+  - lever-01 y lever-02 pedían la base reducida del IRPF del escenario, pero `what_if` da por
+    escenario la cuota (`income_tax`);
+  - lever-04 pedía la diferencia entre obra nueva y segunda mano, que es una resta.
+- En cambio, `screen_properties` aprueba exactamente los 10 pisos de screening-01 y descarta
+  P09 y P12 por el tope, como espera el banco.
+
+**Qué concluimos.**
+
+- **El fallo principal es copiar los datos, no razonar.** En 3 de 4 tareas con un piso, el
+  modelo deja fuera algún dato que cambia la cifra. Es el mismo problema que el CSV de 15 pisos,
+  que ya resolvimos leyéndolo en código.
+- Proponemos leer en código también un piso descrito en prosa (PR #35, se apaga con
+  `ARCA_INGEST_PROSE=0`). En las 12 tareas del banco en que se puede comparar, `analyze` sobre
+  lo extraído da las cifras del banco; en las 7 sin un piso único no extrae nada. Con él, el
+  primer `analyze_property(P1)` ya da el IRPF de lever-01 y kb_plus_tool-01 y el tope de
+  broken_tool-01.
+- Los tres checks se corrigen en el PR #34: aceptan la base o la cuota, y piden los dos totales
+  en vez de la resta. Sin esto, la tasa de éxito del banco tendría un techo de 21/24 para
+  cualquier cerebro.
+- Son 6 tareas y un solo cerebro: indica dónde mirar, no mide nada. La medida es la evaluación
+  completa (`scripts/fase4/eval_agent.sh json`, PR #37).
