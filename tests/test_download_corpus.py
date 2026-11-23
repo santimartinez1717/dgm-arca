@@ -33,6 +33,10 @@ CONSOLIDATED = """<?xml version="1.0" encoding="utf-8"?>
       <blockquote><p>Se modifica el apartado 3 por la Ley 12/2023.</p></blockquote>
     </version>
   </bloque>
+  <bloque id="a18-2" tipo="precepto" titulo="Artículo 18 bis">
+    <version fecha_vigencia="19950101"><p class="articulo">Artículo 18 bis. Viejo.</p></version>
+    <version fecha_vigencia=""><p class="articulo">Artículo 18 bis. Sin fecha.</p></version>
+  </bloque>
   <bloque id="a17-2" tipo="precepto" titulo="Artículo 17 bis">
     <version fecha_vigencia="20990101"><p class="articulo">Artículo 17 bis. Futuro.</p></version>
   </bloque>
@@ -57,6 +61,7 @@ def test_consolidated_drops_amendment_notes_signature_and_future_articles():
     md, _ = boe_consolidated_to_markdown(CONSOLIDATED, "LAU", "u", "2026-11-22")
     assert "Se modifica" not in md and "Téngase" not in md and "JUAN CARLOS" not in md
     assert "Norma derogada" not in md
+    assert "Artículo 18 bis. Viejo." in md and "Sin fecha" not in md
     assert "Futuro" not in md
 
 

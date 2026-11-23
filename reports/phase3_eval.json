@@ -1,0 +1,1774 @@
+{
+ "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+ "sentence_distances": {
+  "n": 15227,
+  "mean": 0.6291167140007019,
+  "p70": 0.7616,
+  "p80": 0.7891,
+  "p90": 0.8215,
+  "p95": 0.8451
+ },
+ "chunkings": {
+  "recursive_800_100": {
+   "stats": {
+    "n_chunks": 4422,
+    "mean_chars": 599.3156942559928,
+    "min_chars": 1,
+    "max_chars": 800
+   },
+   "relevant_chunks_per_question": 1.1764705882352942,
+   "retrievers": {
+    "bm25": {
+     "hit@1": 0.0784313725490196,
+     "recall@1": 0.058823529411764705,
+     "hit@5": 0.27450980392156865,
+     "recall@5": 0.2647058823529412,
+     "hit@10": 0.3137254901960784,
+     "recall@10": 0.29411764705882354,
+     "mrr": 0.14744008714596948,
+     "n_questions": 51
+    },
+    "dense": {
+     "hit@1": 0.17647058823529413,
+     "recall@1": 0.1568627450980392,
+     "hit@5": 0.4117647058823529,
+     "recall@5": 0.4019607843137255,
+     "hit@10": 0.5686274509803921,
+     "recall@10": 0.5490196078431373,
+     "mrr": 0.27229225023342674,
+     "n_questions": 51
+    },
+    "hybrid": {
+     "hit@1": 0.19607843137254902,
+     "recall@1": 0.16666666666666666,
+     "hit@5": 0.45098039215686275,
+     "recall@5": 0.4411764705882353,
+     "hit@10": 0.5686274509803921,
+     "recall@10": 0.5588235294117647,
+     "mrr": 0.2917133520074696,
+     "n_questions": 51,
+     "lambda": 0.2
+    }
+   },
+   "lambda_cv": {
+    "mrr_by_lambda": {
+     "0.0": 0.27229225023342674,
+     "0.1": 0.2889900404606287,
+     "0.2": 0.2917133520074696,
+     "0.3": 0.2583255524431995,
+     "0.4": 0.2518985371926548,
+     "0.5": 0.22289915966386556,
+     "0.6": 0.22322595704948647,
+     "0.7": 0.21538281979458454,
+     "0.8": 0.1710239651416122,
+     "0.9": 0.1565904139433551,
+     "1.0": 0.14744008714596948
+    },
+    "chosen_lambda_counts": {
+     "0.0": 2,
+     "0.1": 105,
+     "0.2": 251,
+     "0.4": 15,
+     "0.6": 12,
+     "0.7": 15
+    },
+    "most_chosen_lambda": 0.2,
+    "held_out_mrr_mean": 0.27470677655677656,
+    "held_out_mrr_std": 0.055901061302420126
+   }
+  },
+  "semantic_p70": {
+   "stats": {
+    "n_chunks": 5384,
+    "mean_chars": 481.0066864784547,
+    "min_chars": 1,
+    "max_chars": 1500
+   },
+   "relevant_chunks_per_question": 1.1568627450980393,
+   "retrievers": {
+    "bm25": {
+     "hit@1": 0.13725490196078433,
+     "recall@1": 0.12745098039215685,
+     "hit@5": 0.37254901960784315,
+     "recall@5": 0.3627450980392157,
+     "hit@10": 0.4117647058823529,
+     "recall@10": 0.4019607843137255,
+     "mrr": 0.22262682850918147,
+     "n_questions": 51
+    },
+    "dense": {
+     "hit@1": 0.2549019607843137,
+     "recall@1": 0.23529411764705882,
+     "hit@5": 0.6274509803921569,
+     "recall@5": 0.6078431372549019,
+     "hit@10": 0.6666666666666666,
+     "recall@10": 0.6568627450980392,
+     "mrr": 0.3943355119825709,
+     "n_questions": 51
+    },
+    "hybrid": {
+     "hit@1": 0.3137254901960784,
+     "recall@1": 0.29411764705882354,
+     "hit@5": 0.5882352941176471,
+     "recall@5": 0.5686274509803921,
+     "hit@10": 0.6666666666666666,
+     "recall@10": 0.6666666666666666,
+     "mrr": 0.4319405539993775,
+     "n_questions": 51,
+     "lambda": 0.3
+    }
+   },
+   "lambda_cv": {
+    "mrr_by_lambda": {
+     "0.0": 0.3943355119825709,
+     "0.1": 0.3959694989106754,
+     "0.2": 0.4061002178649238,
+     "0.3": 0.4319405539993775,
+     "0.4": 0.4161453470276999,
+     "0.5": 0.3574307500778089,
+     "0.6": 0.33128695922813567,
+     "0.7": 0.29291160908807967,
+     "0.8": 0.2650560224089636,
+     "0.9": 0.23894335511982573,
+     "1.0": 0.22262682850918147
+    },
+    "chosen_lambda_counts": {
+     "0.0": 26,
+     "0.1": 6,
+     "0.2": 12,
+     "0.3": 286,
+     "0.4": 70
+    },
+    "most_chosen_lambda": 0.3,
+    "held_out_mrr_mean": 0.41639626068376073,
+    "held_out_mrr_std": 0.05957715857848783
+   }
+  },
+  "semantic_p80": {
+   "stats": {
+    "n_chunks": 4072,
+    "mean_chars": 636.3094302554027,
+    "min_chars": 1,
+    "max_chars": 1500
+   },
+   "relevant_chunks_per_question": 1.1568627450980393,
+   "retrievers": {
+    "bm25": {
+     "hit@1": 0.09803921568627451,
+     "recall@1": 0.08823529411764706,
+     "hit@5": 0.39215686274509803,
+     "recall@5": 0.37254901960784315,
+     "hit@10": 0.4117647058823529,
+     "recall@10": 0.4019607843137255,
+     "mrr": 0.20032679738562092,
+     "n_questions": 51
+    },
+    "dense": {
+     "hit@1": 0.2549019607843137,
+     "recall@1": 0.22549019607843138,
+     "hit@5": 0.5686274509803921,
+     "recall@5": 0.5490196078431373,
+     "hit@10": 0.6666666666666666,
+     "recall@10": 0.6568627450980392,
+     "mrr": 0.3874183006535948,
+     "n_questions": 51
+    },
+    "hybrid": {
+     "hit@1": 0.27450980392156865,
+     "recall@1": 0.24509803921568626,
+     "hit@5": 0.5686274509803921,
+     "recall@5": 0.5490196078431373,
+     "hit@10": 0.6470588235294118,
+     "recall@10": 0.6470588235294118,
+     "mrr": 0.4014939309056956,
+     "n_questions": 51,
+     "lambda": 0.4
+    }
+   },
+   "lambda_cv": {
+    "mrr_by_lambda": {
+     "0.0": 0.3874183006535948,
+     "0.1": 0.400186741363212,
+     "0.2": 0.4008403361344538,
+     "0.3": 0.40007780890133826,
+     "0.4": 0.4014939309056956,
+     "0.5": 0.351384998443822,
+     "0.6": 0.303781512605042,
+     "0.7": 0.2863523187052599,
+     "0.8": 0.2531045751633987,
+     "0.9": 0.20555555555555557,
+     "1.0": 0.20032679738562092
+    },
+    "chosen_lambda_counts": {
+     "0.0": 70,
+     "0.1": 58,
+     "0.2": 60,
+     "0.3": 39,
+     "0.4": 167,
+     "0.5": 6
+    },
+    "most_chosen_lambda": 0.4,
+    "held_out_mrr_mean": 0.3839885744810745,
+    "held_out_mrr_std": 0.05501176647777787
+   }
+  },
+  "semantic_p90": {
+   "stats": {
+    "n_chunks": 2901,
+    "mean_chars": 893.5618752154429,
+    "min_chars": 2,
+    "max_chars": 1500
+   },
+   "relevant_chunks_per_question": 1.1568627450980393,
+   "retrievers": {
+    "bm25": {
+     "hit@1": 0.0784313725490196,
+     "recall@1": 0.06862745098039216,
+     "hit@5": 0.39215686274509803,
+     "recall@5": 0.38235294117647056,
+     "hit@10": 0.43137254901960786,
+     "recall@10": 0.4183006535947712,
+     "mrr": 0.21151571739807035,
+     "n_questions": 51
+    },
+    "dense": {
+     "hit@1": 0.29411764705882354,
+     "recall@1": 0.2647058823529412,
+     "hit@5": 0.5882352941176471,
+     "recall@5": 0.5686274509803921,
+     "hit@10": 0.7254901960784313,
+     "recall@10": 0.7058823529411765,
+     "mrr": 0.4248054777466542,
+     "n_questions": 51
+    },
+    "hybrid": {
+     "hit@1": 0.29411764705882354,
+     "recall@1": 0.2647058823529412,
+     "hit@5": 0.5882352941176471,
+     "recall@5": 0.5686274509803921,
+     "hit@10": 0.7254901960784313,
+     "recall@10": 0.7058823529411765,
+     "mrr": 0.4248054777466542,
+     "n_questions": 51,
+     "lambda": 0.0
+    }
+   },
+   "lambda_cv": {
+    "mrr_by_lambda": {
+     "0.0": 0.4248054777466542,
+     "0.1": 0.42885932150638034,
+     "0.2": 0.4291083099906629,
+     "0.3": 0.42551353874883285,
+     "0.4": 0.39877061935885466,
+     "0.5": 0.34855275443510736,
+     "0.6": 0.3052443199502023,
+     "0.7": 0.2977668845315904,
+     "0.8": 0.2542717086834734,
+     "0.9": 0.22953625894802365,
+     "1.0": 0.21151571739807035
+    },
+    "chosen_lambda_counts": {
+     "0.0": 138,
+     "0.1": 90,
+     "0.2": 104,
+     "0.3": 37,
+     "0.4": 31
+    },
+    "most_chosen_lambda": 0.0,
+    "held_out_mrr_mean": 0.41363563492063493,
+    "held_out_mrr_std": 0.05737228281044438
+   }
+  },
+  "semantic_p95": {
+   "stats": {
+    "n_chunks": 2396,
+    "mean_chars": 1082.1068447412354,
+    "min_chars": 2,
+    "max_chars": 1500
+   },
+   "relevant_chunks_per_question": 1.1568627450980393,
+   "retrievers": {
+    "bm25": {
+     "hit@1": 0.11764705882352941,
+     "recall@1": 0.10784313725490197,
+     "hit@5": 0.37254901960784315,
+     "recall@5": 0.35947712418300654,
+     "hit@10": 0.43137254901960786,
+     "recall@10": 0.4183006535947712,
+     "mrr": 0.21988017429193898,
+     "n_questions": 51
+    },
+    "dense": {
+     "hit@1": 0.23529411764705882,
+     "recall@1": 0.22549019607843138,
+     "hit@5": 0.5490196078431373,
+     "recall@5": 0.5196078431372549,
+     "hit@10": 0.6862745098039216,
+     "recall@10": 0.6666666666666666,
+     "mrr": 0.35767195767195775,
+     "n_questions": 51
+    },
+    "hybrid": {
+     "hit@1": 0.2549019607843137,
+     "recall@1": 0.23529411764705882,
+     "hit@5": 0.5686274509803921,
+     "recall@5": 0.5392156862745098,
+     "hit@10": 0.6862745098039216,
+     "recall@10": 0.6666666666666666,
+     "mrr": 0.3721833177715531,
+     "n_questions": 51,
+     "lambda": 0.1
+    }
+   },
+   "lambda_cv": {
+    "mrr_by_lambda": {
+     "0.0": 0.35767195767195775,
+     "0.1": 0.3721833177715531,
+     "0.2": 0.36477591036414564,
+     "0.3": 0.36734360410831,
+     "0.4": 0.3504279489573607,
+     "0.5": 0.31221599751011514,
+     "0.6": 0.2775287892934952,
+     "0.7": 0.2661998132586368,
+     "0.8": 0.24482570806100218,
+     "0.9": 0.23123249299719886,
+     "1.0": 0.21988017429193898
+    },
+    "chosen_lambda_counts": {
+     "0.0": 17,
+     "0.1": 206,
+     "0.2": 34,
+     "0.3": 95,
+     "0.4": 43,
+     "0.5": 5
+    },
+    "most_chosen_lambda": 0.1,
+    "held_out_mrr_mean": 0.35746192307692304,
+    "held_out_mrr_std": 0.056854094958159414
+   }
+  }
+ },
+ "per_question_first_rank": {
+  "recursive_800_100": {
+   "lau-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "lau-02": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 3
+   },
+   "lau-03": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-04": {
+    "bm25": 3,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-05": {
+    "bm25": null,
+    "dense": 10,
+    "hybrid": null
+   },
+   "lau-06": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "lau-07": {
+    "bm25": 3,
+    "dense": null,
+    "hybrid": null
+   },
+   "lau-08": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-09": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "lau-10": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "lau-11": {
+    "bm25": null,
+    "dense": 8,
+    "hybrid": 8
+   },
+   "lau-12": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "viv-01": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-02": {
+    "bm25": 4,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "rdl-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "rdl-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "rdl-03": {
+    "bm25": 3,
+    "dense": 4,
+    "hybrid": 3
+   },
+   "irpf-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-02": {
+    "bm25": 8,
+    "dense": 10,
+    "hybrid": 10
+   },
+   "irpf-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-04": {
+    "bm25": null,
+    "dense": 7,
+    "hybrid": 8
+   },
+   "irpf-05": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-01": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "aeat-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-03": {
+    "bm25": 3,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-04": {
+    "bm25": 3,
+    "dense": null,
+    "hybrid": 7
+   },
+   "aeat-05": {
+    "bm25": 1,
+    "dense": 7,
+    "hybrid": 4
+   },
+   "aeat-06": {
+    "bm25": null,
+    "dense": 10,
+    "hybrid": 8
+   },
+   "aeat-07": {
+    "bm25": 1,
+    "dense": 3,
+    "hybrid": 3
+   },
+   "itp-01": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "itp-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ibi-01": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 5
+   },
+   "ibi-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "plus-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "cat-01": {
+    "bm25": 5,
+    "dense": 6,
+    "hybrid": 4
+   },
+   "hip-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "hip-02": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "hip-03": {
+    "bm25": 1,
+    "dense": 4,
+    "hybrid": 3
+   },
+   "bde-01": {
+    "bm25": null,
+    "dense": 7,
+    "hybrid": 7
+   },
+   "bde-02": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lph-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "zon-01": {
+    "bm25": 3,
+    "dense": 3,
+    "hybrid": 3
+   },
+   "zon-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "zon-03": {
+    "bm25": 9,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "ser-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irav-01": {
+    "bm25": 3,
+    "dense": 2,
+    "hybrid": 1
+   },
+   "irav-02": {
+    "bm25": 2,
+    "dense": 2,
+    "hybrid": 2
+   }
+  },
+  "semantic_p70": {
+   "lau-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 3
+   },
+   "lau-02": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 1
+   },
+   "lau-03": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-04": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-05": {
+    "bm25": 9,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-06": {
+    "bm25": null,
+    "dense": 9,
+    "hybrid": null
+   },
+   "lau-07": {
+    "bm25": 5,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-08": {
+    "bm25": 3,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-09": {
+    "bm25": null,
+    "dense": 3,
+    "hybrid": 5
+   },
+   "lau-10": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-11": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 6
+   },
+   "lau-12": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "viv-01": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-02": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "rdl-01": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "rdl-02": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "rdl-03": {
+    "bm25": 4,
+    "dense": 3,
+    "hybrid": 1
+   },
+   "irpf-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-04": {
+    "bm25": 4,
+    "dense": 4,
+    "hybrid": 2
+   },
+   "irpf-05": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-01": {
+    "bm25": null,
+    "dense": 3,
+    "hybrid": 3
+   },
+   "aeat-02": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "aeat-03": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-04": {
+    "bm25": 5,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-05": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-06": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-07": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 2
+   },
+   "itp-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "itp-02": {
+    "bm25": 3,
+    "dense": null,
+    "hybrid": 9
+   },
+   "iva-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ibi-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ibi-02": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 8
+   },
+   "plus-01": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 5
+   },
+   "cat-01": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "hip-01": {
+    "bm25": 7,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "hip-02": {
+    "bm25": null,
+    "dense": 6,
+    "hybrid": 7
+   },
+   "hip-03": {
+    "bm25": 5,
+    "dense": 5,
+    "hybrid": 3
+   },
+   "bde-01": {
+    "bm25": 1,
+    "dense": 5,
+    "hybrid": 2
+   },
+   "bde-02": {
+    "bm25": 1,
+    "dense": 2,
+    "hybrid": 1
+   },
+   "lph-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "zon-01": {
+    "bm25": 3,
+    "dense": 3,
+    "hybrid": 3
+   },
+   "zon-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "zon-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ser-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irav-01": {
+    "bm25": 1,
+    "dense": 2,
+    "hybrid": 1
+   },
+   "irav-02": {
+    "bm25": 2,
+    "dense": 2,
+    "hybrid": 2
+   }
+  },
+  "semantic_p80": {
+   "lau-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 3
+   },
+   "lau-02": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 1
+   },
+   "lau-03": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-04": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-05": {
+    "bm25": 4,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-06": {
+    "bm25": null,
+    "dense": 6,
+    "hybrid": 10
+   },
+   "lau-07": {
+    "bm25": 5,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-08": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-09": {
+    "bm25": null,
+    "dense": 3,
+    "hybrid": 5
+   },
+   "lau-10": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-11": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 7
+   },
+   "lau-12": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "viv-01": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-02": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "rdl-01": {
+    "bm25": 4,
+    "dense": 1,
+    "hybrid": 2
+   },
+   "rdl-02": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "rdl-03": {
+    "bm25": 4,
+    "dense": 3,
+    "hybrid": 1
+   },
+   "irpf-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-04": {
+    "bm25": 3,
+    "dense": 4,
+    "hybrid": 3
+   },
+   "irpf-05": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "aeat-02": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 8
+   },
+   "aeat-03": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-04": {
+    "bm25": 6,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-05": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-06": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-07": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 2
+   },
+   "itp-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "itp-02": {
+    "bm25": 3,
+    "dense": null,
+    "hybrid": 4
+   },
+   "iva-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ibi-01": {
+    "bm25": null,
+    "dense": 10,
+    "hybrid": null
+   },
+   "ibi-02": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 8
+   },
+   "plus-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "cat-01": {
+    "bm25": 5,
+    "dense": 5,
+    "hybrid": 5
+   },
+   "hip-01": {
+    "bm25": null,
+    "dense": 10,
+    "hybrid": null
+   },
+   "hip-02": {
+    "bm25": 5,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "hip-03": {
+    "bm25": 5,
+    "dense": 6,
+    "hybrid": 3
+   },
+   "bde-01": {
+    "bm25": 1,
+    "dense": 8,
+    "hybrid": 2
+   },
+   "bde-02": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lph-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "zon-01": {
+    "bm25": 3,
+    "dense": 3,
+    "hybrid": 3
+   },
+   "zon-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "zon-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ser-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irav-01": {
+    "bm25": 1,
+    "dense": 2,
+    "hybrid": 1
+   },
+   "irav-02": {
+    "bm25": 2,
+    "dense": 2,
+    "hybrid": 2
+   }
+  },
+  "semantic_p90": {
+   "lau-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-02": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-03": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-04": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-05": {
+    "bm25": 2,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-06": {
+    "bm25": null,
+    "dense": 3,
+    "hybrid": 3
+   },
+   "lau-07": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-08": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-09": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 5
+   },
+   "lau-10": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-11": {
+    "bm25": null,
+    "dense": 10,
+    "hybrid": 10
+   },
+   "lau-12": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "viv-01": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-02": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "rdl-01": {
+    "bm25": 4,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "rdl-02": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "rdl-03": {
+    "bm25": 2,
+    "dense": 3,
+    "hybrid": 3
+   },
+   "irpf-01": {
+    "bm25": 7,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-03": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "irpf-04": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "irpf-05": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "aeat-02": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 5
+   },
+   "aeat-03": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-04": {
+    "bm25": 4,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-05": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-06": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-07": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "itp-01": {
+    "bm25": 9,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "itp-02": {
+    "bm25": 3,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ibi-01": {
+    "bm25": null,
+    "dense": 9,
+    "hybrid": 9
+   },
+   "ibi-02": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 5
+   },
+   "plus-01": {
+    "bm25": null,
+    "dense": 8,
+    "hybrid": 8
+   },
+   "cat-01": {
+    "bm25": 4,
+    "dense": 3,
+    "hybrid": 3
+   },
+   "hip-01": {
+    "bm25": null,
+    "dense": 10,
+    "hybrid": 10
+   },
+   "hip-02": {
+    "bm25": 5,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "hip-03": {
+    "bm25": 2,
+    "dense": 9,
+    "hybrid": 9
+   },
+   "bde-01": {
+    "bm25": 1,
+    "dense": 8,
+    "hybrid": 8
+   },
+   "bde-02": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lph-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "zon-01": {
+    "bm25": 4,
+    "dense": 7,
+    "hybrid": 7
+   },
+   "zon-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "zon-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ser-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irav-01": {
+    "bm25": 1,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "irav-02": {
+    "bm25": 2,
+    "dense": 2,
+    "hybrid": 2
+   }
+  },
+  "semantic_p95": {
+   "lau-01": {
+    "bm25": null,
+    "dense": 8,
+    "hybrid": 8
+   },
+   "lau-02": {
+    "bm25": 8,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-03": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 5
+   },
+   "lau-04": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-05": {
+    "bm25": 9,
+    "dense": 4,
+    "hybrid": 3
+   },
+   "lau-06": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "lau-07": {
+    "bm25": 9,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-08": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-09": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "lau-10": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "lau-11": {
+    "bm25": null,
+    "dense": 7,
+    "hybrid": 7
+   },
+   "lau-12": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "viv-01": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-02": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "rdl-01": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "rdl-02": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "rdl-03": {
+    "bm25": 3,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "irpf-01": {
+    "bm25": 3,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-03": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "irpf-04": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "irpf-05": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "aeat-02": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "aeat-03": {
+    "bm25": 5,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-04": {
+    "bm25": 2,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-05": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-06": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-07": {
+    "bm25": 3,
+    "dense": 4,
+    "hybrid": 3
+   },
+   "itp-01": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "itp-02": {
+    "bm25": 2,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ibi-01": {
+    "bm25": null,
+    "dense": 9,
+    "hybrid": 9
+   },
+   "ibi-02": {
+    "bm25": null,
+    "dense": 6,
+    "hybrid": 7
+   },
+   "plus-01": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "cat-01": {
+    "bm25": 4,
+    "dense": 3,
+    "hybrid": 4
+   },
+   "hip-01": {
+    "bm25": 4,
+    "dense": 3,
+    "hybrid": 3
+   },
+   "hip-02": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 5
+   },
+   "hip-03": {
+    "bm25": 3,
+    "dense": 9,
+    "hybrid": 4
+   },
+   "bde-01": {
+    "bm25": 1,
+    "dense": 8,
+    "hybrid": 6
+   },
+   "bde-02": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lph-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "zon-01": {
+    "bm25": 3,
+    "dense": 7,
+    "hybrid": 7
+   },
+   "zon-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "zon-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ser-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irav-01": {
+    "bm25": 1,
+    "dense": 2,
+    "hybrid": 1
+   },
+   "irav-02": {
+    "bm25": 2,
+    "dense": 2,
+    "hybrid": 2
+   }
+  }
+ },
+ "instruction_ablation": {
+  "chunking": "semantic_p90",
+  "none": {
+   "instruction": null,
+   "hit@1": 0.3137254901960784,
+   "recall@1": 0.28431372549019607,
+   "hit@5": 0.6078431372549019,
+   "recall@5": 0.5784313725490197,
+   "hit@10": 0.7058823529411765,
+   "recall@10": 0.6830065359477124,
+   "mrr": 0.430905695611578,
+   "n_questions": 51,
+   "mrr_answer_in_boe": 0.47318422318422315,
+   "mrr_answer_elsewhere": 0.353395061728395,
+   "top5_folders": {
+    "aeat": 58,
+    "boe": 154,
+    "boe_diario": 26,
+    "pdf": 17
+   }
+  },
+  "default": {
+   "instruction": "Given a user question, retrieve the passages from the knowledge base that answer it.",
+   "hit@1": 0.29411764705882354,
+   "recall@1": 0.2647058823529412,
+   "hit@5": 0.5882352941176471,
+   "recall@5": 0.5686274509803921,
+   "hit@10": 0.7254901960784313,
+   "recall@10": 0.7058823529411765,
+   "mrr": 0.4248054777466542,
+   "n_questions": 51,
+   "mrr_answer_in_boe": 0.47567340067340064,
+   "mrr_answer_elsewhere": 0.3315476190476191,
+   "top5_folders": {
+    "aeat": 69,
+    "boe": 142,
+    "boe_diario": 28,
+    "pdf": 16
+   }
+  },
+  "generic_es": {
+   "instruction": "Recupera el pasaje que responde a la pregunta.",
+   "hit@1": 0.29411764705882354,
+   "recall@1": 0.2647058823529412,
+   "hit@5": 0.5882352941176471,
+   "recall@5": 0.5686274509803921,
+   "hit@10": 0.7058823529411765,
+   "recall@10": 0.673202614379085,
+   "mrr": 0.42333488951136006,
+   "n_questions": 51,
+   "mrr_answer_in_boe": 0.47032227032227025,
+   "mrr_answer_elsewhere": 0.33719135802469136,
+   "top5_folders": {
+    "aeat": 59,
+    "boe": 151,
+    "boe_diario": 28,
+    "pdf": 17
+   }
+  },
+  "domain_es": {
+   "instruction": "Dada la pregunta de alguien que compra una vivienda para alquilarla en España, recupera el artículo de ley, la norma o el pasaje oficial que la responde.",
+   "hit@1": 0.23529411764705882,
+   "recall@1": 0.21568627450980393,
+   "hit@5": 0.49019607843137253,
+   "recall@5": 0.47058823529411764,
+   "hit@10": 0.6666666666666666,
+   "recall@10": 0.6339869281045752,
+   "mrr": 0.35492530345471524,
+   "n_questions": 51,
+   "mrr_answer_in_boe": 0.4262145262145262,
+   "mrr_answer_elsewhere": 0.22422839506172837,
+   "top5_folders": {
+    "aeat": 34,
+    "boe": 176,
+    "boe_diario": 34,
+    "pdf": 11
+   }
+  },
+  "domain_en": {
+   "instruction": "Given a question from someone buying a home in Spain to rent it out, retrieve the article of law, the regulation or the official passage that answers it.",
+   "hit@1": 0.19607843137254902,
+   "recall@1": 0.17647058823529413,
+   "hit@5": 0.49019607843137253,
+   "recall@5": 0.47058823529411764,
+   "hit@10": 0.6078431372549019,
+   "recall@10": 0.5751633986928105,
+   "mrr": 0.3292950513538749,
+   "n_questions": 51,
+   "mrr_answer_in_boe": 0.3922077922077922,
+   "mrr_answer_elsewhere": 0.21395502645502645,
+   "top5_folders": {
+    "aeat": 33,
+    "boe": 168,
+    "boe_diario": 43,
+    "pdf": 11
+   }
+  },
+  "wrong": {
+   "instruction": "Given a text, retrieve passages written in the same informal style.",
+   "hit@1": 0.3333333333333333,
+   "recall@1": 0.30392156862745096,
+   "hit@5": 0.5490196078431373,
+   "recall@5": 0.5196078431372549,
+   "hit@10": 0.6666666666666666,
+   "recall@10": 0.6470588235294118,
+   "mrr": 0.42696078431372547,
+   "n_questions": 51,
+   "mrr_answer_in_boe": 0.4767676767676768,
+   "mrr_answer_elsewhere": 0.33564814814814814,
+   "top5_folders": {
+    "aeat": 78,
+    "boe": 130,
+    "boe_diario": 27,
+    "pdf": 20
+   }
+  }
+ },
+ "unanswerable_top_dense_score": {
+  "answerable": {
+   "mean": 0.6641289883968877,
+   "min": 0.5289984345436096
+  },
+  "unanswerable": {
+   "mean": 0.576866090297699,
+   "max": 0.7497075200080872
+  },
+  "unanswerable_scores": [
+   0.5052,
+   0.5375,
+   0.7497,
+   0.5022,
+   0.5874,
+   0.5792
+  ]
+ },
+ "elapsed_s": 25.5
+}

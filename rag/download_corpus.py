@@ -202,7 +202,10 @@ def boe_consolidated_to_markdown(
             kind == "precepto" and _in_ranges(_article_number(block_id), articles)
         ):
             continue
-        versions = [v for v in block.findall("version") if v.get("fecha_vigencia", "0") <= cutoff]
+        # a version with no date is not known to be in force: skip it
+        versions = [
+            v for v in block.findall("version") if "" < v.get("fecha_vigencia", "") <= cutoff
+        ]
         if not versions:
             continue
         version = versions[-1]

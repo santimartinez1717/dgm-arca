@@ -1008,3 +1008,81 @@ inmobiliaria», «desocupados con carácter permanente»).
 - Hay conflictos reales entre fuentes (Manual de Renta 2025 frente a LIRPF vigente, folleto
   del BdE frente a Ley 5/2019): son preguntas para el análisis de fallos de la generación.
 - Siguiente: troceado semántico, retriever denso con Qwen3-Embedding y barrido de λ.
+
+---
+
+### 2026-11-23 · Fase 3 · Troceado, tres retrievers, λ e instrucción de consulta
+
+**Qué queríamos saber.** Qué troceado y qué retriever recuperan mejor la respuesta de las 51
+preguntas del conjunto dorado, qué λ usar en el híbrido y qué efecto tiene la instrucción de
+la consulta en Qwen3-Embedding.
+
+**Qué hicimos.** `uv run python -m rag.evaluate` en la MIG (9 min la primera vez; las 11.761
+frases y los índices quedan en `rag/index/`). Resultado en `reports/phase3_eval.json`,
+`reports/phase3_semantic_distances.png` y `reports/phase3_lambda.png`.
+- Troceado recursivo 800/100 frente a semántico con el umbral en los percentiles 70, 80, 90
+  y 95 de la distancia entre frases consecutivas: 0,762, 0,789, 0,821 y 0,845. La media es
+  0,63, así que el 0,25 de la docstring cortaría en casi cada frase.
+- BM25, denso (Qwen3-Embedding-0.6B, índice NumPy) e híbrido (min-max y λ·BM25 + (1−λ)·denso
+  sobre los 20 primeros de cada uno).
+- λ de 0 a 1 de 0,1 en 0,1, elegido por MRR con validación cruzada a dos mitades repetida 200
+  veces. Así el λ no se puntúa sobre las mismas preguntas con que se eligió.
+
+**Qué pasó.** Acierto@5 = la respuesta está entre los 5 primeros; MRR hasta el puesto 10.
+
+| Troceado | Fragmentos | Media (car.) | BM25 | Denso | Híbrido | λ CV | MRR CV |
+|---|---|---|---|---|---|---|---|
+| Recursivo 800/100 | 4.422 | 599 | 27,5 % / 0,147 | 41,2 % / 0,272 | 45,1 % / 0,292 | 0,2 | 0,275 ± 0,056 |
+| Semántico p70 | 5.384 | 481 | 37,3 % / 0,223 | **62,7 %** / 0,394 | 58,8 % / **0,432** | 0,3 | **0,416** ± 0,060 |
+| Semántico p80 | 4.072 | 636 | 39,2 % / 0,200 | 56,9 % / 0,387 | 56,9 % / 0,401 | 0,4 | 0,384 ± 0,055 |
+| Semántico p90 | 2.901 | 894 | 39,2 % / 0,212 | 58,8 % / 0,425 | 58,8 % / 0,425 | 0,0 | 0,414 ± 0,057 |
+| Semántico p95 | 2.396 | 1.082 | 37,3 % / 0,220 | 54,9 % / 0,358 | 56,9 % / 0,372 | 0,1 | 0,357 ± 0,057 |
+
+Instrucción de la consulta (denso, semántico p90):
+
+| Instrucción | Acierto@5 | MRR | MRR respuesta en BOE (33) | MRR resto (18) | Top-5 del BOE / AEAT |
+|---|---|---|---|---|---|
+| Ninguna | 60,8 % | 0,431 | 0,473 | 0,353 | 154 / 58 |
+| Por defecto (inglés, genérica) | 58,8 % | 0,425 | 0,476 | 0,332 | 142 / 69 |
+| Genérica en español | 58,8 % | 0,423 | 0,470 | 0,337 | 151 / 59 |
+| De dominio en español | 49,0 % | 0,355 | 0,426 | 0,224 | 176 / 34 |
+| De dominio en inglés | 49,0 % | 0,329 | 0,392 | 0,214 | 168 / 33 |
+| Equivocada («mismo estilo informal») | 54,9 % | 0,427 | 0,477 | 0,336 | 130 / 78 |
+
+Preguntas sin respuesta: la similitud del primer fragmento es de 0,50 a 0,75 (0,58 de media),
+frente a 0,53 a 0,66 de media en las que sí la tienen. «¿Está Madrid declarada zona
+tensionada?» saca 0,75.
+
+**Qué concluimos.**
+- **El troceado importa más que el retriever.** Pasar del recursivo al semántico sube el MRR
+  del denso de 0,27 a 0,39-0,43. El recursivo corta artículos por la mitad y deja fragmentos
+  de un solo número de apartado. El semántico tiene un punto óptimo: con fragmentos de más
+  de 1.000 caracteres (p95) el vector se diluye y baja.
+- **El denso gana a BM25 con claridad** (MRR 0,43 frente a 0,21 en p90). Las preguntas usan las
+  palabras de un inversor y no las de la ley, y BM25 no salta de «honorarios de la agencia» a
+  «gastos de gestión inmobiliaria».
+- **El híbrido aporta poco y depende del troceado.** Con fragmentos pequeños (p70) sí mejora
+  en validación cruzada (0,416 frente a 0,394 del denso). En p90 la validación cruzada elige
+  λ = 0 en 138 de 400 particiones, pero la curva es plana entre 0 y 0,3. **Elegimos p90 con
+  λ = 0,2**, en el centro de la meseta, por dos razones: la meseta es más robusta que el pico
+  de p70, y los fragmentos de unos 900 caracteres dan más contexto al generador. Con 51
+  preguntas, la desviación de la validación cruzada (±0,06) es mayor que la diferencia entre
+  las configuraciones buenas.
+- **La instrucción sí es una palanca, y también en contra.** Las genéricas (inglés, español,
+  ninguna) quedan empatadas. Pedir «el artículo de ley, la norma o el pasaje oficial» empeora
+  el MRR un 20 %, igual en inglés que en español: no es el idioma, es el contenido. Esa
+  instrucción empuja hacia el BOE (176 fragmentos del BOE en el top-5 frente a 142), donde
+  están los distractores de la LIRPF y su reglamento. Las preguntas que se responden con la
+  AEAT o los PDF caen de 0,33 a 0,22, y las del BOE también bajan. Nos quedamos con la
+  instrucción por defecto.
+- **El «no lo sé» no puede salir de un umbral de similitud**, porque las distribuciones se
+  solapan. Tiene que decidirlo el generador.
+- **Fallos (22 de 51 fuera del top-5 con p90 y λ = 0,2):**
+  - Los preámbulos, sobre todo el del RDL 29/2026, explican las reglas en lenguaje llano y
+    ganan al artículo (lau-09, lau-11, aeat-04, ibi-01/02). A veces son respuestas válidas
+    no anotadas.
+  - El caso práctico de la AEAT hace de «imán»: es una lista de gastos que sale primera en 7
+    preguntas de IRPF, IBI e IVA.
+  - Las filas de tabla partidas separan el municipio de su definición (zon-02, zon-03).
+  - El IVA no tiene puente de vocabulario: «piso usado» frente a «segundas y ulteriores
+    entregas».
