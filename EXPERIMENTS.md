@@ -1839,3 +1839,50 @@ GRPO.
   permite por petición.
 - `rates-02` merece una frase más en la descripción de `get_market_rates` ("también el IRAV
   para actualizar el alquiler") si vuelve a fallar.
+
+---
+
+### 2026-11-23 · Fase 2 · save_to_portfolio sin superficie obligatoria (banco v10)
+
+**Qué queríamos saber.** Probando la API (entrada de `docker compose up api` en la DGX), a
+"Guarda en mi cartera un piso en Valencia de 180.000 € alquilado por 900 € al mes" el modelo
+respondió con `area_m2=180`. Copió la cifra del precio porque `area_m2` era obligatoria y el
+usuario no la había dado. Queríamos que la herramienta no obligue a inventarla.
+
+**Qué hicimos.**
+- **`area_m2` pasa a ser opcional.** Va después de `purchase_price` y `monthly_rent` (el
+  orden de los argumentos decide qué cifra rellena primero el modelo, 22/11), con la
+  descripción "only if the user gives it".
+- **Sin superficie, el piso se guarda igual.** La herramienta devuelve el aviso "superficie no
+  dada… pide la superficie al usuario".
+- **El resumen de la cartera** cuenta `dwellings_without_area`. Si no hay gran tenedor, la
+  razón aclara que no se cuenta la superficie de esos pisos.
+- **Las bases antiguas,** con `area_m2 NOT NULL`, se copian solas al esquema nuevo.
+- Tres tests nuevos.
+- Banco completo con `bash scripts/fase2/fase2_bench_v10.sh`: modelo base, 40 casos, 3 min.
+
+**Qué pasó.**
+
+| Métrica | Base v9 | Base v10 |
+|---|---|---|
+| Selección | 39/40 | 40/40 |
+| Argumentos | 32/40 | 34/40 |
+| Secuencia | 24/40 | 24/40 |
+| Llamadas falsas | 0 | 0 |
+
+- **Cambian dos casos, los dos a mejor.**
+  - `port-01` (guardar con 85 m²): en la v9 se inventaba `cadastral_ref="12121212121212"`;
+    ahora no.
+  - `rates-02` vuelve a llamar a `get_market_rates`. Es ruido de un caso al límite que se mueve
+    con cualquier cambio del prompt.
+- **La pregunta de Valencia, por la API:** `area_m2=null`, con el aviso, en 4,3 s.
+- **Con "95 m²" en la pregunta (Sevilla):** `area_m2=95`.
+- **La respuesta final sale en inglés** en las dos preguntas, como ya pasó con la de Barcelona.
+
+**Qué concluimos.**
+- `save_to_portfolio` ya no obliga a inventar la superficie.
+- Pendiente: el modelo responde en inglés tras algunas herramientas. Probablemente porque los
+  resultados y las descripciones están en inglés; habría que pedir en el prompt de sistema
+  que responda en el idioma del usuario.
+- `stressed_zone` sigue siendo obligatorio y el modelo lo rellena con `false` sin
+  comprobarlo. Se podría consultar solo con la tabla de zonas.
