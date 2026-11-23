@@ -23,9 +23,9 @@ import json
 import os
 import re
 import sys
-import threading
 import time
-from dataclasses import dataclass, field
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass
 from pathlib import Path
 
 from api.schemas import ReasoningResponse, VerifierVerdict
@@ -63,12 +63,18 @@ def _base_model_from_adapter(adapter: str) -> str:
     return "Qwen/Qwen3-0.6B"
 
 
+# Every call that touches the model runs on this one thread. FastAPI serves each request from a
+# different worker thread, and on Apple GPUs (MPS) a model loaded in one thread can hang when a
+# second thread generates with it: the first request answered and the second never did. One
+# worker also queues concurrent requests, which a laptop GPU could not hold in memory anyway.
+_MODEL_THREAD = ThreadPoolExecutor(max_workers=1, thread_name_prefix="phase1-model")
+
+
 @dataclass
 class ReasoningModel:
     base_model: str
     adapter_path: str | None = None
     verifier_name: str = "numeric"
-    _lock: threading.Lock = field(default_factory=threading.Lock, repr=False)
 
     @classmethod
     def from_env(cls) -> ReasoningModel:
@@ -89,6 +95,9 @@ class ReasoningModel:
         )
 
     def load(self) -> None:
+        _MODEL_THREAD.submit(self._load).result()
+
+    def _load(self) -> None:
         import torch
         from peft import PeftModel
         from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -119,6 +128,9 @@ class ReasoningModel:
 
     def generate(self, question: str, max_new_tokens: int = 2048) -> tuple[str, int]:
         """Return the raw completion and the number of generated tokens."""
+        return _MODEL_THREAD.submit(self._generate, question, max_new_tokens).result()
+
+    def _generate(self, question: str, max_new_tokens: int) -> tuple[str, int]:
         import torch
 
         text = self.tokenizer.apply_chat_template(
@@ -126,8 +138,7 @@ class ReasoningModel:
         )
         inputs = self.tokenizer(text, return_tensors="pt").to(self.model.device)
         started = time.perf_counter()
-        # One generation at a time: concurrent requests on a laptop GPU run out of memory.
-        with self._lock, torch.no_grad():
+        with torch.no_grad():
             out = self.model.generate(
                 **inputs,
                 max_new_tokens=max_new_tokens,
