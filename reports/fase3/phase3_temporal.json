@@ -1,0 +1,1462 @@
+{
+ "as_of": "2026-11-22",
+ "dates_read_right": 17,
+ "variants": {
+  "hoy": {
+   "bm25": {
+    "all": {
+     "n": 17,
+     "hit@1": 0.058823529411764705,
+     "hit@5": 0.11764705882352941,
+     "mrr": 0.08823529411764706,
+     "wrong_version@1": 0.11764705882352941
+    },
+    "changed": {
+     "n": 10,
+     "hit@1": 0.0,
+     "hit@5": 0.0,
+     "mrr": 0.0,
+     "wrong_version@1": 0.2
+    },
+    "control": {
+     "n": 7,
+     "hit@1": 0.14285714285714285,
+     "hit@5": 0.2857142857142857,
+     "mrr": 0.21428571428571427,
+     "wrong_version@1": 0.0
+    },
+    "per_question": [
+     {
+      "id": "t-plazo-2017",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "trlrhl-ibi-plusvalia-a72-v13-05"
+     },
+     {
+      "id": "t-plazo-2021",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-a23-v7-07"
+     },
+     {
+      "id": "t-plazo-2019-01",
+      "control": true,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v10-00"
+     },
+     {
+      "id": "t-plazo-2019-02",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": true,
+      "top1": "lau-a9-v8-00"
+     },
+     {
+      "id": "t-tacita-2016",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "ley-credito-inmobiliario-ar-4-v0-06"
+     },
+     {
+      "id": "t-tacita-2020",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "ley-credito-inmobiliario-ar-4-v0-06"
+     },
+     {
+      "id": "t-garantia-2017",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": true,
+      "top1": "lau-a36-v9-01"
+     },
+     {
+      "id": "t-garantia-2021",
+      "control": true,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a36-v9-01"
+     },
+     {
+      "id": "t-honorarios-2021",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "ley-credito-inmobiliario-ar-28-v0-01"
+     },
+     {
+      "id": "t-honorarios-2024",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "ley-credito-inmobiliario-ar-28-v0-01"
+     },
+     {
+      "id": "t-honorarios-hoy",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lph-atercero-v1-00"
+     },
+     {
+      "id": "t-reduccion-2019",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-davigesimaseptima-v3-03"
+     },
+     {
+      "id": "t-reduccion-2024",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a17-v5-02"
+     },
+     {
+      "id": "t-itp-2020",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lph-atercero-v1-00"
+     },
+     {
+      "id": "t-itp-2023",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lph-atercero-v1-00"
+     },
+     {
+      "id": "t-imputacion-2025",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-da-8-v3-02"
+     },
+     {
+      "id": "t-imputacion-2027",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-a91-v2-07"
+     }
+    ]
+   },
+   "dense": {
+    "all": {
+     "n": 17,
+     "hit@1": 0.0,
+     "hit@5": 0.23529411764705882,
+     "mrr": 0.13398692810457516,
+     "wrong_version@1": 0.23529411764705882
+    },
+    "changed": {
+     "n": 10,
+     "hit@1": 0.0,
+     "hit@5": 0.0,
+     "mrr": 0.0,
+     "wrong_version@1": 0.3
+    },
+    "control": {
+     "n": 7,
+     "hit@1": 0.0,
+     "hit@5": 0.5714285714285714,
+     "mrr": 0.3253968253968254,
+     "wrong_version@1": 0.14285714285714285
+    },
+    "per_question": [
+     {
+      "id": "t-plazo-2017",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v10-00"
+     },
+     {
+      "id": "t-plazo-2021",
+      "control": true,
+      "rank": 9,
+      "rr": 0.1111111111111111,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v10-00"
+     },
+     {
+      "id": "t-plazo-2019-01",
+      "control": true,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v10-00"
+     },
+     {
+      "id": "t-plazo-2019-02",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v10-00"
+     },
+     {
+      "id": "t-tacita-2016",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a11-v4-00"
+     },
+     {
+      "id": "t-tacita-2020",
+      "control": true,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": false,
+      "top1": "lau-a11-v4-00"
+     },
+     {
+      "id": "t-garantia-2017",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": true,
+      "top1": "lau-a36-v9-00"
+     },
+     {
+      "id": "t-garantia-2021",
+      "control": true,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": true,
+      "top1": "lau-a36-v9-00"
+     },
+     {
+      "id": "t-honorarios-2021",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-da-3-v1-01"
+     },
+     {
+      "id": "t-honorarios-2024",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "ley-credito-inmobiliario-ar-18-v0-01"
+     },
+     {
+      "id": "t-honorarios-hoy",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "ley-credito-inmobiliario-ar-18-v0-01"
+     },
+     {
+      "id": "t-reduccion-2019",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": true,
+      "top1": "lirpf-a23-v7-02"
+     },
+     {
+      "id": "t-reduccion-2024",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-dttercera-v1-06"
+     },
+     {
+      "id": "t-itp-2020",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "trlci-dtprimera-v4-02"
+     },
+     {
+      "id": "t-itp-2023",
+      "control": true,
+      "rank": 6,
+      "rr": 0.16666666666666666,
+      "wrong_version_top1": false,
+      "top1": "lirpf-da-10-v9-00"
+     },
+     {
+      "id": "t-imputacion-2025",
+      "control": true,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dtdecimoquinta-v4-00"
+     },
+     {
+      "id": "t-imputacion-2027",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": true,
+      "top1": "lirpf-a85-v3-01"
+     }
+    ]
+   },
+   "hybrid": {
+    "all": {
+     "n": 17,
+     "hit@1": 0.058823529411764705,
+     "hit@5": 0.23529411764705882,
+     "mrr": 0.16339869281045755,
+     "wrong_version@1": 0.17647058823529413
+    },
+    "changed": {
+     "n": 10,
+     "hit@1": 0.0,
+     "hit@5": 0.0,
+     "mrr": 0.0,
+     "wrong_version@1": 0.3
+    },
+    "control": {
+     "n": 7,
+     "hit@1": 0.14285714285714285,
+     "hit@5": 0.5714285714285714,
+     "mrr": 0.3968253968253968,
+     "wrong_version@1": 0.0
+    },
+    "per_question": [
+     {
+      "id": "t-plazo-2017",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v10-00"
+     },
+     {
+      "id": "t-plazo-2021",
+      "control": true,
+      "rank": 9,
+      "rr": 0.1111111111111111,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v10-00"
+     },
+     {
+      "id": "t-plazo-2019-01",
+      "control": true,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v10-00"
+     },
+     {
+      "id": "t-plazo-2019-02",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v10-00"
+     },
+     {
+      "id": "t-tacita-2016",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a11-v4-00"
+     },
+     {
+      "id": "t-tacita-2020",
+      "control": true,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": false,
+      "top1": "lau-a11-v4-00"
+     },
+     {
+      "id": "t-garantia-2017",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": true,
+      "top1": "lau-a36-v9-01"
+     },
+     {
+      "id": "t-garantia-2021",
+      "control": true,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a36-v9-01"
+     },
+     {
+      "id": "t-honorarios-2021",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-da-3-v1-01"
+     },
+     {
+      "id": "t-honorarios-2024",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "ley-credito-inmobiliario-ar-18-v0-01"
+     },
+     {
+      "id": "t-honorarios-hoy",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "ley-credito-inmobiliario-ar-18-v0-01"
+     },
+     {
+      "id": "t-reduccion-2019",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": true,
+      "top1": "lirpf-a23-v7-02"
+     },
+     {
+      "id": "t-reduccion-2024",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a17-v5-02"
+     },
+     {
+      "id": "t-itp-2020",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "trlci-dtprimera-v4-02"
+     },
+     {
+      "id": "t-itp-2023",
+      "control": true,
+      "rank": 6,
+      "rr": 0.16666666666666666,
+      "wrong_version_top1": false,
+      "top1": "lirpf-da-10-v9-00"
+     },
+     {
+      "id": "t-imputacion-2025",
+      "control": true,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dtdecimoquinta-v4-00"
+     },
+     {
+      "id": "t-imputacion-2027",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": true,
+      "top1": "lirpf-a85-v3-02"
+     }
+    ]
+   }
+  },
+  "todas": {
+   "bm25": {
+    "all": {
+     "n": 17,
+     "hit@1": 0.11764705882352941,
+     "hit@5": 0.23529411764705882,
+     "mrr": 0.173202614379085,
+     "wrong_version@1": 0.17647058823529413
+    },
+    "changed": {
+     "n": 10,
+     "hit@1": 0.1,
+     "hit@5": 0.3,
+     "mrr": 0.18333333333333332,
+     "wrong_version@1": 0.3
+    },
+    "control": {
+     "n": 7,
+     "hit@1": 0.14285714285714285,
+     "hit@5": 0.14285714285714285,
+     "mrr": 0.15873015873015875,
+     "wrong_version@1": 0.0
+    },
+    "per_question": [
+     {
+      "id": "t-plazo-2017",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dtdecimoquinta-v1-00"
+     },
+     {
+      "id": "t-plazo-2021",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dtdecimoquinta-v1-00"
+     },
+     {
+      "id": "t-plazo-2019-01",
+      "control": true,
+      "rank": 9,
+      "rr": 0.1111111111111111,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v6-00"
+     },
+     {
+      "id": "t-plazo-2019-02",
+      "control": false,
+      "rank": 3,
+      "rr": 0.3333333333333333,
+      "wrong_version_top1": true,
+      "top1": "lau-a9-v0-00"
+     },
+     {
+      "id": "t-tacita-2016",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a36-v0-00"
+     },
+     {
+      "id": "t-tacita-2020",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a36-v0-00"
+     },
+     {
+      "id": "t-garantia-2017",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": true,
+      "top1": "lau-a36-v4-01"
+     },
+     {
+      "id": "t-garantia-2021",
+      "control": true,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a36-v4-01"
+     },
+     {
+      "id": "t-honorarios-2021",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lph-anoveno-v1-01"
+     },
+     {
+      "id": "t-honorarios-2024",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lph-anoveno-v1-01"
+     },
+     {
+      "id": "t-honorarios-hoy",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-dtsegunda-v0-11"
+     },
+     {
+      "id": "t-reduccion-2019",
+      "control": false,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": true,
+      "top1": "lirpf-a23-v0-02"
+     },
+     {
+      "id": "t-reduccion-2024",
+      "control": false,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-a23-v4-02"
+     },
+     {
+      "id": "t-itp-2020",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dttrigesimasegunda-v3-00"
+     },
+     {
+      "id": "t-itp-2023",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "liva-vivienda-a20-v1-24"
+     },
+     {
+      "id": "t-imputacion-2025",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-da-8-v2-02"
+     },
+     {
+      "id": "t-imputacion-2027",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-a91-v2-07"
+     }
+    ]
+   },
+   "dense": {
+    "all": {
+     "n": 17,
+     "hit@1": 0.11764705882352941,
+     "hit@5": 0.17647058823529413,
+     "mrr": 0.16258169934640523,
+     "wrong_version@1": 0.17647058823529413
+    },
+    "changed": {
+     "n": 10,
+     "hit@1": 0.2,
+     "hit@5": 0.2,
+     "mrr": 0.2125,
+     "wrong_version@1": 0.2
+    },
+    "control": {
+     "n": 7,
+     "hit@1": 0.0,
+     "hit@5": 0.14285714285714285,
+     "mrr": 0.09126984126984126,
+     "wrong_version@1": 0.14285714285714285
+    },
+    "per_question": [
+     {
+      "id": "t-plazo-2017",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v2-00"
+     },
+     {
+      "id": "t-plazo-2021",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v3-00"
+     },
+     {
+      "id": "t-plazo-2019-01",
+      "control": true,
+      "rank": 9,
+      "rr": 0.1111111111111111,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v6-00"
+     },
+     {
+      "id": "t-plazo-2019-02",
+      "control": false,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a9-v2-00"
+     },
+     {
+      "id": "t-tacita-2016",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a11-v4-00"
+     },
+     {
+      "id": "t-tacita-2020",
+      "control": true,
+      "rank": 4,
+      "rr": 0.25,
+      "wrong_version_top1": false,
+      "top1": "lau-a11-v4-00"
+     },
+     {
+      "id": "t-garantia-2017",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": true,
+      "top1": "lau-a36-v8-00"
+     },
+     {
+      "id": "t-garantia-2021",
+      "control": true,
+      "rank": 6,
+      "rr": 0.16666666666666666,
+      "wrong_version_top1": true,
+      "top1": "lau-a36-v4-00"
+     },
+     {
+      "id": "t-honorarios-2021",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lph-anoveno-v0-01"
+     },
+     {
+      "id": "t-honorarios-2024",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lph-anoveno-v0-01"
+     },
+     {
+      "id": "t-honorarios-hoy",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lph-aveintiuno-v2-02"
+     },
+     {
+      "id": "t-reduccion-2019",
+      "control": false,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-a23-v2-02"
+     },
+     {
+      "id": "t-reduccion-2024",
+      "control": false,
+      "rank": 8,
+      "rr": 0.125,
+      "wrong_version_top1": false,
+      "top1": "lau-a18-v3-01"
+     },
+     {
+      "id": "t-itp-2020",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "trlci-a60-v0-00"
+     },
+     {
+      "id": "t-itp-2023",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-da-10-v3-00"
+     },
+     {
+      "id": "t-imputacion-2025",
+      "control": true,
+      "rank": 9,
+      "rr": 0.1111111111111111,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dtdecimoquinta-v1-00"
+     },
+     {
+      "id": "t-imputacion-2027",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": true,
+      "top1": "lirpf-a85-v0-01"
+     }
+    ]
+   },
+   "hybrid": {
+    "all": {
+     "n": 17,
+     "hit@1": 0.17647058823529413,
+     "hit@5": 0.29411764705882354,
+     "mrr": 0.22016806722689075,
+     "wrong_version@1": 0.11764705882352941
+    },
+    "changed": {
+     "n": 10,
+     "hit@1": 0.2,
+     "hit@5": 0.3,
+     "mrr": 0.225,
+     "wrong_version@1": 0.2
+    },
+    "control": {
+     "n": 7,
+     "hit@1": 0.14285714285714285,
+     "hit@5": 0.2857142857142857,
+     "mrr": 0.21326530612244898,
+     "wrong_version@1": 0.0
+    },
+    "per_question": [
+     {
+      "id": "t-plazo-2017",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v2-00"
+     },
+     {
+      "id": "t-plazo-2021",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v3-00"
+     },
+     {
+      "id": "t-plazo-2019-01",
+      "control": true,
+      "rank": 7,
+      "rr": 0.14285714285714285,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v6-00"
+     },
+     {
+      "id": "t-plazo-2019-02",
+      "control": false,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a9-v2-00"
+     },
+     {
+      "id": "t-tacita-2016",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a11-v4-00"
+     },
+     {
+      "id": "t-tacita-2020",
+      "control": true,
+      "rank": 4,
+      "rr": 0.25,
+      "wrong_version_top1": false,
+      "top1": "lau-a11-v4-00"
+     },
+     {
+      "id": "t-garantia-2017",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": true,
+      "top1": "lau-a36-v7-01"
+     },
+     {
+      "id": "t-garantia-2021",
+      "control": true,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a36-v4-01"
+     },
+     {
+      "id": "t-honorarios-2021",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lph-anoveno-v0-01"
+     },
+     {
+      "id": "t-honorarios-2024",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lph-anoveno-v0-01"
+     },
+     {
+      "id": "t-honorarios-hoy",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lph-aveintiuno-v2-02"
+     },
+     {
+      "id": "t-reduccion-2019",
+      "control": false,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-a23-v2-02"
+     },
+     {
+      "id": "t-reduccion-2024",
+      "control": false,
+      "rank": 4,
+      "rr": 0.25,
+      "wrong_version_top1": false,
+      "top1": "lau-a18-v3-01"
+     },
+     {
+      "id": "t-itp-2020",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "trlci-a60-v0-00"
+     },
+     {
+      "id": "t-itp-2023",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-da-10-v3-00"
+     },
+     {
+      "id": "t-imputacion-2025",
+      "control": true,
+      "rank": 10,
+      "rr": 0.1,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dtdecimoquinta-v1-00"
+     },
+     {
+      "id": "t-imputacion-2027",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": true,
+      "top1": "lirpf-a85-v0-01"
+     }
+    ]
+   }
+  },
+  "fecha": {
+   "bm25": {
+    "all": {
+     "n": 17,
+     "hit@1": 0.11764705882352941,
+     "hit@5": 0.35294117647058826,
+     "mrr": 0.23529411764705882,
+     "wrong_version@1": 0.0
+    },
+    "changed": {
+     "n": 10,
+     "hit@1": 0.1,
+     "hit@5": 0.4,
+     "mrr": 0.25,
+     "wrong_version@1": 0.0
+    },
+    "control": {
+     "n": 7,
+     "hit@1": 0.14285714285714285,
+     "hit@5": 0.2857142857142857,
+     "mrr": 0.21428571428571427,
+     "wrong_version@1": 0.0
+    },
+    "per_question": [
+     {
+      "id": "t-plazo-2017",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dtdecimoquinta-v1-00"
+     },
+     {
+      "id": "t-plazo-2021",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dtdecimoquinta-v1-00"
+     },
+     {
+      "id": "t-plazo-2019-01",
+      "control": true,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dtdecimoquinta-v1-00"
+     },
+     {
+      "id": "t-plazo-2019-02",
+      "control": false,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dtdecimoquinta-v1-00"
+     },
+     {
+      "id": "t-tacita-2016",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dtdecimoquinta-v1-00"
+     },
+     {
+      "id": "t-tacita-2020",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dtdecimoquinta-v1-00"
+     },
+     {
+      "id": "t-garantia-2017",
+      "control": false,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dtdecimoquinta-v1-00"
+     },
+     {
+      "id": "t-garantia-2021",
+      "control": true,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a36-v6-01"
+     },
+     {
+      "id": "t-honorarios-2021",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "ley-credito-inmobiliario-ar-28-v0-01"
+     },
+     {
+      "id": "t-honorarios-2024",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "ley-credito-inmobiliario-ar-28-v0-01"
+     },
+     {
+      "id": "t-honorarios-hoy",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lph-atercero-v1-00"
+     },
+     {
+      "id": "t-reduccion-2019",
+      "control": false,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": false,
+      "top1": "lirpf-davigesimaseptima-v3-03"
+     },
+     {
+      "id": "t-reduccion-2024",
+      "control": false,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-a23-v4-02"
+     },
+     {
+      "id": "t-itp-2020",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dttrigesimasegunda-v3-00"
+     },
+     {
+      "id": "t-itp-2023",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lph-atercero-v1-00"
+     },
+     {
+      "id": "t-imputacion-2025",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-da-4-v5-00"
+     },
+     {
+      "id": "t-imputacion-2027",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-a91-v2-07"
+     }
+    ]
+   },
+   "dense": {
+    "all": {
+     "n": 17,
+     "hit@1": 0.17647058823529413,
+     "hit@5": 0.6470588235294118,
+     "mrr": 0.38095238095238093,
+     "wrong_version@1": 0.17647058823529413
+    },
+    "changed": {
+     "n": 10,
+     "hit@1": 0.2,
+     "hit@5": 0.6,
+     "mrr": 0.37261904761904757,
+     "wrong_version@1": 0.2
+    },
+    "control": {
+     "n": 7,
+     "hit@1": 0.14285714285714285,
+     "hit@5": 0.7142857142857143,
+     "mrr": 0.3928571428571428,
+     "wrong_version@1": 0.14285714285714285
+    },
+    "per_question": [
+     {
+      "id": "t-plazo-2017",
+      "control": false,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v1-00"
+     },
+     {
+      "id": "t-plazo-2021",
+      "control": true,
+      "rank": 3,
+      "rr": 0.3333333333333333,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v4-00"
+     },
+     {
+      "id": "t-plazo-2019-01",
+      "control": true,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a9-v3-00"
+     },
+     {
+      "id": "t-plazo-2019-02",
+      "control": false,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a9-v4-00"
+     },
+     {
+      "id": "t-tacita-2016",
+      "control": false,
+      "rank": 4,
+      "rr": 0.25,
+      "wrong_version_top1": false,
+      "top1": "lau-a11-v1-00"
+     },
+     {
+      "id": "t-tacita-2020",
+      "control": true,
+      "rank": 4,
+      "rr": 0.25,
+      "wrong_version_top1": false,
+      "top1": "lau-dttercera-v1-12"
+     },
+     {
+      "id": "t-garantia-2017",
+      "control": false,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": true,
+      "top1": "lau-a36-v3-00"
+     },
+     {
+      "id": "t-garantia-2021",
+      "control": true,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": true,
+      "top1": "lau-a36-v6-00"
+     },
+     {
+      "id": "t-honorarios-2021",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lph-aveintiuno-v2-02"
+     },
+     {
+      "id": "t-honorarios-2024",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "ley-credito-inmobiliario-ar-18-v0-01"
+     },
+     {
+      "id": "t-honorarios-hoy",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "ley-credito-inmobiliario-ar-18-v0-01"
+     },
+     {
+      "id": "t-reduccion-2019",
+      "control": false,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-a23-v2-02"
+     },
+     {
+      "id": "t-reduccion-2024",
+      "control": false,
+      "rank": 3,
+      "rr": 0.3333333333333333,
+      "wrong_version_top1": false,
+      "top1": "lau-a17-v2-02"
+     },
+     {
+      "id": "t-itp-2020",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "trlci-dtprimera-v4-02"
+     },
+     {
+      "id": "t-itp-2023",
+      "control": true,
+      "rank": 6,
+      "rr": 0.16666666666666666,
+      "wrong_version_top1": false,
+      "top1": "lirpf-da-10-v0-00"
+     },
+     {
+      "id": "t-imputacion-2025",
+      "control": true,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dtdecimoquinta-v1-00"
+     },
+     {
+      "id": "t-imputacion-2027",
+      "control": false,
+      "rank": 7,
+      "rr": 0.14285714285714285,
+      "wrong_version_top1": true,
+      "top1": "lirpf-a85-v4-02"
+     }
+    ]
+   },
+   "hybrid": {
+    "all": {
+     "n": 17,
+     "hit@1": 0.23529411764705882,
+     "hit@5": 0.6470588235294118,
+     "mrr": 0.4103641456582633,
+     "wrong_version@1": 0.11764705882352941
+    },
+    "changed": {
+     "n": 10,
+     "hit@1": 0.2,
+     "hit@5": 0.6,
+     "mrr": 0.3892857142857143,
+     "wrong_version@1": 0.2
+    },
+    "control": {
+     "n": 7,
+     "hit@1": 0.2857142857142857,
+     "hit@5": 0.7142857142857143,
+     "mrr": 0.4404761904761904,
+     "wrong_version@1": 0.0
+    },
+    "per_question": [
+     {
+      "id": "t-plazo-2017",
+      "control": false,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v1-00"
+     },
+     {
+      "id": "t-plazo-2021",
+      "control": true,
+      "rank": 3,
+      "rr": 0.3333333333333333,
+      "wrong_version_top1": false,
+      "top1": "lau-a10-v4-00"
+     },
+     {
+      "id": "t-plazo-2019-01",
+      "control": true,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a9-v3-00"
+     },
+     {
+      "id": "t-plazo-2019-02",
+      "control": false,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a9-v4-00"
+     },
+     {
+      "id": "t-tacita-2016",
+      "control": false,
+      "rank": 4,
+      "rr": 0.25,
+      "wrong_version_top1": false,
+      "top1": "lau-a11-v1-00"
+     },
+     {
+      "id": "t-tacita-2020",
+      "control": true,
+      "rank": 4,
+      "rr": 0.25,
+      "wrong_version_top1": false,
+      "top1": "lau-a11-v1-00"
+     },
+     {
+      "id": "t-garantia-2017",
+      "control": false,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": true,
+      "top1": "lau-a36-v3-00"
+     },
+     {
+      "id": "t-garantia-2021",
+      "control": true,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lau-a36-v6-01"
+     },
+     {
+      "id": "t-honorarios-2021",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "lph-aveintiuno-v2-02"
+     },
+     {
+      "id": "t-honorarios-2024",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "ley-credito-inmobiliario-ar-18-v0-01"
+     },
+     {
+      "id": "t-honorarios-hoy",
+      "control": true,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "ley-credito-inmobiliario-ar-18-v0-01"
+     },
+     {
+      "id": "t-reduccion-2019",
+      "control": false,
+      "rank": 1,
+      "rr": 1.0,
+      "wrong_version_top1": false,
+      "top1": "lirpf-a23-v2-02"
+     },
+     {
+      "id": "t-reduccion-2024",
+      "control": false,
+      "rank": 2,
+      "rr": 0.5,
+      "wrong_version_top1": false,
+      "top1": "lau-a17-v2-02"
+     },
+     {
+      "id": "t-itp-2020",
+      "control": false,
+      "rank": null,
+      "rr": 0.0,
+      "wrong_version_top1": false,
+      "top1": "trlci-dtprimera-v4-02"
+     },
+     {
+      "id": "t-itp-2023",
+      "control": true,
+      "rank": 6,
+      "rr": 0.16666666666666666,
+      "wrong_version_top1": false,
+      "top1": "lirpf-da-10-v0-00"
+     },
+     {
+      "id": "t-imputacion-2025",
+      "control": true,
+      "rank": 3,
+      "rr": 0.3333333333333333,
+      "wrong_version_top1": false,
+      "top1": "lirpf-dtdecimoquinta-v1-00"
+     },
+     {
+      "id": "t-imputacion-2027",
+      "control": false,
+      "rank": 7,
+      "rr": 0.14285714285714285,
+      "wrong_version_top1": true,
+      "top1": "lirpf-a85-v4-02"
+     }
+    ]
+   }
+  }
+ },
+ "elapsed_s": 20.2
+}

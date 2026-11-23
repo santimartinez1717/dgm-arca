@@ -1,0 +1,2427 @@
+{
+ "generator": "Qwen/Qwen3-1.7B",
+ "config": {
+  "chunking": "semantic",
+  "chunk_size": 800,
+  "chunk_overlap": 100,
+  "semantic_threshold": 0.8215,
+  "max_chunk_chars": 1500,
+  "weight_bm25": 0.2,
+  "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+  "generator_model": "Qwen/Qwen3-1.7B",
+  "generator_adapter": null,
+  "temporal": false,
+  "thinking": true,
+  "max_new_tokens": 1536,
+  "index_dir": "rag/index"
+ },
+ "retriever": "hybrid",
+ "top_k": 5,
+ "metrics": {
+  "n_answerable": 51,
+  "n_unanswerable": 6,
+  "cites_any": 0.882,
+  "answers_with_invented_ids": 0.0,
+  "relevant_retrieved": 0.588,
+  "cites_relevant_when_retrieved": 0.7,
+  "figures_match": 0.361,
+  "figures_match_when_retrieved": 0.435,
+  "abstains_answerable": 0.157,
+  "abstains_when_retrieved": 0.033,
+  "abstains_when_not_retrieved": 0.333,
+  "abstains_unanswerable": 1.0
+ },
+ "elapsed_s": 2104.7,
+ "items": [
+  {
+   "id": "lau-01",
+   "unanswerable": false,
+   "question": "Soy particular y quiero alquilar mi piso con un contrato de un año. ¿Puede el inquilino quedarse más tiempo aunque yo no quiera?",
+   "reference": "Sí: el contrato se prorroga obligatoriamente por años hasta cinco (siete si el arrendador es persona jurídica), salvo que el inquilino no quiera renovar.",
+   "answer": "La información disponible indica que el contrato de un año puede ser renovado anualmente, pero el inquilino no puede quedarse más tiempo sin que el propietario lo autorice. Según el artículo [d0a26f8298-0031], si el contrato es inferior a cinco años, se prorrogará obligatoriamente por plazos anuales hasta alcanzar ese plazo mínimo, salvo que el inquilino notifique al propietario con treinta días de antelación su voluntad de no renovarlo. Sin embargo, el propietario tiene el derecho de decidir la terminación del contrato, incluso si el inquilino no lo desea. Por lo tanto, **no puede el inquilino quedarse más tiempo sin el consentimiento del propietario**, aunque el contrato esté vigente. \n\nLa respuesta directa es: **No, el inquilino no puede quedarse más tiempo sin que el propietario lo autorice**, ya que el contrato es un acuerdo entre ambas partes, y el propietario tiene el derecho de decidir su terminación.",
+   "citations": [
+    "d0a26f8298-0031"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "ff7be5a4bd-0037",
+     "boe/rdl-29-2026.md",
+     0.8
+    ],
+    [
+     "d0a26f8298-0005",
+     "boe/lau.md",
+     0.5607
+    ],
+    [
+     "d0a26f8298-0035",
+     "boe/lau.md",
+     0.5466
+    ],
+    [
+     "d0a26f8298-0031",
+     "boe/lau.md",
+     0.5424
+    ],
+    [
+     "d0a26f8298-0032",
+     "boe/lau.md",
+     0.5019
+    ]
+   ]
+  },
+  {
+   "id": "lau-02",
+   "unanswerable": false,
+   "question": "Pasados los cinco años de contrato, ¿con cuánto tiempo tengo que avisar al inquilino si no quiero seguir alquilándole?",
+   "reference": "Con al menos cuatro meses de antelación; si nadie avisa, se prorroga por años hasta tres más.",
+   "answer": "[d0a26f8298-0036] Si llegada la fecha de vencimiento del contrato de arrendamiento de vivienda habitual, o de cualquiera de sus prórrogas, una vez transcurridos como mínimo cinco años de duración de aquel, o siete años si el arrendador fuese persona jurídica, ninguna de las partes hubiese notificado a la otra, al menos con cuatro meses de antelación a aquella fecha en el caso del arrendador y al menos con dos meses de antelación en el caso del arrendatario, su voluntad de no renovarlo, el contrato se prorrogará obligatoriamente por plazos anuales hasta un máximo de tres años más, salvo que el arrendatario manifieste al arrendador con un mes de antelación a la fecha de terminación de cualquiera de las anualidades, su voluntad de no renovar el contrato.  \n\n**Respuesta:** Si no quieres seguir alquilándole después de cinco años, debes notificar al inquilino **con dos meses de antelación**.",
+   "citations": [
+    "d0a26f8298-0036"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0041",
+     "boe/lau.md",
+     0.8
+    ],
+    [
+     "d0a26f8298-0036",
+     "boe/lau.md",
+     0.7652
+    ],
+    [
+     "d0a26f8298-0200",
+     "boe/lau.md",
+     0.7002
+    ],
+    [
+     "d0a26f8298-0043",
+     "boe/lau.md",
+     0.6908
+    ],
+    [
+     "d0a26f8298-0091",
+     "boe/lau.md",
+     0.679
+    ]
+   ]
+  },
+  {
+   "id": "lau-03",
+   "unanswerable": false,
+   "question": "¿Puede el inquilino marcharse a los siete meses de firmar y qué preaviso me debe dar?",
+   "reference": "Sí: puede desistir una vez pasados seis meses, avisando con al menos treinta días.",
+   "answer": "La información disponible indica que, para contratos de arrendamiento habitual, el arrendatario puede desistir del contrato una vez que hayan transcurrido al menos seis meses, siempre que se lo comunique al arrendador con una antelación mínima de treinta días. Por lo tanto, **sí puede el inquilino marcharse a los siete meses de firmar el contrato**, y debe dar **al menos treinta días de preaviso**. \n\n[d0a26f8298-0041]",
+   "citations": [
+    "d0a26f8298-0041"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0043",
+     "boe/lau.md",
+     0.8
+    ],
+    [
+     "d0a26f8298-0041",
+     "boe/lau.md",
+     0.7955
+    ],
+    [
+     "d0a26f8298-0091",
+     "boe/lau.md",
+     0.7737
+    ],
+    [
+     "d0a26f8298-0054",
+     "boe/lau.md",
+     0.6059
+    ],
+    [
+     "d0a26f8298-0036",
+     "boe/lau.md",
+     0.3962
+    ]
+   ]
+  },
+  {
+   "id": "lau-04",
+   "unanswerable": false,
+   "question": "¿Cuánta fianza debo pedir al firmar un alquiler de vivienda?",
+   "reference": "Una mensualidad de renta en metálico (dos en uso distinto de vivienda).",
+   "answer": "La fianza a pedir al firmar un alquiler de vivienda en España se fija en **una o dos mensualidades de renta**, según el tipo de arrendamiento (vivienda o uso distinto). Esta cantidad es obligatoria y se establece en el contrato, aunque puede ajustarse en caso de prorrogación del contrato [d0a26f8298-0126] [d0a26f8298-0010]. \n\n**Respuesta directa:**  \nLa fianza debe ser de **una o dos mensualidades de renta**, según el tipo de arrendamiento.",
+   "citations": [
+    "d0a26f8298-0126",
+    "d0a26f8298-0010"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0126",
+     "boe/lau.md",
+     0.9677
+    ],
+    [
+     "d0a26f8298-0010",
+     "boe/lau.md",
+     0.4837
+    ],
+    [
+     "ff7be5a4bd-0166",
+     "boe/rdl-29-2026.md",
+     0.3613
+    ],
+    [
+     "ff7be5a4bd-0143",
+     "boe/rdl-29-2026.md",
+     0.3187
+    ],
+    [
+     "ff7be5a4bd-0057",
+     "boe/rdl-29-2026.md",
+     0.2344
+    ]
+   ]
+  },
+  {
+   "id": "lau-05",
+   "unanswerable": false,
+   "question": "Además de la fianza, ¿puedo exigir al inquilino un aval o un seguro de impago?",
+   "reference": "Se puede pactar una garantía adicional de hasta dos mensualidades (contratos de hasta cinco o siete años), pero nunca exigir un seguro de impago.",
+   "answer": "La información disponible indica que **no se permite exigir al inquilino un aval o un seguro de impago**. Esto se establece en el pasaje [d0a26f8298-0127], que especifica que \"en ningún caso podrá exigirse al arrendatario la contratación de seguros de impago de renta u otras coberturas análogas\". \n\n**Respuesta:** No, no se puede exigir al inquilino un aval o un seguro de impago. La información se basa en el pasaje [d0a26f8298-0127].",
+   "citations": [
+    "d0a26f8298-0127"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0126",
+     "boe/lau.md",
+     0.9677
+    ],
+    [
+     "d0a26f8298-0127",
+     "boe/lau.md",
+     0.7435
+    ],
+    [
+     "c1e9ef0fb3-0093",
+     "boe/ley-credito-inmobiliario.md",
+     0.487
+    ],
+    [
+     "d0a26f8298-0109",
+     "boe/lau.md",
+     0.481
+    ],
+    [
+     "c1e9ef0fb3-0163",
+     "boe/ley-credito-inmobiliario.md",
+     0.4379
+    ]
+   ]
+  },
+  {
+   "id": "lau-06",
+   "unanswerable": false,
+   "question": "¿Puedo cobrarle al inquilino los honorarios de la agencia inmobiliaria que me busca inquilino?",
+   "reference": "No: los gastos de gestión inmobiliaria y de formalización del contrato no pueden repercutirse al arrendatario.",
+   "answer": "La información disponible indica que los gastos de gestión inmobiliaria y de formalización del contrato no podrán ser repercutidos al arrendatario, ni directa ni indirectamente. Por lo tanto, no se puede cobrar al inquilino los honorarios de la agencia inmobiliaria que se requieran para el proceso de alquiler. \n\n[d0a26f8298-0079]",
+   "citations": [
+    "d0a26f8298-0079"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "c1e9ef0fb3-0120",
+     "boe/ley-credito-inmobiliario.md",
+     0.8
+    ],
+    [
+     "c1e9ef0fb3-0119",
+     "boe/ley-credito-inmobiliario.md",
+     0.5813
+    ],
+    [
+     "d0a26f8298-0079",
+     "boe/lau.md",
+     0.3731
+    ],
+    [
+     "1378e54815-0102",
+     "boe/ley-vivienda.md",
+     0.2952
+    ],
+    [
+     "40e1e981c0-0001",
+     "aeat/irpf2025-c10-ejemplo-imputacion-rentas-inmobiliarias.md",
+     0.2587
+    ]
+   ]
+  },
+  {
+   "id": "lau-07",
+   "unanswerable": false,
+   "question": "Si en el contrato no pusimos nada sobre subir el alquiler cada año, ¿puedo actualizarlo con la inflación?",
+   "reference": "No: sin pacto expreso no se aplica actualización de la renta.",
+   "answer": "La información disponible indica que si el contrato no establece claramente un mecanismo de actualización anual de la renta, el arrendador puede aplicar la actualización basada en los índices de precios (como el IRAV o el IPC) según las reglas establecidas. Sin embargo, si no hay un pacto expreso entre las partes, el incremento de la renta no podrá superar el 2% en los casos no sujetos a límites máximos de índices. \n\n**Respuesta:**  \nSí, puedes actualizar el alquiler con la inflación si el contrato no establece un mecanismo de actualización anual, pero el incremento no podrá exceder el 2% en ausencia de un pacto expreso. La actualización se basará en los índices determinados en el contrato, como el IRAV o el IPC, según las reglas aplicables. [ff7be5a4bd-0177]",
+   "citations": [
+    "ff7be5a4bd-0177"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0072",
+     "boe/lau.md",
+     0.8121
+    ],
+    [
+     "d0a26f8298-0184",
+     "boe/lau.md",
+     0.7059
+    ],
+    [
+     "c1e9ef0fb3-0251",
+     "boe/ley-credito-inmobiliario.md",
+     0.6831
+    ],
+    [
+     "d0a26f8298-0180",
+     "boe/lau.md",
+     0.6676
+    ],
+    [
+     "ff7be5a4bd-0177",
+     "boe/rdl-29-2026.md",
+     0.4978
+    ]
+   ]
+  },
+  {
+   "id": "lau-08",
+   "unanswerable": false,
+   "question": "Tengo un piso en zona tensionada y el contrato anterior acaba. ¿En qué casos puedo subir la renta del nuevo contrato hasta un 10 %?",
+   "reference": "Si se rehabilitó o mejoró (energía o accesibilidad) en los dos años anteriores, o si el contrato es de diez o más años.",
+   "answer": "La renta del nuevo contrato puede subir hasta un 10% en el caso de que se cumplan los siguientes supuestos:  \n- La renta inicial se haya rebajado en más de un 5 por ciento en relación con la última renta del contrato anterior, una vez aplicada la cláusula de actualización anual.  \n- El arrendatario sea una persona física, y la vivienda esté situada en una zona de mercado residencial tensionado, y el arrendatario tenga una edad comprendida entre 18 y 35 años.  \n- O, en caso de subarriendo parcial, el arrendador tiene derecho a una elevación de renta del 10 por ciento.  \n\nEstas condiciones se mencionan en el pasaje [d0a26f8298-0065] y [782779238c-0003].",
+   "citations": [
+    "d0a26f8298-0065",
+    "782779238c-0003"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0065",
+     "boe/lau.md",
+     0.9488
+    ],
+    [
+     "782779238c-0003",
+     "aeat/irpf2025-c04-arrendamiento-inmuebles-destinados-vivienda.md",
+     0.5851
+    ],
+    [
+     "d0a26f8298-0120",
+     "boe/lau.md",
+     0.34
+    ],
+    [
+     "b139194ed5-0116",
+     "boe/lirpf.md",
+     0.3315
+    ],
+    [
+     "ff7be5a4bd-0177",
+     "boe/rdl-29-2026.md",
+     0.3202
+    ]
+   ]
+  },
+  {
+   "id": "lau-09",
+   "unanswerable": false,
+   "question": "¿Cuánto puede durar como máximo un alquiler de temporada para un trabajador desplazado?",
+   "reference": "Más de treinta y un días y, por regla general, no más de doce meses.",
+   "answer": "La duración máxima de un alquiler de temporada para un trabajador desplazado es de **12 meses**, según los pasajes. [d0a26f8298-0035]",
+   "citations": [
+    "d0a26f8298-0035"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "ff7be5a4bd-0015",
+     "boe/rdl-29-2026.md",
+     0.9746
+    ],
+    [
+     "ff7be5a4bd-0037",
+     "boe/rdl-29-2026.md",
+     0.4231
+    ],
+    [
+     "d0a26f8298-0020",
+     "boe/lau.md",
+     0.3164
+    ],
+    [
+     "d0a26f8298-0024",
+     "boe/lau.md",
+     0.2484
+    ],
+    [
+     "d0a26f8298-0035",
+     "boe/lau.md",
+     0.2382
+    ]
+   ]
+  },
+  {
+   "id": "lau-10",
+   "unanswerable": false,
+   "question": "Si alquilo el piso por habitaciones, ¿hay límite a lo que puedo cobrar en total?",
+   "reference": "Sí: la suma de las rentas de las habitaciones no puede superar la renta del contrato de la vivienda completa.",
+   "answer": "La suma de las rentas de los contratos de arrendamiento parcial por habitaciones o estancias simultáneamente vigentes sobre la misma vivienda no podrá exceder el importe de la renta del contrato de arrendamiento unitario de la vivienda completa. En zonas de mercado residencial tensionado, esta suma deberá respetar las limitaciones previstas en los apartados 6, 7 y 8 del artículo 17 de la Ley de Arrendamientos Urbanos.  \n\n**Base:** [d0a26f8298-0070] y [ff7be5a4bd-0038]",
+   "citations": [
+    "d0a26f8298-0070",
+    "ff7be5a4bd-0038"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0070",
+     "boe/lau.md",
+     0.8
+    ],
+    [
+     "ff7be5a4bd-0061",
+     "boe/rdl-29-2026.md",
+     0.5768
+    ],
+    [
+     "ff7be5a4bd-0038",
+     "boe/rdl-29-2026.md",
+     0.5555
+    ],
+    [
+     "d0a26f8298-0067",
+     "boe/lau.md",
+     0.5108
+    ],
+    [
+     "b5de90aa98-0003",
+     "boe_diario/serpavi-2024.md",
+     0.3869
+    ]
+   ]
+  },
+  {
+   "id": "lau-11",
+   "unanswerable": false,
+   "question": "Quiero vender un piso que tengo alquilado. ¿Tiene el inquilino preferencia para comprarlo y cuánto tiempo tiene para decidir?",
+   "reference": "Sí, derecho de tanteo durante treinta días naturales desde que se le notifica la venta (y retracto si no se le notificó).",
+   "answer": "El inquilino tiene derecho preferente para comprar el piso alquilado si el arrendador desea celebrar un nuevo contrato con un nuevo arrendatario después de un año desde la extinción legal del contrato. Este derecho se ejercita por el inquilino en los 30 días naturales a contar desde la notificación del propósito del arrendador. Si el inquilino no firma el contrato dentro de ese plazo, el arrendador tiene 120 días naturales para formalizar el nuevo contrato. La información se encuentra en el pasaje [d0a26f8298-0200].",
+   "citations": [
+    "d0a26f8298-0200"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0054",
+     "boe/lau.md",
+     0.8
+    ],
+    [
+     "d0a26f8298-0101",
+     "boe/lau.md",
+     0.755
+    ],
+    [
+     "ff7be5a4bd-0037",
+     "boe/rdl-29-2026.md",
+     0.6559
+    ],
+    [
+     "d0a26f8298-0200",
+     "boe/lau.md",
+     0.5481
+    ],
+    [
+     "cc790937d4-0000",
+     "aeat/irpf2025-c04-particular.md",
+     0.3273
+    ]
+   ]
+  },
+  {
+   "id": "lau-12",
+   "unanswerable": false,
+   "question": "¿Puedo repercutir el IBI al inquilino?",
+   "reference": "No, salvo que el inquilino sea el obligado tributario: los tributos de la vivienda no pueden imponerse al arrendatario.",
+   "answer": "La información disponible no es suficiente para determinar si el IBI puede repercutirse al inquilino. Los pasajes no especifican claramente si el IBI se carga al inquilino o al propietario. Aunque se menciona un recargo municipal (hasta 150% del IBI) en [1378e54815-0045] y [ff7be5a4bd-0053], no se indica si este recargo se aplica al inquilino o al propietario. La normativa no establece claramente si el inquilino debe pagar parte del IBI o si el recargo se repercute al propietario. Por lo tanto, no se puede afirmar con certeza si el IBI puede repercutirse al inquilino.",
+   "citations": [
+    "1378e54815-0045",
+    "ff7be5a4bd-0053"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "baaa967049-0014",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.8235
+    ],
+    [
+     "1378e54815-0045",
+     "boe/ley-vivienda.md",
+     0.4371
+    ],
+    [
+     "ff7be5a4bd-0053",
+     "boe/rdl-29-2026.md",
+     0.432
+    ],
+    [
+     "baaa967049-0001",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.309
+    ],
+    [
+     "f7af733eb5-0002",
+     "aeat/irpf2025-c04-rendimiento-neto-reducido.md",
+     0.252
+    ]
+   ]
+  },
+  {
+   "id": "viv-01",
+   "unanswerable": false,
+   "question": "¿A partir de cuántas viviendas se me considera gran tenedor?",
+   "reference": "Más de diez inmuebles urbanos de uso residencial o más de 1.500 m² residenciales; en zonas tensionadas puede bajarse a cinco o más.",
+   "answer": "<think>\nOkay, let's tackle this question. The user is asking, \"¿A partir de cuántas viviendas se me considera gran tenedor?\" which translates to \"From how many homes do I become considered a gran tenedor?\" \n\nFirst, I need to look at the provided passages to find the relevant information. The user mentioned that the answer should be based on the updated passages, so I need to check each passage for mentions of the threshold for being a gran tenedor.\n\nStarting with passage [1378e54815-0022], it talks about the definition of a gran tenedor as someone with more than ten urban residential properties or over 1,500 m² of built area. However, it also mentions that in tensioned market areas, the threshold could be five properties. But passage [1378e54815-0022] is about the general definition and doesn't specify the exact number for the tensioned areas.\n\nThen, passage [1378e54815-0060] states that the gran tenedor is defined as having more than ten urban residential properties or over 1,500 m² of built area. It also mentions that in tensioned market areas, the threshold could be five properties if motivated by the autonomous community. However, passage [1378e54815-0060] doesn't explicitly state that the threshold is five in the tensioned areas, just that it's possible.\n\nPassage [ff7be5a4bd-0039] discusses the certification of gran tenedor status and the calculation of properties, but it doesn't specify the exact number. It mentions that the thresholds are ten properties or 1,500 m², but the particularization can be up to five in tensioned areas. However, the question is about the threshold, not the particularization.\n\nPassage [1378e54815-0100] talks about the criteria for determining a gran tenedor in tensioned areas, but it doesn't specify the exact number. It mentions that the definition can include additional criteria based on the area's characteristics.\n\nPassage [e9bbb702b8-0001] refers to the definition of gran tenedor in tensioned areas as per the autonomous community's declaration, but it doesn't give a numerical threshold.\n\nSo, the key points are in passage [1378e54815-0060] and [ff7be5a4bd-0039]. Passage [1378e54815-0060] says that the general threshold is ten properties or 1,500 m², but in tensioned areas, it can be five. However, the question is about the threshold, not the particularization. The answer would be that the general threshold is ten, but in tensioned areas, it's five. But the user is asking \"a partir de cuántas viviendas,\" so the answer would be ten, but with a note that in tensioned areas it's five. However, the user might be asking for the general threshold. \n\nWait, the question is phrased as \"a partir de cuántas viviendas,\" which is \"from how many homes.\" The answer would be the general threshold of ten, but in tensioned areas, it's five. However, the user might be asking for the general threshold. But the passage [1378e54815-0060] says that the definition can be particularized up to five in tensioned areas. So, the answer is that the general threshold is ten, but in tensioned areas, it's five. However, the question is phrased as \"a partir de cuántas,\" which is \"from how many,\" so the answer would be ten, but with a note that in tensioned areas it's five. But the user might be asking for the general threshold. \n\nLooking back, passage [1378e54815-0060] says: \"k) Gran tenedor: a los efectos de lo establecido en esta ley, la persona física o jurídica que sea titular de más de diez inmuebles urbanos de uso residencial o una superficie construida de más de 1.500 m² de uso residencial, excluyendo en todo caso garajes y trasteros. Esta definición podrá ser particularizada en la declaración de entornos de mercado residencial tensionado hasta aquellos titulares de cinco o más inmuebles de uso residencial ubicadas en dicho ámbito, cuando así sea motivado por la comunidad autónoma en la correspondiente memoria justificativa.\"\n\nSo, the general threshold is ten, but in tensioned areas, it's five. Therefore, the answer is that the general threshold is ten, but in tensioned areas, it's five. However, the question is asking \"a partir de cuántas viviendas,\" which is \"from how many homes.\" The answer would be ten, but with the note that in tensioned areas it's five. But the user might be asking for the general threshold. \n\nBut the user's question is in Spanish, and the answer should be based on the information given. The answer is that the general threshold is ten, but in tensioned areas, it's five. However, the user might be asking for the general threshold. So, the answer is ten, but with the note that in tensioned areas it's five. However, the user might not need the note, just the number. But the question is phrased as \"a partir de cuántas,\" which is \"from how many,\" so the answer is ten. But the passage [1378e54815-0060] says that in tensioned areas, it's five. So, the answer is that the general threshold is ten, but in tensioned areas, it's five. However, the user might be asking for the general threshold. \n\nBut the question is phrased as \"a partir de cuántas viviendas,\" which is \"from how many homes,\" so the answer is ten. However, the passage [1378e54815-0060] says that in tensioned areas, it's five. So, the answer is that the general threshold is ten, but in tensioned areas, it's five. Therefore, the answer is ten, but with the note that in tensioned areas it's five. However, the user might need to know both. But the question is phrased as \"a partir de cuántas,\" so the answer is ten. But the passage [1378e54815-0060] says that in tensioned areas, it's five. So, the answer is that the general threshold is ten, but in tensioned areas, it's five. Therefore, the answer is ten, but with the note that in tensioned areas it's five. However, the user might need to know both. But the question is phrased as \"a partir de cuántas,\" so the answer is ten. But the passage [1378e54815-0060] says that in tensioned areas, it's five. So, the answer is ten, but with the note that in tensioned areas it's five. However, the user might not need the note. \n\nBut the user's question is in Spanish, and the answer should be based on the information given. The answer is that the general threshold is ten, but in tensioned areas, it's five. Therefore, the answer is ten, but with the note that in tensioned areas it's five. However, the user might be asking for the general threshold. So, the answer is ten. But the passage [1378e54815-0060] says that in tensioned areas, it's five. Therefore, the answer is ten, but the user might need to know both. However, the question is phrased as \"a partir de cuántas,\" so the answer is ten. But the passage [1378e54815-0060] says that in tensioned areas",
+   "citations": [
+    "1378e54815-0022",
+    "1378e54815-0060",
+    "ff7be5a4bd-0039",
+    "1378e54815-0100",
+    "e9bbb702b8-0001"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "1378e54815-0022",
+     "boe/ley-vivienda.md",
+     0.8
+    ],
+    [
+     "1378e54815-0060",
+     "boe/ley-vivienda.md",
+     0.795
+    ],
+    [
+     "ff7be5a4bd-0039",
+     "boe/rdl-29-2026.md",
+     0.6177
+    ],
+    [
+     "1378e54815-0100",
+     "boe/ley-vivienda.md",
+     0.4889
+    ],
+    [
+     "e9bbb702b8-0001",
+     "boe_diario/zonas-tensionadas-2024-10.md",
+     0.3891
+    ]
+   ]
+  },
+  {
+   "id": "viv-02",
+   "unanswerable": false,
+   "question": "Una vez declarada una zona de mercado residencial tensionado, ¿cuánto tiempo dura la declaración?",
+   "reference": "Tres años, prorrogables anualmente si persisten las circunstancias.",
+   "answer": "La vigencia de la declaración de una zona de mercado residencial tensionado es de **tres años**, pudiendo prorrogarse anualmente siguiendo el mismo procedimiento, siempre que subsistan las circunstancias que motivaron la declaración y se justifiquen las medidas públicas adoptadas. Esta información se encuentra en el pasaje [1378e54815-0095].",
+   "citations": [
+    "1378e54815-0095"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "1378e54815-0095",
+     "boe/ley-vivienda.md",
+     0.9333
+    ],
+    [
+     "74b86d667c-0000",
+     "boe_diario/zonas-tensionadas-2026-01.md",
+     0.208
+    ],
+    [
+     "d0a26f8298-0068",
+     "boe/lau.md",
+     0.2
+    ],
+    [
+     "1378e54815-0092",
+     "boe/ley-vivienda.md",
+     0.1875
+    ],
+    [
+     "37d1983956-0002",
+     "boe_diario/zonas-tensionadas-2025-07.md",
+     0.1816
+    ]
+   ]
+  },
+  {
+   "id": "viv-03",
+   "unanswerable": false,
+   "question": "¿Qué indicadores sirven para declarar una zona como tensionada?",
+   "reference": "Que el coste de la hipoteca o el alquiler más gastos supere el 30 % de los ingresos medios de los hogares, o que los precios hayan crecido en cinco años al menos tres puntos más que el IPC.",
+   "answer": "La información disponible indica que los indicadores para declarar una zona como tensionada incluyen:  \n- **Período de vigencia de la zona tensionada** (a)  \n- **Definición de gran tenedor en la zona tensionada** (b)  \n- **Aplicación a los efectos del segundo párrafo del artículo 17.7 LAU** (c)  \n- **Enlaces a declaración de la zona y su memoria** (d)  \n\nEstos elementos se encuentran en las columnas del cuadro descrito en el pasaje [b60b9efa0c-0003].",
+   "citations": [
+    "b60b9efa0c-0003"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "6125a2e835-0001",
+     "boe_diario/zonas-tensionadas-2025-07-erratas.md",
+     0.8
+    ],
+    [
+     "6125a2e835-0002",
+     "boe_diario/zonas-tensionadas-2025-07-erratas.md",
+     0.7714
+    ],
+    [
+     "b60b9efa0c-0003",
+     "boe_diario/zonas-tensionadas-2024-03.md",
+     0.7131
+    ],
+    [
+     "74b86d667c-0004",
+     "boe_diario/zonas-tensionadas-2026-01.md",
+     0.6752
+    ],
+    [
+     "f721cf0c7e-0006",
+     "boe_diario/zonas-tensionadas-2026-07.md",
+     0.6558
+    ]
+   ]
+  },
+  {
+   "id": "rdl-01",
+   "unanswerable": false,
+   "question": "Si a mi inquilino le toca la actualización anual en 2027 y no llegamos a ningún acuerdo, ¿cuánto puedo subirle el alquiler?",
+   "reference": "Como máximo un 2 % (y nada si la renta supera el índice de referencia), hasta el 31 de diciembre de 2027.",
+   "answer": "La información disponible indica que, en caso de no haber un acuerdo sobre la actualización anual del alquiler, el incremento máximo permitido es del **2%**. Este límite se establece en los pasajes [d0a26f8298-0180] y [d0a26f8298-0072], que mencionan que, en ausencia de un pacto expreso, el incremento no podrá superar el 2% si no se cumplen los criterios de ingresos límite (como el número de personas que convivan en la vivienda o el salario mínimo). \n\n**Respuesta:** El alquiler puede subir un máximo del 2% sin acuerdo. [d0a26f8298-0180] y [d0a26f8298-0072]",
+   "citations": [
+    "d0a26f8298-0180",
+    "d0a26f8298-0072"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "ff7be5a4bd-0177",
+     "boe/rdl-29-2026.md",
+     0.9361
+    ],
+    [
+     "d0a26f8298-0184",
+     "boe/lau.md",
+     0.8814
+    ],
+    [
+     "d0a26f8298-0180",
+     "boe/lau.md",
+     0.5657
+    ],
+    [
+     "d0a26f8298-0072",
+     "boe/lau.md",
+     0.4844
+    ],
+    [
+     "ff7be5a4bd-0075",
+     "boe/rdl-29-2026.md",
+     0.4538
+    ]
+   ]
+  },
+  {
+   "id": "rdl-02",
+   "unanswerable": false,
+   "question": "En la plusvalía municipal, ¿qué coeficiente máximo se aplica a un terreno que he tenido más de veinte años?",
+   "reference": "0,30, con efectos desde el 1 de diciembre de 2026.",
+   "answer": "El coeficiente máximo aplicable a un terreno que ha tenido más de veinte años en la plusvalía municipal es **0,30**. Este valor se establece en los pasajes [ff7be5a4bd-0135] y [9f3ccfe5d5-0072], donde se especifica que para periodos de generación igual o superior a 20 años, el coeficiente es 0,30.",
+   "citations": [
+    "ff7be5a4bd-0135",
+    "9f3ccfe5d5-0072"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "ff7be5a4bd-0135",
+     "boe/rdl-29-2026.md",
+     0.8
+    ],
+    [
+     "9f3ccfe5d5-0072",
+     "boe/trlrhl-ibi-plusvalia.md",
+     0.6503
+    ],
+    [
+     "ff7be5a4bd-0054",
+     "boe/rdl-29-2026.md",
+     0.6314
+    ],
+    [
+     "9f3ccfe5d5-0068",
+     "boe/trlrhl-ibi-plusvalia.md",
+     0.408
+    ],
+    [
+     "e908d00bad-0091",
+     "boe/trlci.md",
+     0.3345
+    ]
+   ]
+  },
+  {
+   "id": "rdl-03",
+   "unanswerable": false,
+   "question": "Mi inquilino me pide quedarse dos años más al acabar la prórroga obligatoria. ¿Estoy obligado a aceptarlo?",
+   "reference": "Sí, si está al corriente de pago (y lo ha estado los ocho meses anteriores) y la prórroga obligatoria acaba antes del 31/12/2028, salvo nuevo contrato, otro acuerdo o necesidad de la vivienda.",
+   "answer": "La información disponible indica que la prórroga extraordinaria por dos años adicionales es posible a solicitud del arrendatario, siempre que el arrendatario esté al corriente del alquiler y haya estado al corriente mensualmente durante los ocho meses anteriores. Sin embargo, **no se establece que el arrendador esté obligado a aceptar la solicitud**. La disposición final cuarta [ff7be5a4bd-0075] menciona que la prórroga se puede aplicar previa solicitud del arrendatario, pero **solo si el arrendador lo acepta**. Además, hay excepciones como un nuevo contrato o necesidad real de ocupación, pero no se especifica que el arrendador esté obligado a aceptar la solicitud sin condiciones. \n\n**Respuesta:** No, no estás obligado a aceptar la solicitud. La prórroga depende de la voluntad del arrendador, quien debe aceptar la solicitud del arrendatario bajo las condiciones establecidas.",
+   "citations": [
+    "ff7be5a4bd-0075"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "ff7be5a4bd-0075",
+     "boe/rdl-29-2026.md",
+     0.9471
+    ],
+    [
+     "ff7be5a4bd-0175",
+     "boe/rdl-29-2026.md",
+     0.6395
+    ],
+    [
+     "d0a26f8298-0036",
+     "boe/lau.md",
+     0.4943
+    ],
+    [
+     "d0a26f8298-0039",
+     "boe/lau.md",
+     0.4617
+    ],
+    [
+     "d0a26f8298-0038",
+     "boe/lau.md",
+     0.4203
+    ]
+   ]
+  },
+  {
+   "id": "irpf-01",
+   "unanswerable": false,
+   "question": "¿Cuánto puedo deducir cada año en la renta por la amortización del piso que alquilo?",
+   "reference": "El 3 % del mayor entre el coste de adquisición y el valor catastral, sin contar el suelo.",
+   "answer": "La cantidad que se puede deducir cada año por la amortización del piso alquilo se calcula según el pasaje [baaa967049-0002]. En este caso, la amortización del inmueble se calcula como 3% del valor catastral (66.228,60) y se aplica a 9/12 del año (por el periodo de 2025). El valor de la amortización es **1.986,86** euros. Este monto corresponde a la deducción total para el año 2025, y si se aplica por cada año, se dividiría entre 12 meses, resultando en **165,57** euros por año. \n\n**Respuesta:** 1.986,86 euros (total para el año 2025, dividido entre 12 meses para el año actual).",
+   "citations": [
+    "baaa967049-0002"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "baaa967049-0009",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.8
+    ],
+    [
+     "e10c29816c-0004",
+     "aeat/irpf2025-c04-intereses-demas-gastos-financiacion-inmueble.md",
+     0.5377
+    ],
+    [
+     "baaa967049-0002",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.5073
+    ],
+    [
+     "029852c309-0006",
+     "aeat/irpf2025-c04-cantidades-destinadas-amortizacion.md",
+     0.5
+    ],
+    [
+     "ff7be5a4bd-0045",
+     "boe/rdl-29-2026.md",
+     0.4855
+    ]
+   ]
+  },
+  {
+   "id": "irpf-02",
+   "unanswerable": false,
+   "question": "Este año los intereses de la hipoteca y las reparaciones superan lo que he cobrado de alquiler. ¿Pierdo el exceso?",
+   "reference": "No: estos gastos no pueden superar los ingresos íntegros de ese inmueble, pero el exceso se deduce en los cuatro años siguientes.",
+   "answer": "La información disponible indica que el exceso de deducible por intereses y gastos de conservación y reparación se puede aplicar en los cuatro años siguientes, incluso si superan el importe cobrado de alquiler este año",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "e10c29816c-0004",
+     "aeat/irpf2025-c04-intereses-demas-gastos-financiacion-inmueble.md",
+     1.0
+    ],
+    [
+     "baaa967049-0004",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.6703
+    ],
+    [
+     "baaa967049-0009",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.6183
+    ],
+    [
+     "e10c29816c-0000",
+     "aeat/irpf2025-c04-intereses-demas-gastos-financiacion-inmueble.md",
+     0.3544
+    ],
+    [
+     "baaa967049-0016",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.3505
+    ]
+   ]
+  },
+  {
+   "id": "irpf-03",
+   "unanswerable": false,
+   "question": "Si alquilo mi piso a un ayuntamiento para alquiler social, ¿qué reducción tengo en el IRPF?",
+   "reference": "Un 70 % del rendimiento neto (art. 23.2.c LIRPF).",
+   "answer": "La reducción aplicable al IRPF en el caso de alquilar un piso a un ayuntamiento para alquiler social es del **70%**. Esta se establece en el párrafo [b139194ed5-0117], que menciona que cuando el arrendatario es una Administración Pública o entidad sin fines lucrativos, se aplica una reducción del 70% en el rendimiento neto del alquiler, siempre que cumplan los requisitos establecidos.",
+   "citations": [
+    "b139194ed5-0117"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "1378e54815-0043",
+     "boe/ley-vivienda.md",
+     0.9909
+    ],
+    [
+     "b139194ed5-0117",
+     "boe/lirpf.md",
+     0.8129
+    ],
+    [
+     "ff7be5a4bd-0044",
+     "boe/rdl-29-2026.md",
+     0.8
+    ],
+    [
+     "baaa967049-0003",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.784
+    ],
+    [
+     "782779238c-0001",
+     "aeat/irpf2025-c04-arrendamiento-inmuebles-destinados-vivienda.md",
+     0.7333
+    ]
+   ]
+  },
+  {
+   "id": "irpf-04",
+   "unanswerable": false,
+   "question": "Alquilo por primera vez un piso en zona tensionada a una pareja de 28 años y la renta supera el índice de referencia. ¿Qué reducción me aplico según la ley vigente?",
+   "reference": "Un 95 % (primer alquiler, zona tensionada y arrendatario de 18 a 35 años).",
+   "answer": "La reducción aplicable es del **90%**.  \n[b139194ed5-0116] menciona que en una zona de mercado residencial tensionado y cuando el arrendatario tenga una edad comprendida entre 18 y 35 años, se aplica un 90% de reducción. La renta superando el índice de referencia no afecta este porcentaje, ya que la reducción se basa en la ubicación y la edad del arrendatario, no en la renta en sí.",
+   "citations": [
+    "b139194ed5-0116"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "b139194ed5-0116",
+     "boe/lirpf.md",
+     0.8442
+    ],
+    [
+     "baaa967049-0002",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.7339
+    ],
+    [
+     "ff7be5a4bd-0044",
+     "boe/rdl-29-2026.md",
+     0.7253
+    ],
+    [
+     "782779238c-0003",
+     "aeat/irpf2025-c04-arrendamiento-inmuebles-destinados-vivienda.md",
+     0.6354
+    ],
+    [
+     "ff7be5a4bd-0043",
+     "boe/rdl-29-2026.md",
+     0.5534
+    ]
+   ]
+  },
+  {
+   "id": "irpf-05",
+   "unanswerable": false,
+   "question": "Tengo un segundo piso vacío todo el año. ¿Tributa algo en la renta aunque no lo alquile?",
+   "reference": "Sí, una imputación de renta del 2 % del valor catastral (1,1 % si se revisó en los últimos diez años).",
+   "answer": "La información disponible indica que si el segundo piso está en expectativa de alquiler (vacío todo el año), se considera renta imputada y debe declararse en la declaración de rentas inmobiliarias. Esto se apoya en [baaa967049-0012] y [6900f09983-0005], donde se menciona que la imputación de rentas no se limita a los períodos de alquiler, sino que se aplica incluso si el inmueble está en expectativa de alquiler, aunque no esté arrendado. Además, [5e758937d9-0000] especifica que todos los inmuebles a disposición del contribuyente, incluso los vacíos, deben declararse en el apartado \"C\" de la declaración. \n\n**Respuesta:** Sí, se tributa renta imputada en la declaración, ya que el inmueble está en expectativa de alquiler y no se generan rendimientos de capital inmobiliario durante ese periodo. [baaa967049-0012] [6900f09983-0005] [5e758937d9-0000]",
+   "citations": [
+    "baaa967049-0012",
+    "6900f09983-0005",
+    "5e758937d9-0000"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "baaa967049-0012",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.8
+    ],
+    [
+     "dbe8d46e77-0005",
+     "aeat/irpf2025-c10-concepto-requisitos.md",
+     0.7653
+    ],
+    [
+     "6900f09983-0005",
+     "aeat/irpf2025-c04-concepto-rendimientos-capital-inmobiliario.md",
+     0.5077
+    ],
+    [
+     "036c16bb6a-0000",
+     "aeat/irpf2025-c10-individualizacion-rentas-inmobiliarias.md",
+     0.3141
+    ],
+    [
+     "5e758937d9-0000",
+     "aeat/irpf2025-c10-declaracion-rentas-inmobiliarias-imputadas.md",
+     0.3108
+    ]
+   ]
+  },
+  {
+   "id": "aeat-01",
+   "unanswerable": false,
+   "question": "He cambiado la cocina entera del piso alquilado. ¿Lo puedo deducir como gasto ese año?",
+   "reference": "No como gasto: las mejoras no son deducibles, se recuperan vía amortización.",
+   "answer": "La información disponible indica que los gastos de reparación y conservación, incluyendo modificaciones como la instalación de nuevas instalaciones o reformas en el inmueble, **pueden deducirse como gastos necesarios para la obtención de los rendimientos**. En el caso de la cocina entera, si se trata de una **reparación o conservación** (por ejemplo, pintura, instalación de nuevas superficies o mantenimiento de sistemas), se considera deducible. \n\n[baaa967049-0009] y [8ab2cfc84c-0094] mencionan que los gastos de reparación y conservación son incluidos en los gastos deducibles, y el ejemplo en [baaa967049-0009] incluye gastos de reparación y conservación como parte de los gastos deducibles. Por lo tanto, la cocina entera puede deducirse como gasto en este caso. \n\n**Respuesta:** Sí, los gastos de cambio de la cocina entera pueden deducirse como gasto de reparación y conservación, siempre que se considere necesario para mantener el inmueble en buen estado.",
+   "citations": [
+    "baaa967049-0009",
+    "8ab2cfc84c-0094"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "0cc2e3a632-0007",
+     "aeat/irpf2025-c04-otros-gastos-necesarios-obtencion-rendimientos.md",
+     1.0
+    ],
+    [
+     "9459b8aa6b-0000",
+     "aeat/irpf2025-c04-gastos-no-deducibles.md",
+     0.692
+    ],
+    [
+     "baaa967049-0009",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.5361
+    ],
+    [
+     "8ab2cfc84c-0094",
+     "boe/rirpf.md",
+     0.5031
+    ],
+    [
+     "e10c29816c-0004",
+     "aeat/irpf2025-c04-intereses-demas-gastos-financiacion-inmueble.md",
+     0.3853
+    ]
+   ]
+  },
+  {
+   "id": "aeat-02",
+   "unanswerable": false,
+   "question": "Alquilo el piso amueblado. ¿A qué ritmo puedo amortizar los muebles?",
+   "reference": "Con la tabla simplificada: hasta un 10 % anual para instalaciones, mobiliario y enseres.",
+   "answer": "La información disponible no es suficiente para determinar un porcentaje específico de amortización para los muebles alquilados. Según el pasaje [2488db061b-0001], la amortización de bienes muebles se calcula como el coste de adquisición dividido por el número de años de duración, pero no se especifica un coeficiente fijo (como el 3% por 100) para muebles. La normativa no proporciona un porcentaje estándar para muebles en este contexto.",
+   "citations": [
+    "2488db061b-0001"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": true,
+   "chunks": [
+    [
+     "029852c309-0000",
+     "aeat/irpf2025-c04-cantidades-destinadas-amortizacion.md",
+     0.8
+    ],
+    [
+     "029852c309-0001",
+     "aeat/irpf2025-c04-cantidades-destinadas-amortizacion.md",
+     0.7618
+    ],
+    [
+     "029852c309-0011",
+     "aeat/irpf2025-c04-cantidades-destinadas-amortizacion.md",
+     0.6564
+    ],
+    [
+     "2488db061b-0001",
+     "aeat/irpf2025-c04-rendimiento-neto.md",
+     0.5478
+    ],
+    [
+     "029852c309-0009",
+     "aeat/irpf2025-c04-cantidades-destinadas-amortizacion.md",
+     0.4714
+    ]
+   ]
+  },
+  {
+   "id": "aeat-03",
+   "unanswerable": false,
+   "question": "En la declaración de 2025, ¿qué reducción tiene un contrato de alquiler de vivienda firmado en 2021?",
+   "reference": "Un 60 % del rendimiento neto positivo (contratos anteriores al 26 de mayo de 2023).",
+   "answer": "La reducción aplicable a un contrato de alquiler de vivienda firmado en 2021 en la declaración de 2025 es del **60%**. Esto se basa en el cuadro resumen [f2f4407c91-0000], que indica que los contratos anteriores a 26 de mayo de 2023 (incluyendo el 2021) están sujetos a una reducción del 60% sobre el rendimiento positivo. \n\n[f2f4407c91-0000] (de aeat/irpf2025-c04-cuadro-reducciones-arrendamiento.md)",
+   "citations": [
+    "f2f4407c91-0000"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "f2f4407c91-0000",
+     "aeat/irpf2025-c04-cuadro-reducciones-arrendamiento.md",
+     0.9665
+    ],
+    [
+     "baaa967049-0003",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.8959
+    ],
+    [
+     "baaa967049-0002",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.5984
+    ],
+    [
+     "baaa967049-0001",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.3939
+    ],
+    [
+     "1378e54815-0043",
+     "boe/ley-vivienda.md",
+     0.2914
+    ]
+   ]
+  },
+  {
+   "id": "aeat-04",
+   "unanswerable": false,
+   "question": "Si alquilo el apartamento de la playa solo en verano, ¿me puedo aplicar la reducción por alquiler de vivienda?",
+   "reference": "No: los arrendamientos por temporada no dan derecho a la reducción.",
+   "answer": "La información disponible no es suficiente para determinar si se puede aplicar la reducción por alquiler de vivienda en el caso de un apartamento de playa solo en verano. \n\n**Explicación:**  \n- El pasaje [ff7be5a4bd-0020] menciona que la reducción del 90% se aplica a contratos nuevos, primera alquiler o a viviendas rehabilitadas en los dos años anteriores. Sin embargo, el apartamento de playa solo en verano no se menciona como rehabilitado ni como en una zona de mercado residencial tensionado.  \n- El pasaje [f2f4407c91-0000] indica que la reducción del 60% se aplica a contratos anteriores a 26 de mayo de 2023, pero no se especifica si el apartamento está en una zona tensionada.  \n- La reducción del 90% requiere una renta reducida más del 5% en relación con la última renta del contrato anterior, lo cual no se menciona en el caso del usuario.  \n\nPor lo tanto, **no hay suficiente información** para confirmar si la reducción se aplica.",
+   "citations": [
+    "ff7be5a4bd-0020",
+    "f2f4407c91-0000"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "ff7be5a4bd-0052",
+     "boe/rdl-29-2026.md",
+     0.8
+    ],
+    [
+     "b139194ed5-0118",
+     "boe/lirpf.md",
+     0.6687
+    ],
+    [
+     "ff7be5a4bd-0020",
+     "boe/rdl-29-2026.md",
+     0.6453
+    ],
+    [
+     "f2f4407c91-0000",
+     "aeat/irpf2025-c04-cuadro-reducciones-arrendamiento.md",
+     0.6009
+    ],
+    [
+     "b139194ed5-0578",
+     "boe/lirpf.md",
+     0.569
+    ]
+   ]
+  },
+  {
+   "id": "aeat-05",
+   "unanswerable": false,
+   "question": "Una empresa quiere alquilarme el piso para alojar a sus empleados. ¿Mantengo la reducción del IRPF?",
+   "reference": "No, salvo que el contrato identifique desde el principio a la persona física que lo usará como vivienda.",
+   "answer": "La reducción del IRPF no se aplica en este caso, ya que el arrendatario (la empresa) es una persona jurídica y el inmueble no se destina exclusivamente a la vivienda de una persona física determinada. Según el pasaje [782779238c-0001], la reducción solo se aplica cuando el inmueble se destina a la vivienda de una persona física específica y el uso exclusivo se recaiga en ella. En este caso, la empresa no cumple con los requisitos para aplicar la reducción. \n\n**Respuesta:** No, la reducción del IRPF no se aplica, ya que el arrendatario es una persona jurídica y el inmueble no se destina exclusivamente a la vivienda de una persona física determinada. [782779238c-0001]",
+   "citations": [
+    "782779238c-0001"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "782779238c-0001",
+     "aeat/irpf2025-c04-arrendamiento-inmuebles-destinados-vivienda.md",
+     1.0
+    ],
+    [
+     "782779238c-0007",
+     "aeat/irpf2025-c04-arrendamiento-inmuebles-destinados-vivienda.md",
+     0.7162
+    ],
+    [
+     "f2f4407c91-0000",
+     "aeat/irpf2025-c04-cuadro-reducciones-arrendamiento.md",
+     0.6206
+    ],
+    [
+     "baaa967049-0003",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.6006
+    ],
+    [
+     "f7af733eb5-0003",
+     "aeat/irpf2025-c04-rendimiento-neto-reducido.md",
+     0.3278
+    ]
+   ]
+  },
+  {
+   "id": "aeat-06",
+   "unanswerable": false,
+   "question": "El piso estuvo alquilado de marzo a diciembre. ¿Puedo deducir el IBI y la comunidad de todo el año?",
+   "reference": "No: solo la parte correspondiente al tiempo en que estuvo alquilado.",
+   "answer": "La información disponible indica que los gastos deducibles como el IBI y la comunidad solo se aplican al período en que el inmueble esté alquilado. Según el pasaje [baaa967049-0012], la deducibilidad de estos gastos opera solo respecto a la parte del período impositivo en que se encuentra alquilada. Por lo tanto, si el piso estuvo alquilado de marzo a diciembre (10 meses), los gastos deducibles se calcularán solo para esos 10 meses, no para todo el año. \n\n**Respuesta:** No, no se pueden deducir el IBI y la comunidad de todo el año, ya que la deducibilidad se aplica solo al período en que el inmueble esté alquilado. [baaa967049-0012]",
+   "citations": [
+    "baaa967049-0012"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "baaa967049-0014",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.8
+    ],
+    [
+     "baaa967049-0012",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.6602
+    ],
+    [
+     "baaa967049-0002",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.4058
+    ],
+    [
+     "f7af733eb5-0002",
+     "aeat/irpf2025-c04-rendimiento-neto-reducido.md",
+     0.3494
+    ],
+    [
+     "baaa967049-0001",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.2855
+    ]
+   ]
+  },
+  {
+   "id": "aeat-07",
+   "unanswerable": false,
+   "question": "Para la amortización, ¿cómo separo el valor del suelo si en la escritura no viene?",
+   "reference": "Prorrateando el coste de adquisición según la proporción entre los valores catastrales del suelo y de la construcción (recibo del IBI).",
+   "answer": "La información disponible indica que si el valor del suelo no está especificado en la escritura, se calcula **prorrateando el coste de adquisición satisfecho** entre los valores catastrales del suelo y de la construcción de cada año, según el recibo del Impuesto sobre Bienes Inmuebles (IBI). Esto se menciona en [029852c309-0002] y [baaa967049-0010]. \n\n**Respuesta:**  \nEl valor del suelo se calcula prorrateando el coste de adquisición satisfecho entre los valores catastrales del suelo y de la construcción de cada año, según el recibo del IBI.",
+   "citations": [
+    "029852c309-0002",
+    "baaa967049-0010"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "029852c309-0007",
+     "aeat/irpf2025-c04-cantidades-destinadas-amortizacion.md",
+     0.9876
+    ],
+    [
+     "029852c309-0002",
+     "aeat/irpf2025-c04-cantidades-destinadas-amortizacion.md",
+     0.9397
+    ],
+    [
+     "baaa967049-0010",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.4885
+    ],
+    [
+     "029852c309-0001",
+     "aeat/irpf2025-c04-cantidades-destinadas-amortizacion.md",
+     0.3353
+    ],
+    [
+     "029852c309-0011",
+     "aeat/irpf2025-c04-cantidades-destinadas-amortizacion.md",
+     0.1818
+    ]
+   ]
+  },
+  {
+   "id": "itp-01",
+   "unanswerable": false,
+   "question": "Si mi comunidad autónoma no ha fijado tipo propio, ¿qué porcentaje de ITP pago al comprar un piso de segunda mano?",
+   "reference": "El 6 %.",
+   "answer": "La información disponible indica que, si la comunidad autónoma no ha fijado un tipo propio, el porcentaje de ITP (Impuesto sobre Bienes Inmuebles) aplicable a un piso de segunda mano es el **0,4 por ciento** para bienes inmuebles urbanos y **0,3 por ciento** para bienes inmuebles rústicos. Este es el tipo mínimo y supletorio establecido en el artículo 72 del pasaje [9f3ccfe5d5-0023]. \n\nRespuesta: **0,4 por ciento** (para bienes inmuebles urbanos).",
+   "citations": [
+    "9f3ccfe5d5-0023"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "5ea86a86e1-0023",
+     "boe/trlitpajd.md",
+     0.863
+    ],
+    [
+     "ff7be5a4bd-0053",
+     "boe/rdl-29-2026.md",
+     0.6977
+    ],
+    [
+     "baaa967049-0002",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.5916
+    ],
+    [
+     "9f3ccfe5d5-0023",
+     "boe/trlrhl-ibi-plusvalia.md",
+     0.4992
+    ],
+    [
+     "baaa967049-0014",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.4705
+    ]
+   ]
+  },
+  {
+   "id": "itp-02",
+   "unanswerable": false,
+   "question": "Compro por debajo del valor de referencia del Catastro. ¿Sobre qué cantidad pago el ITP?",
+   "reference": "Sobre el valor de referencia, salvo que el precio o el valor declarado sean mayores.",
+   "answer": "La información disponible indica que si el inmueble se compra por debajo del valor de referencia del Catastro, el ITP (Impuesto sobre el Patrimonio) se calcula sobre el 50% del mayor de los siguientes valores:  \n- El valor comprobado por la Administración a efectos de otros tributos.  \n- El precio, contraprestación o valor de la adquisición.  \n\n[4e21d2371d-0001]",
+   "citations": [
+    "4e21d2371d-0001"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "baaa967049-0010",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.8
+    ],
+    [
+     "aa4ea48848-0003",
+     "pdf/ine-irav-metodologia.pdf",
+     0.48
+    ],
+    [
+     "e908d00bad-0131",
+     "boe/trlci.md",
+     0.3364
+    ],
+    [
+     "4e21d2371d-0001",
+     "aeat/irpf2025-c04-rendimiento-minimo-computable-caso-parentesco.md",
+     0.3305
+    ],
+    [
+     "b139194ed5-0299",
+     "boe/lirpf.md",
+     0.3061
+    ]
+   ]
+  },
+  {
+   "id": "iva-01",
+   "unanswerable": false,
+   "question": "Si compro una vivienda nueva al promotor, ¿qué tipo de IVA pago?",
+   "reference": "El tipo reducido del 10 % (viviendas, con hasta dos plazas de garaje y anexos).",
+   "answer": "La información disponible no es suficiente para determinar el tipo de IVA que se paga al comprar una vivienda nueva al promotor. Los pasajes no mencionan específicamente el IVA en relación con la compra de viviendas nuevas, ni se detallan las tasas o regímenes aplicables.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": true,
+   "chunks": [
+    [
+     "b139194ed5-0299",
+     "boe/lirpf.md",
+     0.8
+    ],
+    [
+     "5ea86a86e1-0080",
+     "boe/trlitpajd.md",
+     0.5551
+    ],
+    [
+     "b512130f78-0041",
+     "boe/liva-vivienda.md",
+     0.4717
+    ],
+    [
+     "baaa967049-0002",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.4192
+    ],
+    [
+     "9f3ccfe5d5-0000",
+     "boe/trlrhl-ibi-plusvalia.md",
+     0.4165
+    ]
+   ]
+  },
+  {
+   "id": "iva-02",
+   "unanswerable": false,
+   "question": "Al comprar un piso usado a un particular, ¿pago IVA?",
+   "reference": "No: las segundas y ulteriores entregas de edificaciones están exentas de IVA (tributan por ITP).",
+   "answer": "La información disponible no es suficiente. No se menciona en ninguno de los pasajes si se debe pagar IVA al comprar un piso usado a un particular. Los pasajes se centran en impuestos como el IBI, gastos de adquisición, amortización y rendimientos imputables, pero no abordan el IVA.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "029852c309-0007",
+     "aeat/irpf2025-c04-cantidades-destinadas-amortizacion.md",
+     0.8
+    ],
+    [
+     "baaa967049-0010",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.688
+    ],
+    [
+     "baaa967049-0014",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.5966
+    ],
+    [
+     "40e1e981c0-0000",
+     "aeat/irpf2025-c10-ejemplo-imputacion-rentas-inmobiliarias.md",
+     0.5704
+    ],
+    [
+     "4e21d2371d-0001",
+     "aeat/irpf2025-c04-rendimiento-minimo-computable-caso-parentesco.md",
+     0.5635
+    ]
+   ]
+  },
+  {
+   "id": "iva-03",
+   "unanswerable": false,
+   "question": "¿Tengo que cobrar IVA a mi inquilino por el alquiler de la vivienda?",
+   "reference": "No: el arrendamiento de edificios destinados exclusivamente a vivienda está exento.",
+   "answer": "La información disponible no es suficiente.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "baaa967049-0014",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.8
+    ],
+    [
+     "baaa967049-0012",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.5987
+    ],
+    [
+     "b139194ed5-0653",
+     "boe/lirpf.md",
+     0.4948
+    ],
+    [
+     "40e1e981c0-0000",
+     "aeat/irpf2025-c10-ejemplo-imputacion-rentas-inmobiliarias.md",
+     0.4464
+    ],
+    [
+     "baaa967049-0001",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.3773
+    ]
+   ]
+  },
+  {
+   "id": "ibi-01",
+   "unanswerable": false,
+   "question": "¿Entre qué porcentajes puede fijar un ayuntamiento el tipo del IBI de un piso?",
+   "reference": "Entre el 0,4 % (mínimo y supletorio) y el 1,10 % para inmuebles urbanos.",
+   "answer": "<think>\nOkay, let's see. The user is asking about the percentage ranges a municipality can set for the IBI type. I need to check the provided passages.\n\nLooking at passage [ff7be5a4bd-0053], it mentions that municipalities in tensioned residential areas can impose a surcharge up to 50% on residential properties used for tourism. It goes on to say 100% if the owner has two or more residential properties for tourism, and 150% for four or more. The article also talks about a special tax of 25% on non-distributed profits from rental activities, but that's part of the tax code, not the IBI surcharge.\n\nPassage [9f3ccfe5d5-0024] discusses different percentage points based on municipal characteristics, but it's about different types of properties (urban vs. rural) and specific criteria. It doesn't mention IBI surcharges directly.\n\nPassage [ff7be5a4bd-0054] talks about transitional surcharges for 2026 and 2027, but that's about land value tax, not IBI.\n\nSo the main info is in [ff7be5a4bd-0053], where the surcharge can be up to 150% for tourism properties with multiple units. The answer should be that municipalities can set up to 150% for tourism properties with four or more units, and up to 100% for two or more. But the question is about the general range, not specific cases. Wait, the question is \"¿Entre qué porcentajes puede fijar un ayuntamiento el tipo del IBI de un piso?\" which is \"Between what percentages can a municipality set the IBI type of a house?\"\n\nLooking back, passage [ff7be5a4bd-0053] says the surcharge can be up to 100% when the owner has two or more properties for tourism, and 150% for four or more. But the question is about a general range for any property. However, the passage also mentions that the surcharge is up to 50% in some areas, but that's specific to tensioned residential areas. So the answer would be that municipalities can set surcharges up to 150% for tourism properties with four or more units, and up to 100% for two or more. But the question is about the general range. Wait, the answer should be based on the information given. The passage [ff7be5a4bd-0053] says that in tensioned areas, the surcharge can be up to 50% (but that's for tourism properties). However, the question is about any property. The answer might be that the surcharge can be up to 150% for tourism properties with four or more units, but the general range isn't specified. However, the user might be looking for the maximums mentioned. So the answer would be that municipalities can set surcharges up to 150% for tourism properties with four or more units, and up to 100% for two or more. But the question is about any property, so maybe the answer is that the surcharge can be up to 150% in some cases, but the general range isn't specified. Wait, the passage [ff7be5a4bd-0053] also mentions that the surcharge is up to 100% for two or more properties, and 150% for four or more. So the answer is that the surcharge can be up to 150% for properties used for tourism with four or more units, and up to 100% for two or more. But the question is about any property. The answer would be that the surcharge can be up to 150% for tourism properties with four or more units, and up to 100% for two or more. But the user might need the maximums mentioned. So the answer is that the municipality can set surcharges up to 150% for tourism properties with four or more units, and up to 100% for two or more. But the question is about any property, so maybe the answer is that the surcharge can be up to 150% in some cases, but the general range isn't specified. However, the passage [ff7be5a4bd-0053] also mentions that in tensioned areas, the surcharge can be up to 50%, but that's for tourism properties. So the answer is that the surcharge can be up to 150% for tourism properties with four or more units, and up to 100% for two or more. Therefore, the answer is that the municipality can set surcharges up to 150% for tourism properties with four or more units, and up to 100% for two or more. But the question is about any property, so the answer would be that the surcharge can be up to 150% in some cases, but the general range isn't specified. However, the user might be looking for the maximums mentioned. So the answer is that the surcharge can be up to 150% for tourism properties with four or more units, and up to 100% for two or more. Therefore, the answer is that the municipality can set surcharges up to 150% for tourism properties with four or more units, and up to 100% for two or more. But the question is about any property, so the answer is that the surcharge can be up to 150% in some cases, but the general range isn't specified. However, the passage [ff7be5a4bd-0053] also mentions that in tensioned areas, the surcharge can be up to 50%, but that's for tourism properties. So the answer is that the surcharge can be up to 150% for tourism properties with four or more units, and up to 100% for two or more. Therefore, the answer is that the municipality can set surcharges up to 150% for tourism properties with four or more units, and up to 100% for two or more. But the question is about any property, so the answer is that the surcharge can be up to 150% in some cases, but the general range isn't specified. However, the user might need the specific maximums mentioned. So the answer is that the surcharge can be up to 150% for tourism properties with four or more units, and up to 100% for two or more. Therefore, the answer is that the municipality can set surcharges up to 150% for tourism properties with four or more units, and up to 100% for two or more. But the question is about any property, so the answer is that the surcharge can be up to 150% in some cases, but the general range isn't specified. However, the passage [ff7be5a4bd-0053] also mentions that in tensioned areas, the surcharge can be up to 50%, but that's for tourism properties. So the answer is that the surcharge can be up to 150% for tourism properties with four or more units, and up to 100% for two or more. Therefore, the answer is that the municipality can set surcharges up to 150% for tourism properties with four or more units, and up to 100% for",
+   "citations": [
+    "ff7be5a4bd-0053",
+    "9f3ccfe5d5-0024",
+    "ff7be5a4bd-0054"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "baaa967049-0014",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.8
+    ],
+    [
+     "1378e54815-0045",
+     "boe/ley-vivienda.md",
+     0.6657
+    ],
+    [
+     "ff7be5a4bd-0053",
+     "boe/rdl-29-2026.md",
+     0.5358
+    ],
+    [
+     "9f3ccfe5d5-0024",
+     "boe/trlrhl-ibi-plusvalia.md",
+     0.4544
+    ],
+    [
+     "ff7be5a4bd-0054",
+     "boe/rdl-29-2026.md",
+     0.2461
+    ]
+   ]
+  },
+  {
+   "id": "ibi-02",
+   "unanswerable": false,
+   "question": "¿Me pueden cobrar más IBI por tener un piso vacío?",
+   "reference": "Sí: fuera de zonas tensionadas, hasta un 50 % de recargo si está desocupado más de dos años sin causa y el titular tiene cuatro o más viviendas.",
+   "answer": "La información disponible indica que sí se pueden aplicar recargos adicionales al IBI en caso de que el inmueble esté vacío, según las normativas de los ayuntamientos. En particular, [1378e54815-0045] menciona que el recargo puede alcanzar el 150% si el titular tiene múltiples viviendas vacías, y [ff7be5a4bd-0053] establece que el recargo puede llegar al 100% para titulares de dos o más inmuebles residenciales destinados a alojamientos turísticos. Sin embargo, el recargo se aplica a la cuota líquida del IBI, no a la cuota total, y su valor depende de las condiciones específicas del municipio y la duración de la desocupación. Por lo tanto, **sí se pueden cobrar más IBI si el inmueble está vacío**, pero el porcentaje exacto varía según las normativas locales.",
+   "citations": [
+    "1378e54815-0045",
+    "ff7be5a4bd-0053"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "baaa967049-0014",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.8
+    ],
+    [
+     "1378e54815-0045",
+     "boe/ley-vivienda.md",
+     0.7885
+    ],
+    [
+     "ff7be5a4bd-0053",
+     "boe/rdl-29-2026.md",
+     0.3646
+    ],
+    [
+     "baaa967049-0001",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.3456
+    ],
+    [
+     "1378e54815-0044",
+     "boe/ley-vivienda.md",
+     0.3308
+    ]
+   ]
+  },
+  {
+   "id": "plus-01",
+   "unanswerable": false,
+   "question": "Vendo un piso por menos de lo que me costó. ¿Tengo que pagar la plusvalía municipal?",
+   "reference": "No: si se acredita que no hay incremento de valor del terreno, la transmisión no está sujeta.",
+   "answer": "La información disponible no es suficiente. El pasaje [b139194ed5-0299] menciona el porcentaje del 1,1% para impuestos sobre renta, pero no aborda la plusvalía municipal en el contexto de la venta de un inmueble por menos de su costo. No hay pasajes que expliquen cómo se calcula la plusvalía municipal en este caso.",
+   "citations": [
+    "b139194ed5-0299"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "b139194ed5-0299",
+     "boe/lirpf.md",
+     0.8
+    ],
+    [
+     "9f3ccfe5d5-0055",
+     "boe/trlrhl-ibi-plusvalia.md",
+     0.5665
+    ],
+    [
+     "ff7be5a4bd-0024",
+     "boe/rdl-29-2026.md",
+     0.4601
+    ],
+    [
+     "9f3ccfe5d5-0029",
+     "boe/trlrhl-ibi-plusvalia.md",
+     0.4107
+    ],
+    [
+     "40e1e981c0-0002",
+     "aeat/irpf2025-c10-ejemplo-imputacion-rentas-inmobiliarias.md",
+     0.3765
+    ]
+   ]
+  },
+  {
+   "id": "cat-01",
+   "unanswerable": false,
+   "question": "¿Puede el valor de referencia del Catastro ser mayor que el valor de mercado?",
+   "reference": "No: se determina con el límite del valor de mercado, aplicando un factor de minoración.",
+   "answer": "El valor de referencia del Catastro no puede ser mayor que el valor de mercado, según los pasajes. [e908d00bad-0062] y [e908d00bad-0163] especifican que el valor catastral (valor de referencia) no podrá superar el valor de mercado, y [e908d00bad-0164] menciona que se fijará un factor de minoración al mercado para garantizar que el valor de referencia no supere el valor de mercado. Por lo tanto, la información disponible indica que el valor de referencia no puede ser mayor que el valor de mercado.",
+   "citations": [
+    "e908d00bad-0062",
+    "e908d00bad-0163",
+    "e908d00bad-0164"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "5ea86a86e1-0018",
+     "boe/trlitpajd.md",
+     1.0
+    ],
+    [
+     "e908d00bad-0062",
+     "boe/trlci.md",
+     0.7841
+    ],
+    [
+     "e908d00bad-0164",
+     "boe/trlci.md",
+     0.7661
+    ],
+    [
+     "e908d00bad-0163",
+     "boe/trlci.md",
+     0.7292
+    ],
+    [
+     "e908d00bad-0157",
+     "boe/trlci.md",
+     0.4587
+    ]
+   ]
+  },
+  {
+   "id": "hip-01",
+   "unanswerable": false,
+   "question": "Tengo una hipoteca a tipo variable y quiero amortizar parte en el segundo año. ¿Cuánto me pueden cobrar de comisión?",
+   "reference": "Como máximo el 0,25 % del capital amortizado en los tres primeros años (o el 0,15 % en los cinco primeros, según lo pactado).",
+   "answer": "La información disponible no es suficiente. Los pasajes no especifican un valor o límite para la comisión en caso de amortización parcial en el segundo año. La comisión podría estar relacionada con gastos de registro o otros costes, pero no se menciona un valor específico o un límite contractual para este caso.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": true,
+   "chunks": [
+    [
+     "5c96f4533b-0002",
+     "pdf/bde-guia-prestamo-hipotecario.pdf",
+     1.0
+    ],
+    [
+     "c1e9ef0fb3-0206",
+     "boe/ley-credito-inmobiliario.md",
+     0.7628
+    ],
+    [
+     "c1e9ef0fb3-0089",
+     "boe/ley-credito-inmobiliario.md",
+     0.5056
+    ],
+    [
+     "5c96f4533b-0007",
+     "pdf/bde-guia-prestamo-hipotecario.pdf",
+     0.4311
+    ],
+    [
+     "c1e9ef0fb3-0207",
+     "boe/ley-credito-inmobiliario.md",
+     0.3437
+    ]
+   ]
+  },
+  {
+   "id": "hip-02",
+   "unanswerable": false,
+   "question": "¿Cuántas cuotas tengo que dejar de pagar para que el banco pueda dar por vencida mi hipoteca?",
+   "reference": "En la primera mitad del préstamo, impagos del 3 % del capital o doce cuotas mensuales; en la segunda mitad, del 7 % o quince cuotas.",
+   "answer": "[c1e9ef0fb3-0093] Se considerará cumplido este requisito cuando las cuotas vencidas y no satisfechas equivalgan al impago de quince plazos mensuales o un número de cuotas tal que suponga que el deudor ha incumplido su obligación por un plazo al menos equivalente a quince meses.  \n\nLa respuesta es: **15 cuotas**.",
+   "citations": [
+    "c1e9ef0fb3-0093"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "c1e9ef0fb3-0163",
+     "boe/ley-credito-inmobiliario.md",
+     0.9065
+    ],
+    [
+     "5c96f4533b-0004",
+     "pdf/bde-guia-prestamo-hipotecario.pdf",
+     0.5547
+    ],
+    [
+     "c1e9ef0fb3-0093",
+     "boe/ley-credito-inmobiliario.md",
+     0.537
+    ],
+    [
+     "5c96f4533b-0003",
+     "pdf/bde-guia-prestamo-hipotecario.pdf",
+     0.5108
+    ],
+    [
+     "c1e9ef0fb3-0092",
+     "boe/ley-credito-inmobiliario.md",
+     0.459
+    ]
+   ]
+  },
+  {
+   "id": "hip-03",
+   "unanswerable": false,
+   "question": "¿Con cuántos días de antelación me tiene que dar el banco la documentación de la hipoteca antes de firmar?",
+   "reference": "Con al menos diez días naturales.",
+   "answer": "La documentación de la hipoteca debe entregarse al prestatario con al menos **10 días naturales** antes de la firma del contrato, según el pasaje [c1e9ef0fb3-0050].",
+   "citations": [
+    "c1e9ef0fb3-0050"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "c1e9ef0fb3-0149",
+     "boe/ley-credito-inmobiliario.md",
+     0.9047
+    ],
+    [
+     "5c96f4533b-0001",
+     "pdf/bde-guia-prestamo-hipotecario.pdf",
+     0.7869
+    ],
+    [
+     "5c96f4533b-0000",
+     "pdf/bde-guia-prestamo-hipotecario.pdf",
+     0.567
+    ],
+    [
+     "c1e9ef0fb3-0163",
+     "boe/ley-credito-inmobiliario.md",
+     0.4904
+    ],
+    [
+     "c1e9ef0fb3-0050",
+     "boe/ley-credito-inmobiliario.md",
+     0.3283
+    ]
+   ]
+  },
+  {
+   "id": "bde-01",
+   "unanswerable": false,
+   "question": "¿Qué es la TAE de una hipoteca y para qué sirve?",
+   "reference": "El precio que cobra la entidad por prestar, con intereses, comisiones y otros gastos; sirve para comparar ofertas.",
+   "answer": "La TAE (Tasa Anual Equivalente) es el coste total del préstamo expresado en forma de porcentaje anual, considerando el tipo de interés nominal, la frecuencia de pagos, las comisiones bancarias y otros gastos. Sirve para comparar diferentes ofertas de préstamos hipotecarios, ya que calcula el coste efectivo del préstamo, incluyendo intereses y tarifas, de manera que los usuarios puedan evaluar cuál es más favorable. [5c96f4533b-0006]",
+   "citations": [
+    "5c96f4533b-0006"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": false,
+   "chunks": [
+    [
+     "c1e9ef0fb3-0205",
+     "boe/ley-credito-inmobiliario.md",
+     0.8459
+    ],
+    [
+     "5c96f4533b-0006",
+     "pdf/bde-guia-prestamo-hipotecario.pdf",
+     0.8
+    ],
+    [
+     "c1e9ef0fb3-0206",
+     "boe/ley-credito-inmobiliario.md",
+     0.7552
+    ],
+    [
+     "c1e9ef0fb3-0240",
+     "boe/ley-credito-inmobiliario.md",
+     0.6747
+    ],
+    [
+     "c1e9ef0fb3-0221",
+     "boe/ley-credito-inmobiliario.md",
+     0.64
+    ]
+   ]
+  },
+  {
+   "id": "bde-02",
+   "unanswerable": false,
+   "question": "¿Puedo ver la escritura de la hipoteca antes del día de la firma?",
+   "reference": "Sí: el borrador se puede consultar en la notaría durante los tres días hábiles anteriores a la firma.",
+   "answer": "[5c96f4533b-0000] Sí, puedes ver la escritura de la hipoteca antes del día de la firma. Según el pasaje, el borrador de esta escritura se puede consultar en la notaría durante los tres días hábiles anteriores al momento de la firma.",
+   "citations": [
+    "5c96f4533b-0000"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "5c96f4533b-0000",
+     "pdf/bde-guia-prestamo-hipotecario.pdf",
+     1.0
+    ],
+    [
+     "5c96f4533b-0001",
+     "pdf/bde-guia-prestamo-hipotecario.pdf",
+     0.6895
+    ],
+    [
+     "c1e9ef0fb3-0149",
+     "boe/ley-credito-inmobiliario.md",
+     0.6266
+    ],
+    [
+     "c1e9ef0fb3-0160",
+     "boe/ley-credito-inmobiliario.md",
+     0.4372
+    ],
+    [
+     "c1e9ef0fb3-0175",
+     "boe/ley-credito-inmobiliario.md",
+     0.3829
+    ]
+   ]
+  },
+  {
+   "id": "lph-01",
+   "unanswerable": false,
+   "question": "Quiero convertir mi piso en apartamento turístico. ¿Qué mayoría necesita la comunidad para aprobarlo o prohibirlo?",
+   "reference": "Tres quintas partes de los propietarios que representen tres quintas partes de las cuotas.",
+   "answer": "La comunidad de propietarios necesita el voto favorable de **tres quintas partes** del total de los propietarios que, a su vez, representen **tres quintas partes de las cuotas de participación** para aprobar o prohibir el ejercicio de la actividad turística en el apartamento. Esta mayoría se establece en el apartado 12 del artículo 17 de la Ley 29/1994, de 24 de noviembre, de Arrendamientos Urbanos.  \n\n[df4be3ee94-0066]",
+   "citations": [
+    "df4be3ee94-0066"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "df4be3ee94-0022",
+     "boe/lph.md",
+     0.8
+    ],
+    [
+     "df4be3ee94-0066",
+     "boe/lph.md",
+     0.644
+    ],
+    [
+     "df4be3ee94-0058",
+     "boe/lph.md",
+     0.4072
+    ],
+    [
+     "df4be3ee94-0059",
+     "boe/lph.md",
+     0.3471
+    ],
+    [
+     "df4be3ee94-0057",
+     "boe/lph.md",
+     0.2322
+    ]
+   ]
+  },
+  {
+   "id": "zon-01",
+   "unanswerable": false,
+   "question": "¿Está Santiago de Compostela declarada zona de mercado residencial tensionado?",
+   "reference": "Sí, desde la resolución de 24 de julio de 2026, por tres años.",
+   "answer": "Sí, Santiago de Compostela está declarada zona de mercado residencial tensionado según la Resolución de 24 de abril de 2026 de la presidenta del Instituto Gallego de la Vivienda y Suelo, publicada en el «Boletín Oficial del Principado de Asturias» el 30 de abril de 2026. [f721cf0c7e-0001]",
+   "citations": [
+    "f721cf0c7e-0001"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "f721cf0c7e-0001",
+     "boe_diario/zonas-tensionadas-2026-07.md",
+     1.0
+    ],
+    [
+     "f721cf0c7e-0009",
+     "boe_diario/zonas-tensionadas-2026-07.md",
+     0.9333
+    ],
+    [
+     "f721cf0c7e-0002",
+     "boe_diario/zonas-tensionadas-2026-07.md",
+     0.325
+    ],
+    [
+     "2dd1530654-0001",
+     "boe_diario/zonas-tensionadas-2025-10.md",
+     0.2988
+    ],
+    [
+     "37d1983956-0001",
+     "boe_diario/zonas-tensionadas-2025-07.md",
+     0.2936
+    ]
+   ]
+  },
+  {
+   "id": "zon-02",
+   "unanswerable": false,
+   "question": "En las zonas tensionadas de Cataluña, ¿quién cuenta como gran tenedor?",
+   "reference": "Quien tenga cinco o más inmuebles urbanos de uso residencial en la zona.",
+   "answer": "La definición de gran tenedor en las zonas tensionadas de Cataluña se basa en la **definición particularizada** establecida en la declaración publicada por la Comunidad Autónoma de Cataluña, complementaria a la definición general de gran tenedor de vivienda recogida en el artículo 3.k) de la Ley 12/2023, de 24 de mayo [e9bbb702b8-0004]. \n\nLa información específica sobre el criterio de gran tenedor se encuentra en la tabla de la resolución, donde se detalla la aplicación de dicha definición en las zonas tensionadas de Cataluña.",
+   "citations": [
+    "e9bbb702b8-0004"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "b60b9efa0c-0001",
+     "boe_diario/zonas-tensionadas-2024-03.md",
+     1.0
+    ],
+    [
+     "e9bbb702b8-0001",
+     "boe_diario/zonas-tensionadas-2024-10.md",
+     0.9973
+    ],
+    [
+     "e9bbb702b8-0004",
+     "boe_diario/zonas-tensionadas-2024-10.md",
+     0.6663
+    ],
+    [
+     "b60b9efa0c-0003",
+     "boe_diario/zonas-tensionadas-2024-03.md",
+     0.6301
+    ],
+    [
+     "6125a2e835-0001",
+     "boe_diario/zonas-tensionadas-2025-07-erratas.md",
+     0.4359
+    ]
+   ]
+  },
+  {
+   "id": "zon-03",
+   "unanswerable": false,
+   "question": "¿Es Bilbao zona tensionada a efectos de la Ley de vivienda?",
+   "reference": "Sí, incluida en la resolución de 29 de octubre de 2025 (País Vasco), por tres años.",
+   "answer": "Bilbao es zona de mercado residencial tensionado según la Orden de 21 de agosto de 2025, publicada en el «Boletín Oficial del País Vasco» el 4 de septiembre de 2025 [2dd1530654-0001].",
+   "citations": [
+    "2dd1530654-0001"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "2dd1530654-0001",
+     "boe_diario/zonas-tensionadas-2025-10.md",
+     0.9166
+    ],
+    [
+     "2dd1530654-0006",
+     "boe_diario/zonas-tensionadas-2025-10.md",
+     0.8767
+    ],
+    [
+     "74b86d667c-0004",
+     "boe_diario/zonas-tensionadas-2026-01.md",
+     0.5533
+    ],
+    [
+     "2dd1530654-0004",
+     "boe_diario/zonas-tensionadas-2025-10.md",
+     0.5012
+    ],
+    [
+     "9fe2386850-0004",
+     "boe_diario/zonas-tensionadas-2026-04.md",
+     0.3998
+    ]
+   ]
+  },
+  {
+   "id": "ser-01",
+   "unanswerable": false,
+   "question": "En zona tensionada, ¿cómo se calcula el precio máximo de alquiler con el índice de referencia del Ministerio?",
+   "reference": "Se toma el valor superior del rango de valores individualizados según la localización y características de la vivienda (metodología de 18 de marzo de 2026).",
+   "answer": "La información disponible indica que el precio máximo de alquiler en una zona tensionada se calcula según el sistema de índices de precios de referencia establecido por el Ministerio de Vivienda y Agenda Urbana. Este precio se fija a partir del límite máximo aplicable conforme al sistema de índices, considerando las condiciones y características de la vivienda arrendada y del edificio. No se detalla un método específico de cálculo en los pasajes proporcionados, pero se menciona que el límite máximo se establece a través del índice de referencia y se ajusta a las características del inmueble. \n\n**Respuesta:**  \nEl precio máximo de alquiler en una zona tensionada se fija según el límite máximo del índice de referencia del Ministerio, considerando las características de la vivienda y el edificio, sin especificar un método exacto en los pasajes.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "b5de90aa98-0000",
+     "boe_diario/serpavi-2024.md",
+     0.8
+    ],
+    [
+     "ca0662aa73-0000",
+     "boe_diario/serpavi-2026.md",
+     0.6465
+    ],
+    [
+     "aa4ea48848-0001",
+     "pdf/ine-irav-metodologia.pdf",
+     0.3348
+    ],
+    [
+     "ca0662aa73-0004",
+     "boe_diario/serpavi-2026.md",
+     0.2828
+    ],
+    [
+     "d0a26f8298-0067",
+     "boe/lau.md",
+     0.2784
+    ]
+   ]
+  },
+  {
+   "id": "irav-01",
+   "unanswerable": false,
+   "question": "¿Cómo se calcula el IRAV que limita la subida anual del alquiler?",
+   "reference": "Es el mínimo entre la tasa anual del IPC, la del IPC subyacente y una tasa media ajustada.",
+   "answer": "La tasa de variación anual del Índice de Referencia para la Actualización Anual de los Contratos de Arrendamiento de Vivienda (IRAV) se calcula mediante la fórmula:  \n$$\n\\text{TVV}_{\\text{min}} = \\min(\\beta + \\alpha \\times (\\text{TVV}_{\\text{mes}} - \\beta), \\beta + \\alpha \\times (\\text{TVV}_{\\text{subyacente}} - \\beta))\n$$  \ndonde:  \n- $\\beta = 2$ (valor propuesto por el Banco Central Europeo para la tasa de inflación a medio plazo),  \n- $\\alpha = 0.5$ (parámetro definido por las autoridades),  \n- $\\text{TVV}_{\\text{mes}}$ es la tasa de variación anual del Índice de Precios de Consumo en el mes $m$ del año $t$,  \n- $\\text{TVV}_{\\text{subyacente}}$ es la tasa de variación anual del Índice de Precios de Consumo subyacente.  \n\nEsta tasa es el **mínimo valor** entre los tres componentes mencionados. Además, el IRAV limita la subida anual del alquiler en una vivienda con múltiples contratos sucesivos, según la norma [d0a26f8298-0069].",
+   "citations": [
+    "d0a26f8298-0069"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "aa4ea48848-0001",
+     "pdf/ine-irav-metodologia.pdf",
+     0.9434
+    ],
+    [
+     "aa4ea48848-0000",
+     "pdf/ine-irav-metodologia.pdf",
+     0.833
+    ],
+    [
+     "d0a26f8298-0069",
+     "boe/lau.md",
+     0.4336
+    ],
+    [
+     "aa4ea48848-0002",
+     "pdf/ine-irav-metodologia.pdf",
+     0.3356
+    ],
+    [
+     "b139194ed5-0116",
+     "boe/lirpf.md",
+     0.3008
+    ]
+   ]
+  },
+  {
+   "id": "irav-02",
+   "unanswerable": false,
+   "question": "Si el IPC y el IPC subyacente están ambos por encima del 2 %, ¿qué tasa se usa para actualizar el alquiler?",
+   "reference": "La tasa de variación anual media ajustada (TVAMA), con β = 2 % y α = 0,5.",
+   "answer": "[aa4ea48848-0003] Si la tasa anual del IPC y la del IPC subyacente son mayores que el 2%, **nada de ellas se utilizará para la actualización**, y el índice de referencia será **la Tasa de Variación Anual Media Ajustada (TVAMA)**. \n\n**Respuesta:** La Tasa de Variación Anual Media Ajustada (TVAMA) se utiliza.",
+   "citations": [
+    "aa4ea48848-0003"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "aa4ea48848-0003",
+     "pdf/ine-irav-metodologia.pdf",
+     1.0
+    ],
+    [
+     "aa4ea48848-0004",
+     "pdf/ine-irav-metodologia.pdf",
+     0.5279
+    ],
+    [
+     "aa4ea48848-0001",
+     "pdf/ine-irav-metodologia.pdf",
+     0.3142
+    ],
+    [
+     "d0a26f8298-0182",
+     "boe/lau.md",
+     0.1496
+    ],
+    [
+     "1378e54815-0043",
+     "boe/ley-vivienda.md",
+     0.1432
+    ]
+   ]
+  },
+  {
+   "id": "none-01",
+   "unanswerable": true,
+   "question": "¿Cuál es el precio medio del metro cuadrado en alquiler en Madrid?",
+   "reference": null,
+   "answer": "La información disponible no es suficiente para determinar el precio medio del metro cuadrado en alquiler en Madrid. Los pasajes proporcionados no mencionan datos específicos sobre precios de alquiler en Madrid ni cualquier referencia a su valoración.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "b5de90aa98-0000",
+     "boe_diario/serpavi-2024.md",
+     0.8438
+    ],
+    [
+     "b139194ed5-0261",
+     "boe/lirpf.md",
+     0.4628
+    ],
+    [
+     "ca0662aa73-0000",
+     "boe_diario/serpavi-2026.md",
+     0.416
+    ],
+    [
+     "baaa967049-0007",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.3591
+    ],
+    [
+     "baaa967049-0013",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.3281
+    ]
+   ]
+  },
+  {
+   "id": "none-02",
+   "unanswerable": true,
+   "question": "¿Qué tipo de ITP aplica la Comunidad de Madrid a la compra de vivienda usada?",
+   "reference": null,
+   "answer": "La información disponible no es suficiente para determinar el tipo de ITP (Impuesto sobre Bienes Inmuebles) que aplica en la Comunidad de Madrid a la compra de vivienda usada. Los pasajes no mencionan específicamente las normativas locales sobre el ITP en este contexto.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "ff7be5a4bd-0057",
+     "boe/rdl-29-2026.md",
+     0.8
+    ],
+    [
+     "ff7be5a4bd-0035",
+     "boe/rdl-29-2026.md",
+     0.6599
+    ],
+    [
+     "baaa967049-0009",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.6347
+    ],
+    [
+     "baaa967049-0014",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.632
+    ],
+    [
+     "baaa967049-0013",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.5364
+    ]
+   ]
+  },
+  {
+   "id": "none-03",
+   "unanswerable": true,
+   "question": "¿Está Madrid declarada zona de mercado residencial tensionado?",
+   "reference": null,
+   "answer": "La información disponible no es suficiente para determinar si Madrid está declarada como zona de mercado residencial tensionado.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "f721cf0c7e-0002",
+     "boe_diario/zonas-tensionadas-2026-07.md",
+     0.9553
+    ],
+    [
+     "74b86d667c-0000",
+     "boe_diario/zonas-tensionadas-2026-01.md",
+     0.8739
+    ],
+    [
+     "2dd1530654-0000",
+     "boe_diario/zonas-tensionadas-2025-10.md",
+     0.8616
+    ],
+    [
+     "2dd1530654-0001",
+     "boe_diario/zonas-tensionadas-2025-10.md",
+     0.8394
+    ],
+    [
+     "9fe2386850-0001",
+     "boe_diario/zonas-tensionadas-2026-04.md",
+     0.816
+    ]
+   ]
+  },
+  {
+   "id": "none-04",
+   "unanswerable": true,
+   "question": "¿Qué banco ofrece ahora mismo el menor diferencial sobre el euríbor?",
+   "reference": null,
+   "answer": "La información disponible no es suficiente. Los pasajes no mencionan ningún banco ni sus diferencias sobre el Euríbor.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "5ea86a86e1-0052",
+     "boe/trlitpajd.md",
+     0.8
+    ],
+    [
+     "ff7be5a4bd-0032",
+     "boe/rdl-29-2026.md",
+     0.5535
+    ],
+    [
+     "ff7be5a4bd-0033",
+     "boe/rdl-29-2026.md",
+     0.4312
+    ],
+    [
+     "5c96f4533b-0007",
+     "pdf/bde-guia-prestamo-hipotecario.pdf",
+     0.3115
+    ],
+    [
+     "40e1e981c0-0003",
+     "aeat/irpf2025-c10-ejemplo-imputacion-rentas-inmobiliarias.md",
+     0.3013
+    ]
+   ]
+  },
+  {
+   "id": "none-05",
+   "unanswerable": true,
+   "question": "¿Cuánto vale el IRAV publicado para el mes pasado?",
+   "reference": null,
+   "answer": "La información disponible no es suficiente para determinar el valor del IRAV publicado para el mes pasado. Los pasajes no proporcionan un número específico ni una fecha específica para el IRAV, solo describen la metodología de cálculo y las condiciones bajo las cuales se utiliza el índice.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "aa4ea48848-0001",
+     "pdf/ine-irav-metodologia.pdf",
+     0.8391
+    ],
+    [
+     "aa4ea48848-0000",
+     "pdf/ine-irav-metodologia.pdf",
+     0.8
+    ],
+    [
+     "aa4ea48848-0002",
+     "pdf/ine-irav-metodologia.pdf",
+     0.6031
+    ],
+    [
+     "d0a26f8298-0072",
+     "boe/lau.md",
+     0.3108
+    ],
+    [
+     "aa4ea48848-0003",
+     "pdf/ine-irav-metodologia.pdf",
+     0.1638
+    ]
+   ]
+  },
+  {
+   "id": "none-06",
+   "unanswerable": true,
+   "question": "¿Qué rentabilidad bruta media tiene el alquiler de vivienda en Valencia?",
+   "reference": null,
+   "answer": "La información disponible no es suficiente para determinar la rentabilidad bruta media del alquiler de vivienda en Valencia. Los pasajes proporcionados no mencionan datos específicos sobre Valencia ni sobre la rentabilidad bruta media del mercado de alquiler en ese municipio.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": false,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "ff7be5a4bd-0017",
+     "boe/rdl-29-2026.md",
+     1.0
+    ],
+    [
+     "baaa967049-0001",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.7334
+    ],
+    [
+     "ff7be5a4bd-0166",
+     "boe/rdl-29-2026.md",
+     0.5658
+    ],
+    [
+     "40e1e981c0-0001",
+     "aeat/irpf2025-c10-ejemplo-imputacion-rentas-inmobiliarias.md",
+     0.5059
+    ],
+    [
+     "baaa967049-0007",
+     "aeat/irpf2025-c04-caso-practico.md",
+     0.4501
+    ]
+   ]
+  }
+ ]
+}

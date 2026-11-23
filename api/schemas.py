@@ -105,6 +105,10 @@ class RagResponse(BaseModel):
     citations: list[str] = Field(default_factory=list, description="Chunk ids cited in the answer.")
     retriever: Literal["dense", "bm25", "hybrid"]
     model: str = ""
+    law_date: str | None = Field(
+        default=None,
+        description="Optional: date whose law the BOE passages reflect (read from the question).",
+    )
 
 
 # -------------------------------------------------------------------------- phase 4: /agent

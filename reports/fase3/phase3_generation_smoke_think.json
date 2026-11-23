@@ -1,0 +1,361 @@
+{
+ "generator": "Qwen/Qwen3-1.7B",
+ "config": {
+  "chunking": "semantic",
+  "chunk_size": 800,
+  "chunk_overlap": 100,
+  "semantic_threshold": 0.8215,
+  "max_chunk_chars": 1500,
+  "weight_bm25": 0.2,
+  "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+  "generator_model": "Qwen/Qwen3-1.7B",
+  "generator_adapter": null,
+  "thinking": true,
+  "max_new_tokens": 1536,
+  "index_dir": "rag/index"
+ },
+ "retriever": "hybrid",
+ "top_k": 5,
+ "metrics": {
+  "n_answerable": 8,
+  "n_unanswerable": 0,
+  "cites_any": 0.5,
+  "answers_with_invented_ids": 0.0,
+  "relevant_retrieved": 1.0,
+  "cites_relevant_when_retrieved": 0.25,
+  "figures_match": 0.5,
+  "abstains_answerable": 0.375,
+  "abstains_unanswerable": null
+ },
+ "elapsed_s": 484.6,
+ "items": [
+  {
+   "id": "lau-01",
+   "unanswerable": false,
+   "question": "Soy particular y quiero alquilar mi piso con un contrato de un año. ¿Puede el inquilino quedarse más tiempo aunque yo no quiera?",
+   "reference": "Sí: el contrato se prorroga obligatoriamente por años hasta cinco (siete si el arrendador es persona jurídica), salvo que el inquilino no quiera renovar.",
+   "answer": "La respuesta es **sí**, el inquilino puede quedarse más tiempo en el piso incluso si el propietario no lo quiere, siempre que el contrato esté renovado por el inquilino. Según el artículo 10 del texto, si el contrato de un año se renovó anualmente, el inquilino puede continuar alquilando el piso por más de un año, siempre que se cumplan las condiciones de renovación (como la notificación anticipada). El propietario no puede imponer una duración superior a la pactada sin consentimiento del inquilino.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "ff7be5a4bd-0037",
+     "boe/rdl-29-2026.md",
+     0.8
+    ],
+    [
+     "d0a26f8298-0005",
+     "boe/lau.md",
+     0.5605
+    ],
+    [
+     "d0a26f8298-0035",
+     "boe/lau.md",
+     0.5466
+    ],
+    [
+     "d0a26f8298-0031",
+     "boe/lau.md",
+     0.5424
+    ],
+    [
+     "d0a26f8298-0032",
+     "boe/lau.md",
+     0.5019
+    ]
+   ]
+  },
+  {
+   "id": "lau-02",
+   "unanswerable": false,
+   "question": "Pasados los cinco años de contrato, ¿con cuánto tiempo tengo que avisar al inquilino si no quiero seguir alquilándole?",
+   "reference": "Con al menos cuatro meses de antelación; si nadie avisa, se prorroga por años hasta tres más.",
+   "answer": "La información disponible no es suficiente para determinar el tiempo necesario para avisar al inquilino después de 5 años de contrato. Los pasajes mencionados no especifican un plazo definido para desistir del contrato tras cumplirse los 5 años, ni mencionan claramente las normativas aplicables en este contexto.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": false,
+   "abstains": true,
+   "chunks": [
+    [
+     "d0a26f8298-0041",
+     "boe/lau.md",
+     0.8
+    ],
+    [
+     "d0a26f8298-0036",
+     "boe/lau.md",
+     0.7651
+    ],
+    [
+     "d0a26f8298-0200",
+     "boe/lau.md",
+     0.7002
+    ],
+    [
+     "d0a26f8298-0043",
+     "boe/lau.md",
+     0.6908
+    ],
+    [
+     "d0a26f8298-0091",
+     "boe/lau.md",
+     0.679
+    ]
+   ]
+  },
+  {
+   "id": "lau-03",
+   "unanswerable": false,
+   "question": "¿Puede el inquilino marcharse a los siete meses de firmar y qué preaviso me debe dar?",
+   "reference": "Sí: puede desistir una vez pasados seis meses, avisando con al menos treinta días.",
+   "answer": "El inquilino puede desistir del contrato de arrendamiento una vez que hayan transcurrido al menos seis meses desde la formalización del contrato, siempre que se lo comunique al arrendador con una antelación mínima de treinta días. Por lo tanto, **30 días de antelación** son necesarios para desistir del contrato a los siete meses de firmar. \n\n[id: d0a26f8298-0041]",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0043",
+     "boe/lau.md",
+     0.8
+    ],
+    [
+     "d0a26f8298-0041",
+     "boe/lau.md",
+     0.7955
+    ],
+    [
+     "d0a26f8298-0091",
+     "boe/lau.md",
+     0.7737
+    ],
+    [
+     "d0a26f8298-0054",
+     "boe/lau.md",
+     0.6059
+    ],
+    [
+     "d0a26f8298-0036",
+     "boe/lau.md",
+     0.3962
+    ]
+   ]
+  },
+  {
+   "id": "lau-04",
+   "unanswerable": false,
+   "question": "¿Cuánta fianza debo pedir al firmar un alquiler de vivienda?",
+   "reference": "Una mensualidad de renta en metálico (dos en uso distinto de vivienda).",
+   "answer": "La fianza debo pedir equivalente a una o dos mensualidades de renta, según el tipo de arrendamiento (vivienda o uso distinto). Esta cantidad se fija como obligatoria para el contrato, según el artículo 36 del texto [d0a26f8298-0010].",
+   "citations": [
+    "d0a26f8298-0010"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0126",
+     "boe/lau.md",
+     0.9678
+    ],
+    [
+     "d0a26f8298-0010",
+     "boe/lau.md",
+     0.4838
+    ],
+    [
+     "ff7be5a4bd-0166",
+     "boe/rdl-29-2026.md",
+     0.3613
+    ],
+    [
+     "ff7be5a4bd-0143",
+     "boe/rdl-29-2026.md",
+     0.3187
+    ],
+    [
+     "ff7be5a4bd-0057",
+     "boe/rdl-29-2026.md",
+     0.2345
+    ]
+   ]
+  },
+  {
+   "id": "lau-05",
+   "unanswerable": false,
+   "question": "Además de la fianza, ¿puedo exigir al inquilino un aval o un seguro de impago?",
+   "reference": "Se puede pactar una garantía adicional de hasta dos mensualidades (contratos de hasta cinco o siete años), pero nunca exigir un seguro de impago.",
+   "answer": "La información disponible indica que, además de la fianza, no se permite exigir al inquilino un aval o un seguro de impago. El pasaje [d0a26f8298-0127] establece que la garantía adicional no podrá exceder de dos mensualidades de renta en contratos de hasta cinco años o de siete años si el arrendador es persona jurídica, y que no se puede exigir al inquilino la contratación de seguros de impago u otras coberturas análogas. Por lo tanto, la respuesta es: **No, no se permite exigir un aval o un seguro de impago**.",
+   "citations": [
+    "d0a26f8298-0127"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": false,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0126",
+     "boe/lau.md",
+     0.9678
+    ],
+    [
+     "d0a26f8298-0127",
+     "boe/lau.md",
+     0.7435
+    ],
+    [
+     "c1e9ef0fb3-0093",
+     "boe/ley-credito-inmobiliario.md",
+     0.487
+    ],
+    [
+     "d0a26f8298-0109",
+     "boe/lau.md",
+     0.4811
+    ],
+    [
+     "c1e9ef0fb3-0163",
+     "boe/ley-credito-inmobiliario.md",
+     0.4377
+    ]
+   ]
+  },
+  {
+   "id": "lau-06",
+   "unanswerable": false,
+   "question": "¿Puedo cobrarle al inquilino los honorarios de la agencia inmobiliaria que me busca inquilino?",
+   "reference": "No: los gastos de gestión inmobiliaria y de formalización del contrato no pueden repercutirse al arrendatario.",
+   "answer": "La información disponible no es suficiente. El pasaje [d0a26f8298-0079] menciona que los gastos de gestión inmobiliaria y de formalización del contrato no pueden ser repercutidos al arrendatario, pero no especifica si los honorarios de la agencia inmobiliaria se consideran parte de estos gastos. Por lo tanto, no se puede determinar con certeza si los honorarios de la agencia inmobiliaria pueden ser cobrados al inquilino.",
+   "citations": [
+    "d0a26f8298-0079"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": true,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "c1e9ef0fb3-0120",
+     "boe/ley-credito-inmobiliario.md",
+     0.8
+    ],
+    [
+     "c1e9ef0fb3-0119",
+     "boe/ley-credito-inmobiliario.md",
+     0.5813
+    ],
+    [
+     "d0a26f8298-0079",
+     "boe/lau.md",
+     0.3731
+    ],
+    [
+     "1378e54815-0102",
+     "boe/ley-vivienda.md",
+     0.2952
+    ],
+    [
+     "40e1e981c0-0001",
+     "aeat/irpf2025-c10-ejemplo-imputacion-rentas-inmobiliarias.md",
+     0.2587
+    ]
+   ]
+  },
+  {
+   "id": "lau-07",
+   "unanswerable": false,
+   "question": "Si en el contrato no pusimos nada sobre subir el alquiler cada año, ¿puedo actualizarlo con la inflación?",
+   "reference": "No: sin pacto expreso no se aplica actualización de la renta.",
+   "answer": "La renta puede actualizarse anualmente con la inflación, aunque no haya especificado en el contrato, según las reglas establecidas. Según el pasaje [d0a26f8298-0180], si no hay un pacto expreso, la renta se actualiza anualmente a tenor de la variación del **Indice General de Precios al Consumo (IGPC)** en los doce meses anteriores a la fecha de actualización. Sin embargo, el incremento no podrá exceder del **2%** en caso de no haber un nuevo pacto entre las partes. \n\nAdemás, si el arrendatario no acredita sus ingresos, se presumirá la actualización pretendida, lo que implica que la renta se ajustará según el IGPC. \n\n**Respuesta:** Sí, la renta puede actualizarse anualmente con la inflación, pero el incremento no podrá exceder del 2% si no hay un pacto expreso, y se basará en la variación del IGPC.",
+   "citations": [
+    "d0a26f8298-0180"
+   ],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": null,
+   "abstains": true,
+   "chunks": [
+    [
+     "d0a26f8298-0072",
+     "boe/lau.md",
+     0.8122
+    ],
+    [
+     "d0a26f8298-0184",
+     "boe/lau.md",
+     0.7059
+    ],
+    [
+     "c1e9ef0fb3-0251",
+     "boe/ley-credito-inmobiliario.md",
+     0.6831
+    ],
+    [
+     "d0a26f8298-0180",
+     "boe/lau.md",
+     0.6676
+    ],
+    [
+     "ff7be5a4bd-0177",
+     "boe/rdl-29-2026.md",
+     0.4978
+    ]
+   ]
+  },
+  {
+   "id": "lau-08",
+   "unanswerable": false,
+   "question": "Tengo un piso en zona tensionada y el contrato anterior acaba. ¿En qué casos puedo subir la renta del nuevo contrato hasta un 10 %?",
+   "reference": "Si se rehabilitó o mejoró (energía o accesibilidad) en los dos años anteriores, o si el contrato es de diez o más años.",
+   "answer": "La renta del nuevo contrato puede subir hasta un 10% en los siguientes casos:  \n\n1. **Cuando el arrendatario sea una persona física** y el arrendador alquile por primera vez la vivienda, y la vivienda esté en una zona de mercado residencial tensionado, y el arrendatario tenga una edad comprendida entre 18 y 35 años.  \n2. **Cuando el arrendatario sea una Administración Pública o entidad sin fines lucrativos** y la vivienda esté en una zona de mercado residencial tensionado, y el arrendatario tenga una edad comprendida entre 18 y 35 años.  \n\nEstos casos se aplican según las disposiciones de la Ley 12/2023, de 24 de mayo, en zonas tensionadas.",
+   "citations": [],
+   "invented_ids": [],
+   "relevant_retrieved": true,
+   "cites_relevant": false,
+   "figures_match": true,
+   "abstains": false,
+   "chunks": [
+    [
+     "d0a26f8298-0065",
+     "boe/lau.md",
+     0.9485
+    ],
+    [
+     "782779238c-0003",
+     "aeat/irpf2025-c04-arrendamiento-inmuebles-destinados-vivienda.md",
+     0.5848
+    ],
+    [
+     "d0a26f8298-0120",
+     "boe/lau.md",
+     0.3397
+    ],
+    [
+     "b139194ed5-0116",
+     "boe/lirpf.md",
+     0.3315
+    ],
+    [
+     "ff7be5a4bd-0177",
+     "boe/rdl-29-2026.md",
+     0.3202
+    ]
+   ]
+  }
+ ]
+}
