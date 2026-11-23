@@ -190,3 +190,21 @@ def test_registers_as_a_tool():
     with case_file.active(case):
         record = registry.call("screen_properties", {"min_net_yield_pct": 4.5})
     assert record.error is None, record.error
+
+
+def test_exactly_the_minimum_does_not_pass():
+    case = new_case(PROFILE)
+    with case_file.active(case):
+        net = screen_properties.fn(min_net_yield_pct=4.5)
+        flat = net["passed"][0]
+        exact = screen_properties.fn(min_net_yield_pct=flat["net_yield_pct"])
+    assert flat["id"] not in {r["id"] for r in exact["passed"]}
+    reason = {r["id"]: r["reason"] for r in exact["rejected"]}[flat["id"]]
+    assert " % = " in reason
+
+
+def test_repeated_assumptions_are_one_line_in_the_case_file():
+    _, case = screen(min_net_yield_pct=4.5)
+    text = case.render()
+    lines = [line for line in text.splitlines() if line.startswith("- reference_value")]
+    assert len(lines) == 1 and "P01=" in lines[0] and "P02=" in lines[0], lines

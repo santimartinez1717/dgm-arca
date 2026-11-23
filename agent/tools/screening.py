@@ -77,8 +77,8 @@ def screen_properties(
     them). Record the properties first with record_property.
 
     Args:
-        min_net_yield_pct: Minimum net yield in percent, inclusive (4.5 means 4.5 %). If
-            omitted, the investor's target_net_yield_pct is used.
+        min_net_yield_pct: Net yield the property must exceed, in percent (4.5 means more
+            than 4.5 %). If omitted, the investor's target_net_yield_pct is used.
         max_price: Maximum purchase price in euros.
         min_cash_on_cash_pct: Minimum mortgage cash-on-cash in percent (needs financing).
         require_legal_rent: True (default) computes with the rent the law allows, i.e. the
@@ -122,8 +122,9 @@ def screen_properties(
                 reasons.append(_missing_reason(result, key))
                 case.ask(f"{prop.id}: {reasons[-1]}")
                 blocked = True
-            elif value < minimum:
-                reasons.append(f"{label} {_num(value)} % < {_num(minimum)} %")
+            elif value <= minimum:  # "más de un 4,5 %": exactly the minimum does not pass
+                sign = "<" if value < minimum else "="
+                reasons.append(f"{label} {_num(value)} % {sign} {_num(minimum)} %")
                 gap = max(gap, minimum - value)
 
         if min_net_yield_pct is None and yield_key not in result.figures and not reasons:
