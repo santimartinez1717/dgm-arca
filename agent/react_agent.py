@@ -278,6 +278,8 @@ class _Run:
     last_audit: AuditResult | None = None
     levers: list[dict[str, Any]] = field(default_factory=list)
     scenarios: list[dict[str, Any]] = field(default_factory=list)
+    # Every generation as the model saw and wrote it: the SFT data of issue 18.
+    generations: list[dict[str, Any]] = field(default_factory=list)
 
     def step(self, thought: str, action: AgentAction | None, observation: str | None) -> None:
         self.steps.append(AgentStep(thought=thought, action=action, observation=observation))
@@ -311,6 +313,8 @@ class ReActAgent:
     audit: bool = True
     use_playbook: bool = True
     anchor_case_file: bool = True
+    # The generations of the last run (messages shown and raw output), for agent.collect_traces.
+    last_generations: list[dict[str, Any]] = field(default_factory=list, repr=False)
 
     @classmethod
     def from_env(cls) -> ReActAgent:
@@ -404,6 +408,7 @@ class ReActAgent:
             try:
                 return self._loop(state, memory)
             finally:
+                self.last_generations = state.generations
                 case_file.save(case)
 
     def _loop(self, state: _Run, memory: ConversationMemory) -> AgentResponse:
@@ -415,6 +420,7 @@ class ReActAgent:
                 )
             messages = memory.render(self.system_prompt(state.max_steps, state.case))
             raw, prompt_tokens, completion_tokens = state.brain.generate(messages, tools)
+            state.generations.append({"messages": messages, "raw": raw})
             state.tokens += prompt_tokens + completion_tokens
             parsed = parse_tool_calls(raw)
             thought = _thought(parsed.thinking, parsed.text)
