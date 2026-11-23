@@ -6,7 +6,8 @@
 #   bash scripts/fase4/crear_issues.sh            # dry run: prints what it would create
 #   bash scripts/fase4/crear_issues.sh --create   # creates them
 #
-# 01-04 go to Bernardo (knowledge), 05-08 to Kike (evaluation). The first line of each file
+# Bernardo: 01-04, 09, 11 (knowledge, closing the loop, the ReAct loop).
+# Kike: 05-08, 10, 12 (evaluation, report, API fields and CSV ingestion). The first line of each file
 # ("# Title") is the issue title; the rest is the body.
 set -euo pipefail
 
@@ -17,8 +18,8 @@ DIR="$(cd "$(dirname "$0")/../.." && pwd)/docs/fase4/issues"
 
 assignee_for() {
   case "$1" in
-    0[1-4]-*) echo "berordas" ;;
-    0[5-8]-*) echo "enriquerodriguezcamacho" ;;
+    0[1-4]-* | 09-* | 11-*) echo "berordas" ;;
+    0[5-8]-* | 10-* | 12-*) echo "enriquerodriguezcamacho" ;;
     *) echo "" ;;
   esac
 }

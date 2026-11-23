@@ -15,7 +15,9 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass, field
 
-from agent.prompts import REACT_SYSTEM_PROMPT
+from agent.prompts import AGENT_SYSTEM_PROMPT
+from agent.tools.case_tools import CASE_TOOLS
+from agent.tools.knowledge import search_knowledge_base
 from api.schemas import AgentResponse, AgentStep
 from tool_use.registry import ToolRegistry, tool
 from tool_use.tools import default_registry
@@ -31,21 +33,12 @@ def final_answer(answer: str) -> str:
     return answer
 
 
-@tool
-def search_knowledge_base(query: str, top_k: int = 5) -> str:
-    """Search the domain knowledge base and return the most relevant passages with their ids.
-
-    Args:
-        query: What to look for, phrased as a question.
-        top_k: How many passages to return.
-    """
-    # Tu turno: call your phase-3 retriever and render hits as "[id] (source)\\ntext".
-    raise NotImplementedError("wire search_knowledge_base to rag/retriever.py")
-
-
 BRAINS = {
-    "base": lambda: os.environ.get("ARCA_RLM_BASE_MODEL", "Qwen/Qwen3-0.6B"),
-    "rlm": lambda: os.environ.get("ARCA_RLM_ADAPTER", ""),
+    # See docs/fase4/issues/11-bucle-react.md: one shared Qwen3-1.7B, adapter per request.
+    "base": lambda: os.environ.get("ARCA_AGENT_MODEL", "Qwen/Qwen3-1.7B"),
+    "rlm": lambda: (
+        os.environ.get("ARCA_AGENT_RLM_ADAPTER") or os.environ.get("ARCA_RLM_ADAPTER", "")
+    ),
     "thinking": lambda: os.environ.get("ARCA_THINKING_MODEL", "Qwen/Qwen3-1.7B"),
 }
 
@@ -59,7 +52,7 @@ class ReActAgent:
     @classmethod
     def from_env(cls) -> ReActAgent:
         agent = cls()
-        agent.registry.register(final_answer, search_knowledge_base)
+        agent.registry.register(*CASE_TOOLS, search_knowledge_base, final_answer)
         agent.load()
         return agent
 
@@ -68,9 +61,7 @@ class ReActAgent:
         raise NotImplementedError("Phase 4 is not implemented yet: see agent/README.md.")
 
     def system_prompt(self, max_steps: int) -> str:
-        return REACT_SYSTEM_PROMPT.format(
-            max_steps=max_steps, tools_description=self.registry.render_for_prompt()
-        )
+        return AGENT_SYSTEM_PROMPT.format(max_steps=max_steps)
 
     def generate(self, messages: list[dict], brain: str) -> str:
         """Tu turno: one generation with the chosen brain."""

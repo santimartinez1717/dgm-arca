@@ -30,8 +30,10 @@ el playbook. La tool `find_levers` (núcleo) lo filtra por las condiciones del c
      por habitaciones, subastas del BOE.
    - **`illegal_warning`**, al menos 3, para **detectar y advertir**: precio parcialmente en negro,
      no declarar las rentas, falsear el empadronamiento o la vivienda habitual.
-2. Esquema Pydantic en `agent/playbook/schema.py` (`Lever`, `Condition`, `Evidence`,
-   `load_levers()`) que valide el YAML al cargarlo.
+2. El esquema ya existe (`agent/playbook/schema.py`, lo usa `find_levers`), y también 6 palancas
+   semilla con sus citas comprobadas en `agent/playbook/levers.yaml`. Completa el catálogo
+   siguiendo esas palancas como ejemplo. Si el esquema se queda corto, propón el cambio en la
+   issue.
 3. Test `tests/test_playbook.py`:
    - el YAML valida;
    - los ids son únicos;

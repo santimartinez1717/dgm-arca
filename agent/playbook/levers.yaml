@@ -1,0 +1,124 @@
+# Playbook de palancas de Umbral. Esquema y reglas en agent/playbook/schema.py y
+# docs/fase4/diseno.md. Cada `evidence.quote` es literal del corpus de la fase 3 y lo
+# comprueba tests/test_playbook.py. Las explicaciones no llevan cifras: las pone what_if.
+
+- id: rent_cut_over_5pct
+  level: legal
+  title: Bajar la renta inicial más de un 5 % frente al contrato anterior
+  applies_when:
+    - {field: property.previous_rent, op: not_null}
+    - {field: property.stressed_zone, op: ne, value: false}
+  engine:
+    set: {property.monthly_rent: "$property.previous_rent*0.94"}
+  evidence:
+    source: boe/lirpf.md
+    section: Artículo 23
+    quote: >-
+      1.º En el que la renta inicial se hubiera rebajado en más de un 5 por ciento en
+      relación con la última renta del anterior contrato de arrendamiento de la misma vivienda
+  risk: null
+  explanation: >-
+    En zona tensionada, firmar el nuevo contrato con una renta algo más baja que la anterior
+    sube la reducción del IRPF sobre el rendimiento del alquiler. A veces el ahorro fiscal
+    compensa la renta que se deja de cobrar; otras no, y por eso hay que calcularlo.
+
+- id: young_tenant_stressed_zone
+  level: legal
+  title: Alquilar a un inquilino joven en zona tensionada
+  applies_when:
+    - {field: property.stressed_zone, op: ne, value: false}
+    - {field: property.tenant_age, op: is_null}
+  engine:
+    set: {property.tenant_age: 30}
+  evidence:
+    source: boe/lirpf.md
+    section: Artículo 23
+    quote: >-
+      2.º En un 95 por ciento, cuando no dándose el requisito previsto en el párrafo
+      anterior, la vivienda esté situada en una zona de mercado residencial tensionado y el
+      arrendatario tenga una edad comprendida entre 18 y 35 años.
+  risk: null
+  explanation: >-
+    Si el inquilino tiene entre dieciocho y treinta y cinco años y el piso está en zona
+    tensionada, la reducción del IRPF del alquiler es mayor que la general. En un piso que
+    ya estuvo alquilado solo suma si además la renta baja más de un cinco por ciento frente
+    al contrato anterior: conviene simularla junto con esa palanca.
+
+- id: rehabilitation_before_contract
+  level: legal
+  title: Rehabilitar antes de firmar el contrato
+  applies_when:
+    - {field: property.rehabilitation_last_2y, op: eq, value: false}
+  engine:
+    set: {property.rehabilitation_last_2y: true}
+  evidence:
+    source: boe/lirpf.md
+    section: Artículo 23
+    quote: >-
+      d) En un 60 por ciento cuando la vivienda hubiera sido objeto de una actuación de
+      rehabilitación en los términos previstos en el apartado 1 del artículo 41 del Reglamento
+  risk: null
+  explanation: >-
+    Una rehabilitación terminada en los dos años anteriores al contrato da derecho a una
+    reducción del IRPF y, en zona tensionada, permite subir la renta por encima de la
+    anterior. Solo cuenta si cumple la definición de rehabilitación del Reglamento del IRPF.
+
+- id: reference_value_above_price
+  level: legal
+  title: El ITP se paga sobre el mayor de precio y valor de referencia
+  applies_when:
+    - {field: property.new_build, op: eq, value: false}
+    - {field: property.reference_value, op: gt, value: "$property.price"}
+  engine:
+    set: {property.reference_value: "$property.price"}
+  evidence:
+    source: boe/trlitpajd.md
+    section: Artículo 10
+    quote: >-
+      No obstante, si el valor del bien inmueble declarado por los interesados, el precio o
+      contraprestación pactada, o ambos son superiores a su valor de referencia, se tomará
+      como base imponible la mayor de estas magnitudes.
+  risk: null
+  explanation: >-
+    Si el valor de referencia del Catastro supera el precio, el ITP se paga sobre el valor
+    de referencia. Negociar sabiendo esto cambia el coste real de la compra; y si el valor
+    está mal calculado se puede impugnar al rectificar la autoliquidación.
+
+- id: offer_at_max_price
+  level: legal
+  title: Ofrecer como máximo el precio que da la rentabilidad objetivo
+  applies_when:
+    - {field: profile.target_net_yield_pct, op: not_null}
+    - {field: property.monthly_rent, op: not_null}
+  engine:
+    set: {property.price: "$max_offer_price"}
+  evidence:
+    source: boe/trlitpajd.md
+    section: Artículo 10
+    quote: >-
+      2. En el caso de los bienes inmuebles, su valor será el valor de referencia previsto
+      en la normativa reguladora del catastro inmobiliario, a la fecha de devengo del impuesto.
+  risk: null
+  explanation: >-
+    El precio de salida es negociable. El motor calcula el precio más alto con el que el
+    piso todavía llega a la rentabilidad que pide el inversor, impuestos de compra incluidos.
+
+- id: short_term_rental
+  level: grey
+  title: Alquiler de temporada o turístico en lugar de vivienda habitual
+  applies_when: []
+  engine: null
+  evidence:
+    source: boe/rdl-29-2026.md
+    section: Preámbulo
+    quote: >-
+      Se excluyen de la exención los arrendamientos de apartamentos o viviendas amueblados
+      cuando el arrendador preste servicios complementarios propios de la industria hotelera
+  risk: >-
+    Si en realidad es la vivienda habitual del inquilino, el contrato se rige por la LAU y
+    sus topes de renta; además, desde el 1 de diciembre de 2026 ciertos alquileres cortos
+    pagan IVA y no tienen la reducción del IRPF.
+  explanation: >-
+    Los alquileres de temporada escapan a los topes de renta de la vivienda habitual, pero
+    solo si son de verdad de temporada. Usarlos para esquivar la ley de vivienda es la
+    trampa más vigilada.

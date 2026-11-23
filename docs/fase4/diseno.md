@@ -27,8 +27,9 @@ El "listillo" está en los números, no en la labia.
 ## Arquitectura
 
 ```
- tarea (+ session_id) ──► 0. Ingesta determinista
-                           pisos del texto/CSV, perfil del inversor → Expediente (SQLite)
+ tarea (+ session_id) ──► 0. Ingesta determinista de CSV → Expediente (SQLite)
+                           (los datos en prosa los guarda el modelo con record_property /
+                            record_investor: rellenar argumentos ya lo hace bien, fase 2)
                               │
                               ▼
  ┌─────────── 1. Bucle ReAct (cerebro: base | rlm | thinking) ───────────────────────┐
@@ -80,25 +81,26 @@ compacto. Así se evita el efecto "perdido en el medio".
 
 ```python
 class InvestorProfile(BaseModel):
-    region: str | None = None                  # community where they buy (or a city)
-    properties_owned: int | None = None        # dwellings already owned (large holder)
+    region: str | None = None  # community where they buy (or a city)
+    properties_owned: int | None = None  # dwellings already owned (large holder)
     properties_owned_stressed: int | None = None
     area_owned_m2: float | None = None
     financing: bool | None = None
-    down_payment_pct: float | None = None      # 20 means 20 %
+    down_payment_pct: float | None = None  # 20 means 20 %
     interest_rate_pct: float | None = None
     loan_years: int | None = None
     target_net_yield_pct: float | None = None
 
+
 class Property(BaseModel):
-    id: str                                    # "P1", or the user's label
+    id: str  # "P1", or the user's label
     municipality: str | None = None
     region: str | None = None
     price: float | None = None
     reference_value: float | None = None
     new_build: bool = False
     area_m2: float | None = None
-    monthly_rent: float | None = None          # asking rent
+    monthly_rent: float | None = None  # asking rent
     previous_rent: float | None = None
     stressed_zone: bool | None = None
     cadastral_value: float | None = None
@@ -111,19 +113,22 @@ class Property(BaseModel):
     rehabilitation_last_2y: bool = False
     tenant_age: int | None = None
 
-class Figure(BaseModel):                       # a number the engine produced
+
+class Figure(BaseModel):  # a number the engine produced
     property_id: str | None
-    name: str                                  # "net_yield_pct", "itp", "irpf_net_income"...
+    name: str  # "net_yield_pct", "itp", "irpf_net_income"...
     value: float
-    unit: str                                  # "%", "EUR", "EUR/month"
-    tool: str                                  # tool that produced it
-    scenario: str = "base"                     # or a lever id / "if reference_value=..."
+    unit: str  # "%", "EUR", "EUR/month"
+    tool: str  # tool that produced it
+    scenario: str = "base"  # or a lever id / "if reference_value=..."
+
 
 class Assumption(BaseModel):
     property_id: str | None
     field: str
     value: Any
     reason: str
+
 
 class CaseFile(BaseModel):
     session_id: str
@@ -250,12 +255,21 @@ a `/agent`, como en la corrección, la respuesta ya es útil sin esperar.
 
 ## Quién hace qué
 
-- **Núcleo (Santiago):**
-  - bucle, expediente, memoria, guardarraíles y auditor;
-  - `analyze_property`, `find_levers`, `what_if` y `search_knowledge_base`;
-  - integración con la API y con los cerebros;
-  - cierre del círculo.
-- **Bernardo (conocimiento):** playbook, `screen_properties`, `write_investment_report` y
-  ampliación del corpus.
-- **Kike (evaluación):** banco, `agent/evaluate.py` con ablaciones, contraste con `CodeAgent` y la
-  interfaz de trazas.
+- **Ya hecho en `fase4`:**
+  - expediente, `analyze`, esquema del playbook y palancas semilla;
+  - `find_levers`, `what_if` y el auditor;
+  - `search_knowledge_base`, prompts y política de memoria.
+- **Santiago:** fine-tune de formato del RLM (fase 2), revisión de los PR y la defensa.
+- **Bernardo:**
+  - el bucle ReAct (issue 11);
+  - el playbook (issue 01);
+  - `screen_properties` y `write_investment_report` (issues 02 y 03);
+  - el corpus (issue 04);
+  - el cierre del círculo (issue 09).
+- **Kike:**
+  - campos de la API e ingesta de CSV (issue 12);
+  - el banco (issue 05);
+  - la evaluación y las ablaciones (issue 06);
+  - el contraste con `CodeAgent` (issue 07);
+  - la interfaz de trazas (issue 08);
+  - el informe y el README (issue 10).
