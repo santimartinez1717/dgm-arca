@@ -9,6 +9,9 @@
 # Se para con Ctrl+C. Log en logs/serve_dgx.log.
 set -euo pipefail
 cd "$(dirname "$0")/.."
+# The port asked for when launching (ARCA_API_PORT=8001 bash scripts/serve_dgx.sh) wins over
+# the one in .env, which dgx_env.sh loads.
+REQUESTED_PORT="${ARCA_API_PORT:-}"
 source smoke/dgx_env.sh >/dev/null
 
 if pgrep -af "python -m (rlm|tool_use|rag|agent)" >/dev/null; then
@@ -18,7 +21,16 @@ if pgrep -af "python -m (rlm|tool_use|rag|agent)" >/dev/null; then
 fi
 
 export ARCA_RLM_ADAPTER="${ARCA_RLM_ADAPTER:-rlm/weights/grpo2_lora}"
-PORT="${ARCA_API_PORT:-8000}"
+PORT="${REQUESTED_PORT:-${ARCA_API_PORT:-8000}}"
+export ARCA_API_PORT="$PORT"
+
+# Several sessions of the team can share a DGX node: an API of someone else on this port would
+# get our warm-up calls and, through ngrok, the grader's.
+if curl -s -m 3 "http://localhost:$PORT/health" >/dev/null; then
+    echo "El puerto $PORT ya tiene una API (quizá la de otro compañero en este nodo)."
+    echo "Usa otro: ARCA_API_PORT=8001 bash scripts/serve_dgx.sh, y ngrok http 8001."
+    exit 1
+fi
 
 # Lo que no está en git y sin lo que /reasoning o /rag fallan en clase.
 if [ ! -f "$ARCA_RLM_ADAPTER/adapter_config.json" ] || [ ! -f "$ARCA_RLM_ADAPTER/adapter_model.safetensors" ]; then
