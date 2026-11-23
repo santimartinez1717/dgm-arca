@@ -86,8 +86,95 @@ def test_unreadable_cells_are_reported_not_fatal():
     ],
 )
 def test_text_without_csv_is_untouched(task):
-    props, text = extract_properties(task)
+    props, text = extract_properties(task, prose=False)
     assert props == [] and text == task
+
+
+# --------------------------------------------------------------------------- one flat in prose
+
+from agent.analysis import analyze  # noqa: E402
+from agent.bench.build_bench import build  # noqa: E402
+from agent.case_file import InvestorProfile  # noqa: E402
+from agent.ingest import extract_prose  # noqa: E402
+
+SPECS = {s.id: s for s in build()}
+
+# Bench task -> (figure of the analysis, figure the bench expects): the prose read in code
+# must give the engine the same numbers the bench was built with.
+SAME_FIGURES = {
+    "lever-01": [("irpf_reduced_net_income", ("after", "reduced_net_income"))],
+    "lever-02": [("irpf_reduced_net_income", ("same", "reduced_net_income"))],
+    "lever-03": [("effective_rent", ("cap_10pct",)), ("net_yield_pct", ("yield_10pct",))],
+    "inconsistent-01": [("effective_rent", ("cap",)), ("net_yield_pct", ("yield_legal",))],
+    "inconsistent-02": [("net_yield_pct", ("yield_ref_150000",))],
+    "law_on_date-01": [("irpf_reduced_net_income", ("reduced_net_income",))],
+    "law_on_date-02": [("irpf_reduced_net_income", ("reduced_net_income",))],
+    "kb_plus_tool-01": [("irpf_depreciation", ("depreciation",))],
+    "kb_plus_tool-02": [("effective_rent", ("cap",))],
+    "kb_plus_tool-03": [("transfer_tax", ("transfer_tax",)), ("total_investment", ("total",))],
+    "broken_tool-01": [("effective_rent", ("cap_if_stressed",))],
+    "broken_tool-02": [("irpf_reduced_net_income", ("reduced_net_income",))],
+}
+# Tasks where reading one flat would be wrong: several flats, a portfolio, no flat at all,
+# or two different rents.
+NO_FLAT = [
+    "lever-04", "large_holder-01", "large_holder-02", "grey_or_illegal-01",
+    "grey_or_illegal-02", "impossible-01", "impossible-02",
+]  # fmt: skip
+
+
+@pytest.mark.parametrize("task_id", sorted(SAME_FIGURES))
+def test_prose_gives_the_engine_the_bench_figures(task_id):
+    spec = SPECS[task_id]
+    found = extract_prose(spec.task)
+    assert found.property is not None, task_id
+    figures = analyze(found.property, InvestorProfile()).figures
+    for key, path in SAME_FIGURES[task_id]:
+        expected = spec.figures
+        for part in path:
+            expected = expected[part]
+        assert figures[key] == pytest.approx(expected, abs=0.01), (task_id, key)
+
+
+@pytest.mark.parametrize("task_id", NO_FLAT)
+def test_prose_reads_no_flat_when_it_should_not(task_id):
+    assert extract_prose(SPECS[task_id].task).property is None
+
+
+def test_rent_after_a_rent_verb_is_not_the_price():
+    found = extract_prose(
+        "Compré un piso de 75 m² en Sevilla por 155.000 € y lo alquilo por 800 € al mes."
+    )
+    assert (found.property.price, found.property.monthly_rent) == (155000, 800)
+
+
+def test_two_values_of_a_field_are_left_to_the_model():
+    found = extract_prose(
+        "Piso de 70 m² en Murcia por 120.000 €. Cobro 600 € pero podría cobrar 650 €."
+    )
+    assert found.property.monthly_rent is None and found.ambiguous == ["monthly_rent"]
+
+
+def test_land_value_and_yearly_community():
+    found = extract_prose(
+        "Piso de 80 m² en Murcia por 167.000 €, valor catastral 95.000 €, de los que "
+        "38.000 € son suelo; comunidad 600 € al año."
+    )
+    assert found.property.land_share_pct == 40 and found.property.community_monthly == 50
+
+
+def test_ingest_loads_the_flat_and_keeps_the_prose(monkeypatch):
+    task = "Piso en Valencia de 70 m² por 180.000 €, alquilado por 850 € al mes. ¿Rentabilidad?"
+    props, text = extract_properties(task)
+    assert props[0].id == "P1" and props[0].municipality == "Valencia"
+    assert text.startswith(task) and "[1 piso cargado en el expediente: P1 (" in text
+    monkeypatch.setenv("ARCA_INGEST_PROSE", "0")
+    assert extract_properties(task) == ([], task)
+
+
+def test_a_csv_wins_over_the_prose():
+    props, _ = extract_properties("Piso en Madrid por 100.000 €, 60 m².\nprecio;renta\n90000;500")
+    assert [p.price for p in props] == [90000]
 
 
 def test_two_tables_number_flats_consecutively():
