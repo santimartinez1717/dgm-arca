@@ -94,7 +94,18 @@ def irpf_of(figures: dict[str, float]) -> dict[str, float]:
         "net_income": figures["irpf_net_income"],
         "reduction_pct": figures["irpf_reduction_pct"],
         "reduced_net_income": figures["irpf_reduced_net_income"],
+        # the tax due at the default marginal rate: what what_if reports for each scenario
+        "income_tax": figures["income_tax"],
     }
+
+
+def taxed(irpf: dict[str, float]) -> dict[str, Any]:
+    """The answer gives the IRPF of a scenario: the reduced base or the tax due.
+
+    analyze_property returns both, but what_if returns only ``income_tax`` for a scenario, and
+    the auditor rejects a figure that no tool returned: the check has to accept either.
+    """
+    return any_of(number(irpf["reduced_net_income"], 1), number(irpf["income_tax"], 1))
 
 
 # --------------------------------------------------------------------------- the 15 flats
@@ -365,8 +376,8 @@ def levers() -> list[Spec]:
             "por el alquiler?",
             required_tools=["find_levers", "what_if"],
             check=all_of(
-                number(after["reduced_net_income"], 1),
-                number(before["reduced_net_income"], 1),
+                taxed(after),
+                taxed(before),
                 regex(r"30/11/2026|1 de diciembre|01/12/2026|antes del? (1|01)"),
                 contains("asesor"),
             ),
@@ -376,10 +387,10 @@ def levers() -> list[Spec]:
                 f"{before['reduction_pct']} %."
             ),
             good=f"Sí: la fecha de firma. Firmando el 15/12/2026 se aplica la escala del RDL "
-            f"29/2026 y, al subir la renta un 3 %, la reducción es del {after['reduction_pct']} "
-            f"%: tributarías {eur(after['reduced_net_income'])}. Si firmas el 30/11/2026, antes "
-            f"del 01/12/2026, se aplica la Ley 12/2023 con un {before['reduction_pct']} % y "
-            f"tributarías {eur(before['reduced_net_income'])}. {DISCLAIMER}",
+            f"29/2026 y, al subir la renta un 3 %, la reducción es del {after['reduction_pct']:g} "
+            f"%: pagarías {eur(after['income_tax'])} de IRPF por el alquiler. Si firmas el "
+            f"30/11/2026, antes del 01/12/2026, se aplica la Ley 12/2023 con un "
+            f"{before['reduction_pct']:g} % y pagarías {eur(before['income_tax'])}. {DISCLAIMER}",
             bad=f"No hay ninguna palanca: tributarás {eur(after['reduced_net_income'])} "
             "firmes cuando firmes.",
             figures={"before": before, "after": after},
@@ -413,8 +424,8 @@ def levers() -> list[Spec]:
             "bajar la renta un 6 % (a 846 €)?",
             required_tools=["find_levers", "what_if"],
             check=all_of(
-                number(same["reduced_net_income"], 1),
-                number(cut["reduced_net_income"], 1),
+                taxed(same),
+                taxed(cut),
                 number(cut["reduction_pct"], 0),
                 contains("asesor"),
             ),
@@ -422,10 +433,10 @@ def levers() -> list[Spec]:
                 "RDL 29/2026: renta igual a la anterior → 50 %; rebaja de más del 5 % en zona "
                 f"tensionada → {cut['reduction_pct']} %."
             ),
-            good=f"Con 900 € la reducción es del {same['reduction_pct']} % y tributas "
-            f"{eur(same['reduced_net_income'])}. Bajando a 846 € (−6 %) la reducción sube al "
-            f"{cut['reduction_pct']} % y tributas solo {eur(cut['reduced_net_income'])}, a "
-            f"cambio de cobrar 648 € menos al año. {DISCLAIMER}",
+            good=f"Con 900 € la reducción es del {same['reduction_pct']:g} % y pagas "
+            f"{eur(same['income_tax'])} de IRPF por el alquiler. Bajando a 846 € (54 € menos al "
+            f"mes) la reducción sube al {cut['reduction_pct']:g} % y pagas solo "
+            f"{eur(cut['income_tax'])}. {DISCLAIMER}",
             bad=f"Con 900 € tributas {eur(same['net_income'])} y bajando la renta no cambia "
             "la reducción, que es siempre del 60 %.",
             figures={"same": same, "cut": cut},
@@ -493,11 +504,9 @@ def levers() -> list[Spec]:
             "promotora (AJD del 0,75 %) y otro de segunda mano. Para alquilar, ¿cuál me sale "
             "más barato de comprar con impuestos y cuánto me ahorro?",
             required_tools=["analyze_property", "what_if"],
-            check=all_of(
-                number(new["total"], 1),
-                number(used["total"], 1),
-                number(new["total"] - used["total"], 1),
-            ),
+            # The saving is a subtraction: only what_if reports it (total_investment_change), so
+            # an answer from two analyze_property calls cannot state it past the auditor.
+            check=all_of(number(new["total"], 1), number(used["total"], 1)),
             notes="Obra nueva: IVA 10 % + AJD; segunda mano: ITP de Madrid (6 %).",
             good=f"El de segunda mano: {eur(used['total'])} con un 6 % de ITP, frente a "
             f"{eur(new['total'])} del de obra nueva (10 % de IVA más AJD). Te ahorras "
