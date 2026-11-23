@@ -143,10 +143,47 @@ def test_overrides_branch_on_a_fact_and_reject_unknown_fields():
     assert "error" in out["scenarios"][0]
 
 
+def test_contract_date_lever_compares_both_irpf_scales():
+    case = CaseFile(session_id="s", profile=PROFILE, properties={"P1": barcelona()})
+    assert "contract_date_before_rdl_29_2026" in {
+        lever["id"] for lever in levers.find(case, "P1")["applicable"]
+    }
+    out = levers.simulate(case, "P1", ["contract_date_before_rdl_29_2026"])
+    assert "Ley 12/2023" in out["scenarios"][0]["irpf_rule"]
+
+
+def test_cheapest_itp_region_lowers_the_purchase_cost():
+    assert levers.cheapest_itp_region() == "pais_vasco"
+    case = CaseFile(session_id="s", profile=PROFILE, properties={"P1": barcelona()})
+    out = levers.simulate(case, "P1", ["cheapest_itp_region"])
+    assert out["scenarios"][0]["total_investment_change"] < 0
+
+
+def test_large_holder_lever_only_for_investors_near_the_threshold():
+    case = CaseFile(session_id="s", profile=PROFILE, properties={"P1": barcelona()})
+    assert "stay_below_large_holder" not in {
+        lever["id"] for lever in levers.find(case, "P1")["applicable"]
+    }
+    big = PROFILE.model_copy(update={"properties_owned": 12})
+    case = CaseFile(session_id="s", profile=big, properties={"P1": barcelona()})
+    assert "stay_below_large_holder" in {
+        lever["id"] for lever in levers.find(case, "P1")["applicable"]
+    }
+
+
+def test_regional_levers_follow_the_resolved_region():
+    madrid = barcelona(municipality="Madrid", region="Comunidad de Madrid")
+    for prop, expected in ((madrid, True), (barcelona(), False)):
+        case = CaseFile(session_id="s", profile=PROFILE, properties={"P1": prop})
+        ids = {lever["id"] for lever in levers.find(case, "P1")["applicable"]}
+        assert ("madrid_rental_expenses_deduction" in ids) is expected
+
+
 def test_illegal_and_qualitative_levers_are_never_priced():
     case = CaseFile(session_id="s", profile=PROFILE, properties={"P1": barcelona()})
-    out = levers.simulate(case, "P1", ["short_term_rental"])
+    out = levers.simulate(case, "P1", ["short_term_rental", "undeclared_cash_price"])
     assert "qualitative" in out["scenarios"][0]
+    assert "refused" in out["scenarios"][1]
 
 
 def test_playbook_schema_rules():

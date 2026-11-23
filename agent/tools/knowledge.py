@@ -11,6 +11,7 @@ far more reliably than a chunk id (phase 3), and the auditor checks the keys it 
 
 from __future__ import annotations
 
+import threading
 from datetime import date
 from typing import Annotated
 
@@ -22,10 +23,17 @@ from tool_use.registry import tool
 MAX_PASSAGE_CHARS = 900  # a semantic chunk is up to 1500; the head carries the rule
 
 
+_LOADING = threading.Lock()
+
+
 def _pipeline():
+    # The agent runs each tool in a thread with a timeout. A search that times out while the
+    # index is being built keeps building in the background; without the lock every retry
+    # started another build of the same index.
     from rag.generate import build_pipeline
 
-    return build_pipeline()
+    with _LOADING:
+        return build_pipeline()
 
 
 def _excerpt(text: str) -> str:

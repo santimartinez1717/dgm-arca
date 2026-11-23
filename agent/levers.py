@@ -16,6 +16,7 @@ from agent.analysis import Analysis, analyze
 from agent.case_file import CaseFile, InvestorProfile, Property
 from agent.playbook.schema import REFERENCE, Condition, Lever, check_path, load_levers
 from rlm import realestate_rules as rules
+from tool_use.itp_rates import ITP_GENERAL
 
 # What a scenario reports: enough to compare, short enough for a small model's context.
 KEY_METRICS = (
@@ -43,6 +44,8 @@ def resolve_value(
         return value
     if value == "$max_offer_price":
         return max_offer_price(prop, profile, base or analyze(prop, profile))
+    if value == "$cheapest_itp_region":
+        return cheapest_itp_region()
     match = REFERENCE.match(value)
     if match is None:
         raise ValueError(f"cannot resolve {value!r}")
@@ -64,6 +67,11 @@ def max_offer_price(prop: Property, profile: InvestorProfile, base: Analysis) ->
         itp_rate=base.figures.get("itp_rate_pct", 0.0) / 100,
         fixed_costs=prop.notary_registry + prop.agency_fee + prop.renovation,
     )
+
+
+def cheapest_itp_region() -> str:
+    """Autonomous community with the lowest general ITP rate (ties broken by name)."""
+    return min(ITP_GENERAL, key=lambda region: (ITP_GENERAL[region].rate_pct, region))
 
 
 def evaluate(condition: Condition, prop: Property, profile: InvestorProfile) -> bool | None:
@@ -98,7 +106,7 @@ def effective_property(prop: Property, base: Analysis) -> Property:
     update = {}
     if prop.stressed_zone is None and base.stressed_zone is not None:
         update["stressed_zone"] = base.stressed_zone
-    if prop.region is None and base.region is not None:
+    if base.region is not None:  # resolved: "Comunidad de Madrid" -> "madrid", as levers say
         update["region"] = base.region
     return prop.model_copy(update=update)
 

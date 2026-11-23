@@ -58,8 +58,9 @@ def record_property(
         price: Purchase price in euros.
         monthly_rent: Rent per MONTH in euros the user expects or asks.
         area_m2: Built area in square metres.
-        reference_value: Cadastral reference value ("valor de referencia") in euros.
-        cadastral_value: Cadastral value ("valor catastral") from the IBI receipt, in euros.
+        reference_value: Only the "valor de referencia" of the Catastro, in euros (the ITP
+            base). Not the "valor catastral".
+        cadastral_value: The "valor catastral" from the IBI receipt, in euros (for the IRPF).
         land_share_pct: Share of the cadastral value that is land, in percent.
         new_build: True for a new build bought from the developer.
         previous_rent: Monthly rent of the previous contract, if it was rented before.
@@ -95,7 +96,8 @@ def record_investor(
 ) -> dict[str, Any]:
     """Save what the user said about themselves as an investor in the case file.
 
-    Leave out what the user did not say. The number of dwellings they already own decides
+    Leave out what the user did not say: never pass 0, false or a guess for an unknown. The
+    number of dwellings they already own decides
     whether they are a large holder ("gran tenedor"), which changes the legal rent and the IRPF.
 
     Args:
