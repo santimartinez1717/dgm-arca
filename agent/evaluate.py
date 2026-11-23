@@ -257,6 +257,8 @@ def run_task(agent: Any, task: dict, brain: str, max_steps: int, hang_s: float |
             }
             crash = f"{type(exc).__name__}: {exc}"
     used = tools_used(response.get("steps", []))
+    # A code agent calls tools from inside its Python: those calls count as used too.
+    used |= {c["name"] for c in response.get("tool_calls", [])}
     passes = check_answer(task, response.get("final_answer", ""))
     audit = response.get("audit") or None
     return {
@@ -277,6 +279,7 @@ def run_task(agent: Any, task: dict, brain: str, max_steps: int, hang_s: float |
         "audit_rejections": int((audit or {}).get("rejections", 0)),
         "open_questions": response.get("open_questions", []),
         "crash": crash,
+        "code_errors": response.get("code_errors"),
         "seconds": round(time.perf_counter() - started, 2),
     }
 
@@ -302,6 +305,9 @@ def summarise(rows: list[dict]) -> dict[str, Any]:
         "audit_rejection_rate": mean([r["audit_rejections"] > 0 for r in audited]),
         "abstention_rate": mean([r["check"] for r in impossible]),
         "crashes": sum(r["crash"] is not None for r in rows),
+        "mean_code_errors": mean(
+            [r["code_errors"] for r in rows if r.get("code_errors") is not None]
+        ),
     }
 
 
@@ -384,13 +390,13 @@ def markdown(results: dict[str, Any]) -> str:
     """Tables ready for the report: brains × configurations, categories, McNemar."""
     runs = results["runs"]
     lines = [
-        "# Fase 4 · Evaluación del agente",
+        f"# Fase 4 · Evaluación del agente ({results.get('agent', 'json')})",
         "",
         "## Cerebros × configuraciones",
         "",
         "| Config. | Cerebro | Éxito | IC 95 % (Wilson) | Pasos | Tokens | Tools requeridas "
-        "| Rechazo auditor | Abstención (imposibles) | Caídas |",
-        "|---|---|---|---|---|---|---|---|---|---|",
+        "| Rechazo auditor | Abstención (imposibles) | Caídas | Errores de código |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for run in runs.values():
         low, high = run["wilson_95"]
@@ -399,7 +405,8 @@ def markdown(results: dict[str, Any]) -> str:
             f"({_pct(run['success_rate'])}) | {100 * low:.0f}–{100 * high:.0f} % "
             f"| {_num(run['mean_steps'])} | {_num(run['mean_tokens'], 0)} "
             f"| {_pct(run['required_tools_rate'])} | {_pct(run['audit_rejection_rate'])} "
-            f"| {_pct(run['abstention_rate'])} | {run['crashes']} |"
+            f"| {_pct(run['abstention_rate'])} | {run['crashes']} "
+            f"| {_num(run.get('mean_code_errors'))} |"
         )
     categories = sorted({c for run in runs.values() for c in run["by_category"]})
     lines += [
@@ -504,6 +511,12 @@ def main() -> None:
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("--bench", default="agent/bench/tasks.jsonl")
+    parser.add_argument(
+        "--agent",
+        choices=["json", "code"],
+        default="json",
+        help="json: our ReAct agent; code: smolagents' CodeAgent with the same tools (issue 16)",
+    )
     parser.add_argument("--brains", nargs="+", default=["rlm"])
     parser.add_argument("--configs", nargs="+", default=["full"], choices=sorted(CONFIGS))
     parser.add_argument("--max-steps", type=int, default=10)
@@ -513,10 +526,14 @@ def main() -> None:
     parser.add_argument("--traces-dir", default="reports/fase4/trazas")
     args = parser.parse_args()
 
-    from agent.react_agent import ReActAgent
+    if args.agent == "code":
+        from agent.code_agent import CodeAgentRunner as Agent
+    else:
+        from agent.react_agent import ReActAgent as Agent
 
     tasks = load_tasks(Path(args.bench), args.ids, args.limit)
-    results = evaluate(tasks, ReActAgent.from_env, args.brains, args.configs, args.max_steps)
+    results = evaluate(tasks, Agent.from_env, args.brains, args.configs, args.max_steps)
+    results["agent"] = args.agent
     for path in write_reports(results, Path(args.out), Path(args.traces_dir)):
         print(f"wrote {path}", flush=True)
     for run in results["runs"].values():
