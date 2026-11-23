@@ -52,7 +52,21 @@ THINK = re.compile(r"<think>.*?</think>\s*", re.DOTALL)
 
 
 def agent_registry() -> ToolRegistry:
-    """The tools of the JSON agent, without its ``final_answer`` (smolagents has its own)."""
+    """The tools of the JSON agent, without its ``final_answer`` (smolagents has its own).
+
+    It is the loop's own ``build_registry`` (issue 20) when the loop is in this checkout, so
+    both agents always see the same tools, including screen_properties and
+    write_investment_report when they exist. Before that, the same rule written here.
+    """
+    try:
+        from agent.react_agent import build_registry
+    except ImportError:
+        build_registry = None
+    if build_registry is not None:
+        registry = build_registry()
+        registry.tools.pop("final_answer", None)
+        return registry
+
     from agent.tools.case_tools import CASE_TOOLS
     from agent.tools.knowledge import search_knowledge_base
     from tool_use.tools import default_registry
