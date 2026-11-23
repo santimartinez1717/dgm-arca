@@ -67,7 +67,14 @@ class ReActAgent:
         """Tu turno: one generation with the chosen brain."""
         raise NotImplementedError
 
-    def run(self, task: str, max_steps: int = 10, brain: str = "rlm") -> AgentResponse:
+    def run(
+        self,
+        task: str,
+        max_steps: int = 10,
+        brain: str = "rlm",
+        session_id: str | None = None,
+        confirm: bool = False,
+    ) -> AgentResponse:
         """Tu turno: the ReAct loop.
 
         Sketch::

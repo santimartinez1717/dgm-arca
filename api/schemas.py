@@ -121,6 +121,15 @@ class AgentRequest(BaseModel):
         default="rlm",
         description="Model driving the loop: base model, your phase-1 RLM, or a thinking model",
     )
+    # Optional extensions: a client that sends only the fields above keeps working.
+    session_id: str | None = Field(
+        default=None,
+        description="Optional: continue the case file of an earlier run (multi-turn memory).",
+    )
+    confirm: bool = Field(
+        default=False,
+        description="Optional: allow tools with an effect (saving to the portfolio, the report).",
+    )
 
 
 class AgentAction(BaseModel):
@@ -141,3 +150,18 @@ class AgentResponse(BaseModel):
     succeeded: bool = True
     model: str = ""
     tokens_used: int = 0
+    # Optional extensions, read by the trace viewer and the evaluation.
+    session_id: str | None = Field(default=None, description="Case file of this run.")
+    case_file: str | None = Field(default=None, description="The case file, rendered.")
+    levers: list[dict[str, Any]] = Field(
+        default_factory=list, description="Levers returned by find_levers."
+    )
+    scenarios: list[dict[str, Any]] = Field(
+        default_factory=list, description="Scenarios of every what_if call."
+    )
+    open_questions: list[str] = Field(
+        default_factory=list, description="Data still needed to settle the answer."
+    )
+    audit: dict[str, Any] | None = Field(
+        default=None, description="The auditor's verdict and how many answers it rejected."
+    )
