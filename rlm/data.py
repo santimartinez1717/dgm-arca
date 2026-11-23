@@ -20,8 +20,10 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from datasets import Dataset, load_dataset
+if TYPE_CHECKING:  # imported lazily: the MLX environment has no datasets
+    from datasets import Dataset
 
 R1_ZERO_SYSTEM_PROMPT = (
     "A conversation between User and Assistant. The user asks a question, and the "
@@ -51,6 +53,8 @@ def load_gsm8k(split: str = "train", n_examples: int | None = None, seed: int = 
     ``prompt`` is a list of chat messages; ``answer`` is the final number as a string.
     Set ``n_examples`` to work with a random subset (the smoke test uses a few hundred).
     """
+    from datasets import load_dataset
+
     dataset = load_dataset("openai/gsm8k", "main", split=split)
     if n_examples is not None:
         dataset = dataset.shuffle(seed=seed).select(range(min(n_examples, len(dataset))))
@@ -75,6 +79,8 @@ def load_domain_dataset(path: str | Path, system_prompt: str = R1_ZERO_SYSTEM_PR
     # Nested dicts (the generator's ``params`` and ``branches``) have a different shape per
     # problem family and break Arrow's schema inference. They are for analysis, not for the
     # rewards, so they stay in the JSONL and out of the training dataset.
+    from datasets import Dataset
+
     dataset = Dataset.from_list(
         [{k: v for k, v in row.items() if not isinstance(v, dict)} for row in rows]
     )
