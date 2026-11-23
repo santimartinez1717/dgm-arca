@@ -1645,3 +1645,79 @@ api` y se exponga con ngrok. Queríamos saber si la DGX puede hacer las dos cosa
 - `save_to_portfolio` pide `area_m2` obligatorio, y si el usuario no lo da, el modelo lo
   rellena con otra cifra. Es la misma lección que con los ejemplos numéricos: no dejar que
   una cifra ocupe en silencio el lugar de otra.
+
+---
+
+### 2026-11-23 · Fase 2 · Tipos de ITP verificados con fuentes oficiales
+
+**Qué queríamos saber.** La tabla de `tool_use/itp_rates.py` (17 comunidades) venía de una
+fuente secundaria (Gibobs, consultada el 17/11) y la herramienta avisaba "tipo de ITP sin
+verificar". Queríamos saber si los tipos eran correctos.
+
+**Qué hicimos.** Cotejamos cada fila con la hacienda autonómica o foral, su boletín oficial o
+el BOE, y dejamos el enlace junto a la fila. En el País Vasco cotejamos las tres haciendas
+forales.
+
+**Qué pasó.** Las 17 filas quedan con `verified=True`. Cuatro tipos generales estaban mal en
+la fuente secundaria:
+
+| Comunidad | Gibobs | Oficial |
+|---|---|---|
+| Cantabria | 10 % | 9 % (desde el 1/1/2024) |
+| Comunitat Valenciana | 10 % | 9 % (10 % para devengos anteriores al 1/6/2026) |
+| Galicia | 10 % | 8 % |
+| Murcia | 8 % | 7,75 % |
+
+Siete notas cambian:
+- **Aragón, Baleares, Cataluña y Extremadura:** ahora llevan los tramos con sus importes.
+- **Asturias:** no es una escala por tramos. El tipo se elige por el valor total y se aplica
+  a toda la base.
+- **Castilla y León:** la nota faltaba. Lo que pasa de 250.000 € tributa al 10 %.
+- **País Vasco:** la vivienda pierde el 4 % si el comprador tiene más de cinco.
+
+**Qué concluimos.**
+- Una de cada cuatro filas tenía mal el tipo general. Con datos que cambian cada año por ley
+  de presupuestos, la fuente secundaria no basta.
+- El banco de la fase 2 comprueba argumentos, no cifras, así que sus resultados no cambian.
+  La fase 1 no usa la tabla: cada problema da su tipo.
+- Hay que revisar la tabla con cada ley de presupuestos autonómica.
+
+---
+
+### 2026-11-23 · API · La primera petición de cada longitud iba a 2,8 tokens/s: atención de cuDNN
+
+**Qué queríamos saber.** Servida en la DGX, la primera `/reasoning` tardaba 145 s (2,8
+tokens/s). Queríamos saber si era Docker, el modelo compartido (3131fb3) o la partición MIG,
+y si una sesión con más GPU lo arreglaría.
+
+**Qué hicimos.** Medimos la misma pregunta de `/reasoning` (piso de 100.000 €, unos 400
+tokens) y una de `/tools` con `uv run arca-api`, sin Docker, en la MIG 1g.18gb, lanzando
+varias peticiones seguidas tras cada arranque. Después probamos
+`torch.backends.cuda.enable_cudnn_sdp(False)` en `api/shared_model.py`, como ya se hizo en el
+GRPO.
+
+**Qué pasó.**
+
+| Situación | 1.ª petición | Siguientes |
+|---|---|---|
+| Antes del modelo compartido (9e0ad62), `/reasoning` | 137 s (2,9 tok/s) | 6,3 s (64 tok/s) |
+| Modelo compartido (3131fb3), `/reasoning` | 142 s (2,8 tok/s) | 11-12 s (34-37 tok/s) |
+| Ídem, `/tools` | 70 s | 4 s |
+| `/reasoning` con 16 tokens y después la pregunta completa | 12,7 s y luego **145 s** | — |
+| **Sin atención de cuDNN**, `/reasoning` | **18,9 s** (37 tok/s, incluye la carga) | 12,6 s (38 tok/s) |
+| **Sin atención de cuDNN**, `/tools` | **4,0 s** | 3,9 s |
+
+- No era ni Docker ni la GPU. Era el arranque en frío de la atención de cuDNN, que construye
+  un plan por cada longitud de secuencia nueva.
+- Por eso calentar con una pregunta corta no servía, y calentar `/tools` no calentaba
+  `/reasoning`.
+- Sin cuDNN, la misma pregunta genera 479 tokens en vez de 401: otro kernel de atención,
+  otra aritmética, otro texto greedy. La respuesta sigue siendo correcta (111.000,00).
+
+**Qué concluimos.**
+- `api/shared_model.py` desactiva la atención de cuDNN en GPU (fdef57f). No hace falta pedir
+  una sesión más grande para la corrección.
+- La diferencia 64 frente a 37 tok/s entre antes y después del modelo compartido sale de una
+  sola medida: no está confirmada.
+- Pendiente: comprobar que el pass@1 de la fase 1 servido sin cuDNN no baja. El 47,3 % se
+  midió con el backend por defecto.
