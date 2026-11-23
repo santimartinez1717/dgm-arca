@@ -32,6 +32,7 @@ import contextvars
 import json
 import logging
 import os
+import sys
 import threading
 import uuid
 from collections import Counter
@@ -89,6 +90,14 @@ LOOP_STOP = (
 TOOL_ERROR_HINT = (
     " Decide what to do: retry with other arguments, use another tool, or tell the user in "
     "final_answer that you could not get this."
+)
+# Appended to the last observation of every turn. Phase 2 measured that a hint here works
+# where the system prompt does not: after reading English tool results the model answered
+# Spanish questions in English, and it rarely wrote a thought before a native tool call.
+TURN_HINT = (
+    "\n\n[{left} of {total} steps left. Start your next message with 'Thought:' and one "
+    "sentence on what you know and what you need. Do not repeat a call you already made. "
+    "When you have what the user asked for, call final_answer, in Spanish.]"
 )
 NO_TOOL_CALL = "[sin final_answer: el texto se toma como respuesta] "
 EMPTY_OUTPUT = "Your last message had no text and no tool call. Call a tool, or call final_answer."
@@ -246,6 +255,17 @@ class _Run:
 
     def step(self, thought: str, action: AgentAction | None, observation: str | None) -> None:
         self.steps.append(AgentStep(thought=thought, action=action, observation=observation))
+        if os.environ.get("ARCA_AGENT_TRACE", "1") != "0":
+            # A running process cannot be inspected on the DGX: the log is the only window.
+            name = action.name if action else "(text)"
+            args = json.dumps(action.arguments, ensure_ascii=False)[:120] if action else ""
+            obs = " ".join((observation or "").split())[:160]
+            print(
+                f"  step {len(self.steps)}/{self.max_steps} · {self.tokens} tok · {name} {args}"
+                f" -> {obs}",
+                file=sys.stderr,
+                flush=True,
+            )
 
     @property
     def steps_left(self) -> int:
@@ -359,7 +379,7 @@ class ReActAgent:
             thought = _thought(parsed.thinking, parsed.text)
 
             if not parsed.tool_calls:
-                text = parsed.text.strip()
+                text = _strip_label(parsed.text)
                 if not text:
                     state.step(thought, None, EMPTY_OUTPUT)
                     memory.add("assistant", "")
@@ -414,6 +434,10 @@ class ReActAgent:
                 memory.add("user", state.steps[-1].observation or EMPTY_OUTPUT)
             if state.steps_left <= 1 or state.tokens >= 0.8 * self.token_budget:
                 memory.messages[-1]["content"] += f"\n\n{BUDGET_NUDGE}"
+            else:
+                memory.messages[-1]["content"] += TURN_HINT.format(
+                    left=state.steps_left, total=state.max_steps
+                )
             memory.compress(lambda old: self._summarize(state, old))
         return self._fallback(state, f"se agotaron los {state.max_steps} pasos")
 
@@ -569,6 +593,14 @@ class ReActAgent:
         state.tokens += prompt_tokens + completion_tokens
         parsed = parse_tool_calls(text)
         return parsed.text.strip() or text.strip()
+
+
+def _strip_label(text: str) -> str:
+    """The answer without the "Thought:" label the hint asks the model to start with."""
+    text = text.strip()
+    if text.lower().startswith("thought:"):
+        text = text[len("thought:") :].strip()
+    return text
 
 
 def _thought(thinking: str, text: str) -> str:
