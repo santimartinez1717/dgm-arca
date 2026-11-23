@@ -26,12 +26,103 @@ import numpy as np
 VARIANTS = ("hoy", "todas", "fecha")
 
 
+def version_relevance(gold_item: dict, chunks, on: str, static_relevant: set[str]) -> set[str]:
+    """Relevant ids for a normal gold question when the BOE laws come as article versions.
+
+    Non-BOE evidence keeps its chunks of the normal index (they are shared). BOE evidence
+    (``boe/<law>.md``, section ``Artículo N``) maps to the chunks of that article's version in
+    force on ``on`` that hold the quote, or a 20+ character half of it when it is split.
+    """
+    from rag.gold import normalise
+
+    relevant = {cid for cid in static_relevant}
+    for e in gold_item["evidence"]:
+        if not e["source"].startswith("boe/"):
+            continue
+        law = e["source"].removeprefix("boe/").removesuffix(".md")
+        quote = normalise(e["quote"])
+        halves = [h for h in (quote[: len(quote) // 2], quote[len(quote) // 2 :]) if len(h) >= 20]
+        section = (e.get("section") or "") + "."
+        article = [
+            c for c in chunks
+            if c.doc_id.startswith(f"{law}-") and c.in_force(on)
+            and c.text.split("\n", 1)[0].split(" — ", 1)[-1].startswith(section)
+        ]  # fmt: skip
+        version_text = normalise(" ".join(c.text for c in article))
+        if quote in version_text:
+            relevant |= {
+                c.id for c in article if any(h in normalise(c.text) for h in [quote, *halves])
+            }
+    return relevant
+
+
+def compare_on_normal_gold(out: Path) -> None:
+    """The 51 normal questions: normal index, routed (dated ones to versions), all to versions."""
+    from rag.download_corpus import AS_OF
+    from rag.evaluate import load_gold, reciprocal_rank
+    from rag.generate import RagConfig, RagPipeline
+    from rag.gold import resolve
+    from rag.ingest import load_corpus
+    from rag.temporal import question_date
+
+    pipeline = RagPipeline(RagConfig(temporal=True))
+    pipeline.load(generator=False)
+    gold = resolve(load_gold("rag/gold/gold.jsonl"), load_corpus(), pipeline.chunks)
+    temporal = pipeline.temporal
+    rows = []
+    for g in gold:
+        q = g["question"]
+        normal_rel = set(g["relevant_chunk_ids"])
+        static_rel = {cid for cid in normal_rel if cid in {c.id for c in temporal.static}}
+        on = question_date(q) or AS_OF
+        forced_rel = version_relevance(g, temporal.versions, on, static_rel)
+        normal = [h.chunk.id for h in pipeline.retrievers["hybrid"].search(q, 10)]
+        routed_hits, routed_on = pipeline.retrieve_dated(q, 10, "hybrid")
+        routed = [h.chunk.id for h in routed_hits]
+        forced = [h.chunk.id for h in temporal.search(q, 10, "hybrid", on=on)]
+        rows.append(
+            {
+                "id": g["id"],
+                "routed_to_versions": routed_on is not None,
+                "versions_have_answer": bool(forced_rel),
+                "normal": reciprocal_rank(normal, normal_rel),
+                "routed": reciprocal_rank(routed, forced_rel if routed_on else normal_rel),
+                "forced": reciprocal_rank(forced, forced_rel),
+                "normal_hit5": bool(set(normal[:5]) & normal_rel),
+                "routed_hit5": bool(set(routed[:5]) & (forced_rel if routed_on else normal_rel)),
+                "forced_hit5": bool(set(forced[:5]) & forced_rel),
+            }
+        )
+    summary = {
+        v: {
+            "hit@5": float(np.mean([r[f"{v}_hit5"] for r in rows])),
+            "mrr": float(np.mean([r[v] for r in rows])),
+        }
+        for v in ("normal", "routed", "forced")
+    }
+    summary["routed_questions"] = [r["id"] for r in rows if r["routed_to_versions"]]
+    summary["unresolvable_in_versions"] = [r["id"] for r in rows if not r["versions_have_answer"]]
+    out.write_text(
+        json.dumps({"summary": summary, "per_question": rows}, ensure_ascii=False, indent=1)
+    )
+    print(json.dumps(summary, ensure_ascii=False, indent=1))
+    print(f"report: {out}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--gold", default="rag/gold/temporal.jsonl")
     parser.add_argument("--out", default="reports/fase3/phase3_temporal.json")
     parser.add_argument("--weight-bm25", type=float, default=0.2)
+    parser.add_argument(
+        "--normal-gold",
+        action="store_true",
+        help="compare normal / routed / all-versions on the 51 normal gold questions",
+    )
     args = parser.parse_args()
+    if args.normal_gold:
+        compare_on_normal_gold(Path("reports/fase3/phase3_temporal_routing.json"))
+        return
 
     from rag.download_corpus import AS_OF
     from rag.embed import Embedder

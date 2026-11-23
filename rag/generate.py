@@ -118,7 +118,9 @@ class RagConfig:
     embedding_model: str = DEFAULT_EMBEDDING_MODEL
     generator_model: str = "Qwen/Qwen3-1.7B"
     generator_adapter: str | None = None  # e.g. rlm/weights/grpo2_lora (phase-1 model)
-    temporal: bool = False  # option 1: BOE articles in the version in force on the question's date
+    # option 1: a question that mentions a date is answered with the BOE articles in force on
+    # that date; a question without one goes through the normal index (ARCA_RAG_TEMPORAL=0: never)
+    temporal: bool = True
     thinking: bool = False  # Qwen3 thinking mode before the answer
     max_new_tokens: int = 512
     index_dir: str = "rag/index"
@@ -205,11 +207,25 @@ class RagPipeline:
         return f"{name}+{Path(c.generator_adapter).name}" if c.generator_adapter else name
 
     def retrieve(self, question: str, top_k: int, retriever: str) -> list[Hit]:
+        return self.retrieve_dated(question, top_k, retriever)[0]
+
+    def retrieve_dated(
+        self, question: str, top_k: int, retriever: str
+    ) -> tuple[list[Hit], str | None]:
+        """The hits and the date whose law they reflect (None: the normal index, today's law).
+
+        Routed per question: only a question that mentions a date goes to the article versions
+        in force on that date. The others keep the normal index, the one chosen with the gold
+        set (rag/evaluate.py); the versions are chunked differently.
+        """
+        from rag.temporal import question_date
+
         if retriever not in self.retrievers:
             raise ValueError(f"retriever must be one of {sorted(self.retrievers)}")
-        if self.temporal is not None:
-            return self.temporal.search(question, top_k, mode=retriever)
-        return self.retrievers[retriever].search(question, top_k=top_k)
+        on = question_date(question) if self.temporal is not None else None
+        if on:
+            return self.temporal.search(question, top_k, mode=retriever, on=on), on
+        return self.retrievers[retriever].search(question, top_k=top_k), None
 
     def answer(self, question: str, top_k: int = 5, retriever: str = "hybrid") -> RagResponse:
         return self.answer_many([question], top_k, retriever)[0]
@@ -220,8 +236,9 @@ class RagPipeline:
         """Retrieve -> ``build_prompt`` -> generate (one batch) -> ``to_response``."""
         hits, dates = [], []
         for q in questions:
-            hits.append(self.retrieve(q, top_k, retriever))
-            dates.append(self.temporal.last_date if self.temporal is not None else None)
+            found, on = self.retrieve_dated(q, top_k, retriever)
+            hits.append(found)
+            dates.append(on)
         prompts = [build_prompt(q, h, on) for q, h, on in zip(questions, hits, dates, strict=True)]
         with self._lock:  # one generation at a time on a small GPU
             generator = self.load_generator()

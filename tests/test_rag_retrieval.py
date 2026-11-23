@@ -157,3 +157,26 @@ def test_pipeline_answer_with_a_fake_generator():
     assert response.answer == "Una mensualidad [d-0000]."
     assert response.citations == ["d-0000"] and response.law_date is None
     assert response.chunks[0].id == "d-0000"
+
+
+def test_pipeline_routes_only_dated_questions_to_the_law_versions():
+    from rag.generate import RagConfig, RagPipeline
+
+    class FakeTemporal:
+        def __init__(self):
+            self.calls = []
+
+        def search(self, question, top_k, mode, on):
+            self.calls.append(on)
+            return [Hit(CHUNKS[2], 1.0)]
+
+    pipeline = RagPipeline(RagConfig())
+    pipeline.retrievers = {"bm25": BM25Retriever(CHUNKS)}
+    pipeline.temporal = FakeTemporal()
+    hits, on = pipeline.retrieve_dated("¿fianza de un contrato de 2017?", 2, "bm25")
+    assert on == "2017-07-01" and hits[0].chunk.id == "d-0002"
+    hits, on = pipeline.retrieve_dated("¿fianza?", 2, "bm25")
+    assert on is None and hits[0].chunk.id == "d-0000"  # normal index
+    assert pipeline.temporal.calls == ["2017-07-01"]
+    pipeline.temporal = None  # ARCA_RAG_TEMPORAL=0
+    assert pipeline.retrieve_dated("¿fianza en 2017?", 2, "bm25")[1] is None
