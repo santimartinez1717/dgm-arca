@@ -21,8 +21,9 @@ export ARCA_RLM_ADAPTER="${ARCA_RLM_ADAPTER:-rlm/weights/grpo2_lora}"
 PORT="${ARCA_API_PORT:-8000}"
 
 # Lo que no está en git y sin lo que /reasoning o /rag fallan en clase.
-if [ ! -f "$ARCA_RLM_ADAPTER/adapter_config.json" ]; then
-    echo "FALTA el adaptador GRPO 2 en $ARCA_RLM_ADAPTER (te lo pasa Santiago, docs/servir_api.md)."
+if [ ! -f "$ARCA_RLM_ADAPTER/adapter_config.json" ] || [ ! -f "$ARCA_RLM_ADAPTER/adapter_model.safetensors" ]; then
+    echo "FALTA el adaptador GRPO 2 en $ARCA_RLM_ADAPTER: hacen falta adapter_config.json y"
+    echo "adapter_model.safetensors (te los pasa Santiago, docs/servir_api.md)."
     echo "Sin él, /reasoning no arranca y /agent con brain=rlm responde con el modelo base."
 fi
 if [ -z "$(ls rag/corpus/boe 2>/dev/null)" ]; then
