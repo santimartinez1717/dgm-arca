@@ -76,26 +76,114 @@ uv run python -m rlm.eval_mlx --model rlm/weights/grpo2_mlx_8bit --n-examples 30
     --out reports/eval_grpo2_mlx8_2048.json
 ```
 
-## 3. Desde otro portátil (Linux o Windows con NVIDIA)
+## 3. Desde un portátil con Windows y NVIDIA (Docker)
 
-Lo que necesita: una GPU NVIDIA con 6 GB o más y drivers recientes, 16 GB de RAM, unos 10 GB de
-disco, `git`, [`uv`](https://docs.astral.sh/uv/) y ngrok con la cuenta del equipo (o su propia
-cuenta y su propia URL, que habría que comunicar a los profesores).
+Pensado para (sin probar aún): Windows 11, RTX 3060 Laptop de 6 GB, 16 GB de RAM. En Windows hay que usar
+Docker: `uv` directamente instalaría torch sin CUDA (el proyecto solo lo pide con CUDA en
+Linux) y la API iría en CPU, inservible. Docker corre un Linux con acceso a la GPU.
 
-```bash
-git clone https://github.com/santimartinez1717/dgm-arca.git && cd dgm-arca
-uv sync --extra train
-cp .env.example .env    # y descomentar ARCA_RLM_ADAPTER=rlm/weights/grpo2_lora
+Hace falta: unos 30 GB libres en disco, conexión buena (la imagen y el modelo son ~15 GB) y
+1-2 horas la primera vez. **Hacerlo entero el día antes**, no el de la demo.
+
+### Paso 1. Driver de NVIDIA
+
+Instalar el último driver Game Ready o Studio para la RTX 3060 Laptop desde
+<https://www.nvidia.com/Download/index.aspx> (o la app NVIDIA). Reiniciar. Con él, la GPU ya
+funciona dentro de WSL2 y Docker: **no** hay que instalar CUDA aparte.
+
+### Paso 2. WSL2
+
+PowerShell **como administrador**:
+
+```powershell
+wsl --install
 ```
 
-El adaptador (67 MB) está en un repositorio privado de Hugging Face: o se le pasa la carpeta
-`rlm/weights/grpo2_lora` directamente, o se descarga con un token que tenga acceso.
+Reiniciar cuando lo pida. Si ya estaba instalado, `wsl --update`.
 
-```bash
-uv run python -c "import torch; print(torch.cuda.is_available(), torch.cuda.get_device_name(0))"
-uv run --env-file .env arca-api
+### Paso 3. Docker Desktop
+
+Descargar e instalar <https://www.docker.com/products/docker-desktop/> dejando marcada la
+opción *Use WSL 2 instead of Hyper-V*. Abrir Docker Desktop y esperar a que diga *Engine
+running*. Comprobar que Docker ve la GPU (PowerShell normal):
+
+```powershell
+docker run --rm --gpus all nvidia/cuda:12.8.1-base-ubuntu22.04 nvidia-smi
 ```
 
-La primera línea tiene que decir `True` y el nombre de la tarjeta. La terminal de la API escribe
-`phase 1 model on cuda` al cargar. Después, ngrok como en el Mac. Sin GPU NVIDIA (solo CPU)
-va igual de lento que el Mac sin MLX.
+Tiene que salir una tabla con la *GeForce RTX 3060 Laptop GPU*. Si sale un error, revisar el
+paso 1 y reiniciar.
+
+### Paso 4. El código y el modelo
+
+```powershell
+cd $HOME
+git clone https://github.com/santimartinez1717/dgm-arca.git
+cd dgm-arca
+```
+
+(Si el repositorio es privado, Santiago tiene que añadirlo como colaborador en GitHub primero.)
+
+Crear la carpeta `rlm\weights\grpo2_lora` y copiar dentro los ficheros del adaptador que le
+pasa Santiago: `adapter_config.json`, `adapter_model.safetensors`, `chat_template.jinja`,
+`tokenizer.json` y `tokenizer_config.json`. Comprobar:
+
+```powershell
+dir rlm\weights\grpo2_lora
+```
+
+### Paso 5. El `.env`
+
+```powershell
+copy .env.example .env
+```
+
+No hay que tocar nada: ya trae `ARCA_RLM_ADAPTER=rlm/weights/grpo2_lora` y
+`ARCA_RLM_VERIFIER=euro`. **No** hace falta `HF_TOKEN`: el modelo base es público.
+
+### Paso 6. Construir y arrancar
+
+```powershell
+docker compose build
+docker compose run --rm check-gpu
+docker compose up api
+```
+
+`build` tarda la primera vez (descarga ~10 GB). `check-gpu` tiene que decir que ve CUDA y
+`bf16 supported: True`. `up api` deja la API en marcha en esa ventana; se para con `Ctrl+C`.
+
+### Paso 7. Probarla y calentarla
+
+Abrir en el navegador <http://localhost:8000/docs>, desplegar **POST /reasoning**, *Try it
+out*, y pegar:
+
+```json
+{"question": "Estoy analizando un piso de segunda mano que se vende por 338.500 €. El barrio tiene metro a cinco minutos. No necesita reforma. El tipo de ITP de la comunidad es del 3,5 %. No hay comisión de agencia. El valor de referencia del Catastro es 369.500 €. Notaría, registro y gestoría suman 4.120 €. ¿Cuál es el desembolso total de la operación? Da el resultado en euros, con dos decimales.", "expected_answer": "355552.50"}
+```
+
+*Execute*. La primera vez descarga el modelo base (3,4 GB) y tarda unos minutos; en la ventana
+de Docker sale `phase 1 model on cuda` y después `generated N tokens in X s`. Tiene que
+devolver `"answer": "355552.50"` y `"is_correct": true`. Repetir: la segunda vez debe tardar
+menos de un minuto. Probar también <http://localhost:8000/health>.
+
+### Paso 8. ngrok
+
+En otra ventana de PowerShell:
+
+```powershell
+winget install ngrok.ngrok
+ngrok config add-authtoken <TOKEN>
+ngrok http 8000 --url=https://sculptor-fled-magical.ngrok-free.dev
+```
+
+Con el token de la cuenta del equipo se usa la URL de siempre (y no puede haber otro ngrok
+abierto con ella). Con su propia cuenta, quitar `--url=...`: ngrok le dará otra URL, que hay
+que mandar a los profesores. Comprobar desde el móvil `<URL>/health`.
+
+### Durante la corrección o la demo
+
+- Portátil enchufado y sin suspensión: *Configuración → Sistema → Energía → Suspender: Nunca*.
+- Las dos ventanas abiertas (Docker y ngrok). Si el portátil se reinicia: abrir Docker
+  Desktop, `docker compose up api`, calentar (paso 7) y `ngrok http ...`.
+- La fase 1 ocupa unos 4,5 GB de los 6 de la tarjeta. La fase 2 (`POST /tools`) carga **otro**
+  modelo de 3,4 GB en el mismo proceso: las dos a la vez no caben en 6 GB.

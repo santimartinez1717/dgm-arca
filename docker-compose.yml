@@ -38,6 +38,11 @@ services:
   api:
     <<: *arca
     command: arca-api
+    # ARCA_* (adaptador, verificador, equipo...) desde el .env; sin él la API arranca con
+    # todas las fases sin configurar.
+    env_file:
+      - path: .env
+        required: false
     ports:
       - "${ARCA_API_PORT:-8000}:8000"
 
