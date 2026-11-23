@@ -116,6 +116,9 @@ class RagConfig:
     max_chunk_chars: int = 1500
     weight_bm25: float = 0.2  # middle of the MRR plateau (λ 0-0.3) for semantic p90
     embedding_model: str = DEFAULT_EMBEDDING_MODEL
+    # "cpu" on a small GPU: with the index already built, only the question is embedded (<1 s);
+    # None lets Sentence Transformers pick (CUDA if present)
+    embedding_device: str | None = None
     generator_model: str = "Qwen/Qwen3-1.7B"
     generator_adapter: str | None = None  # e.g. rlm/weights/grpo2_lora (phase-1 model)
     # option 1: a question that mentions a date is answered with the BOE articles in force on
@@ -163,7 +166,7 @@ class RagPipeline:
         documents = load_corpus()
         if not documents:
             raise RuntimeError("rag/corpus is empty: run `uv run python -m rag.download_corpus`")
-        self.embedder = Embedder(c.embedding_model)
+        self.embedder = Embedder(c.embedding_model, device=c.embedding_device)
         if c.chunking == "semantic":
             sentences = SentenceCache(documents, self.embedder, c.max_chunk_chars, c.index_dir)
             chunks = semantic_chunks(documents, sentences, c.semantic_threshold, c.max_chunk_chars)
