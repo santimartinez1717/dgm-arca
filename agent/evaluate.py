@@ -292,6 +292,10 @@ def run_task(agent: Any, task: dict, brain: str, max_steps: int, hang_s: float |
         "case_file": response.get("case_file"),
         "crash": crash,
         "code_errors": response.get("code_errors"),
+        "model": response.get("model", ""),
+        # The loop answers with base when a brain cannot load and says so in ``model``
+        # ("[rlm no disponible: responde base]"): such a row does not measure that brain.
+        "brain_substituted": "no disponible" in response.get("model", ""),
         "seconds": round(time.perf_counter() - started, 2),
     }
 
@@ -317,6 +321,7 @@ def summarise(rows: list[dict]) -> dict[str, Any]:
         "audit_rejection_rate": mean([r["audit_rejections"] > 0 for r in audited]),
         "abstention_rate": mean([r["check"] for r in impossible]),
         "crashes": sum(r["crash"] is not None for r in rows),
+        "brain_substituted": sum(bool(r.get("brain_substituted")) for r in rows),
         "mean_code_errors": mean(
             [r["code_errors"] for r in rows if r.get("code_errors") is not None]
         ),
@@ -363,6 +368,8 @@ def evaluate(
                 rows.append(row)
                 done += 1
                 mark = "ok " if row["correct"] else ("ERR" if row["crash"] else "no ")
+                if row.get("brain_substituted"):
+                    mark += " [¡cerebro sustituido por base!]"
                 log(
                     f"[{done}/{total}] {tag}{config}/{brain} {row['id']}: {mark} "
                     f"steps={row['n_steps']} tokens={row['tokens_used']} {row['seconds']}s"
@@ -451,6 +458,18 @@ def markdown(results: dict[str, Any]) -> str:
             f"| {_pct(run['abstention_rate'])} | {run['crashes']} "
             f"| {_num(run.get('mean_code_errors'))} |"
         )
+    substituted = [
+        f"{run['config']}/{run['brain']} ({run['brain_substituted']}/{run['n']})"
+        for run in runs.values()
+        if run.get("brain_substituted")
+    ]
+    if substituted:
+        lines[2:2] = [
+            "> **Aviso:** en estas ejecuciones el cerebro pedido no cargó y respondió `base`: "
+            + ", ".join(substituted)
+            + ". Sus cifras no miden ese cerebro.",
+            "",
+        ]
     categories = sorted({c for run in runs.values() for c in run["by_category"]})
     lines += [
         "",

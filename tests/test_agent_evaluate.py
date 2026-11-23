@@ -270,3 +270,23 @@ def test_no_playbook_uses_the_loop_switch():
     assert not {"find_levers", "what_if"} & {
         t["function"]["name"] for t in agent.tool_definitions()
     }
+
+
+def test_a_substituted_brain_is_flagged():
+    """The loop answers with base if rlm cannot load: the table must not call it rlm."""
+
+    class Fallback(ScriptedAgent):
+        def run(self, task, max_steps=10, brain="rlm"):
+            out = super().run(task, max_steps, brain)
+            out["model"] = "Qwen/Qwen3-1.7B [rlm no disponible: responde base]"
+            return out
+
+    tasks = [BENCH["kb_plus_tool-02"]]
+    lines: list[str] = []
+    results = ev.evaluate(
+        tasks, lambda: Fallback(script=SCRIPT), ["rlm"], ["full"], log=lines.append
+    )
+    run = results["runs"]["full/rlm"]
+    assert run["brain_substituted"] == 1 and run["rows"][0]["brain_substituted"]
+    assert "cerebro sustituido" in lines[0]
+    assert "no cargó y respondió `base`" in ev.markdown(results)
