@@ -197,9 +197,23 @@ class CaseFile(BaseModel):
                 lines.append(f"- {pid} [{name}]: {values}")
         if self.assumptions:
             lines.append("Assumptions (tell the user):")
+            # Fifteen screened flats repeat the same assumption fifteen times: one line each.
+            grouped: dict[tuple[str, str], list[Assumption]] = {}
             for a in self.assumptions:
-                where = f"{a.property_id} " if a.property_id else ""
-                lines.append(f"- {where}{a.field} = {a.value} ({a.reason})")
+                grouped.setdefault((a.field, a.reason), []).append(a)
+            for (name, reason), items in grouped.items():
+                if len(items) == 1:
+                    a = items[0]
+                    where = f"{a.property_id} " if a.property_id else ""
+                    lines.append(f"- {where}{name} = {_kv({'': a.value})[1:]} ({reason})")
+                    continue
+                values = {_kv({"": a.value})[1:] for a in items}
+                ids = ", ".join(a.property_id or "case" for a in items)
+                if len(values) == 1:
+                    lines.append(f"- {name} = {values.pop()} in {ids} ({reason})")
+                else:
+                    per = ", ".join(f"{a.property_id}={_kv({'': a.value})[1:]}" for a in items)
+                    lines.append(f"- {name}: {per} ({reason})")
         if self.open_questions:
             lines.append("Open questions for the user:")
             lines.extend(f"- {q}" for q in self.open_questions)
