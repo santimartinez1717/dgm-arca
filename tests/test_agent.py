@@ -5,7 +5,10 @@ from agent.memory import ConversationMemory
 
 
 def test_memory_compresses_old_messages_when_over_budget():
-    memory = ConversationMemory("sys", count_tokens=len, token_budget=60, keep_last=2)
+    # the course mechanics; our policy (task pinned) is tested in test_agent_core.py
+    memory = ConversationMemory(
+        "sys", count_tokens=len, token_budget=60, keep_last=2, pin_first=False
+    )
     for i in range(6):
         memory.add("user" if i % 2 == 0 else "assistant", f"message number {i} " * 2)
     assert memory.over_budget()

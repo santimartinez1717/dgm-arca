@@ -1,0 +1,1777 @@
+{
+ "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+ "sentence_distances": {
+  "n": 16458,
+  "mean": 0.6308682560920715,
+  "p70": 0.7634,
+  "p80": 0.7906,
+  "p90": 0.8218,
+  "p95": 0.8452
+ },
+ "chunkings": {
+  "recursive_800_100": {
+   "stats": {
+    "n_chunks": 4745,
+    "mean_chars": 598.822760800843,
+    "min_chars": 1,
+    "max_chars": 800
+   },
+   "relevant_chunks_per_question": 1.1764705882352942,
+   "retrievers": {
+    "bm25": {
+     "hit@1": 0.0784313725490196,
+     "recall@1": 0.058823529411764705,
+     "hit@5": 0.27450980392156865,
+     "recall@5": 0.2647058823529412,
+     "hit@10": 0.3137254901960784,
+     "recall@10": 0.29411764705882354,
+     "mrr": 0.15234204793028322,
+     "n_questions": 51
+    },
+    "dense": {
+     "hit@1": 0.1568627450980392,
+     "recall@1": 0.13725490196078433,
+     "hit@5": 0.4117647058823529,
+     "recall@5": 0.4019607843137255,
+     "hit@10": 0.5490196078431373,
+     "recall@10": 0.5294117647058824,
+     "mrr": 0.25968720821661995,
+     "n_questions": 51
+    },
+    "hybrid": {
+     "hit@1": 0.17647058823529413,
+     "recall@1": 0.14705882352941177,
+     "hit@5": 0.45098039215686275,
+     "recall@5": 0.43137254901960786,
+     "hit@10": 0.5490196078431373,
+     "recall@10": 0.5392156862745098,
+     "mrr": 0.2788359788359789,
+     "n_questions": 51,
+     "lambda": 0.2
+    }
+   },
+   "lambda_cv": {
+    "mrr_by_lambda": {
+     "0.0": 0.25968720821661995,
+     "0.1": 0.27638499844382197,
+     "0.2": 0.2788359788359789,
+     "0.3": 0.25587457205104264,
+     "0.4": 0.23122471210706502,
+     "0.5": 0.21802832244008713,
+     "0.6": 0.21683006535947713,
+     "0.7": 0.19185340802987863,
+     "0.8": 0.16775599128540306,
+     "0.9": 0.15332244008714596,
+     "1.0": 0.15234204793028322
+    },
+    "chosen_lambda_counts": {
+     "0.0": 2,
+     "0.1": 102,
+     "0.2": 243,
+     "0.3": 15,
+     "0.4": 4,
+     "0.5": 3,
+     "0.6": 23,
+     "0.7": 7,
+     "0.9": 1
+    },
+    "most_chosen_lambda": 0.2,
+    "held_out_mrr_mean": 0.260733869047619,
+    "held_out_mrr_std": 0.05509051270045653
+   }
+  },
+  "semantic_p70": {
+   "stats": {
+    "n_chunks": 5816,
+    "mean_chars": 477.5405777166437,
+    "min_chars": 1,
+    "max_chars": 1500
+   },
+   "relevant_chunks_per_question": 1.1568627450980393,
+   "retrievers": {
+    "bm25": {
+     "hit@1": 0.13725490196078433,
+     "recall@1": 0.12745098039215685,
+     "hit@5": 0.37254901960784315,
+     "recall@5": 0.3627450980392157,
+     "hit@10": 0.39215686274509803,
+     "recall@10": 0.38235294117647056,
+     "mrr": 0.22080610021786493,
+     "n_questions": 51
+    },
+    "dense": {
+     "hit@1": 0.23529411764705882,
+     "recall@1": 0.21568627450980393,
+     "hit@5": 0.6078431372549019,
+     "recall@5": 0.5882352941176471,
+     "hit@10": 0.6666666666666666,
+     "recall@10": 0.6568627450980392,
+     "mrr": 0.3833333333333334,
+     "n_questions": 51
+    },
+    "hybrid": {
+     "hit@1": 0.3137254901960784,
+     "recall@1": 0.30392156862745096,
+     "hit@5": 0.5686274509803921,
+     "recall@5": 0.5588235294117647,
+     "hit@10": 0.6274509803921569,
+     "recall@10": 0.6274509803921569,
+     "mrr": 0.41750700280112046,
+     "n_questions": 51,
+     "lambda": 0.4
+    }
+   },
+   "lambda_cv": {
+    "mrr_by_lambda": {
+     "0.0": 0.3833333333333334,
+     "0.1": 0.3849673202614379,
+     "0.2": 0.4063725490196079,
+     "0.3": 0.4085200746965453,
+     "0.4": 0.41750700280112046,
+     "0.5": 0.3601851851851852,
+     "0.6": 0.32679738562091504,
+     "0.7": 0.2952536570183629,
+     "0.8": 0.2614612511671335,
+     "0.9": 0.23420479302832245,
+     "1.0": 0.22080610021786493
+    },
+    "chosen_lambda_counts": {
+     "0.0": 12,
+     "0.2": 115,
+     "0.3": 53,
+     "0.4": 220
+    },
+    "most_chosen_lambda": 0.4,
+    "held_out_mrr_mean": 0.3978547847985348,
+    "held_out_mrr_std": 0.05747673757872713
+   }
+  },
+  "semantic_p80": {
+   "stats": {
+    "n_chunks": 4390,
+    "mean_chars": 632.9845102505694,
+    "min_chars": 1,
+    "max_chars": 1500
+   },
+   "relevant_chunks_per_question": 1.1568627450980393,
+   "retrievers": {
+    "bm25": {
+     "hit@1": 0.09803921568627451,
+     "recall@1": 0.08823529411764706,
+     "hit@5": 0.37254901960784315,
+     "recall@5": 0.3627450980392157,
+     "hit@10": 0.4117647058823529,
+     "recall@10": 0.4019607843137255,
+     "mrr": 0.20065359477124184,
+     "n_questions": 51
+    },
+    "dense": {
+     "hit@1": 0.2549019607843137,
+     "recall@1": 0.22549019607843138,
+     "hit@5": 0.5490196078431373,
+     "recall@5": 0.5294117647058824,
+     "hit@10": 0.6470588235294118,
+     "recall@10": 0.6372549019607843,
+     "mrr": 0.380905695611578,
+     "n_questions": 51
+    },
+    "hybrid": {
+     "hit@1": 0.29411764705882354,
+     "recall@1": 0.2549019607843137,
+     "hit@5": 0.5294117647058824,
+     "recall@5": 0.5098039215686274,
+     "hit@10": 0.6470588235294118,
+     "recall@10": 0.6372549019607843,
+     "mrr": 0.4051120448179272,
+     "n_questions": 51,
+     "lambda": 0.1
+    }
+   },
+   "lambda_cv": {
+    "mrr_by_lambda": {
+     "0.0": 0.380905695611578,
+     "0.1": 0.4051120448179272,
+     "0.2": 0.39465452847805793,
+     "0.3": 0.399447556800498,
+     "0.4": 0.3873560535325241,
+     "0.5": 0.35040460628695924,
+     "0.6": 0.30483971366324303,
+     "0.7": 0.283442265795207,
+     "0.8": 0.25100373482726424,
+     "0.9": 0.20392156862745098,
+     "1.0": 0.20065359477124184
+    },
+    "chosen_lambda_counts": {
+     "0.0": 24,
+     "0.1": 192,
+     "0.2": 10,
+     "0.3": 105,
+     "0.4": 60,
+     "0.5": 9
+    },
+    "most_chosen_lambda": 0.1,
+    "held_out_mrr_mean": 0.38629092185592184,
+    "held_out_mrr_std": 0.05729755531344987
+   }
+  },
+  "semantic_p90": {
+   "stats": {
+    "n_chunks": 3126,
+    "mean_chars": 889.3365323096609,
+    "min_chars": 2,
+    "max_chars": 1500
+   },
+   "relevant_chunks_per_question": 1.1568627450980393,
+   "retrievers": {
+    "bm25": {
+     "hit@1": 0.0784313725490196,
+     "recall@1": 0.06862745098039216,
+     "hit@5": 0.37254901960784315,
+     "recall@5": 0.37254901960784315,
+     "hit@10": 0.4117647058823529,
+     "recall@10": 0.3986928104575163,
+     "mrr": 0.20541549953314656,
+     "n_questions": 51
+    },
+    "dense": {
+     "hit@1": 0.27450980392156865,
+     "recall@1": 0.24509803921568626,
+     "hit@5": 0.5882352941176471,
+     "recall@5": 0.5686274509803921,
+     "hit@10": 0.6862745098039216,
+     "recall@10": 0.6666666666666666,
+     "mrr": 0.4038359788359789,
+     "n_questions": 51
+    },
+    "hybrid": {
+     "hit@1": 0.27450980392156865,
+     "recall@1": 0.24509803921568626,
+     "hit@5": 0.5686274509803921,
+     "recall@5": 0.5490196078431373,
+     "hit@10": 0.6862745098039216,
+     "recall@10": 0.6764705882352942,
+     "mrr": 0.4111577964519141,
+     "n_questions": 51,
+     "lambda": 0.1
+    }
+   },
+   "lambda_cv": {
+    "mrr_by_lambda": {
+     "0.0": 0.4038359788359789,
+     "0.1": 0.4111577964519141,
+     "0.2": 0.39659197012138186,
+     "0.3": 0.39958761282290695,
+     "0.4": 0.3835745409274821,
+     "0.5": 0.3303610333022098,
+     "0.6": 0.2991285403050109,
+     "0.7": 0.28057889822595705,
+     "0.8": 0.25284780578898225,
+     "0.9": 0.2316604419545596,
+     "1.0": 0.20541549953314656
+    },
+    "chosen_lambda_counts": {
+     "0.0": 131,
+     "0.1": 193,
+     "0.2": 2,
+     "0.3": 30,
+     "0.4": 44
+    },
+    "most_chosen_lambda": 0.1,
+    "held_out_mrr_mean": 0.3930208943833944,
+    "held_out_mrr_std": 0.05664762499038635
+   }
+  },
+  "semantic_p95": {
+   "stats": {
+    "n_chunks": 2580,
+    "mean_chars": 1077.7565891472868,
+    "min_chars": 2,
+    "max_chars": 1500
+   },
+   "relevant_chunks_per_question": 1.1568627450980393,
+   "retrievers": {
+    "bm25": {
+     "hit@1": 0.11764705882352941,
+     "recall@1": 0.10784313725490197,
+     "hit@5": 0.35294117647058826,
+     "recall@5": 0.3398692810457516,
+     "hit@10": 0.43137254901960786,
+     "recall@10": 0.4183006535947712,
+     "mrr": 0.21922657952069716,
+     "n_questions": 51
+    },
+    "dense": {
+     "hit@1": 0.21568627450980393,
+     "recall@1": 0.20588235294117646,
+     "hit@5": 0.5294117647058824,
+     "recall@5": 0.5,
+     "hit@10": 0.6666666666666666,
+     "recall@10": 0.6470588235294118,
+     "mrr": 0.33929349517584817,
+     "n_questions": 51
+    },
+    "hybrid": {
+     "hit@1": 0.23529411764705882,
+     "recall@1": 0.21568627450980393,
+     "hit@5": 0.5490196078431373,
+     "recall@5": 0.5196078431372549,
+     "hit@10": 0.6666666666666666,
+     "recall@10": 0.6470588235294118,
+     "mrr": 0.35380485527544353,
+     "n_questions": 51,
+     "lambda": 0.1
+    }
+   },
+   "lambda_cv": {
+    "mrr_by_lambda": {
+     "0.0": 0.33929349517584817,
+     "0.1": 0.35380485527544353,
+     "0.2": 0.34465452847805783,
+     "0.3": 0.3490662931839402,
+     "0.4": 0.33343448490507316,
+     "0.5": 0.2951213818860878,
+     "0.6": 0.2738562091503268,
+     "0.7": 0.2596638655462185,
+     "0.8": 0.2371148459383753,
+     "0.9": 0.2295985060690943,
+     "1.0": 0.21922657952069716
+    },
+    "chosen_lambda_counts": {
+     "0.0": 20,
+     "0.1": 206,
+     "0.2": 10,
+     "0.3": 109,
+     "0.4": 50,
+     "0.5": 4,
+     "1.0": 1
+    },
+    "most_chosen_lambda": 0.1,
+    "held_out_mrr_mean": 0.33859158882783885,
+    "held_out_mrr_std": 0.054895768199332874
+   }
+  }
+ },
+ "per_question_first_rank": {
+  "recursive_800_100": {
+   "lau-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "lau-02": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 3
+   },
+   "lau-03": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-04": {
+    "bm25": 4,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-05": {
+    "bm25": null,
+    "dense": 10,
+    "hybrid": null
+   },
+   "lau-06": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "lau-07": {
+    "bm25": 3,
+    "dense": null,
+    "hybrid": null
+   },
+   "lau-08": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-09": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "lau-10": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "lau-11": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "lau-12": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "viv-01": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-02": {
+    "bm25": 4,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "rdl-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "rdl-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "rdl-03": {
+    "bm25": 3,
+    "dense": 4,
+    "hybrid": 3
+   },
+   "irpf-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-02": {
+    "bm25": 8,
+    "dense": 10,
+    "hybrid": 10
+   },
+   "irpf-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-04": {
+    "bm25": null,
+    "dense": 8,
+    "hybrid": 9
+   },
+   "irpf-05": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-01": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "aeat-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-03": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-04": {
+    "bm25": 2,
+    "dense": null,
+    "hybrid": 8
+   },
+   "aeat-05": {
+    "bm25": 1,
+    "dense": 7,
+    "hybrid": 4
+   },
+   "aeat-06": {
+    "bm25": null,
+    "dense": 10,
+    "hybrid": 8
+   },
+   "aeat-07": {
+    "bm25": 1,
+    "dense": 3,
+    "hybrid": 3
+   },
+   "itp-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "itp-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ibi-01": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 5
+   },
+   "ibi-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "plus-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "cat-01": {
+    "bm25": 5,
+    "dense": 6,
+    "hybrid": 4
+   },
+   "hip-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "hip-02": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "hip-03": {
+    "bm25": 1,
+    "dense": 4,
+    "hybrid": 3
+   },
+   "bde-01": {
+    "bm25": null,
+    "dense": 7,
+    "hybrid": 7
+   },
+   "bde-02": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lph-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "zon-01": {
+    "bm25": 3,
+    "dense": 3,
+    "hybrid": 3
+   },
+   "zon-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "zon-03": {
+    "bm25": 9,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "ser-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irav-01": {
+    "bm25": 3,
+    "dense": 2,
+    "hybrid": 1
+   },
+   "irav-02": {
+    "bm25": 2,
+    "dense": 2,
+    "hybrid": 2
+   }
+  },
+  "semantic_p70": {
+   "lau-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 3
+   },
+   "lau-02": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 1
+   },
+   "lau-03": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-04": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-05": {
+    "bm25": 9,
+    "dense": 2,
+    "hybrid": 1
+   },
+   "lau-06": {
+    "bm25": null,
+    "dense": 8,
+    "hybrid": null
+   },
+   "lau-07": {
+    "bm25": 4,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-08": {
+    "bm25": 4,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-09": {
+    "bm25": null,
+    "dense": 3,
+    "hybrid": 5
+   },
+   "lau-10": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-11": {
+    "bm25": null,
+    "dense": 8,
+    "hybrid": null
+   },
+   "lau-12": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "viv-01": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 3
+   },
+   "viv-02": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "rdl-01": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "rdl-02": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "rdl-03": {
+    "bm25": 4,
+    "dense": 3,
+    "hybrid": 1
+   },
+   "irpf-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-04": {
+    "bm25": 3,
+    "dense": 4,
+    "hybrid": 3
+   },
+   "irpf-05": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-01": {
+    "bm25": null,
+    "dense": 3,
+    "hybrid": 3
+   },
+   "aeat-02": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 7
+   },
+   "aeat-03": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-04": {
+    "bm25": 5,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-05": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-06": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-07": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 2
+   },
+   "itp-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "itp-02": {
+    "bm25": 3,
+    "dense": null,
+    "hybrid": 5
+   },
+   "iva-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ibi-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ibi-02": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 8
+   },
+   "plus-01": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": null
+   },
+   "cat-01": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "hip-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "hip-02": {
+    "bm25": null,
+    "dense": 6,
+    "hybrid": 8
+   },
+   "hip-03": {
+    "bm25": 5,
+    "dense": 5,
+    "hybrid": 3
+   },
+   "bde-01": {
+    "bm25": 1,
+    "dense": 5,
+    "hybrid": 1
+   },
+   "bde-02": {
+    "bm25": 1,
+    "dense": 2,
+    "hybrid": 1
+   },
+   "lph-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "zon-01": {
+    "bm25": 3,
+    "dense": 3,
+    "hybrid": 3
+   },
+   "zon-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "zon-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ser-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irav-01": {
+    "bm25": 1,
+    "dense": 2,
+    "hybrid": 1
+   },
+   "irav-02": {
+    "bm25": 2,
+    "dense": 2,
+    "hybrid": 2
+   }
+  },
+  "semantic_p80": {
+   "lau-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-02": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-03": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-04": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-05": {
+    "bm25": 4,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-06": {
+    "bm25": null,
+    "dense": 7,
+    "hybrid": 7
+   },
+   "lau-07": {
+    "bm25": 5,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-08": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-09": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 5
+   },
+   "lau-10": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-11": {
+    "bm25": null,
+    "dense": 8,
+    "hybrid": 8
+   },
+   "lau-12": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "viv-01": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-02": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "rdl-01": {
+    "bm25": 4,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "rdl-02": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "rdl-03": {
+    "bm25": 4,
+    "dense": 3,
+    "hybrid": 1
+   },
+   "irpf-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-04": {
+    "bm25": 3,
+    "dense": 4,
+    "hybrid": 3
+   },
+   "irpf-05": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "aeat-02": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "aeat-03": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-04": {
+    "bm25": 6,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-05": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-06": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-07": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "itp-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "itp-02": {
+    "bm25": 3,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ibi-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ibi-02": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 5
+   },
+   "plus-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "cat-01": {
+    "bm25": 5,
+    "dense": 5,
+    "hybrid": 6
+   },
+   "hip-01": {
+    "bm25": null,
+    "dense": 10,
+    "hybrid": 10
+   },
+   "hip-02": {
+    "bm25": 6,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "hip-03": {
+    "bm25": 4,
+    "dense": 6,
+    "hybrid": 6
+   },
+   "bde-01": {
+    "bm25": 1,
+    "dense": 8,
+    "hybrid": 7
+   },
+   "bde-02": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lph-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "zon-01": {
+    "bm25": 3,
+    "dense": 3,
+    "hybrid": 3
+   },
+   "zon-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "zon-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ser-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irav-01": {
+    "bm25": 1,
+    "dense": 2,
+    "hybrid": 1
+   },
+   "irav-02": {
+    "bm25": 2,
+    "dense": 2,
+    "hybrid": 2
+   }
+  },
+  "semantic_p90": {
+   "lau-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-02": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-03": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-04": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-05": {
+    "bm25": 2,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-06": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "lau-07": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-08": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-09": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 5
+   },
+   "lau-10": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-11": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "lau-12": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "viv-01": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-02": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "rdl-01": {
+    "bm25": 4,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "rdl-02": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "rdl-03": {
+    "bm25": 2,
+    "dense": 3,
+    "hybrid": 2
+   },
+   "irpf-01": {
+    "bm25": 7,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-03": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 2
+   },
+   "irpf-04": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "irpf-05": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "aeat-02": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 5
+   },
+   "aeat-03": {
+    "bm25": 3,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-04": {
+    "bm25": 4,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-05": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-06": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-07": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 2
+   },
+   "itp-01": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "itp-02": {
+    "bm25": 3,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ibi-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ibi-02": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 6
+   },
+   "plus-01": {
+    "bm25": null,
+    "dense": 10,
+    "hybrid": 10
+   },
+   "cat-01": {
+    "bm25": 4,
+    "dense": 3,
+    "hybrid": 4
+   },
+   "hip-01": {
+    "bm25": null,
+    "dense": 10,
+    "hybrid": 10
+   },
+   "hip-02": {
+    "bm25": 6,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "hip-03": {
+    "bm25": 2,
+    "dense": 9,
+    "hybrid": 7
+   },
+   "bde-01": {
+    "bm25": 1,
+    "dense": 8,
+    "hybrid": 6
+   },
+   "bde-02": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lph-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "zon-01": {
+    "bm25": 4,
+    "dense": 7,
+    "hybrid": 7
+   },
+   "zon-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "zon-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ser-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irav-01": {
+    "bm25": 1,
+    "dense": 2,
+    "hybrid": 1
+   },
+   "irav-02": {
+    "bm25": 2,
+    "dense": 2,
+    "hybrid": 2
+   }
+  },
+  "semantic_p95": {
+   "lau-01": {
+    "bm25": null,
+    "dense": 8,
+    "hybrid": 8
+   },
+   "lau-02": {
+    "bm25": 9,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "lau-03": {
+    "bm25": null,
+    "dense": 6,
+    "hybrid": 6
+   },
+   "lau-04": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-05": {
+    "bm25": 9,
+    "dense": 4,
+    "hybrid": 3
+   },
+   "lau-06": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "lau-07": {
+    "bm25": 8,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-08": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lau-09": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "lau-10": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "lau-11": {
+    "bm25": null,
+    "dense": 10,
+    "hybrid": 10
+   },
+   "lau-12": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "viv-01": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-02": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "viv-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "rdl-01": {
+    "bm25": 2,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "rdl-02": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "rdl-03": {
+    "bm25": 3,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "irpf-01": {
+    "bm25": 3,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irpf-03": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "irpf-04": {
+    "bm25": null,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "irpf-05": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "aeat-02": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "aeat-03": {
+    "bm25": 6,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-04": {
+    "bm25": 2,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-05": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "aeat-06": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "aeat-07": {
+    "bm25": 3,
+    "dense": 4,
+    "hybrid": 3
+   },
+   "itp-01": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "itp-02": {
+    "bm25": 2,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "iva-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ibi-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ibi-02": {
+    "bm25": null,
+    "dense": 6,
+    "hybrid": 7
+   },
+   "plus-01": {
+    "bm25": null,
+    "dense": 4,
+    "hybrid": 4
+   },
+   "cat-01": {
+    "bm25": 4,
+    "dense": 3,
+    "hybrid": 4
+   },
+   "hip-01": {
+    "bm25": 4,
+    "dense": 3,
+    "hybrid": 3
+   },
+   "hip-02": {
+    "bm25": null,
+    "dense": 5,
+    "hybrid": 5
+   },
+   "hip-03": {
+    "bm25": 3,
+    "dense": 9,
+    "hybrid": 4
+   },
+   "bde-01": {
+    "bm25": 1,
+    "dense": 8,
+    "hybrid": 6
+   },
+   "bde-02": {
+    "bm25": 1,
+    "dense": 1,
+    "hybrid": 1
+   },
+   "lph-01": {
+    "bm25": null,
+    "dense": 2,
+    "hybrid": 2
+   },
+   "zon-01": {
+    "bm25": 3,
+    "dense": 7,
+    "hybrid": 7
+   },
+   "zon-02": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "zon-03": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "ser-01": {
+    "bm25": null,
+    "dense": null,
+    "hybrid": null
+   },
+   "irav-01": {
+    "bm25": 1,
+    "dense": 2,
+    "hybrid": 1
+   },
+   "irav-02": {
+    "bm25": 2,
+    "dense": 2,
+    "hybrid": 2
+   }
+  }
+ },
+ "instruction_ablation": {
+  "chunking": "semantic_p90",
+  "none": {
+   "instruction": null,
+   "hit@1": 0.3137254901960784,
+   "recall@1": 0.28431372549019607,
+   "hit@5": 0.5882352941176471,
+   "recall@5": 0.5588235294117647,
+   "hit@10": 0.6862745098039216,
+   "recall@10": 0.6764705882352942,
+   "mrr": 0.4224400871459695,
+   "n_questions": 51,
+   "mrr_answer_in_boe": 0.4634680134680135,
+   "mrr_answer_elsewhere": 0.3472222222222222,
+   "top5_folders": {
+    "aeat": 53,
+    "boe": 161,
+    "boe_diario": 24,
+    "pdf": 17
+   }
+  },
+  "default": {
+   "instruction": "Given a user question, retrieve the passages from the knowledge base that answer it.",
+   "hit@1": 0.27450980392156865,
+   "recall@1": 0.24509803921568626,
+   "hit@5": 0.5882352941176471,
+   "recall@5": 0.5686274509803921,
+   "hit@10": 0.6862745098039216,
+   "recall@10": 0.6666666666666666,
+   "mrr": 0.4038359788359789,
+   "n_questions": 51,
+   "mrr_answer_in_boe": 0.44326599326599325,
+   "mrr_answer_elsewhere": 0.3315476190476191,
+   "top5_folders": {
+    "aeat": 63,
+    "boe": 150,
+    "boe_diario": 26,
+    "pdf": 16
+   }
+  },
+  "generic_es": {
+   "instruction": "Recupera el pasaje que responde a la pregunta.",
+   "hit@1": 0.29411764705882354,
+   "recall@1": 0.2647058823529412,
+   "hit@5": 0.5686274509803921,
+   "recall@5": 0.5490196078431373,
+   "hit@10": 0.6862745098039216,
+   "recall@10": 0.6666666666666666,
+   "mrr": 0.41726579520697166,
+   "n_questions": 51,
+   "mrr_answer_in_boe": 0.46430976430976434,
+   "mrr_answer_elsewhere": 0.3310185185185185,
+   "top5_folders": {
+    "aeat": 56,
+    "boe": 156,
+    "boe_diario": 26,
+    "pdf": 17
+   }
+  },
+  "domain_es": {
+   "instruction": "Dada la pregunta de alguien que compra una vivienda para alquilarla en España, recupera el artículo de ley, la norma o el pasaje oficial que la responde.",
+   "hit@1": 0.21568627450980393,
+   "recall@1": 0.19607843137254902,
+   "hit@5": 0.49019607843137253,
+   "recall@5": 0.47058823529411764,
+   "hit@10": 0.6470588235294118,
+   "recall@10": 0.6143790849673202,
+   "mrr": 0.33659352629940864,
+   "n_questions": 51,
+   "mrr_answer_in_boe": 0.39894179894179893,
+   "mrr_answer_elsewhere": 0.22228835978835976,
+   "top5_folders": {
+    "aeat": 31,
+    "boe": 181,
+    "boe_diario": 32,
+    "pdf": 11
+   }
+  },
+  "domain_en": {
+   "instruction": "Given a question from someone buying a home in Spain to rent it out, retrieve the article of law, the regulation or the official passage that answers it.",
+   "hit@1": 0.19607843137254902,
+   "recall@1": 0.17647058823529413,
+   "hit@5": 0.47058823529411764,
+   "recall@5": 0.45098039215686275,
+   "hit@10": 0.5882352941176471,
+   "recall@10": 0.5555555555555556,
+   "mrr": 0.324120759414877,
+   "n_questions": 51,
+   "mrr_answer_in_boe": 0.38496873496873496,
+   "mrr_answer_elsewhere": 0.21256613756613757,
+   "top5_folders": {
+    "aeat": 30,
+    "boe": 173,
+    "boe_diario": 41,
+    "pdf": 11
+   }
+  },
+  "wrong": {
+   "instruction": "Given a text, retrieve passages written in the same informal style.",
+   "hit@1": 0.3137254901960784,
+   "recall@1": 0.28431372549019607,
+   "hit@5": 0.5490196078431373,
+   "recall@5": 0.5196078431372549,
+   "hit@10": 0.6470588235294118,
+   "recall@10": 0.6274509803921569,
+   "mrr": 0.4088468720821662,
+   "n_questions": 51,
+   "mrr_answer_in_boe": 0.4487734487734487,
+   "mrr_answer_elsewhere": 0.33564814814814814,
+   "top5_folders": {
+    "aeat": 73,
+    "boe": 137,
+    "boe_diario": 25,
+    "pdf": 20
+   }
+  }
+ },
+ "unanswerable_top_dense_score": {
+  "answerable": {
+   "mean": 0.6660343630641115,
+   "min": 0.5404504537582397
+  },
+  "unanswerable": {
+   "mean": 0.5804709593454996,
+   "max": 0.7497075200080872
+  },
+  "unanswerable_scores": [
+   0.5052,
+   0.5591,
+   0.7497,
+   0.5022,
+   0.5874,
+   0.5792
+  ]
+ },
+ "elapsed_s": 556.7
+}

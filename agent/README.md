@@ -72,7 +72,7 @@ la base de conocimiento y una herramienta, y con alguna imposible, y miraré:
 |---|---|---|
 | `prompts.py` | hecho | Prompt de sistema ReAct y prompt de resumen |
 | `memory.py` | hecho + tu turno | Memoria con presupuesto; la política de compresión es vuestra |
-| `react_agent.py` | tu turno | El bucle; `final_answer` y `search_knowledge_base`; detrás de `/agent` |
+| `react_agent.py` | hecho | El bucle con guardarraíles y tres cerebros (`docs/fase4/issues/11-bucle-react.md`); detrás de `/agent` |
 | `evaluate.py` | hecho | Éxito, pasos y tokens por cerebro sobre el banco de tareas |
 | `ui.py` | hecho | Visor de trazas en Gradio contra la API |
 | `bench/` | vuestro | Tareas (`example_tasks.jsonl` muestra el formato) |

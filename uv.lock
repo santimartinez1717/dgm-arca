@@ -549,6 +549,7 @@ dependencies = [
     { name = "httpx" },
     { name = "pydantic" },
     { name = "python-dotenv" },
+    { name = "pyyaml" },
     { name = "rich" },
     { name = "uvicorn", extra = ["standard"] },
 ]
@@ -601,6 +602,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.11" },
     { name = "pypdf", marker = "extra == 'rag'", specifier = ">=5.0" },
     { name = "python-dotenv", specifier = ">=1.1" },
+    { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "rank-bm25", marker = "extra == 'rag'", specifier = ">=0.2.2" },
     { name = "requests", marker = "extra == 'agent'", specifier = ">=2.32" },
     { name = "rich", specifier = ">=13.9" },

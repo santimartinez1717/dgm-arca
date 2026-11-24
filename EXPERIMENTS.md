@@ -1648,288 +1648,6 @@ api` y se exponga con ngrok. Queríamos saber si la DGX puede hacer las dos cosa
 
 ---
 
-### 2026-11-22 · Fase 3 · Corpus descargado con un script
-
-**Qué queríamos saber.** Si el corpus de la propuesta (normativa del BOE, manual de la AEAT,
-guías oficiales) se puede montar de forma reproducible y con qué tamaño sale.
-
-**Qué hicimos.** `uv run python -m rag.download_corpus` (`rag/download_corpus.py`; fuentes,
-licencias y decisiones en `rag/CORPUS.md`). Las leyes consolidadas se fijan a la versión
-vigente el 2026-11-22. Después, `rag.ingest` y el troceado recursivo por defecto (800/100).
-
-**Qué pasó.**
-
-| Carpeta | Documentos | Fragmentos recursivos (800/100) |
-|---|---|---|
-| `boe/` (11 leyes consolidadas) | 11 | 4.004 |
-| `aeat/` (Manual de Renta 2025) | 28 | 212 |
-| `boe_diario/` (SERPAVI, zonas tensionadas) | 11 | 174 |
-| `pdf/` (INE IRAV, BdE) | 2 | 27 |
-| **Total** | **52** (2,6 M caracteres) | **4.417** (media 600) |
-
-Las dos preguntas de la propuesta tienen respuesta en el corpus (art. 23.2 LIRPF, 70 %;
-art. 17.6 LAU, contrato de diez o más años). Hay 29 fragmentos de menos de 50 caracteres
-(«7», «II»…): números de apartado que el troceado recursivo deja sueltos.
-
-**Qué concluimos.**
-- El corpus está muy desequilibrado: el 91 % de los fragmentos son de leyes del BOE, y LIRPF y
-  su reglamento traen mucho texto que no trata de alquileres. Es deliberado (distractores),
-  pero el conjunto dorado debe repartir preguntas entre las cuatro fuentes, no solo leyes.
-- Los fragmentos minúsculos son un argumento para el troceado semántico o por artículo.
-- Siguiente: anotar el conjunto dorado por documento y artículo (o cita literal) y no por id
-  de fragmento, para que sirva a las dos estrategias de troceado.
-
----
-
-### 2026-11-22 · Fase 3 · Conjunto dorado anotado por artículo y cita
-
-**Qué queríamos saber.** Cómo escribir las 50 preguntas para que sirvan a las dos estrategias de
-troceado, y si son demasiado fáciles para BM25.
-
-**Qué hicimos.** Leímos el corpus artículo a artículo y escribimos 51 preguntas con respuesta
-(`rag/gold/gold.jsonl`) y 6 sin respuesta (`rag/gold/unanswerable.jsonl`). Cada pregunta
-guarda documento, sección y una cita literal. `rag/gold.py` las traduce a ids para cualquier
-troceado: es relevante el fragmento que contiene al menos la mitad de una cita. Formato y
-criterios en `rag/gold/README.md`. Prueba rápida con BM25 sobre el troceado recursivo (800/100).
-
-Al leer apareció que el RDL 26/2026 estaba **derogado** (no se convalidó). Lo cambiamos por
-el RDL 29/2026, que lo sustituye, y el script ahora se niega a descargar normas derogadas.
-También quitamos de las 28 páginas de la AEAT el texto del diálogo «Generar PDF».
-
-**Qué pasó.**
-
-| | Valor |
-|---|---|
-| Preguntas con más de una ubicación válida | 7 (ley + reglamento + manual, ley + preámbulo…) |
-| Fragmentos relevantes por pregunta (recursivo 800/100) | 1 en 43 preguntas, 2 en 7, 3 en 1 |
-| BM25: acierto@1 / @5 / @10 | 7,8 % / 27,5 % / 31,4 % |
-| BM25: MRR@10 | 0,147 |
-
-BM25 no encuentra en los 10 primeros 35 de las 51 preguntas. Las preguntas usan las palabras de
-un inversor («honorarios de la agencia», «piso vacío») y no las de la norma («gastos de gestión
-inmobiliaria», «desocupados con carácter permanente»).
-
-**Qué concluimos.**
-- El conjunto es exigente para recuperación léxica, que es lo que queríamos: deja margen para
-  medir el denso y el híbrido. Si el denso tampoco llega, habrá que mirar si las preguntas son
-  demasiado indirectas.
-- Hay conflictos reales entre fuentes (Manual de Renta 2025 frente a LIRPF vigente, folleto
-  del BdE frente a Ley 5/2019): son preguntas para el análisis de fallos de la generación.
-- Siguiente: troceado semántico, retriever denso con Qwen3-Embedding y barrido de λ.
-
----
-
-### 2026-11-23 · Fase 3 · Troceado, tres retrievers, λ e instrucción de consulta
-
-**Qué queríamos saber.** Qué troceado y qué retriever recuperan mejor la respuesta de las 51
-preguntas del conjunto dorado, qué λ usar en el híbrido y qué efecto tiene la instrucción de
-la consulta en Qwen3-Embedding.
-
-**Qué hicimos.** `uv run python -m rag.evaluate` en la MIG (9 min la primera vez; las 11.761
-frases y los índices quedan en `rag/index/`). Resultado en `reports/fase3/phase3_eval.json`,
-`reports/fase3/phase3_semantic_distances.png` y `reports/fase3/phase3_lambda.png`.
-- Troceado recursivo 800/100 frente a semántico con el umbral en los percentiles 70, 80, 90
-  y 95 de la distancia entre frases consecutivas: 0,762, 0,789, 0,821 y 0,845. La media es
-  0,63, así que el 0,25 de la docstring cortaría en casi cada frase.
-- BM25, denso (Qwen3-Embedding-0.6B, índice NumPy) e híbrido (min-max y λ·BM25 + (1−λ)·denso
-  sobre los 20 primeros de cada uno).
-- λ de 0 a 1 de 0,1 en 0,1, elegido por MRR con validación cruzada a dos mitades repetida 200
-  veces. Así el λ no se puntúa sobre las mismas preguntas con que se eligió.
-
-**Qué pasó.** Acierto@5 = la respuesta está entre los 5 primeros; MRR hasta el puesto 10.
-
-| Troceado | Fragmentos | Media (car.) | BM25 | Denso | Híbrido | λ CV | MRR CV |
-|---|---|---|---|---|---|---|---|
-| Recursivo 800/100 | 4.422 | 599 | 27,5 % / 0,147 | 41,2 % / 0,272 | 45,1 % / 0,292 | 0,2 | 0,275 ± 0,056 |
-| Semántico p70 | 5.384 | 481 | 37,3 % / 0,223 | **62,7 %** / 0,394 | 58,8 % / **0,432** | 0,3 | **0,416** ± 0,060 |
-| Semántico p80 | 4.072 | 636 | 39,2 % / 0,200 | 56,9 % / 0,387 | 56,9 % / 0,401 | 0,4 | 0,384 ± 0,055 |
-| Semántico p90 | 2.901 | 894 | 39,2 % / 0,212 | 58,8 % / 0,425 | 58,8 % / 0,425 | 0,0 | 0,414 ± 0,057 |
-| Semántico p95 | 2.396 | 1.082 | 37,3 % / 0,220 | 54,9 % / 0,358 | 56,9 % / 0,372 | 0,1 | 0,357 ± 0,057 |
-
-Instrucción de la consulta (denso, semántico p90):
-
-| Instrucción | Acierto@5 | MRR | MRR respuesta en BOE (33) | MRR resto (18) | Top-5 del BOE / AEAT |
-|---|---|---|---|---|---|
-| Ninguna | 60,8 % | 0,431 | 0,473 | 0,353 | 154 / 58 |
-| Por defecto (inglés, genérica) | 58,8 % | 0,425 | 0,476 | 0,332 | 142 / 69 |
-| Genérica en español | 58,8 % | 0,423 | 0,470 | 0,337 | 151 / 59 |
-| De dominio en español | 49,0 % | 0,355 | 0,426 | 0,224 | 176 / 34 |
-| De dominio en inglés | 49,0 % | 0,329 | 0,392 | 0,214 | 168 / 33 |
-| Equivocada («mismo estilo informal») | 54,9 % | 0,427 | 0,477 | 0,336 | 130 / 78 |
-
-Preguntas sin respuesta: la similitud del primer fragmento es de 0,50 a 0,75 (0,58 de media),
-frente a 0,53 a 0,66 de media en las que sí la tienen. «¿Está Madrid declarada zona
-tensionada?» saca 0,75.
-
-**Qué concluimos.**
-- **El troceado importa más que el retriever.** Pasar del recursivo al semántico sube el MRR
-  del denso de 0,27 a 0,39-0,43. El recursivo corta artículos por la mitad y deja fragmentos
-  de un solo número de apartado. El semántico tiene un punto óptimo: con fragmentos de más
-  de 1.000 caracteres (p95) el vector se diluye y baja.
-- **El denso gana a BM25 con claridad** (MRR 0,43 frente a 0,21 en p90). Las preguntas usan las
-  palabras de un inversor y no las de la ley, y BM25 no salta de «honorarios de la agencia» a
-  «gastos de gestión inmobiliaria».
-- **El híbrido aporta poco y depende del troceado.** Con fragmentos pequeños (p70) sí mejora
-  en validación cruzada (0,416 frente a 0,394 del denso). En p90 la validación cruzada elige
-  λ = 0 en 138 de 400 particiones, pero la curva es plana entre 0 y 0,3. **Elegimos p90 con
-  λ = 0,2**, en el centro de la meseta, por dos razones: la meseta es más robusta que el pico
-  de p70, y los fragmentos de unos 900 caracteres dan más contexto al generador. Con 51
-  preguntas, la desviación de la validación cruzada (±0,06) es mayor que la diferencia entre
-  las configuraciones buenas.
-- **La instrucción sí es una palanca, y también en contra.** Las genéricas (inglés, español,
-  ninguna) quedan empatadas. Pedir «el artículo de ley, la norma o el pasaje oficial» empeora
-  el MRR un 20 %, igual en inglés que en español: no es el idioma, es el contenido. Esa
-  instrucción empuja hacia el BOE (176 fragmentos del BOE en el top-5 frente a 142), donde
-  están los distractores de la LIRPF y su reglamento. Las preguntas que se responden con la
-  AEAT o los PDF caen de 0,33 a 0,22, y las del BOE también bajan. Nos quedamos con la
-  instrucción por defecto.
-- **El «no lo sé» no puede salir de un umbral de similitud**, porque las distribuciones se
-  solapan. Tiene que decidirlo el generador.
-- **Fallos (22 de 51 fuera del top-5 con p90 y λ = 0,2):**
-  - Los preámbulos, sobre todo el del RDL 29/2026, explican las reglas en lenguaje llano y
-    ganan al artículo (lau-09, lau-11, aeat-04, ibi-01/02). A veces son respuestas válidas
-    no anotadas.
-  - El caso práctico de la AEAT hace de «imán»: es una lista de gastos que sale primera en 7
-    preguntas de IRPF, IBI e IVA.
-  - Las filas de tabla partidas separan el municipio de su definición (zon-02, zon-03).
-  - El IVA no tiene puente de vocabulario: «piso usado» frente a «segundas y ulteriores
-    entregas».
-
----
-
-### 2026-11-23 · Fase 3 · Generación con citas: base, base con pensamiento y modelo de la fase 1
-
-**Qué queríamos saber.** Qué generador poner detrás de `/rag`, y si el modelo entrenado en la
-fase 1 lee y cita mejor que el base.
-
-**Qué hicimos.**
-- Pipeline de `rag/generate.py`: semántico p90, híbrido λ = 0,2, cinco primeros fragmentos.
-- La plantilla de clase en español, con citas numeradas [1]…[5] que se traducen a ids después
-  de generar.
-- Antes, tres pruebas cortas de 8 preguntas (`reports/fase3/phase3_generation_smoke*.json`). Con la
-  plantilla inglesa, Qwen3-1.7B contestaba en inglés la mitad de las preguntas, citaba
-  «artículo 36» en vez del id, y abría respuestas correctas con «no se especifica».
-- Las 57 preguntas (51 + 6 sin respuesta) con `scripts/fase3/rag_gen_compare.sh` y `scripts/fase3/rag_round2.sh`:
-  `rag.eval_generation --name {base, base_think, rlm_think}`. El modelo de la fase 1 es
-  `rlm/weights/grpo2_lora`. Pensamiento con 1.536 tokens, sin él con 512.
-- Las métricas se recalcularon con `--rescore` después de mejorar el detector de abstención:
-  no reconocía «No se encuentra información en los pasajes».
-- **Corpus.** `base` se repitió (13:04) sobre el corpus definitivo, tras dejar de tomar por
-  vigente la versión sin fecha del art. 6 bis RIRPF. La primera ejecución, de las 11:27, está
-  en `reports/fase3/phase3_generation_base_corpus_previo.json` y da las mismas cifras salvo en las
-  citas: cita algo en el 74,5 % frente al 76,5 %, y el relevante en 14 de 30 frente a 15. Es la
-  variación de una o dos respuestas. La evaluación de recuperación también se repitió (12:44) y
-  reproduce la entrada anterior con diferencias de milésimas.
-
-**Qué pasó.** El fragmento relevante se recupera en 30 de las 51 preguntas respondibles.
-
-| | Qwen3-1.7B | Qwen3-1.7B con pensamiento | Fase 1 (GRPO 2) con pensamiento |
-|---|---|---|---|
-| Cita algún fragmento | 76,5 % | **88,2 %** | 74,5 % |
-| Cita el relevante, cuando se recuperó | 50,0 % (15/30) | **70,0 %** (21/30) | 46,7 % |
-| Cifras de la referencia en la respuesta, cuando se recuperó | 39,1 % | **43,5 %** | 30,4 % |
-| Se abstiene con el fragmento delante | 6,7 % | **3,3 %** | 6,7 % |
-| Se abstiene sin el fragmento (lo correcto) | 33,3 % | 33,3 % | 14,3 % |
-| Se abstiene en las 6 sin respuesta | **6/6** | **6/6** | 5/6 |
-| Ids inventados | 0 | 0 | 0 |
-| Razonamiento cortado sin cerrar | 0 | 2 | 10 |
-| Tiempo para las 57 | **9 min** | 35 min | 31 min |
-
-**Qué concluimos.**
-- **Pensar ayuda a leer.** Con pensamiento, el modelo cita el fragmento correcto en 21 de las 30
-  preguntas en que lo tiene delante, frente a 15. Pero cuesta cuatro veces más. `/rag` queda sin
-  pensamiento por defecto, porque la API se sirve desde el MacBook; `ARCA_RAG_THINKING=1` lo
-  activa.
-- **El modelo de la fase 1 es peor generador de RAG que el base.** Razona largo y en inglés,
-  como le enseñó GRPO, y agota los 1.536 tokens sin cerrar en 10 de 57 preguntas. Cita y
-  acierta menos, y contesta una pregunta sin respuesta. El entrenamiento para hacer cuentas no
-  se transfiere a leer y citar: dato para la comparación de cerebros de la fase 4.
-- **El «no lo sé» funciona** cuando lo decide el generador: 6/6 en las preguntas sin respuesta,
-  y solo 1-2 abstenciones de 30 cuando tiene el fragmento delante.
-- La «coincidencia de cifras» es una aproximación: no ve paráfrasis ni penaliza cifras de más.
-  Las respuestas están guardadas en los JSON.
-
----
-
-### 2026-11-23 · Fase 3 · Opción 1: el derecho aplicable en una fecha y auditoría del motor
-
-**Qué queríamos saber.** Si un RAG que solo ve los artículos vigentes en la fecha de la pregunta
-responde bien donde el RAG normal (la ley de hoy) se equivoca, sin perder lo que la ley de hoy
-ya responde bien. Y si esas mismas versiones sirven para detectar reglas desfasadas en el motor
-de las fases 1 y 2.
-
-**Qué hicimos.**
-- `rag/temporal.py`: 2.049 versiones de artículos de las 11 leyes, con sus intervalos de
-  vigencia, partidas en 8.208 fragmentos. En una fecha rige la última versión, en el orden del
-  documento, con fecha anterior o igual. Las versiones sin fecha no cuentan.
-- `rag/gold/temporal.jsonl`: 17 preguntas con fecha, casi todas en pares que solo se
-  distinguen por la fecha. 7 son de control: su respuesta coincide con la de hoy.
-- Relevancia por contenido: vale cualquier versión del artículo que contenga la cita entera y
-  ninguna de las frases de `absent`. La primera evaluación (13:00,
-  `reports/fase3/phase3_temporal_relevancia_por_version.json`) exigía la versión exacta en vigor ese
-  día, y por eso los controles nunca se acertaban con la ley de hoy. Lo corregimos (89899d6)
-  y la repetimos.
-- Recuperación: `uv run python -m rag.eval_temporal` → `reports/fase3/phase3_temporal.json`.
-- Generación: `rag.eval_generation --gold rag/gold/temporal.jsonl --unanswerable ""` con el RAG
-  normal y con `ARCA_RAG_TEMPORAL=1`, sin pensamiento y con él (1.536 tokens), en
-  `reports/fase3/phase3_generation_temporal_{hoy,fecha}{,_think}.json`. Las 68 respuestas se juzgaron
-  a mano: correcta, regla equivocada o abstención.
-- Auditoría: `uv run python -m rag.audit_rules`.
-
-**Qué pasó.** Recuperación (acierto@5 / MRR; híbrido λ = 0,2):
-
-| Versiones visibles | Respuesta cambiada (10) | Controles (7) | Primero el artículo correcto pero en una versión que no aplicaba (cambiadas) |
-|---|---|---|---|
-| Solo las de hoy | 0 % / 0,000 | 57 % / 0,397 | 30 % |
-| Todas, sin filtro | 30 % / 0,225 | 29 % / 0,213 | 20 % |
-| **Las vigentes en la fecha** | **60 %** / **0,389** | **71 %** / **0,440** | 20 % |
-
-El extractor de fechas acierta las 17.
-
-Generación, juzgada a mano:
-
-| | Cambiadas: correctas | Cambiadas: regla equivocada | Controles: correctas |
-|---|---|---|---|
-| RAG normal, sin pensamiento | 0 | 5 | 2 |
-| RAG por fecha, sin pensamiento | 3 | 4 | 2 |
-| RAG normal, con pensamiento | 1 | 5 | 3 |
-| **RAG por fecha, con pensamiento** | **5** | **2** | 3 |
-
-- **El RAG normal se equivoca con aplomo.** Con la ley de hoy contesta «cinco años» a un
-  contrato de febrero de 2019 y «hasta tres años más» a una prórroga de 2016. Al de 2017 le
-  aplica el límite de garantía de 2019.
-- **El RAG por fecha con pensamiento acierta:** el plazo de 2017 (tres años), el de febrero de
-  2019 (tres años, tras la derogación del RDL 21/2018), la prórroga tácita de 2016 (un año) y
-  la reducción de 2019 (60 %) y de 2024 (90 %).
-- **Fallos que quedan, todos del generador con la versión buena delante:**
-  - el ITP de 2020: responde con el ISD de un caso práctico de la AEAT;
-  - la imputación de 2027: dice el 2 % estando la escala en el contexto;
-  - los honorarios de 2021: el razonamiento se corta sin cerrar;
-  - la garantía de 2017: se abstiene en vez de concluir que no había límite.
-
-Auditoría del motor de reglas (versión del 15/09/2026 frente a la del 22/11/2026):
-- 4 reglas rotas: la escala 90/70/60/50 % de `rental_reduction_pct`, reescrita por el
-  RDL 29/2026.
-- 5 por revisar: artículos cambiados que aún contienen el texto en que se apoya la regla.
-- 2 sin cambios.
-
-**Qué concluimos.**
-- **Filtrar por fecha es lo que convierte la historia del BOE en respuestas correctas.**
-  - Con solo la ley de hoy, ninguna de las 10 preguntas cambiadas tiene la versión buena entre
-    los 5 primeros.
-  - Con todas las versiones sin filtro sube al 30 %, pero se mezclan textos contradictorios.
-  - Filtrando por fecha llega al 60 %, y la respuesta pasa de 1 a 5 aciertos de 10.
-  - Los controles no empeoran, y en recuperación mejoran, porque en una fecha pasada desaparecen
-    distractores que hoy existen (los artículos nuevos del RDL 29/2026).
-- **Con 10 + 7 preguntas son indicios, no pruebas estadísticas.** Pero el patrón es el que
-  predice el diseño: ganan las preguntas cuya respuesta cambió, y no pierden las que no.
-- **Ahora el límite es el generador.** En 3 de los 5 fallos que quedan tiene delante la
-  versión correcta. Un generador mayor o con más tokens de pensamiento es la palanca siguiente.
-- **La auditoría convierte la lección de la fase 2 en una prueba repetible.** El motor de la
-  fase 1 aplica una escala que ya no está en el texto vigente. Para contratos anteriores al
-  1/12/2026 sigue valiendo, por la transitoria 38.ª; eso lo decide una persona. Cuando se
-  fusione la fase 2, que añade `rental_reduction_pct_2026` al motor, hay que darle reglas en
-  `RULES`.
 ### 2026-11-23 · API · Servir la fase 1 fuera de la DGX y una sola copia del modelo para todas las fases
 
 **Qué queríamos saber.** Si la API con el modelo final (GRPO 2) se puede servir desde un
@@ -2224,3 +1942,468 @@ usuario no la había dado. Queríamos que la herramienta no obligue a inventarla
   No cambiamos el caso del banco, para no mover la portería; lo explicamos.
 - **La instrucción de idioma funciona cuando va pegada al punto donde el modelo empieza a
   responder,** no en el prompt de sistema. Es lo mismo que pasó con el encadenado.
+
+---
+
+### 2026-11-22 · Fase 3 · Corpus descargado con un script
+
+**Qué queríamos saber.** Si el corpus de la propuesta (normativa del BOE, manual de la AEAT,
+guías oficiales) se puede montar de forma reproducible y con qué tamaño sale.
+
+**Qué hicimos.** `uv run python -m rag.download_corpus` (`rag/download_corpus.py`; fuentes,
+licencias y decisiones en `rag/CORPUS.md`). Las leyes consolidadas se fijan a la versión
+vigente el 2026-11-22. Después, `rag.ingest` y el troceado recursivo por defecto (800/100).
+
+**Qué pasó.**
+
+| Carpeta | Documentos | Fragmentos recursivos (800/100) |
+|---|---|---|
+| `boe/` (11 leyes consolidadas) | 11 | 4.004 |
+| `aeat/` (Manual de Renta 2025) | 28 | 212 |
+| `boe_diario/` (SERPAVI, zonas tensionadas) | 11 | 174 |
+| `pdf/` (INE IRAV, BdE) | 2 | 27 |
+| **Total** | **52** (2,6 M caracteres) | **4.417** (media 600) |
+
+Las dos preguntas de la propuesta tienen respuesta en el corpus (art. 23.2 LIRPF, 70 %;
+art. 17.6 LAU, contrato de diez o más años). Hay 29 fragmentos de menos de 50 caracteres
+(«7», «II»…): números de apartado que el troceado recursivo deja sueltos.
+
+**Qué concluimos.**
+- El corpus está muy desequilibrado: el 91 % de los fragmentos son de leyes del BOE, y LIRPF y
+  su reglamento traen mucho texto que no trata de alquileres. Es deliberado (distractores),
+  pero el conjunto dorado debe repartir preguntas entre las cuatro fuentes, no solo leyes.
+- Los fragmentos minúsculos son un argumento para el troceado semántico o por artículo.
+- Siguiente: anotar el conjunto dorado por documento y artículo (o cita literal) y no por id
+  de fragmento, para que sirva a las dos estrategias de troceado.
+
+---
+
+### 2026-11-22 · Fase 3 · Conjunto dorado anotado por artículo y cita
+
+**Qué queríamos saber.** Cómo escribir las 50 preguntas para que sirvan a las dos estrategias de
+troceado, y si son demasiado fáciles para BM25.
+
+**Qué hicimos.** Leímos el corpus artículo a artículo y escribimos 51 preguntas con respuesta
+(`rag/gold/gold.jsonl`) y 6 sin respuesta (`rag/gold/unanswerable.jsonl`). Cada pregunta
+guarda documento, sección y una cita literal. `rag/gold.py` las traduce a ids para cualquier
+troceado: es relevante el fragmento que contiene al menos la mitad de una cita. Formato y
+criterios en `rag/gold/README.md`. Prueba rápida con BM25 sobre el troceado recursivo (800/100).
+
+Al leer apareció que el RDL 26/2026 estaba **derogado** (no se convalidó). Lo cambiamos por
+el RDL 29/2026, que lo sustituye, y el script ahora se niega a descargar normas derogadas.
+También quitamos de las 28 páginas de la AEAT el texto del diálogo «Generar PDF».
+
+**Qué pasó.**
+
+| | Valor |
+|---|---|
+| Preguntas con más de una ubicación válida | 7 (ley + reglamento + manual, ley + preámbulo…) |
+| Fragmentos relevantes por pregunta (recursivo 800/100) | 1 en 43 preguntas, 2 en 7, 3 en 1 |
+| BM25: acierto@1 / @5 / @10 | 7,8 % / 27,5 % / 31,4 % |
+| BM25: MRR@10 | 0,147 |
+
+BM25 no encuentra en los 10 primeros 35 de las 51 preguntas. Las preguntas usan las palabras de
+un inversor («honorarios de la agencia», «piso vacío») y no las de la norma («gastos de gestión
+inmobiliaria», «desocupados con carácter permanente»).
+
+**Qué concluimos.**
+- El conjunto es exigente para recuperación léxica, que es lo que queríamos: deja margen para
+  medir el denso y el híbrido. Si el denso tampoco llega, habrá que mirar si las preguntas son
+  demasiado indirectas.
+- Hay conflictos reales entre fuentes (Manual de Renta 2025 frente a LIRPF vigente, folleto
+  del BdE frente a Ley 5/2019): son preguntas para el análisis de fallos de la generación.
+- Siguiente: troceado semántico, retriever denso con Qwen3-Embedding y barrido de λ.
+
+---
+
+### 2026-11-23 · Fase 3 · Troceado, tres retrievers, λ e instrucción de consulta
+
+**Qué queríamos saber.** Qué troceado y qué retriever recuperan mejor la respuesta de las 51
+preguntas del conjunto dorado, qué λ usar en el híbrido y qué efecto tiene la instrucción de
+la consulta en Qwen3-Embedding.
+
+**Qué hicimos.** `uv run python -m rag.evaluate` en la MIG (9 min la primera vez; las 11.761
+frases y los índices quedan en `rag/index/`). Resultado en `reports/fase3/phase3_eval.json`,
+`reports/fase3/phase3_semantic_distances.png` y `reports/fase3/phase3_lambda.png`.
+- Troceado recursivo 800/100 frente a semántico con el umbral en los percentiles 70, 80, 90
+  y 95 de la distancia entre frases consecutivas: 0,762, 0,789, 0,821 y 0,845. La media es
+  0,63, así que el 0,25 de la docstring cortaría en casi cada frase.
+- BM25, denso (Qwen3-Embedding-0.6B, índice NumPy) e híbrido (min-max y λ·BM25 + (1−λ)·denso
+  sobre los 20 primeros de cada uno).
+- λ de 0 a 1 de 0,1 en 0,1, elegido por MRR con validación cruzada a dos mitades repetida 200
+  veces. Así el λ no se puntúa sobre las mismas preguntas con que se eligió.
+
+**Qué pasó.** Acierto@5 = la respuesta está entre los 5 primeros; MRR hasta el puesto 10.
+
+| Troceado | Fragmentos | Media (car.) | BM25 | Denso | Híbrido | λ CV | MRR CV |
+|---|---|---|---|---|---|---|---|
+| Recursivo 800/100 | 4.422 | 599 | 27,5 % / 0,147 | 41,2 % / 0,272 | 45,1 % / 0,292 | 0,2 | 0,275 ± 0,056 |
+| Semántico p70 | 5.384 | 481 | 37,3 % / 0,223 | **62,7 %** / 0,394 | 58,8 % / **0,432** | 0,3 | **0,416** ± 0,060 |
+| Semántico p80 | 4.072 | 636 | 39,2 % / 0,200 | 56,9 % / 0,387 | 56,9 % / 0,401 | 0,4 | 0,384 ± 0,055 |
+| Semántico p90 | 2.901 | 894 | 39,2 % / 0,212 | 58,8 % / 0,425 | 58,8 % / 0,425 | 0,0 | 0,414 ± 0,057 |
+| Semántico p95 | 2.396 | 1.082 | 37,3 % / 0,220 | 54,9 % / 0,358 | 56,9 % / 0,372 | 0,1 | 0,357 ± 0,057 |
+
+Instrucción de la consulta (denso, semántico p90):
+
+| Instrucción | Acierto@5 | MRR | MRR respuesta en BOE (33) | MRR resto (18) | Top-5 del BOE / AEAT |
+|---|---|---|---|---|---|
+| Ninguna | 60,8 % | 0,431 | 0,473 | 0,353 | 154 / 58 |
+| Por defecto (inglés, genérica) | 58,8 % | 0,425 | 0,476 | 0,332 | 142 / 69 |
+| Genérica en español | 58,8 % | 0,423 | 0,470 | 0,337 | 151 / 59 |
+| De dominio en español | 49,0 % | 0,355 | 0,426 | 0,224 | 176 / 34 |
+| De dominio en inglés | 49,0 % | 0,329 | 0,392 | 0,214 | 168 / 33 |
+| Equivocada («mismo estilo informal») | 54,9 % | 0,427 | 0,477 | 0,336 | 130 / 78 |
+
+Preguntas sin respuesta: la similitud del primer fragmento es de 0,50 a 0,75 (0,58 de media),
+frente a 0,53 a 0,66 de media en las que sí la tienen. «¿Está Madrid declarada zona
+tensionada?» saca 0,75.
+
+**Qué concluimos.**
+- **El troceado importa más que el retriever.** Pasar del recursivo al semántico sube el MRR
+  del denso de 0,27 a 0,39-0,43. El recursivo corta artículos por la mitad y deja fragmentos
+  de un solo número de apartado. El semántico tiene un punto óptimo: con fragmentos de más
+  de 1.000 caracteres (p95) el vector se diluye y baja.
+- **El denso gana a BM25 con claridad** (MRR 0,43 frente a 0,21 en p90). Las preguntas usan las
+  palabras de un inversor y no las de la ley, y BM25 no salta de «honorarios de la agencia» a
+  «gastos de gestión inmobiliaria».
+- **El híbrido aporta poco y depende del troceado.** Con fragmentos pequeños (p70) sí mejora
+  en validación cruzada (0,416 frente a 0,394 del denso). En p90 la validación cruzada elige
+  λ = 0 en 138 de 400 particiones, pero la curva es plana entre 0 y 0,3. **Elegimos p90 con
+  λ = 0,2**, en el centro de la meseta, por dos razones: la meseta es más robusta que el pico
+  de p70, y los fragmentos de unos 900 caracteres dan más contexto al generador. Con 51
+  preguntas, la desviación de la validación cruzada (±0,06) es mayor que la diferencia entre
+  las configuraciones buenas.
+- **La instrucción sí es una palanca, y también en contra.** Las genéricas (inglés, español,
+  ninguna) quedan empatadas. Pedir «el artículo de ley, la norma o el pasaje oficial» empeora
+  el MRR un 20 %, igual en inglés que en español: no es el idioma, es el contenido. Esa
+  instrucción empuja hacia el BOE (176 fragmentos del BOE en el top-5 frente a 142), donde
+  están los distractores de la LIRPF y su reglamento. Las preguntas que se responden con la
+  AEAT o los PDF caen de 0,33 a 0,22, y las del BOE también bajan. Nos quedamos con la
+  instrucción por defecto.
+- **El «no lo sé» no puede salir de un umbral de similitud**, porque las distribuciones se
+  solapan. Tiene que decidirlo el generador.
+- **Fallos (22 de 51 fuera del top-5 con p90 y λ = 0,2):**
+  - Los preámbulos, sobre todo el del RDL 29/2026, explican las reglas en lenguaje llano y
+    ganan al artículo (lau-09, lau-11, aeat-04, ibi-01/02). A veces son respuestas válidas
+    no anotadas.
+  - El caso práctico de la AEAT hace de «imán»: es una lista de gastos que sale primera en 7
+    preguntas de IRPF, IBI e IVA.
+  - Las filas de tabla partidas separan el municipio de su definición (zon-02, zon-03).
+  - El IVA no tiene puente de vocabulario: «piso usado» frente a «segundas y ulteriores
+    entregas».
+
+---
+
+### 2026-11-23 · Fase 3 · Generación con citas: base, base con pensamiento y modelo de la fase 1
+
+**Qué queríamos saber.** Qué generador poner detrás de `/rag`, y si el modelo entrenado en la
+fase 1 lee y cita mejor que el base.
+
+**Qué hicimos.**
+- Pipeline de `rag/generate.py`: semántico p90, híbrido λ = 0,2, cinco primeros fragmentos.
+- La plantilla de clase en español, con citas numeradas [1]…[5] que se traducen a ids después
+  de generar.
+- Antes, tres pruebas cortas de 8 preguntas (`reports/fase3/phase3_generation_smoke*.json`). Con la
+  plantilla inglesa, Qwen3-1.7B contestaba en inglés la mitad de las preguntas, citaba
+  «artículo 36» en vez del id, y abría respuestas correctas con «no se especifica».
+- Las 57 preguntas (51 + 6 sin respuesta) con `scripts/fase3/rag_gen_compare.sh` y `scripts/fase3/rag_round2.sh`:
+  `rag.eval_generation --name {base, base_think, rlm_think}`. El modelo de la fase 1 es
+  `rlm/weights/grpo2_lora`. Pensamiento con 1.536 tokens, sin él con 512.
+- Las métricas se recalcularon con `--rescore` después de mejorar el detector de abstención:
+  no reconocía «No se encuentra información en los pasajes».
+- **Corpus.** `base` se repitió (13:04) sobre el corpus definitivo, tras dejar de tomar por
+  vigente la versión sin fecha del art. 6 bis RIRPF. La primera ejecución, de las 11:27, está
+  en `reports/fase3/phase3_generation_base_corpus_previo.json` y da las mismas cifras salvo en las
+  citas: cita algo en el 74,5 % frente al 76,5 %, y el relevante en 14 de 30 frente a 15. Es la
+  variación de una o dos respuestas. La evaluación de recuperación también se repitió (12:44) y
+  reproduce la entrada anterior con diferencias de milésimas.
+
+**Qué pasó.** El fragmento relevante se recupera en 30 de las 51 preguntas respondibles.
+
+| | Qwen3-1.7B | Qwen3-1.7B con pensamiento | Fase 1 (GRPO 2) con pensamiento |
+|---|---|---|---|
+| Cita algún fragmento | 76,5 % | **88,2 %** | 74,5 % |
+| Cita el relevante, cuando se recuperó | 50,0 % (15/30) | **70,0 %** (21/30) | 46,7 % |
+| Cifras de la referencia en la respuesta, cuando se recuperó | 39,1 % | **43,5 %** | 30,4 % |
+| Se abstiene con el fragmento delante | 6,7 % | **3,3 %** | 6,7 % |
+| Se abstiene sin el fragmento (lo correcto) | 33,3 % | 33,3 % | 14,3 % |
+| Se abstiene en las 6 sin respuesta | **6/6** | **6/6** | 5/6 |
+| Ids inventados | 0 | 0 | 0 |
+| Razonamiento cortado sin cerrar | 0 | 2 | 10 |
+| Tiempo para las 57 | **9 min** | 35 min | 31 min |
+
+**Qué concluimos.**
+- **Pensar ayuda a leer.** Con pensamiento, el modelo cita el fragmento correcto en 21 de las 30
+  preguntas en que lo tiene delante, frente a 15. Pero cuesta cuatro veces más. `/rag` queda sin
+  pensamiento por defecto, porque la API se sirve desde el MacBook; `ARCA_RAG_THINKING=1` lo
+  activa.
+- **El modelo de la fase 1 es peor generador de RAG que el base.** Razona largo y en inglés,
+  como le enseñó GRPO, y agota los 1.536 tokens sin cerrar en 10 de 57 preguntas. Cita y
+  acierta menos, y contesta una pregunta sin respuesta. El entrenamiento para hacer cuentas no
+  se transfiere a leer y citar: dato para la comparación de cerebros de la fase 4.
+- **El «no lo sé» funciona** cuando lo decide el generador: 6/6 en las preguntas sin respuesta,
+  y solo 1-2 abstenciones de 30 cuando tiene el fragmento delante.
+- La «coincidencia de cifras» es una aproximación: no ve paráfrasis ni penaliza cifras de más.
+  Las respuestas están guardadas en los JSON.
+
+---
+
+### 2026-11-23 · Fase 3 · Opción 1: el derecho aplicable en una fecha y auditoría del motor
+
+**Qué queríamos saber.** Si un RAG que solo ve los artículos vigentes en la fecha de la pregunta
+responde bien donde el RAG normal (la ley de hoy) se equivoca, sin perder lo que la ley de hoy
+ya responde bien. Y si esas mismas versiones sirven para detectar reglas desfasadas en el motor
+de las fases 1 y 2.
+
+**Qué hicimos.**
+- `rag/temporal.py`: 2.049 versiones de artículos de las 11 leyes, con sus intervalos de
+  vigencia, partidas en 8.208 fragmentos. En una fecha rige la última versión, en el orden del
+  documento, con fecha anterior o igual. Las versiones sin fecha no cuentan.
+- `rag/gold/temporal.jsonl`: 17 preguntas con fecha, casi todas en pares que solo se
+  distinguen por la fecha. 7 son de control: su respuesta coincide con la de hoy.
+- Relevancia por contenido: vale cualquier versión del artículo que contenga la cita entera y
+  ninguna de las frases de `absent`. La primera evaluación (13:00,
+  `reports/fase3/phase3_temporal_relevancia_por_version.json`) exigía la versión exacta en vigor ese
+  día, y por eso los controles nunca se acertaban con la ley de hoy. Lo corregimos (89899d6)
+  y la repetimos.
+- Recuperación: `uv run python -m rag.eval_temporal` → `reports/fase3/phase3_temporal.json`.
+- Generación: `rag.eval_generation --gold rag/gold/temporal.jsonl --unanswerable ""` con el RAG
+  normal y con `ARCA_RAG_TEMPORAL=1`, sin pensamiento y con él (1.536 tokens), en
+  `reports/fase3/phase3_generation_temporal_{hoy,fecha}{,_think}.json`. Las 68 respuestas se juzgaron
+  a mano: correcta, regla equivocada o abstención.
+- Auditoría: `uv run python -m rag.audit_rules`.
+
+**Qué pasó.** Recuperación (acierto@5 / MRR; híbrido λ = 0,2):
+
+| Versiones visibles | Respuesta cambiada (10) | Controles (7) | Primero el artículo correcto pero en una versión que no aplicaba (cambiadas) |
+|---|---|---|---|
+| Solo las de hoy | 0 % / 0,000 | 57 % / 0,397 | 30 % |
+| Todas, sin filtro | 30 % / 0,225 | 29 % / 0,213 | 20 % |
+| **Las vigentes en la fecha** | **60 %** / **0,389** | **71 %** / **0,440** | 20 % |
+
+El extractor de fechas acierta las 17.
+
+Generación, juzgada a mano:
+
+| | Cambiadas: correctas | Cambiadas: regla equivocada | Controles: correctas |
+|---|---|---|---|
+| RAG normal, sin pensamiento | 0 | 5 | 2 |
+| RAG por fecha, sin pensamiento | 3 | 4 | 2 |
+| RAG normal, con pensamiento | 1 | 5 | 3 |
+| **RAG por fecha, con pensamiento** | **5** | **2** | 3 |
+
+- **El RAG normal se equivoca con aplomo.** Con la ley de hoy contesta «cinco años» a un
+  contrato de febrero de 2019 y «hasta tres años más» a una prórroga de 2016. Al de 2017 le
+  aplica el límite de garantía de 2019.
+- **El RAG por fecha con pensamiento acierta:** el plazo de 2017 (tres años), el de febrero de
+  2019 (tres años, tras la derogación del RDL 21/2018), la prórroga tácita de 2016 (un año) y
+  la reducción de 2019 (60 %) y de 2024 (90 %).
+- **Fallos que quedan, todos del generador con la versión buena delante:**
+  - el ITP de 2020: responde con el ISD de un caso práctico de la AEAT;
+  - la imputación de 2027: dice el 2 % estando la escala en el contexto;
+  - los honorarios de 2021: el razonamiento se corta sin cerrar;
+  - la garantía de 2017: se abstiene en vez de concluir que no había límite.
+
+Auditoría del motor de reglas (versión del 15/09/2026 frente a la del 22/11/2026):
+- 4 reglas rotas: la escala 90/70/60/50 % de `rental_reduction_pct`, reescrita por el
+  RDL 29/2026.
+- 5 por revisar: artículos cambiados que aún contienen el texto en que se apoya la regla.
+- 2 sin cambios.
+
+**Qué concluimos.**
+- **Filtrar por fecha es lo que convierte la historia del BOE en respuestas correctas.**
+  - Con solo la ley de hoy, ninguna de las 10 preguntas cambiadas tiene la versión buena entre
+    los 5 primeros.
+  - Con todas las versiones sin filtro sube al 30 %, pero se mezclan textos contradictorios.
+  - Filtrando por fecha llega al 60 %, y la respuesta pasa de 1 a 5 aciertos de 10.
+  - Los controles no empeoran, y en recuperación mejoran, porque en una fecha pasada desaparecen
+    distractores que hoy existen (los artículos nuevos del RDL 29/2026).
+- **Con 10 + 7 preguntas son indicios, no pruebas estadísticas.** Pero el patrón es el que
+  predice el diseño: ganan las preguntas cuya respuesta cambió, y no pierden las que no.
+- **Ahora el límite es el generador.** En 3 de los 5 fallos que quedan tiene delante la
+  versión correcta. Un generador mayor o con más tokens de pensamiento es la palanca siguiente.
+- **La auditoría convierte la lección de la fase 2 en una prueba repetible.** El motor de la
+  fase 1 aplica una escala que ya no está en el texto vigente. Para contratos anteriores al
+  1/12/2026 sigue valiendo, por la transitoria 38.ª; eso lo decide una persona. Cuando se
+  fusione la fase 2, que añade `rental_reduction_pct_2026` al motor, hay que darle reglas en
+  `RULES`.
+
+---
+
+### 2026-11-23 · Fase 4 · Corpus ampliado con normativa autonómica, Sociedades y subastas (issue #13)
+
+**Qué queríamos saber.** Si añadir las fuentes que piden las palancas del playbook (issue #10)
+empeora la recuperación de la fase 3. La spec pide que no empeore el Recall@5 ni el MRR de las 51
+preguntas doradas.
+
+**Qué hicimos.** Añadimos seis documentos oficiales a `rag/download_corpus.py`, documentados en
+`rag/CORPUS.md`:
+
+- los textos de tributos cedidos de Madrid (DLeg 1/2010), Cataluña (DLeg 1/2024, libro 6),
+  Andalucía (Ley 5/2021) y la Comunitat Valenciana (Ley 13/1997), en su versión consolidada del
+  BOE/BOCM;
+- el artículo 29 de la Ley 27/2014 del Impuesto sobre Sociedades;
+- los artículos 643 a 675 de la LEC (subastas).
+
+Medimos dos veces sobre el mismo corpus de la fase 3, antes y después de añadirlos, con
+`rag.evaluate` y la configuración de la fase 3. El "después" está en
+`scripts/fase4/ampliar_corpus_eval.sh` y tardó 1.235 s:
+
+- con las 51 preguntas y las 6 sin respuesta del commit 9b1c9ad;
+- con las 59 preguntas actuales (8 nuevas sobre los documentos nuevos).
+
+Al final reindexamos el pipeline de `/rag`: 3.956 fragmentos. `none-02` (el ITP de Madrid) deja
+de ser una pregunta sin respuesta y pasa a ser `ccaa-01`.
+
+**Qué pasó.** Semántico p90, la configuración de `/rag`:
+
+| Retriever | R@5 antes (51) | R@5 después (51) | MRR antes (51) | MRR después (51) | R@5 (59) | MRR (59) |
+|---|---|---|---|---|---|---|
+| híbrido λ = 0,2 | 0,529 | 0,510 | 0,421 | 0,395 | 0,492 | 0,375 |
+| denso | 0,529 | 0,510 | 0,414 | 0,391 | 0,492 | 0,372 |
+| BM25 | 0,382 | 0,353 | 0,218 | 0,208 | 0,322 | 0,197 |
+
+Fragmentos: 2.897 antes y 3.883 después (+34 %). Con troceado recursivo, el R@5 híbrido no cambia
+(0,441) y el MRR baja de 0,292 a 0,273.
+
+Con el híbrido, cambia el primer acierto de 6 de las 51 preguntas: 1 mejora y 5 empeoran.
+
+- itp-01 pasa de la posición 1 a la 4. Pregunta por el tipo estatal supletorio del ITP, y los
+  cuatro textos autonómicos hablan también del tipo del ITP de la vivienda usada: compiten, y con
+  razón.
+- lau-06 pasa de 3 a 10, irpf-03 de 2 a 3, y lau-11 e ibi-01, que estaban en la posición 10,
+  salen del top 10.
+
+De las 8 preguntas nuevas, 3 tienen un fragmento relevante en el top 5: lec-01 (1), lec-02 (2) y
+ccaa-05 (2). Las 4 del tipo autonómico del ITP (ccaa-01 a 04) y lis-01 no aparecen en el top 10.
+Las leyes autonómicas son largas y repiten "tipo de gravamen" en cada impuesto cedido, así que el
+fragmento del ITP de la vivienda no destaca.
+
+**Qué concluimos.**
+
+- **No se cumple el criterio "no empeora".** En las 51 preguntas, el R@5 baja 0,019, es decir, una
+  pregunta menos en el top 5, y el MRR baja 0,026. Con 51 preguntas es una diferencia pequeña.
+  Aun así, el sentido es claro: más documentos parecidos diluyen el ranking. La mantenemos
+  porque, sin estas fuentes, las palancas autonómicas, la de la sociedad y la de las subastas no
+  tienen cita en el corpus (issue #10).
+- **Siguiente paso**, para no diluir los textos estatales: trocear las leyes autonómicas solo por
+  los artículos del ITP y de las deducciones del IRPF, como ya hacemos con `trlrhl` y `liva`, en
+  vez de descargarlas enteras. Sería una pregunta para la issue.
+- Las citas del playbook (`evidence.quote`) se comprueban contra el corpus en el test de la
+  issue #10. Siguen siendo correctas aunque el retriever no encuentre esos pasajes: el agente las
+  cita desde `find_levers`, no desde la búsqueda.
+### 2026-11-23 · Fase 4 · Primeras pruebas del bucle ReAct con Qwen3-1.7B (cerebro base)
+
+**Qué queríamos saber.** Si el bucle de la issue #20 (`agent/react_agent.py`) funciona con el
+modelo de verdad: que cierre con `final_answer`, que la traza tenga pensamiento, acción y
+observación reales, y que los guardarraíles (auditor, bucle, pasos) actúen. No es la
+evaluación del banco (issue 06, de Kike): son 5–6 tareas elegidas para cubrir categorías.
+
+**Qué hicimos.** `uv run python -m agent.evaluate --brains base --ids lever-01 lever-04
+inconsistent-02 impossible-01 broken_tool-01 [kb_plus_tool-01] --out
+reports/fase4/smoke_react_base{,_v2,_v4}.json`, `max_steps=10`, greedy, 1024 tokens por paso,
+en la MIG de la DGX. Tres versiones del bucle, cambiando una cosa cada vez:
+
+- v1: el bucle tal como lo pide la spec (commit 2990766).
+- v2: una pista al final de la última observación de cada turno (pasos que quedan, "Thought:",
+  no repetir, `final_answer` en español), como el `CHAIN_HINT` de la fase 2 (cc4dbcd).
+- v3 (parada a mitad, sin informe): un "Thought:" sin tool call deja de tomarse como respuesta
+  y cuenta como paso (310a0e1).
+- v4: ese pensamiento suelto ya no gasta paso; pasa a ser el `thought` de la siguiente llamada.
+  La cuarta llamada idéntica corta el bucle (e3c27ff).
+
+**Qué pasó.**
+
+| Versión | Tareas | Check ok | Cierra con `final_answer` | Texto suelto como respuesta | Reserva | Pasos con pensamiento |
+|---|---|---|---|---|---|---|
+| v1 | 5 | 0 | 1 | 3 | 1 | 3/30 |
+| v2 | 6 | 0 | 0 | 6 | 0 | 12/21 |
+| v4 | 6 | 1 | 5 | 0 | 1 | 36/46 |
+
+- **v1.** Qwen3 sin thinking emite el `<tool_call>` sin texto: 27 de 30 pasos sin pensamiento.
+  Tras leer resultados en inglés responde en inglés y sin la tool. En inconsistent-02 hizo bien
+  la bifurcación (`what_if` con valor de referencia 150.000 y 210.000) pero la repitió dos veces
+  más, pese al aviso, y agotó los pasos.
+- **v2.** La pista da pensamientos, pero el modelo escribe "Thought: necesito llamar a what_if"
+  **sin** la llamada, y la spec trata el texto sin tool call como respuesta: las 6 tareas
+  terminaron así, con una intención por respuesta.
+- **v3.** Contar ese pensamiento como paso gastaba la mitad de los 10 pasos: el modelo alterna
+  un mensaje de pensamiento y otro de llamada (lever-04: 5 pensamientos y 5 búsquedas
+  idénticas).
+- **v4.** Las 6 tareas llegan a `final_answer`, en español salvo una (lever-04). El auditor
+  rechaza cifras inventadas que antes pasaban: "6,8 %" cuando el motor dio 0,68 %
+  (impossible-01), "1.140 €" cuando era 11.400 € (broken_tool-01). A la tercera, la respuesta
+  sale con `succeeded=false`. inconsistent-02 pasa el check con los dos escenarios.
+
+Lo que falla en v4 es del cerebro, no del bucle:
+
+- lever-04 no guarda los dos pisos con `record_property` y busca en el RAG.
+- `search_knowledge_base` recibe un `on_date` inventado (2023-01-01, 2023-10-05) y devuelve la
+  ley antigua.
+- En impossible-01 se inventa un piso (500.000 €, 300 €/mes) para tener algo que analizar.
+- `record_investor` rellena con ceros lo que no se dijo (`loan_years: 0`).
+
+Una incidencia: en v1 el corpus apareció a mitad de la corrida (lo descargaba otro proceso) y la
+primera búsqueda construyó el índice dentro del timeout de 30 s. Cada reintento lanzaba otra
+construcción en paralelo, así que `_pipeline()` lleva ahora un candado.
+
+**Qué concluimos.**
+
+- El bucle cumple la spec y los guardarraíles actúan sobre el modelo real. Con 6 tareas no se
+  puede comparar nada (1/6 frente a 0/5): la tasa la da el banco completo (issue 06).
+- Desviación de la spec (punto 9): un texto que empieza por "Thought:" no es una respuesta, sino
+  el pensamiento del paso siguiente. Hay que confirmarlo en la issue.
+- `brain=thinking` con el bucle v4, en dos tareas (`reports/fase4/smoke_react_thinking.json`):
+  funciona. El `thought` de cada paso es el razonamiento de Qwen3, y las dos tareas terminan en
+  3 y 6 pasos (51 s y 90 s), pero ninguna pasa el check. En inconsistent-02 dice que el valor de
+  referencia "no influye" en el neto y no llama a `what_if`; es falso, porque cambia el ITP. En
+  impossible-01 se abstiene bien ("no tools can predict 2027 price drops"), pero en inglés y
+  después de repetir búsquedas hasta el "NOT RUN".
+- Pendiente para el núcleo, fuera del bucle: que `search_knowledge_base` no acepte un `on_date`
+  que la tarea no menciona, y probar `brain=rlm` (aquí no está el adaptador del GRPO 2).
+
+---
+
+### 2026-11-24 · Fase 4 · Leyes autonómicas recortadas al ITP y a las deducciones por alquilar (issue #13)
+
+**Qué queríamos saber.** Si recortar las cuatro leyes autonómicas recupera la recuperación de la
+fase 3. Las leyes enteras la habían empeorado: R@5 de 0,529 a 0,510 y MRR de 0,421 a 0,395 (entrada
+del 23/11).
+
+**Qué hicimos.** En `rag/download_corpus.py` dejamos de cada ley solo esto:
+
+- Madrid: los artículos 8, 8 bis y 8 ter (deducciones por alquilar, que citan las palancas) y el
+  capítulo del ITP, artículos 27 a 38;
+- Andalucía: los artículos 41 a 51;
+- Cataluña: los artículos 641 a 642;
+- Comunitat Valenciana: el artículo 13.
+
+Las leyes pasan de 169-234 KB a 20-42 KB y el corpus, de 3.883 a 3.126 fragmentos. El filtro de
+artículos toma ahora el número del título del artículo y no el identificador del bloque del BOE,
+que en los códigos autonómicos no coincide.
+
+Volvimos a descargar con `--only boe --force` y repetimos la misma evaluación con
+`scripts/fase4/recortar_autonomicas_eval.sh`, que tardó 956 s.
+
+**Qué pasó.** Semántico p90, híbrido λ = 0,2:
+
+| Corpus | Fragmentos | R@5 (51) | MRR (51) | R@5 (59) | MRR (59) |
+|---|---|---|---|---|---|
+| Fase 3, antes de ampliar | 2.897 | 0,529 | 0,421 | — | — |
+| Ampliado, leyes enteras | 3.883 | 0,510 | 0,395 | 0,492 | 0,375 |
+| Ampliado, leyes recortadas | 3.126 | **0,549** | 0,411 | **0,542** | 0,409 |
+
+De las 8 preguntas nuevas, 4 tienen un fragmento relevante en el top 5 (antes 3): ccaa-02 (1),
+ccaa-05 (2), lec-01 (1) y lec-02 (2). ccaa-03 queda en la posición 6. ccaa-01, ccaa-04 y lis-01
+siguen fuera del top 10.
+
+**Qué concluimos.**
+
+- El recorte resuelve el empeoramiento. Con las 51 preguntas de la fase 3, el R@5 supera al de
+  antes de ampliar el corpus (0,549 frente a 0,529). El MRR queda 0,010 por debajo, con 51
+  preguntas.
+- Lo que diluía el ranking era el tamaño de las leyes, no su tema.
+- Las citas del playbook y del conjunto dorado se siguen localizando en el corpus recortado.
+- Para usarlo en una máquina ya montada: `uv run python -m rag.download_corpus --only boe --force`.
+  La primera carga reindexa (unos 5 min en GPU). La DGX que sirve la API para la evaluación del
+  24/11 se queda con el corpus probado.

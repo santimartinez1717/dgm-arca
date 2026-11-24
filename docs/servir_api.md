@@ -38,8 +38,11 @@ en `~/.config`, que no se conserva:
 
 1. Abrir una sesión en Open OnDemand con duración suficiente (máximo 24 h) para cubrir toda la
    ventana de corrección o la demo.
-2. Terminal 1: `bash scripts/serve_dgx.sh`. Espera a que la API responda, la calienta con una pregunta
-   (la primera carga el modelo) y escribe `API lista`.
+2. Terminal 1: `bash scripts/serve_dgx.sh`. Espera a que la API responda, llama una vez a cada
+   endpoint (`scripts/calentar_api.py`: la primera llamada carga cada modelo), dice OK o MAL por
+   endpoint y escribe `API lista`. Si el puerto 8000 ya lo usa otra API (la de un compañero en
+   el mismo nodo de la DGX), se para y lo dice: entonces `ARCA_API_PORT=8001 bash
+   scripts/serve_dgx.sh` y, en el paso 3, `ngrok http 8001`.
 3. Terminal 2:
    ```bash
    ~/clusters/dgx/bin/ngrok http 8000 --url=https://sculptor-fled-magical.ngrok-free.dev \
